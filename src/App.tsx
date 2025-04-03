@@ -12,6 +12,11 @@ import History from "./pages/History";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import ChatInterface from "./components/ChatInterface";
+import TrendcastUploadLinks from "./pages/trendcast/TrendcastUploadLinks";
+import TrendcastEditScript from "./pages/trendcast/TrendcastEditScript";
+import TrendcastAudio from "./pages/trendcast/TrendcastAudio";
+import TrendcastVideo from "./pages/trendcast/TrendcastVideo";
+import TrendcastPreview from "./pages/trendcast/TrendcastPreview";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { applyThemeColors } from "./lib/theme-utils";
@@ -47,6 +52,14 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/chat" element={<ChatInterface />} />
+                
+                {/* Trendcast Workflow Routes */}
+                <Route path="/trendcast" element={<TrendcastUploadLinks />} />
+                <Route path="/trendcast/script" element={<TrendcastEditScript />} />
+                <Route path="/trendcast/audio" element={<TrendcastAudio />} />
+                <Route path="/trendcast/video" element={<TrendcastVideo />} />
+                <Route path="/trendcast/preview" element={<TrendcastPreview />} />
+                
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

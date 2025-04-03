@@ -115,7 +115,7 @@ const NewWorkflowDialog = ({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create New Workflow</DialogTitle>
+            <DialogTitle>Create New Chat-based Workflow</DialogTitle>
             <DialogDescription>
               Configure your new chat-based workflow.
             </DialogDescription>
@@ -257,7 +257,7 @@ const NewWorkflowDialog = ({
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">Create Workflow</Button>
+            <Button type="submit">Create Chat-based Workflow</Button>
           </DialogFooter>
         </form>
       </DialogContent>

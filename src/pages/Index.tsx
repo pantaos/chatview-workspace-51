@@ -10,7 +10,8 @@ import {
   Video,
   SlidersHorizontal,
   History,
-  LucideIcon
+  LucideIcon,
+  Rss
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +36,8 @@ interface Workflow {
   icon: LucideIcon;
   color?: string;
   translationKey?: string;
+  type: "chat" | "screen";
+  route?: string;
 }
 
 const workflows: Workflow[] = [
@@ -43,43 +46,58 @@ const workflows: Workflow[] = [
     title: "Chat Assistant",
     description: "General purpose AI chat assistant",
     icon: MessageSquare,
-    translationKey: "chatAssistant"
+    translationKey: "chatAssistant",
+    type: "chat"
   },
   {
     id: "code",
     title: "Code Helper",
     description: "Generate and explain code",
     icon: Code,
-    translationKey: "codeHelper"
+    translationKey: "codeHelper",
+    type: "chat"
   },
   {
     id: "image",
     title: "Image Creator",
     description: "Create images from text descriptions",
     icon: Image,
-    translationKey: "imageCreator"
+    translationKey: "imageCreator",
+    type: "chat"
   },
   {
     id: "doc",
     title: "Document Helper",
     description: "Summarize and extract from documents",
     icon: FileText,
-    translationKey: "documentHelper"
+    translationKey: "documentHelper",
+    type: "chat"
   },
   {
     id: "video",
     title: "Video Generator",
     description: "Create videos from text prompts",
     icon: Video,
-    translationKey: "videoGenerator"
+    translationKey: "videoGenerator",
+    type: "chat"
   },
   {
     id: "music",
     title: "Music Composer",
     description: "Generate music and audio",
     icon: Music,
-    translationKey: "musicComposer"
+    translationKey: "musicComposer",
+    type: "chat"
   },
+  {
+    id: "trendcast",
+    title: "Trendcast",
+    description: "Turn website content into professional videos",
+    icon: Rss,
+    translationKey: "trendcast",
+    type: "screen",
+    route: "/trendcast"
+  }
 ];
 
 const historyItems = [
@@ -183,7 +201,8 @@ const Index = () => {
       title: workflowData.title,
       description: workflowData.description,
       icon: iconComponent,
-      color: workflowData.iconColor
+      color: workflowData.iconColor,
+      type: "chat" as const
     };
 
     setAvailableWorkflows(prev => [...prev, newWorkflow]);
@@ -191,8 +210,12 @@ const Index = () => {
   };
 
   const handleWorkflowClick = (workflow: Workflow) => {
-    setCurrentWorkflow(workflow);
-    setShowChat(true);
+    if (workflow.type === "chat") {
+      setCurrentWorkflow(workflow);
+      setShowChat(true);
+    } else if (workflow.type === "screen" && workflow.route) {
+      navigate(workflow.route);
+    }
   };
 
   useEffect(() => {
@@ -253,7 +276,7 @@ const Index = () => {
                     onClick={() => setShowNewWorkflowDialog(true)}
                   >
                     <Plus className="h-4 w-4" />
-                    {translate('dashboard.newWorkflow')}
+                    {translate('dashboard.newChatWorkflow')}
                   </Button>
                 </div>
                 

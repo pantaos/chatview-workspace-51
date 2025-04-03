@@ -1,194 +1,153 @@
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+type Language = "en" | "de";
 
-// Define available languages
-export type Language = 'en' | 'de';
-
-// Define translation structure
-export type Translations = {
-  [key: string]: string;
-};
-
-// Define context type
-type LanguageContextType = {
+interface LanguageContextType {
   language: Language;
-  setLanguage: (language: Language) => void;
   translate: (key: string) => string;
-};
+  switchLanguage: (lang: Language) => void;
+}
 
-// Create the context with default values
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'en',
-  setLanguage: () => {},
-  translate: (key) => key,
+  language: "en",
+  translate: (key: string) => key,
+  switchLanguage: () => {}
 });
 
-// Translation data for English and German
-const translations: Record<Language, Translations> = {
-  en: {
-    // General
-    'app.title': 'AI Assistant Dashboard',
-    'app.settings': 'Settings',
-    'app.history': 'History',
-    'app.profile': 'Profile',
-    'app.logout': 'Logout',
-    'app.viewAll': 'View All',
-    'app.save': 'Save',
-    'app.cancel': 'Cancel',
-    'app.edit': 'Edit',
-    'app.delete': 'Delete',
-    
-    // Dashboard
-    'dashboard.workflows': 'Workflows',
-    'dashboard.newWorkflow': 'New Workflow',
-    'dashboard.all': 'All',
-    'dashboard.recent': 'Recent',
-    'dashboard.favorites': 'Favorites',
-    'dashboard.workflowSettings': 'Workflow Settings',
-    'dashboard.creativityLevel': 'Adjust the creativity level for your workflows',
-    'dashboard.conservative': 'Conservative',
-    'dashboard.creative': 'Creative',
-    'dashboard.recentHistory': 'Recent History',
-    
-    // Workflow types
-    'workflow.chatAssistant': 'Chat Assistant',
-    'workflow.codeHelper': 'Code Helper',
-    'workflow.imageCreator': 'Image Creator',
-    'workflow.documentHelper': 'Document Helper',
-    'workflow.videoGenerator': 'Video Generator',
-    'workflow.musicComposer': 'Music Composer',
-    'workflow.chatAssistantDesc': 'General purpose AI chat assistant',
-    'workflow.codeHelperDesc': 'Generate and explain code',
-    'workflow.imageCreatorDesc': 'Create images from text descriptions',
-    'workflow.documentHelperDesc': 'Summarize and extract from documents',
-    'workflow.videoGeneratorDesc': 'Create videos from text prompts',
-    'workflow.musicComposerDesc': 'Generate music and audio',
-    
-    // Menu actions
-    'menu.editWorkflow': 'Editing workflow',
-    'menu.workflowSettings': 'Opening settings for',
-    'menu.deleteWorkflow': 'Delete workflow',
-    'menu.deleteConfirm': 'This action can\'t be undone.',
-    'menu.undoDelete': 'Undo',
-    'menu.deleteCancelled': 'Deletion cancelled',
-    
-    // Settings
-    'settings.title': 'Settings',
-    'settings.subtitle': 'Manage your account settings and preferences',
-    'settings.notifications': 'Notifications',
-    'settings.notificationsDesc': 'Receive notifications about your account activity',
-    'settings.darkMode': 'Dark Mode',
-    'settings.darkModeDesc': 'Toggle between light and dark mode',
-    'settings.twoFactor': 'Two-Factor Authentication',
-    'settings.twoFactorDesc': 'Add an extra layer of security to your account',
-    'settings.aiSettings': 'AI Settings',
-    'settings.apiKey': 'API Key',
-    'settings.apiKeyDesc': 'Your API key is used to authenticate requests to the AI service',
-    'settings.modelTemp': 'Model Temperature',
-    'settings.modelTempDesc': 'Adjust how creative the AI responses should be',
-    'settings.language': 'Language',
-    'settings.languageDesc': 'Select your preferred language',
-    'settings.show': 'Show',
-  },
-  de: {
-    // General
-    'app.title': 'KI-Assistent Dashboard',
-    'app.settings': 'Einstellungen',
-    'app.history': 'Verlauf',
-    'app.profile': 'Profil',
-    'app.logout': 'Abmelden',
-    'app.viewAll': 'Alle anzeigen',
-    'app.save': 'Speichern',
-    'app.cancel': 'Abbrechen',
-    'app.edit': 'Bearbeiten',
-    'app.delete': 'Löschen',
-    
-    // Dashboard
-    'dashboard.workflows': 'Arbeitsabläufe',
-    'dashboard.newWorkflow': 'Neuer Arbeitsablauf',
-    'dashboard.all': 'Alle',
-    'dashboard.recent': 'Kürzlich',
-    'dashboard.favorites': 'Favoriten',
-    'dashboard.workflowSettings': 'Arbeitsablauf-Einstellungen',
-    'dashboard.creativityLevel': 'Passen Sie die Kreativität für Ihre Arbeitsabläufe an',
-    'dashboard.conservative': 'Konservativ',
-    'dashboard.creative': 'Kreativ',
-    'dashboard.recentHistory': 'Aktueller Verlauf',
-    
-    // Workflow types
-    'workflow.chatAssistant': 'Chat-Assistent',
-    'workflow.codeHelper': 'Code-Helfer',
-    'workflow.imageCreator': 'Bild-Ersteller',
-    'workflow.documentHelper': 'Dokument-Helfer',
-    'workflow.videoGenerator': 'Video-Generator',
-    'workflow.musicComposer': 'Musik-Komponist',
-    'workflow.chatAssistantDesc': 'Allgemeiner KI-Chat-Assistent',
-    'workflow.codeHelperDesc': 'Code generieren und erklären',
-    'workflow.imageCreatorDesc': 'Bilder aus Textbeschreibungen erstellen',
-    'workflow.documentHelperDesc': 'Dokumente zusammenfassen und extrahieren',
-    'workflow.videoGeneratorDesc': 'Videos aus Textaufforderungen erstellen',
-    'workflow.musicComposerDesc': 'Musik und Audio generieren',
-    
-    // Menu actions
-    'menu.editWorkflow': 'Arbeitsablauf bearbeiten',
-    'menu.workflowSettings': 'Einstellungen öffnen für',
-    'menu.deleteWorkflow': 'Arbeitsablauf löschen',
-    'menu.deleteConfirm': 'Diese Aktion kann nicht rückgängig gemacht werden.',
-    'menu.undoDelete': 'Rückgängig',
-    'menu.deleteCancelled': 'Löschen abgebrochen',
-    
-    // Settings
-    'settings.title': 'Einstellungen',
-    'settings.subtitle': 'Verwalten Sie Ihre Kontoeinstellungen und Präferenzen',
-    'settings.notifications': 'Benachrichtigungen',
-    'settings.notificationsDesc': 'Erhalten Sie Benachrichtigungen über Ihre Kontoaktivitäten',
-    'settings.darkMode': 'Dunkelmodus',
-    'settings.darkModeDesc': 'Zwischen hellem und dunklem Modus wechseln',
-    'settings.twoFactor': 'Zwei-Faktor-Authentifizierung',
-    'settings.twoFactorDesc': 'Fügen Sie Ihrem Konto eine zusätzliche Sicherheitsebene hinzu',
-    'settings.aiSettings': 'KI-Einstellungen',
-    'settings.apiKey': 'API-Schlüssel',
-    'settings.apiKeyDesc': 'Ihr API-Schlüssel wird verwendet, um Anfragen an den KI-Dienst zu authentifizieren',
-    'settings.modelTemp': 'Modell-Temperatur',
-    'settings.modelTempDesc': 'Passen Sie an, wie kreativ die KI-Antworten sein sollen',
-    'settings.language': 'Sprache',
-    'settings.languageDesc': 'Wählen Sie Ihre bevorzugte Sprache',
-    'settings.show': 'Anzeigen',
-  }
-};
+export const useLanguage = () => useContext(LanguageContext);
 
-type LanguageProviderProps = {
-  children: ReactNode;
-};
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+  const [language, setLanguage] = useState<Language>((localStorage.getItem('language') as Language) || 'en');
 
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  // Try to get saved language preference or default to browser language
-  const getBrowserLanguage = (): Language => {
-    const browserLang = navigator.language.split('-')[0];
-    return (browserLang === 'de' ? 'de' : 'en') as Language;
-  };
-
-  const [language, setLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('language') as Language;
-    return savedLanguage || getBrowserLanguage();
-  });
-
-  // Save language preference to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('language', language);
   }, [language]);
 
-  // Translation function
-  const translate = (key: string): string => {
-    return translations[language][key] || key;
+  const translate = (key: string) => {
+    return translationMap[language][key] || translationMap["en"][key] || key;
+  };
+
+  const switchLanguage = (lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const handleLanguageSwitch = (lang: Language) => {
+    switchLanguage(lang);
+  };
+
+  const translationMap: Record<Language, Record<string, string>> = {
+    en: {
+      'app.title': 'My App',
+      'app.greeting': 'Hello',
+      'app.farewell': 'Goodbye',
+      'app.viewAll': 'View All',
+      'menu.editWorkflow': 'Edit Workflow',
+      'menu.workflowSettings': 'Workflow Settings',
+      'menu.deleteWorkflow': 'Delete Workflow',
+      'menu.deleteConfirm': 'Are you sure you want to delete this workflow?',
+      'menu.undoDelete': 'Undo',
+      'menu.deleteCancelled': 'Delete cancelled',
+      'dashboard.workflows': 'Workflows',
+      'dashboard.newWorkflow': 'New Workflow',
+      'dashboard.recent': 'Recent',
+      'dashboard.all': 'All',
+      'dashboard.favorites': 'Favorites',
+      'dashboard.recentHistory': 'Recent History',
+      'dashboard.workflowSettings': 'Workflow Settings',
+      'dashboard.creativityLevel': 'Creativity Level',
+      'dashboard.conservative': 'Conservative',
+      'dashboard.creative': 'Creative',
+      'dashboard.newChatWorkflow': 'New Chat-based Workflow',
+      'workflow.trendcast': 'Trendcast',
+      'workflow.trendcastDesc': 'Turn website content into professional videos',
+      'trendcast.uploadLinks': 'Upload Links and Images',
+      'trendcast.scriptSummary': 'Script Summary',
+      'trendcast.audioFile': 'Audio File with Custom Voice',
+      'trendcast.createVideo': 'Create Video',
+      'trendcast.preview': 'Preview Video',
+      'trendcast.addMoreLinks': 'Add More Links',
+      'trendcast.generateScript': 'Generate Script',
+      'trendcast.generateAudio': 'Generate Audio',
+      'trendcast.generateVideo': 'Generate Video',
+      'trendcast.download': 'Download',
+      'trendcast.useCaption': 'Use Caption (Caption will be displayed on the video)',
+      'trendcast.useSubtitles': 'Use Subtitles (Subtitles will be displayed on the video)',
+      'trendcast.approximateLength': 'Approximate Length of Audio',
+      'trendcast.link': 'Link',
+      'trendcast.caption': 'Caption',
+      'trendcast.options': 'Options',
+      'minutes': 'Minutes',
+      'seconds': 'Seconds',
+      'wordCount': 'Word Count',
+      'approxAudioLength': 'Approx. Audio Length',
+      'generating': 'Generating',
+      'generatingAudio': 'Generating Audio',
+      'generatingVideo': 'Generating Video',
+      'thisCanTakeAMinute': 'This can take a minute',
+      'next': 'Next',
+      'downloaded': 'Downloaded',
+      'createNewTrendcast': 'Create New Trendcast',
+    },
+    de: {
+      'app.title': 'Meine App',
+      'app.greeting': 'Hallo',
+      'app.farewell': 'Auf Wiedersehen',
+      'app.viewAll': 'Alle anzeigen',
+      'menu.editWorkflow': 'Workflow bearbeiten',
+      'menu.workflowSettings': 'Workflow-Einstellungen',
+      'menu.deleteWorkflow': 'Workflow löschen',
+      'menu.deleteConfirm': 'Möchten Sie diesen Workflow wirklich löschen?',
+      'menu.undoDelete': 'Rückgängig machen',
+      'menu.deleteCancelled': 'Löschen abgebrochen',
+      'dashboard.workflows': 'Workflows',
+      'dashboard.newWorkflow': 'Neuer Workflow',
+      'dashboard.recent': 'Kürzlich',
+      'dashboard.all': 'Alle',
+      'dashboard.favorites': 'Favoriten',
+      'dashboard.recentHistory': 'Kürzliche Historie',
+      'dashboard.workflowSettings': 'Workflow Einstellungen',
+      'dashboard.creativityLevel': 'Kreativitätslevel',
+      'dashboard.conservative': 'Konservativ',
+      'dashboard.creative': 'Kreativ',
+      'dashboard.newChatWorkflow': 'Neuer Chat-basierter Workflow',
+      'workflow.trendcast': 'Trendcast',
+      'workflow.trendcastDesc': 'Verwandle Webinhalte in professionelle Videos',
+      'trendcast.uploadLinks': 'Links und Bilder hochladen',
+      'trendcast.scriptSummary': 'Skriptzusammenfassung',
+      'trendcast.audioFile': 'Audiodatei mit individueller Stimme',
+      'trendcast.createVideo': 'Video erstellen',
+      'trendcast.preview': 'Videovorschau',
+      'trendcast.addMoreLinks': 'Weitere Links hinzufügen',
+      'trendcast.generateScript': 'Skript generieren',
+      'trendcast.generateAudio': 'Audio generieren',
+      'trendcast.generateVideo': 'Video generieren',
+      'trendcast.download': 'Herunterladen',
+      'trendcast.useCaption': 'Beschriftung verwenden (Beschriftung wird im Video angezeigt)',
+      'trendcast.useSubtitles': 'Untertitel verwenden (Untertitel werden im Video angezeigt)',
+      'trendcast.approximateLength': 'Ungefähre Länge des Audios',
+      'trendcast.link': 'Link',
+      'trendcast.caption': 'Beschriftung',
+      'trendcast.options': 'Optionen',
+      'minutes': 'Minuten',
+      'seconds': 'Sekunden',
+      'wordCount': 'Wörteranzahl',
+      'approxAudioLength': 'Ungefähre Audiolänge',
+      'generating': 'Generierung',
+      'generatingAudio': 'Audio wird generiert',
+      'generatingVideo': 'Video wird generiert',
+      'thisCanTakeAMinute': 'Dies kann eine Minute dauern',
+      'next': 'Weiter',
+      'downloaded': 'Heruntergeladen',
+      'createNewTrendcast': 'Neuen Trendcast erstellen',
+    }
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, translate }}>
+    <LanguageContext.Provider value={{ language, translate, switchLanguage }}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
-// Custom hook to use the language context
-export const useLanguage = () => useContext(LanguageContext);
+export default LanguageContext;

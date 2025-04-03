@@ -1,11 +1,13 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Home } from 'lucide-react';
+import { ArrowLeft, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import LanguageSelector from '@/components/LanguageSelector';
+import Logo from '@/components/Logo';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 interface TrendcastLayoutProps {
   children: React.ReactNode;
@@ -45,33 +47,41 @@ const TrendcastLayout = ({
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleGoBack}
-            className="hover:bg-gray-100"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <Logo />
+          
+          <div className="text-lg font-medium">Moin Arian</div>
+          
           <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-black hover:text-white"
+              onClick={() => navigate("/history")}
+            >
+              <History className="h-5 w-5" />
+            </Button>
             <LanguageSelector />
+            <ProfileDropdown 
+              name="Moin Arian" 
+              email="moin@example.com"
+            />
           </div>
         </div>
       </header>
 
-      {/* Dashboard button */}
-      <div className="container mx-auto px-4 py-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/dashboard')}
-          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-        >
-          <Home className="h-4 w-4" /> {translate('backToDashboard')}
-        </Button>
-      </div>
-
       <div className="flex-1">
+        {/* Dashboard button */}
+        <div className="container mx-auto px-4 py-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/dashboard')}
+            className="text-blue-600 hover:text-blue-800 flex items-center"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </div>
+
         {/* Steps indicator */}
         <div className="container mx-auto pt-6 pb-4">
           <div className="flex justify-center items-center mb-4 gap-2">

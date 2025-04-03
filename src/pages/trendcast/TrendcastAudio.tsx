@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Play, Pause, Download } from 'lucide-react';
+import { Play, Pause, Download, Volume2, SkipBack, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -18,6 +18,7 @@ const TrendcastAudio = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [generating, setGenerating] = useState(true);
+  const [volume, setVolume] = useState(80);
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -86,6 +87,30 @@ const TrendcastAudio = () => {
       setCurrentTime(value[0]);
     }
   };
+  
+  const handleVolumeChange = (value: number[]) => {
+    if (audioRef.current) {
+      const volumeValue = value[0] / 100;
+      audioRef.current.volume = volumeValue;
+      setVolume(value[0]);
+    }
+  };
+
+  const skipBackward = () => {
+    if (audioRef.current) {
+      const newTime = Math.max(0, currentTime - 10);
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const skipForward = () => {
+    if (audioRef.current) {
+      const newTime = Math.min(duration, currentTime + 10);
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -136,17 +161,39 @@ const TrendcastAudio = () => {
             <audio ref={audioRef} src={audioUrl} preload="metadata" />
           )}
           
-          <div className="bg-gray-100 p-8 rounded-lg flex flex-col items-center">
-            <div className="w-full max-w-md">
-              {/* Waveform visualization (static for demo) */}
-              <div className="w-full h-16 mb-6 bg-contain bg-center bg-no-repeat" 
-                style={{ 
-                  backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gMCw0MCBRIDQwLDEwIDE1MCw0MCBRIDIwMCw2MCAyNTAsMzAgUSAzMDAsNjAgNDAwLDQwIiBzdHJva2U9IiM0MzU4QjYiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==')" 
-                }}
-              ></div>
-
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg shadow-inner flex flex-col items-center">
+            <div className="w-full max-w-xl">
+              {/* Audio visualization */}
+              <div className="relative">
+                <div className="w-full h-24 mb-6 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg overflow-hidden">
+                  {/* Visualization bars - just visual representation */}
+                  <div className="flex items-end justify-between h-full px-2">
+                    {Array.from({ length: 40 }, (_, i) => (
+                      <div 
+                        key={i} 
+                        className="bg-blue-500 opacity-80 w-1.5 rounded-t-sm" 
+                        style={{ 
+                          height: `${20 + Math.sin(i * 0.5) * 60}%`,
+                          opacity: isPlaying ? 0.8 : 0.4,
+                          transition: 'all 0.2s'
+                        }}
+                      ></div>
+                    ))}
+                  </div>
+                  
+                  {/* Playhead position */}
+                  <div 
+                    className="absolute top-0 bottom-0 w-0.5 bg-blue-600" 
+                    style={{ 
+                      left: `${(currentTime / duration) * 100}%`,
+                      display: duration > 0 ? 'block' : 'none'
+                    }}
+                  ></div>
+                </div>
+              </div>
+              
               {/* Player controls */}
-              <div className="w-full space-y-4">
+              <div className="w-full space-y-6">
                 <Slider
                   value={[currentTime]}
                   min={0}
@@ -161,7 +208,17 @@ const TrendcastAudio = () => {
                   <span>{formatTime(duration || 0)}</span>
                 </div>
                 
-                <div className="flex justify-center mt-4">
+                {/* Transport controls */}
+                <div className="flex justify-center gap-4 mt-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full h-10 w-10 text-blue-600"
+                    onClick={skipBackward}
+                  >
+                    <SkipBack className="h-5 w-5" />
+                  </Button>
+                  
                   <Button
                     variant="outline"
                     size="icon"
@@ -174,13 +231,36 @@ const TrendcastAudio = () => {
                       <Play className="h-6 w-6 ml-1" />
                     )}
                   </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full h-10 w-10 text-blue-600"
+                    onClick={skipForward}
+                  >
+                    <SkipForward className="h-5 w-5" />
+                  </Button>
                 </div>
                 
+                {/* Volume control */}
+                <div className="flex items-center gap-3 mt-4">
+                  <Volume2 className="h-4 w-4 text-blue-600" />
+                  <Slider
+                    value={[volume]}
+                    min={0}
+                    max={100}
+                    step={1}
+                    onValueChange={handleVolumeChange}
+                    className="w-32"
+                  />
+                </div>
+                
+                {/* Download button */}
                 <div className="flex justify-center mt-4">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-2 text-blue-600"
+                    className="flex items-center gap-2 text-blue-600 border-blue-600"
                     onClick={handleDownload}
                   >
                     <Download className="h-4 w-4" />

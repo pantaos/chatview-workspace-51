@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -41,7 +41,7 @@ const TrendcastLayout = ({
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -59,9 +59,21 @@ const TrendcastLayout = ({
         </div>
       </header>
 
+      {/* Dashboard button */}
+      <div className="container mx-auto px-4 py-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/dashboard')}
+          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+        >
+          <Home className="h-4 w-4" /> {translate('backToDashboard')}
+        </Button>
+      </div>
+
       <div className="flex-1">
         {/* Steps indicator */}
-        <div className="container mx-auto pt-8 pb-4">
+        <div className="container mx-auto pt-6 pb-4">
           <div className="flex justify-center items-center mb-4 gap-2">
             {[1, 2, 3, 4, 5].map((step) => (
               <React.Fragment key={step}>

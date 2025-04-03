@@ -10,6 +10,7 @@ interface TrendcastButtonProps {
   icon?: React.ReactNode;
   disabled?: boolean;
   loading?: boolean;
+  variant?: 'default' | 'secondary';
 }
 
 const TrendcastButton = ({
@@ -17,7 +18,8 @@ const TrendcastButton = ({
   onClick,
   icon = <ArrowRight className="ml-2 h-4 w-4" />,
   disabled = false,
-  loading = false
+  loading = false,
+  variant = 'default'
 }: TrendcastButtonProps) => {
   const { theme } = useTheme();
   
@@ -25,9 +27,11 @@ const TrendcastButton = ({
     <Button
       onClick={onClick}
       disabled={disabled || loading}
-      className="rounded-full px-6 py-2 text-white flex items-center gap-2 transition-all duration-300"
+      className="rounded-full px-6 py-2 text-white flex items-center gap-2 transition-all duration-300 hover:shadow-md"
       style={{
-        background: `linear-gradient(90deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`,
+        background: variant === 'default' 
+          ? `linear-gradient(90deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`
+          : `linear-gradient(90deg, ${theme.secondaryColor} 0%, ${theme.primaryColor} 100%)`,
       }}
     >
       {loading ? (

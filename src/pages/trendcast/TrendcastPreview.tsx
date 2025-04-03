@@ -1,8 +1,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Download, CheckCircle2 } from 'lucide-react';
+import { Download, CheckCircle2, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import TrendcastLayout from '@/components/trendcast/TrendcastLayout';
@@ -15,6 +16,9 @@ const TrendcastPreview = () => {
   const [loading, setLoading] = useState(true);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [downloadStarted, setDownloadStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -37,6 +41,60 @@ const TrendcastPreview = () => {
 
     return () => clearTimeout(timer);
   }, [location.state, navigate]);
+
+  useEffect(() => {
+    if (videoRef.current && videoUrl) {
+      const video = videoRef.current;
+
+      const updateTime = () => {
+        setCurrentTime(video.currentTime);
+      };
+
+      const handleDurationChange = () => {
+        setDuration(video.duration);
+      };
+
+      const handleEnded = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+        video.currentTime = 0;
+      };
+
+      video.addEventListener('timeupdate', updateTime);
+      video.addEventListener('durationchange', handleDurationChange);
+      video.addEventListener('ended', handleEnded);
+
+      return () => {
+        video.removeEventListener('timeupdate', updateTime);
+        video.removeEventListener('durationchange', handleDurationChange);
+        video.removeEventListener('ended', handleEnded);
+      };
+    }
+  }, [videoUrl]);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeChange = (value: number[]) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = value[0];
+      setCurrentTime(value[0]);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   const handleDownload = () => {
     if (videoUrl) {
@@ -70,16 +128,44 @@ const TrendcastPreview = () => {
           <p className="text-sm text-gray-500 mt-2">{translate('thisCanTakeAMinute')}</p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
           {videoUrl && (
-            <div className="aspect-video bg-black rounded-lg overflow-hidden">
+            <div className="bg-black rounded-lg overflow-hidden shadow-lg">
               <video 
                 ref={videoRef}
                 src={videoUrl} 
-                controls 
-                className="w-full h-full"
+                className="w-full h-full aspect-video"
                 poster="https://via.placeholder.com/640x360?text=Your+Video"
+                onClick={togglePlay}
               />
+              
+              <div className="bg-gray-900 p-4">
+                <Slider
+                  value={[currentTime]}
+                  min={0}
+                  max={duration || 100}
+                  step={0.1}
+                  onValueChange={handleTimeChange}
+                  className="w-full"
+                />
+                
+                <div className="flex justify-between items-center mt-2">
+                  <div className="text-xs text-white">{formatTime(currentTime)} / {formatTime(duration || 0)}</div>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full h-8 w-8 text-white hover:bg-gray-700"
+                    onClick={togglePlay}
+                  >
+                    {isPlaying ? (
+                      <Pause className="h-4 w-4" />
+                    ) : (
+                      <Play className="h-4 w-4 ml-0.5" />
+                    )}
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
           

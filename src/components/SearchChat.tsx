@@ -95,9 +95,9 @@ const SearchChat = ({
           ))}
         </div>
       )}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <Search className="h-5 w-5 text-muted-foreground" />
+      <div className="relative shadow-lg transition-all rounded-2xl hover:shadow-xl">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-5">
+          <Search className="h-6 w-6 text-panta-blue" />
         </div>
         <input
           ref={inputRef}
@@ -106,17 +106,17 @@ const SearchChat = ({
           value={value !== undefined ? value : query}
           onChange={handleQueryChange}
           onFocus={handleFocus}
-          className="ai-chat-input pl-10 pr-24"
+          className="ai-chat-input pl-14 pr-28 py-5 text-lg backdrop-blur-sm bg-white/90 border-2 border-panta-blue/20 focus:border-panta-blue transition-all duration-300 shadow-inner"
         />
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
           <Button
             type="button"
             size="icon"
             variant="ghost"
-            className="h-8 w-8 hover:bg-black hover:text-white"
+            className="h-10 w-10 rounded-full hover:bg-panta-blue hover:text-white transition-all duration-300"
             onClick={() => fileInputRef.current?.click()}
           >
-            <Paperclip className="h-4 w-4" />
+            <Paperclip className="h-5 w-5" />
             <input
               ref={fileInputRef}
               type="file"
@@ -128,10 +128,10 @@ const SearchChat = ({
           <Button 
             type="submit" 
             size="icon"
-            className="h-8 w-8 bg-panta-blue hover:bg-black hover:text-white"
+            className="h-10 w-10 bg-panta-blue rounded-full hover:bg-black hover:text-white transition-all duration-300 shadow-md"
             disabled={!(value || query).trim() && files.length === 0}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         </div>
       </div>

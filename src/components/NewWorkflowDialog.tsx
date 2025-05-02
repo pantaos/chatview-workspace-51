@@ -21,6 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 const iconOptions = [
   { name: "Chat", icon: MessageSquare },
@@ -42,13 +56,19 @@ const colorOptions = [
   { name: "Gray", value: "text-gray-600" },
 ];
 
+interface ConversationStarter {
+  displayText: string;
+  fullPrompt: string;
+  isExpanded?: boolean;
+}
+
 interface WorkflowFormData {
   title: string;
   description: string;
   systemPrompt: string;
   selectedIcon: string;
   iconColor: string;
-  starters: string[];
+  starters: ConversationStarter[];
 }
 
 interface NewWorkflowDialogProps {
@@ -68,9 +88,23 @@ const NewWorkflowDialog = ({
     systemPrompt: "You are a helpful assistant.",
     selectedIcon: "Chat",
     iconColor: "text-gray-600",
-    starters: ["How can I help you today?", "What would you like to know?"],
+    starters: [
+      {
+        displayText: "How can I help you today?",
+        fullPrompt: "How can I help you today?",
+        isExpanded: false
+      },
+      {
+        displayText: "What would you like to know?",
+        fullPrompt: "What would you like to know about this topic? I can provide detailed information.",
+        isExpanded: false
+      },
+    ],
   });
-  const [currentStarter, setCurrentStarter] = useState("");
+
+  const [currentStarterDisplay, setCurrentStarterDisplay] = useState("");
+  const [currentStarterPrompt, setCurrentStarterPrompt] = useState("");
+  const [editingStarterIndex, setEditingStarterIndex] = useState<number | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -88,13 +122,51 @@ const NewWorkflowDialog = ({
   };
 
   const handleAddStarter = () => {
-    if (currentStarter.trim()) {
+    if (currentStarterDisplay.trim()) {
+      const newStarter: ConversationStarter = {
+        displayText: currentStarterDisplay.trim(),
+        fullPrompt: currentStarterPrompt.trim() || currentStarterDisplay.trim(),
+        isExpanded: false
+      };
+      
       setFormData((prev) => ({
         ...prev,
-        starters: [...prev.starters, currentStarter.trim()],
+        starters: [...prev.starters, newStarter],
       }));
-      setCurrentStarter("");
+      
+      setCurrentStarterDisplay("");
+      setCurrentStarterPrompt("");
     }
+  };
+
+  const handleUpdateStarter = () => {
+    if (editingStarterIndex !== null && currentStarterDisplay.trim()) {
+      setFormData((prev) => {
+        const updatedStarters = [...prev.starters];
+        updatedStarters[editingStarterIndex] = {
+          displayText: currentStarterDisplay.trim(),
+          fullPrompt: currentStarterPrompt.trim() || currentStarterDisplay.trim(),
+          isExpanded: updatedStarters[editingStarterIndex].isExpanded
+        };
+        return { ...prev, starters: updatedStarters };
+      });
+      
+      setCurrentStarterDisplay("");
+      setCurrentStarterPrompt("");
+      setEditingStarterIndex(null);
+    }
+  };
+
+  const handleEditStarter = (index: number) => {
+    setCurrentStarterDisplay(formData.starters[index].displayText);
+    setCurrentStarterPrompt(formData.starters[index].fullPrompt);
+    setEditingStarterIndex(index);
+  };
+
+  const handleCancelEdit = () => {
+    setCurrentStarterDisplay("");
+    setCurrentStarterPrompt("");
+    setEditingStarterIndex(null);
   };
 
   const handleRemoveStarter = (index: number) => {
@@ -102,6 +174,17 @@ const NewWorkflowDialog = ({
       ...prev,
       starters: prev.starters.filter((_, i) => i !== index),
     }));
+  };
+
+  const toggleStarterExpanded = (index: number) => {
+    setFormData((prev) => {
+      const updatedStarters = [...prev.starters];
+      updatedStarters[index] = {
+        ...updatedStarters[index],
+        isExpanded: !updatedStarters[index].isExpanded
+      };
+      return { ...prev, starters: updatedStarters };
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -218,38 +301,124 @@ const NewWorkflowDialog = ({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="starters">Conversation Starters</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="starter-input"
-                  value={currentStarter}
-                  onChange={(e) => setCurrentStarter(e.target.value)}
-                  placeholder="Add a conversation starter"
-                  className="flex-1"
-                />
-                <Button type="button" onClick={handleAddStarter}>
-                  Add
-                </Button>
-              </div>
-              <div className="mt-2 space-y-2">
-                {formData.starters.map((starter, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between rounded-md border border-input bg-background p-2"
-                  >
-                    <span className="text-sm truncate flex-1">{starter}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveStarter(index)}
-                      className="h-8 w-8 p-0"
-                    >
-                      &times;
-                    </Button>
+              <Label>Conversation Starters</Label>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Add Conversation Starter</CardTitle>
+                  <CardDescription>
+                    Create conversation starters with display text and detailed prompts
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="display-text">Display Text</Label>
+                      <Input
+                        id="display-text"
+                        value={currentStarterDisplay}
+                        onChange={(e) => setCurrentStarterDisplay(e.target.value)}
+                        placeholder="Short text shown to users"
+                        className="mt-1.5"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="full-prompt">Full Prompt (optional)</Label>
+                      <Textarea
+                        id="full-prompt"
+                        value={currentStarterPrompt}
+                        onChange={(e) => setCurrentStarterPrompt(e.target.value)}
+                        placeholder="Detailed prompt sent to AI (defaults to display text if left empty)"
+                        className="min-h-[80px] mt-1.5"
+                      />
+                    </div>
                   </div>
-                ))}
-              </div>
+                </CardContent>
+                <CardFooter>
+                  {editingStarterIndex !== null ? (
+                    <div className="flex gap-2">
+                      <Button type="button" onClick={handleUpdateStarter}>
+                        Update
+                      </Button>
+                      <Button type="button" variant="outline" onClick={handleCancelEdit}>
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button type="button" onClick={handleAddStarter} disabled={!currentStarterDisplay.trim()}>
+                      Add Starter
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+
+              {formData.starters.length > 0 && (
+                <div className="border rounded-lg mt-4">
+                  <div className="p-3 bg-gray-50 border-b rounded-t-lg">
+                    <h3 className="font-medium">Conversation Starters</h3>
+                  </div>
+                  <div className="divide-y">
+                    {formData.starters.map((starter, index) => (
+                      <Collapsible 
+                        key={index} 
+                        open={starter.isExpanded} 
+                        onOpenChange={() => toggleStarterExpanded(index)}
+                        className="px-4 py-3"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 font-medium text-sm truncate pr-2">
+                            {starter.displayText}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button 
+                              type="button" 
+                              size="sm" 
+                              variant="ghost" 
+                              className="h-8 w-8 p-0"
+                              onClick={() => handleEditStarter(index)}
+                            >
+                              <span className="sr-only">Edit</span>
+                              <Code className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              type="button"
+                              size="sm" 
+                              variant="ghost" 
+                              className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+                              onClick={() => handleRemoveStarter(index)}
+                            >
+                              <span className="sr-only">Remove</span>
+                              <X className="h-4 w-4" />
+                            </Button>
+                            <CollapsibleTrigger asChild>
+                              <Button 
+                                type="button" 
+                                size="sm" 
+                                variant="ghost" 
+                                className="h-8 w-8 p-0"
+                              >
+                                <span className="sr-only">Toggle</span>
+                                {starter.isExpanded ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                          </div>
+                        </div>
+                        <CollapsibleContent className="mt-2 pt-2 border-t">
+                          <div className="text-sm">
+                            <Label className="text-xs text-gray-500 mb-1 block">Full Prompt:</Label>
+                            <div className="bg-gray-50 p-2 rounded text-gray-700 whitespace-pre-wrap">
+                              {starter.fullPrompt}
+                            </div>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

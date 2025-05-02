@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -157,7 +158,8 @@ const Index = () => {
       id: "chat",
       title: "Chat Assistant",
       description: "General purpose AI chat assistant",
-      icon: MessageSquare
+      icon: MessageSquare,
+      type: "chat"
     });
     setShowChat(true);
   };
@@ -294,7 +296,7 @@ const Index = () => {
                   </TabsList>
                   
                   <TabsContent value="all" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                       {availableWorkflows.map((workflow) => (
                         <WorkflowCard
                           key={workflow.id}
@@ -310,7 +312,7 @@ const Index = () => {
                   </TabsContent>
                   
                   <TabsContent value="recent" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                       {workflows.slice(0, 3).map((workflow) => (
                         <WorkflowCard
                           key={workflow.id}
@@ -325,7 +327,7 @@ const Index = () => {
                   </TabsContent>
                   
                   <TabsContent value="favorites" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                       {workflows.slice(0, 2).map((workflow) => (
                         <WorkflowCard
                           key={workflow.id}
@@ -396,7 +398,8 @@ const Index = () => {
                           id: item.id,
                           title: item.workflowType,
                           description: item.title,
-                          icon: item.icon
+                          icon: item.icon,
+                          type: "chat"
                         });
                         setShowChat(true);
                       }}

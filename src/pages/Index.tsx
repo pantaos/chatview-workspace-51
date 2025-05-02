@@ -256,7 +256,7 @@ const Index = () => {
           </header>
           
           <div className="py-12" style={{ 
-            background: `linear-gradient(135deg, #e0f7ff 0%, #1a75c1 100%)`,
+            background: `linear-gradient(135deg, #2a5b8a 0%, #0f3153 100%)`,
           }}>
             <div className="container mx-auto px-4">
               <section className="mb-16">
@@ -381,9 +381,6 @@ const Index = () => {
                       <TabsTrigger value="all">
                         {translate('dashboard.all')}
                       </TabsTrigger>
-                      <TabsTrigger value="recent">
-                        {translate('dashboard.recent')}
-                      </TabsTrigger>
                       <TabsTrigger value="favorites">
                         {translate('dashboard.favorites')}
                       </TabsTrigger>
@@ -408,36 +405,6 @@ const Index = () => {
                           workflowType={item.workflowType}
                           timestamp={item.timestamp}
                           icon={item.icon}
-                          status={item.status}
-                          isFavorite={item.isFavorite}
-                          onClick={() => {
-                            console.log(`History item clicked: ${item.id}`);
-                            setCurrentWorkflow({
-                              id: item.id,
-                              title: item.workflowType,
-                              description: item.title,
-                              icon: item.icon,
-                              type: "chat"
-                            });
-                            setShowChat(true);
-                          }}
-                          onFavoriteToggle={() => toggleFavorite(item.id)}
-                          onRename={(newName) => renameHistoryItem(item.id, newName)}
-                        />
-                      ))}
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="recent" className="mt-4">
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                      {historyData.slice(0, 2).map((item) => (
-                        <HistoryItem
-                          key={item.id}
-                          title={item.title}
-                          workflowType={item.workflowType}
-                          timestamp={item.timestamp}
-                          icon={item.icon}
-                          status={item.status}
                           isFavorite={item.isFavorite}
                           onClick={() => {
                             console.log(`History item clicked: ${item.id}`);
@@ -466,7 +433,6 @@ const Index = () => {
                           workflowType={item.workflowType}
                           timestamp={item.timestamp}
                           icon={item.icon}
-                          status={item.status}
                           isFavorite={item.isFavorite}
                           onClick={() => {
                             console.log(`History item clicked: ${item.id}`);

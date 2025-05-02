@@ -23,7 +23,6 @@ interface HistoryItemType {
   workflowType: string;
   timestamp: Date;
   icon: LucideIcon;
-  status: "completed" | "failed" | "processing";
   isFavorite: boolean;
 }
 
@@ -34,7 +33,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Document Helper",
     timestamp: new Date(Date.now() - 1000 * 60 * 30),
     icon: FileText,
-    status: "completed",
     isFavorite: false
   },
   {
@@ -43,7 +41,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Image Creator",
     timestamp: new Date(Date.now() - 1000 * 60 * 120),
     icon: Image,
-    status: "completed",
     isFavorite: true
   },
   {
@@ -52,7 +49,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Code Helper",
     timestamp: new Date(Date.now() - 1000 * 60 * 240),
     icon: Code,
-    status: "failed",
     isFavorite: false
   },
   {
@@ -61,7 +57,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Chat Assistant",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
     icon: MessageSquare,
-    status: "completed",
     isFavorite: false
   },
   // Additional history items
@@ -71,7 +66,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Document Helper",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48),
     icon: FileText,
-    status: "completed",
     isFavorite: true
   },
   {
@@ -80,7 +74,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Code Helper",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72),
     icon: Code,
-    status: "completed",
     isFavorite: false
   },
   {
@@ -89,7 +82,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Image Creator",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 96),
     icon: Image,
-    status: "completed",
     isFavorite: true
   },
   {
@@ -98,7 +90,6 @@ const historyItems: HistoryItemType[] = [
     workflowType: "Chat Assistant",
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 120),
     icon: MessageSquare,
-    status: "processing",
     isFavorite: false
   }
 ];
@@ -133,11 +124,6 @@ const History = () => {
   const filteredHistory = historyData.filter(item => {
     if (activeTab === "all") return true;
     if (activeTab === "favorites") return item.isFavorite;
-    if (activeTab === "recent") {
-      // Show items from the last 24 hours
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      return item.timestamp > oneDayAgo;
-    }
     return true;
   });
 
@@ -174,9 +160,6 @@ const History = () => {
             <TabsTrigger value="all">
               {translate('dashboard.all') || 'All'}
             </TabsTrigger>
-            <TabsTrigger value="recent">
-              {translate('dashboard.recent') || 'Recent'}
-            </TabsTrigger>
             <TabsTrigger value="favorites">
               {translate('dashboard.favorites') || 'Favorites'}
             </TabsTrigger>
@@ -196,36 +179,6 @@ const History = () => {
                     workflowType={item.workflowType}
                     timestamp={item.timestamp}
                     icon={item.icon}
-                    status={item.status}
-                    isFavorite={item.isFavorite}
-                    onClick={() => {
-                      console.log(`History item clicked: ${item.id}`);
-                      navigate('/chat');
-                    }}
-                    onFavoriteToggle={() => toggleFavorite(item.id)}
-                    onRename={(newName) => renameHistoryItem(item.id, newName)}
-                    onDelete={() => deleteHistoryItem(item.id)}
-                  />
-                ))
-              )}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="recent" className="animate-fade-in">
-            <div className="bg-white rounded-lg shadow-sm border">
-              {filteredHistory.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <p>No recent history items found</p>
-                </div>
-              ) : (
-                filteredHistory.map((item) => (
-                  <HistoryItem
-                    key={item.id}
-                    title={item.title}
-                    workflowType={item.workflowType}
-                    timestamp={item.timestamp}
-                    icon={item.icon}
-                    status={item.status}
                     isFavorite={item.isFavorite}
                     onClick={() => {
                       console.log(`History item clicked: ${item.id}`);
@@ -254,7 +207,6 @@ const History = () => {
                     workflowType={item.workflowType}
                     timestamp={item.timestamp}
                     icon={item.icon}
-                    status={item.status}
                     isFavorite={item.isFavorite}
                     onClick={() => {
                       console.log(`History item clicked: ${item.id}`);

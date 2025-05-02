@@ -74,7 +74,7 @@ const WorkflowCard = ({
         />
       </div>
       
-      <div className="workflow-icon bg-gray-100 p-4 rounded-full mb-3 group-hover:bg-black group-hover:text-white transition-colors duration-200">
+      <div className="workflow-icon bg-gray-200 p-4 rounded-full mb-3 group-hover:bg-black group-hover:text-white transition-colors duration-200">
         <Icon className={cn("h-6 w-6", color, "group-hover:text-white")} />
       </div>
       <h3 className="font-medium text-sm text-center group-hover:text-black mb-1">{displayTitle}</h3>

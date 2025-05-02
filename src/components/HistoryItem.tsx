@@ -31,7 +31,6 @@ const HistoryItem = ({
   workflowType,
   timestamp, 
   icon: Icon,
-  status = "completed",
   isFavorite = false,
   className,
   onClick,
@@ -41,12 +40,6 @@ const HistoryItem = ({
 }: HistoryItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
-  
-  const statusColors = {
-    completed: "text-green-500",
-    processing: "text-amber-500",
-    failed: "text-red-500"
-  };
 
   const handleRename = () => {
     onRename(newTitle);
@@ -97,12 +90,6 @@ const HistoryItem = ({
       </div>
       
       <div className="flex items-center">
-        <div className={cn("text-xs font-medium mr-2", statusColors[status])}>
-          {status === "completed" && "Completed"}
-          {status === "processing" && "Processing"}
-          {status === "failed" && "Failed"}
-        </div>
-        
         <Button
           variant="ghost"
           size="sm"

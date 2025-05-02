@@ -68,7 +68,7 @@
   }
   
   .workflow-icon {
-    @apply flex items-center justify-center w-14 h-14 mb-2 rounded-full bg-gray-100 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
+    @apply flex items-center justify-center w-14 h-14 mb-2 rounded-full bg-gray-200 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
   }
   
   .history-item {

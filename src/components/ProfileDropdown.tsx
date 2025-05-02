@@ -28,17 +28,17 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
-        <Avatar className="cursor-pointer border-2 border-transparent hover:border-ai-purple-400 transition-all">
+        <Avatar className="cursor-pointer border-2 border-transparent hover:border-primary transition-all h-9 w-9">
           {avatarUrl ? (
             <AvatarImage src={avatarUrl} alt={name} className="object-cover" />
           ) : (
-            <AvatarFallback className="bg-ai-purple-100 text-ai-purple-600">
+            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
               {initials}
             </AvatarFallback>
           )}
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56 mt-1">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{name}</p>
@@ -47,7 +47,7 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem 
-          className="cursor-pointer hover:bg-black hover:text-white"
+          className="cursor-pointer hover:bg-black hover:text-white transition-colors"
           onClick={() => {
             console.log("Dashboard clicked");
             navigate('/dashboard');
@@ -57,21 +57,21 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
           <span>Dashboard</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          className="cursor-pointer hover:bg-black hover:text-white"
+          className="cursor-pointer hover:bg-black hover:text-white transition-colors"
           onClick={() => navigate('/profile')}
         >
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          className="cursor-pointer hover:bg-black hover:text-white"
+          className="cursor-pointer hover:bg-black hover:text-white transition-colors"
           onClick={() => navigate('/settings')}
         >
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer text-red-500 focus:text-white hover:bg-black hover:text-white">
+        <DropdownMenuItem className="cursor-pointer text-red-500 focus:text-white hover:bg-black hover:text-white transition-colors">
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

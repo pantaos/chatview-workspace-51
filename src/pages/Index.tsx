@@ -9,25 +9,21 @@ import {
   Plus, 
   Video,
   SlidersHorizontal,
-  History,
   LucideIcon,
   Rss
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProfileDropdown from "@/components/ProfileDropdown";
 import SearchChat from "@/components/SearchChat";
 import WorkflowCard from "@/components/WorkflowCard";
 import HistoryItem from "@/components/HistoryItem";
-import Logo from "@/components/Logo";
 import ChatInterface from "@/components/ChatInterface";
 import { Slider } from "@/components/ui/slider";
 import NewWorkflowDialog from "@/components/NewWorkflowDialog";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSelector from "@/components/LanguageSelector";
+import ModernNavbar from "@/components/ModernNavbar";
 
 interface Workflow {
   id: string;
@@ -141,7 +137,6 @@ const historyItems = [
 
 const Index = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const { translate } = useLanguage();
   const [activeTab, setActiveTab] = useState("all");
   const [showChat, setShowChat] = useState(false);
@@ -233,30 +228,10 @@ const Index = () => {
         />
       ) : (
         <>
-          <header className="bg-white shadow-sm">
-            <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-              <Logo />
-              
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-black hover:text-white"
-                  onClick={() => navigate("/history")}
-                >
-                  <History className="h-5 w-5" />
-                </Button>
-                <LanguageSelector />
-                <ProfileDropdown 
-                  name="Moin Arian" 
-                  email="moin@example.com"
-                />
-              </div>
-            </div>
-          </header>
+          <ModernNavbar />
           
           <div className="py-12" style={{ 
-            background: `linear-gradient(135deg, #2a5b8a 0%, #0f3153 100%)`,
+            background: `linear-gradient(135deg, #163962 0%, #061a2c 100%)`,
           }}>
             <div className="container mx-auto px-4">
               <section className="mb-16">
@@ -265,7 +240,8 @@ const Index = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onSubmit={handleSearchSubmit}
                   disableNavigation={true}
-                  title={translate('dashboard.howCanIHelp') || "How can I help you?"}
+                  title="How can I help you?"
+                  placeholder="Start a conversation"
                 />
               </section>
               

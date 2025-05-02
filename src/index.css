@@ -68,7 +68,7 @@
   }
   
   .workflow-icon {
-    @apply flex items-center justify-center w-14 h-14 mb-2 rounded-full bg-gray-200 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
+    @apply flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-gray-300 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
   }
   
   .history-item {
@@ -102,5 +102,19 @@
   .filters-with-button {
     @apply flex justify-between items-center;
     padding-right: 0.5rem;
+  }
+  
+  /* Modern navbar styles */
+  .navbar-glass {
+    @apply backdrop-blur-md bg-white/75;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  
+  .navbar-item {
+    @apply relative flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-black rounded-md transition-all;
+  }
+  
+  .navbar-item-active {
+    @apply text-primary before:absolute before:bottom-0 before:left-0 before:h-0.5 before:w-full before:bg-primary;
   }
 }

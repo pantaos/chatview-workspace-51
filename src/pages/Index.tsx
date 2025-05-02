@@ -272,7 +272,7 @@ const Index = () => {
               <section className="mb-10">
                 <h2 className="text-xl font-medium text-white mb-6">{translate('dashboard.workflows')}</h2>
                 
-                <div className="mb-6 flex flex-col">
+                <div className="mb-8 flex flex-col">
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <div className="filters-with-button">
                       <TabsList className="bg-white/20 backdrop-blur-sm">
@@ -297,7 +297,7 @@ const Index = () => {
                       </Button>
                     </div>
                     
-                    <TabsContent value="all" className="animate-fade-in">
+                    <TabsContent value="all" className="animate-fade-in mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {availableWorkflows.map((workflow) => (
                           <WorkflowCard
@@ -313,7 +313,7 @@ const Index = () => {
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="recent" className="animate-fade-in">
+                    <TabsContent value="recent" className="animate-fade-in mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {workflows.slice(0, 3).map((workflow) => (
                           <WorkflowCard
@@ -328,7 +328,7 @@ const Index = () => {
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="favorites" className="animate-fade-in">
+                    <TabsContent value="favorites" className="animate-fade-in mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
                         {workflows.slice(0, 2).map((workflow) => (
                           <WorkflowCard
@@ -399,7 +399,7 @@ const Index = () => {
                     </Button>
                   </div>
                   
-                  <TabsContent value="all">
+                  <TabsContent value="all" className="mt-4">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                       {historyData.map((item) => (
                         <HistoryItem
@@ -428,7 +428,7 @@ const Index = () => {
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="recent">
+                  <TabsContent value="recent" className="mt-4">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                       {historyData.slice(0, 2).map((item) => (
                         <HistoryItem
@@ -457,7 +457,7 @@ const Index = () => {
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="favorites">
+                  <TabsContent value="favorites" className="mt-4">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                       {historyData.filter(item => item.isFavorite).map((item) => (
                         <HistoryItem

@@ -64,11 +64,11 @@
 
 @layer components {
   .workflow-card {
-    @apply relative flex flex-col items-center justify-center p-4 bg-white border rounded-xl transition-all duration-200 hover:shadow-md hover:border-black;
+    @apply relative flex flex-col items-center justify-center p-3 bg-white border rounded-xl transition-all duration-200 hover:shadow-md hover:border-black;
   }
   
   .workflow-icon {
-    @apply flex items-center justify-center w-16 h-16 mb-3 rounded-xl bg-accent text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
+    @apply flex items-center justify-center w-14 h-14 mb-2 rounded-full bg-gray-100 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
   }
   
   .history-item {

@@ -255,24 +255,24 @@ const Index = () => {
             </div>
           </header>
           
-          <div className="py-8" style={{ 
-            background: `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`,
+          <div className="py-12" style={{ 
+            background: `linear-gradient(135deg, #e0f7ff 0%, #1a75c1 100%)`,
           }}>
             <div className="container mx-auto px-4">
-              <section className="mb-10">
+              <section className="mb-16">
                 <SearchChat 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onSubmit={handleSearchSubmit}
                   disableNavigation={true}
-                  title={translate('dashboard.howCanIHelp') || "How can I help you today?"}
+                  title={translate('dashboard.howCanIHelp') || "How can I help you?"}
                 />
               </section>
               
               <section className="mb-10">
-                <h2 className="text-xl font-medium text-white mb-6">{translate('dashboard.workflows')}</h2>
+                <h2 className="text-xl font-medium text-white mb-8">{translate('dashboard.workflows')}</h2>
                 
-                <div className="mb-8 flex flex-col">
+                <div className="mb-10 flex flex-col">
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <div className="filters-with-button">
                       <TabsList className="bg-white/20 backdrop-blur-sm">
@@ -289,7 +289,7 @@ const Index = () => {
                       
                       <Button 
                         variant="outline" 
-                        className="gap-1 hover:bg-black hover:text-white bg-white/20 backdrop-blur-sm text-white border-white/30"
+                        className="gap-1 hover:bg-black hover:text-white bg-white/20 backdrop-blur-sm text-white border-white/30 ml-6"
                         onClick={() => setShowNewWorkflowDialog(true)}
                       >
                         <Plus className="h-4 w-4" />
@@ -297,8 +297,8 @@ const Index = () => {
                       </Button>
                     </div>
                     
-                    <TabsContent value="all" className="animate-fade-in mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                    <TabsContent value="all" className="animate-fade-in mt-8">
+                      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
                         {availableWorkflows.map((workflow) => (
                           <WorkflowCard
                             key={workflow.id}

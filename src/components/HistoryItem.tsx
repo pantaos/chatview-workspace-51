@@ -1,5 +1,5 @@
 
-import { LucideIcon, MoreHorizontal, Star, StarOff, Edit } from "lucide-react";
+import { LucideIcon, MoreHorizontal, Heart, Edit, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
@@ -23,6 +23,7 @@ interface HistoryItemProps {
   onClick?: () => void;
   onFavoriteToggle?: () => void;
   onRename?: (newName: string) => void;
+  onDelete?: () => void;
 }
 
 const HistoryItem = ({ 
@@ -35,7 +36,8 @@ const HistoryItem = ({
   className,
   onClick,
   onFavoriteToggle = () => {},
-  onRename = () => {}
+  onRename = () => {},
+  onDelete = () => {}
 }: HistoryItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
@@ -53,7 +55,7 @@ const HistoryItem = ({
 
   return (
     <div 
-      className={cn("history-item", className)}
+      className={cn("history-item p-3 border-b hover:bg-gray-50 flex items-center", className)}
     >
       <div className={cn("flex items-center justify-center w-8 h-8 rounded-full bg-panta-blue-100 mr-3")}>
         <Icon className="h-4 w-4 text-panta-blue" />
@@ -101,6 +103,20 @@ const HistoryItem = ({
           {status === "failed" && "Failed"}
         </div>
         
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 p-0 mr-1"
+          onClick={onFavoriteToggle}
+        >
+          <Heart 
+            className={cn(
+              "h-4 w-4 transition-colors", 
+              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"
+            )} 
+          />
+        </Button>
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -113,17 +129,15 @@ const HistoryItem = ({
               Rename
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onFavoriteToggle}>
-              {isFavorite ? (
-                <>
-                  <StarOff className="mr-2 h-4 w-4" />
-                  Remove from favorites
-                </>
-              ) : (
-                <>
-                  <Star className="mr-2 h-4 w-4" />
-                  Add to favorites
-                </>
-              )}
+              <Heart className={cn("mr-2 h-4 w-4", isFavorite ? "fill-red-500 text-red-500" : "")} />
+              {isFavorite ? "Remove from favorites" : "Add to favorites"}
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={onDelete}
+              className="text-red-500 focus:text-red-500 focus:bg-red-50"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

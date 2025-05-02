@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -105,7 +104,6 @@ const historyItems: HistoryItemType[] = [
 
 const History = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
   const [historyData, setHistoryData] = useState<HistoryItemType[]>(historyItems);
   
   const toggleFavorite = (id: string) => {
@@ -124,10 +122,9 @@ const History = () => {
     );
   };
 
-  const filteredHistory = historyData.filter(item => 
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.workflowType.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const deleteHistoryItem = (id: string) => {
+    setHistoryData(prev => prev.filter(item => item.id !== id));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -155,24 +152,15 @@ const History = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold">Chat History</h1>
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search history..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
         </div>
         
         <div className="bg-white rounded-lg shadow-sm border">
-          {filteredHistory.length === 0 ? (
+          {historyData.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>No history items found</p>
             </div>
           ) : (
-            filteredHistory.map((item) => (
+            historyData.map((item) => (
               <HistoryItem
                 key={item.id}
                 title={item.title}
@@ -187,6 +175,7 @@ const History = () => {
                 }}
                 onFavoriteToggle={() => toggleFavorite(item.id)}
                 onRename={(newName) => renameHistoryItem(item.id, newName)}
+                onDelete={() => deleteHistoryItem(item.id)}
               />
             ))
           )}

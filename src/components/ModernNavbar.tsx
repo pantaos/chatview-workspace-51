@@ -1,10 +1,9 @@
 
 import React from "react";
-import { History, UserRound } from "lucide-react";
+import { History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import ProfileDropdown from "@/components/ProfileDropdown";
-import LanguageSelector from "@/components/LanguageSelector";
 import { cn } from "@/lib/utils";
 
 interface ModernNavbarProps {
@@ -20,42 +19,19 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
         <div className="flex h-16 items-center justify-between">
           <Logo />
           
-          <div className="flex items-center space-x-5">
-            <div className="hidden md:flex items-center space-x-6">
-              <nav className="flex items-center space-x-6">
-                <button 
-                  onClick={() => navigate('/dashboard')}
-                  className="text-sm font-medium text-gray-700 hover:text-black transition-colors"
-                >
-                  Dashboard
-                </button>
-                <button 
-                  onClick={() => navigate('/trendcast')}
-                  className="text-sm font-medium text-gray-700 hover:text-black transition-colors"
-                >
-                  Trendcast
-                </button>
-              </nav>
-            </div>
+          <div className="flex items-center space-x-4">
+            <button
+              className="rounded-full p-2 hover:bg-gray-100 transition-colors"
+              onClick={() => navigate("/history")}
+              title="History"
+            >
+              <History className="h-5 w-5 text-gray-600" />
+            </button>
             
-            <div className="flex items-center space-x-4">
-              <button
-                className="rounded-full p-2 hover:bg-gray-100 transition-colors"
-                onClick={() => navigate("/history")}
-                title="History"
-              >
-                <History className="h-5 w-5 text-gray-600" />
-              </button>
-              
-              <div className="hidden sm:flex">
-                <LanguageSelector />
-              </div>
-              
-              <ProfileDropdown 
-                name="Moin Arian" 
-                email="moin@example.com"
-              />
-            </div>
+            <ProfileDropdown 
+              name="Moin Arian" 
+              email="moin@example.com"
+            />
           </div>
         </div>
       </div>

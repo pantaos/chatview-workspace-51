@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import { Search, UploadCloud } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, UploadCloud, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SearchChatProps {
@@ -12,6 +11,7 @@ interface SearchChatProps {
   title?: string;
   className?: string;
   placeholder?: string;
+  autoFocus?: boolean;
 }
 
 const SearchChat = ({
@@ -21,7 +21,8 @@ const SearchChat = ({
   disableNavigation = false,
   title = "Search or ask a question",
   className,
-  placeholder = "Type your question here..."
+  placeholder = "Type your question here...",
+  autoFocus = false
 }: SearchChatProps) => {
   const [files, setFiles] = useState<File[]>([]);
   
@@ -54,6 +55,7 @@ const SearchChat = ({
               onChange={onChange}
               className="ai-chat-input py-3 flex-1 bg-transparent outline-none text-sm"
               autoComplete="off"
+              autoFocus={autoFocus}
             />
           </div>
           
@@ -68,13 +70,13 @@ const SearchChat = ({
               />
             </label>
             
-            <Button 
+            <button 
               type="submit" 
-              className="rounded-full ml-1 mr-1 bg-black text-white hover:bg-gray-800"
+              className="p-2 rounded-full mr-1 text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!value.trim() && files.length === 0}
             >
-              Ask
-            </Button>
+              <ArrowRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
         

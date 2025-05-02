@@ -231,7 +231,7 @@ const Index = () => {
           <ModernNavbar />
           
           <div className="py-12" style={{ 
-            background: `linear-gradient(135deg, #163962 0%, #061a2c 100%)`,
+            background: `linear-gradient(135deg, #0EA5E9 0%, #0A2E50 100%)`,
           }}>
             <div className="container mx-auto px-4">
               <section className="mb-16">

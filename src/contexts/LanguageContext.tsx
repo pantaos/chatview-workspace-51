@@ -1,153 +1,95 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-type Language = "en" | "de";
+export type LanguageType = "en" | "de" | "fr" | "es";
 
-interface LanguageContextType {
-  language: Language;
+export interface LanguageContextType {
+  language: LanguageType;
+  changeLanguage: (lang: LanguageType) => void;
   translate: (key: string) => string;
-  switchLanguage: (lang: Language) => void;
 }
+
+// Translations map
+const translations: Record<LanguageType, Record<string, string>> = {
+  en: {
+    "app.viewAll": "View All",
+    "dashboard.all": "All",
+    "dashboard.recent": "Recent",
+    "dashboard.favorites": "Favorites",
+    "dashboard.workflows": "Workflows",
+    "dashboard.recentHistory": "Recent History",
+    "dashboard.workflowSettings": "Workflow Settings",
+    "dashboard.creativityLevel": "Adjust the creativity level of your responses",
+    "dashboard.conservative": "Conservative",
+    "dashboard.creative": "Creative",
+    "dashboard.newChatWorkflow": "New Workflow",
+    // ... other translations
+  },
+  de: {
+    "app.viewAll": "Alle anzeigen",
+    "dashboard.all": "Alle",
+    "dashboard.recent": "Kürzlich",
+    "dashboard.favorites": "Favoriten",
+    "dashboard.workflows": "Arbeitsabläufe",
+    "dashboard.recentHistory": "Kürzliche Aktivitäten",
+    "dashboard.workflowSettings": "Arbeitsablauf-Einstellungen",
+    "dashboard.creativityLevel": "Passen Sie den Kreativitätsgrad Ihrer Antworten an",
+    "dashboard.conservative": "Konservativ",
+    "dashboard.creative": "Kreativ",
+    "dashboard.newChatWorkflow": "Neuer Arbeitsablauf",
+    // ... other translations
+  },
+  fr: {
+    "app.viewAll": "Voir tout",
+    "dashboard.all": "Tous",
+    "dashboard.recent": "Récents",
+    "dashboard.favorites": "Favoris",
+    "dashboard.workflows": "Workflows",
+    "dashboard.recentHistory": "Historique récent",
+    "dashboard.workflowSettings": "Paramètres du workflow",
+    "dashboard.creativityLevel": "Ajustez le niveau de créativité de vos réponses",
+    "dashboard.conservative": "Conservateur",
+    "dashboard.creative": "Créatif",
+    "dashboard.newChatWorkflow": "Nouveau Workflow",
+    // ... other translations
+  },
+  es: {
+    "app.viewAll": "Ver todo",
+    "dashboard.all": "Todos",
+    "dashboard.recent": "Recientes",
+    "dashboard.favorites": "Favoritos",
+    "dashboard.workflows": "Flujos de trabajo",
+    "dashboard.recentHistory": "Historial reciente",
+    "dashboard.workflowSettings": "Configuración del flujo de trabajo",
+    "dashboard.creativityLevel": "Ajuste el nivel de creatividad de sus respuestas",
+    "dashboard.conservative": "Conservador",
+    "dashboard.creative": "Creativo",
+    "dashboard.newChatWorkflow": "Nuevo flujo de trabajo",
+    // ... other translations
+  }
+};
 
 const LanguageContext = createContext<LanguageContextType>({
   language: "en",
-  translate: (key: string) => key,
-  switchLanguage: () => {}
+  changeLanguage: () => {},
+  translate: () => ""
 });
 
 export const useLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>((localStorage.getItem('language') as Language) || 'en');
+  const [language, setLanguage] = useState<LanguageType>("en");
 
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
-
-  const translate = (key: string) => {
-    return translationMap[language][key] || translationMap["en"][key] || key;
-  };
-
-  const switchLanguage = (lang: Language) => {
+  const changeLanguage = (lang: LanguageType) => {
     setLanguage(lang);
-    localStorage.setItem('language', lang);
   };
 
-  const handleLanguageSwitch = (lang: Language) => {
-    switchLanguage(lang);
-  };
-
-  const translationMap: Record<Language, Record<string, string>> = {
-    en: {
-      'app.title': 'My App',
-      'app.greeting': 'Hello',
-      'app.farewell': 'Goodbye',
-      'app.viewAll': 'View All',
-      'menu.editWorkflow': 'Edit Workflow',
-      'menu.workflowSettings': 'Workflow Settings',
-      'menu.deleteWorkflow': 'Delete Workflow',
-      'menu.deleteConfirm': 'Are you sure you want to delete this workflow?',
-      'menu.undoDelete': 'Undo',
-      'menu.deleteCancelled': 'Delete cancelled',
-      'dashboard.workflows': 'Workflows',
-      'dashboard.newWorkflow': 'New Workflow',
-      'dashboard.recent': 'Recent',
-      'dashboard.all': 'All',
-      'dashboard.favorites': 'Favorites',
-      'dashboard.recentHistory': 'Recent History',
-      'dashboard.workflowSettings': 'Workflow Settings',
-      'dashboard.creativityLevel': 'Creativity Level',
-      'dashboard.conservative': 'Conservative',
-      'dashboard.creative': 'Creative',
-      'dashboard.newChatWorkflow': 'New Chat-based Workflow',
-      'workflow.trendcast': 'Trendcast',
-      'workflow.trendcastDesc': 'Turn website content into professional videos',
-      'trendcast.uploadLinks': 'Upload Links and Images',
-      'trendcast.scriptSummary': 'Script Summary',
-      'trendcast.audioFile': 'Audio File with Custom Voice',
-      'trendcast.createVideo': 'Create Video',
-      'trendcast.preview': 'Preview Video',
-      'trendcast.addMoreLinks': 'Add More Links',
-      'trendcast.generateScript': 'Generate Script',
-      'trendcast.generateAudio': 'Generate Audio',
-      'trendcast.generateVideo': 'Generate Video',
-      'trendcast.download': 'Download',
-      'trendcast.useCaption': 'Use Caption (Caption will be displayed on the video)',
-      'trendcast.useSubtitles': 'Use Subtitles (Subtitles will be displayed on the video)',
-      'trendcast.approximateLength': 'Approximate Length of Audio',
-      'trendcast.link': 'Link',
-      'trendcast.caption': 'Caption',
-      'trendcast.options': 'Options',
-      'minutes': 'Minutes',
-      'seconds': 'Seconds',
-      'wordCount': 'Word Count',
-      'approxAudioLength': 'Approx. Audio Length',
-      'generating': 'Generating',
-      'generatingAudio': 'Generating Audio',
-      'generatingVideo': 'Generating Video',
-      'thisCanTakeAMinute': 'This can take a minute',
-      'next': 'Next',
-      'downloaded': 'Downloaded',
-      'createNewTrendcast': 'Create New Trendcast',
-    },
-    de: {
-      'app.title': 'Meine App',
-      'app.greeting': 'Hallo',
-      'app.farewell': 'Auf Wiedersehen',
-      'app.viewAll': 'Alle anzeigen',
-      'menu.editWorkflow': 'Workflow bearbeiten',
-      'menu.workflowSettings': 'Workflow-Einstellungen',
-      'menu.deleteWorkflow': 'Workflow löschen',
-      'menu.deleteConfirm': 'Möchten Sie diesen Workflow wirklich löschen?',
-      'menu.undoDelete': 'Rückgängig machen',
-      'menu.deleteCancelled': 'Löschen abgebrochen',
-      'dashboard.workflows': 'Workflows',
-      'dashboard.newWorkflow': 'Neuer Workflow',
-      'dashboard.recent': 'Kürzlich',
-      'dashboard.all': 'Alle',
-      'dashboard.favorites': 'Favoriten',
-      'dashboard.recentHistory': 'Kürzliche Historie',
-      'dashboard.workflowSettings': 'Workflow Einstellungen',
-      'dashboard.creativityLevel': 'Kreativitätslevel',
-      'dashboard.conservative': 'Konservativ',
-      'dashboard.creative': 'Kreativ',
-      'dashboard.newChatWorkflow': 'Neuer Chat-basierter Workflow',
-      'workflow.trendcast': 'Trendcast',
-      'workflow.trendcastDesc': 'Verwandle Webinhalte in professionelle Videos',
-      'trendcast.uploadLinks': 'Links und Bilder hochladen',
-      'trendcast.scriptSummary': 'Skriptzusammenfassung',
-      'trendcast.audioFile': 'Audiodatei mit individueller Stimme',
-      'trendcast.createVideo': 'Video erstellen',
-      'trendcast.preview': 'Videovorschau',
-      'trendcast.addMoreLinks': 'Weitere Links hinzufügen',
-      'trendcast.generateScript': 'Skript generieren',
-      'trendcast.generateAudio': 'Audio generieren',
-      'trendcast.generateVideo': 'Video generieren',
-      'trendcast.download': 'Herunterladen',
-      'trendcast.useCaption': 'Beschriftung verwenden (Beschriftung wird im Video angezeigt)',
-      'trendcast.useSubtitles': 'Untertitel verwenden (Untertitel werden im Video angezeigt)',
-      'trendcast.approximateLength': 'Ungefähre Länge des Audios',
-      'trendcast.link': 'Link',
-      'trendcast.caption': 'Beschriftung',
-      'trendcast.options': 'Optionen',
-      'minutes': 'Minuten',
-      'seconds': 'Sekunden',
-      'wordCount': 'Wörteranzahl',
-      'approxAudioLength': 'Ungefähre Audiolänge',
-      'generating': 'Generierung',
-      'generatingAudio': 'Audio wird generiert',
-      'generatingVideo': 'Video wird generiert',
-      'thisCanTakeAMinute': 'Dies kann eine Minute dauern',
-      'next': 'Weiter',
-      'downloaded': 'Heruntergeladen',
-      'createNewTrendcast': 'Neuen Trendcast erstellen',
-    }
+  const translate = (key: string): string => {
+    return translations[language][key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, translate, switchLanguage }}>
+    <LanguageContext.Provider value={{ language, changeLanguage, translate }}>
       {children}
     </LanguageContext.Provider>
   );
 };
-
-export default LanguageContext;

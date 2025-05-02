@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, X, Feather } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -116,7 +116,6 @@ const ChatInterface = ({
           </div>
           
           <div className="flex items-center gap-3">
-            <div className="text-lg font-medium">{userName}</div>
             <ProfileDropdown 
               name={userName} 
               email="moin@example.com"
@@ -156,35 +155,22 @@ const ChatInterface = ({
                   }`}
                 >
                   <div
-                    className={`flex gap-3 max-w-[80%] ${
-                      message.sender === "user" ? "flex-row-reverse" : ""
+                    className={`max-w-[80%] ${
+                      message.sender === "user" ? "ml-auto" : "mr-auto"
                     }`}
                   >
                     <div
-                      className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                        message.sender === "user"
-                          ? "bg-panta-blue"
-                          : "bg-gray-100"
-                      }`}
-                    >
-                      {message.sender === "user" ? (
-                        <User className="h-5 w-5 text-white" />
-                      ) : (
-                        <Feather className="h-5 w-5 text-panta-blue" />
-                      )}
-                    </div>
-                    <div
                       className={`rounded-lg p-4 ${
                         message.sender === "user"
-                          ? "bg-panta-blue text-white"
-                          : "bg-gray-100 text-gray-800"
+                          ? "bg-gray-200 text-gray-800"
+                          : "bg-white border border-gray-200 text-gray-800"
                       }`}
                     >
                       <p>{message.content}</p>
                       <div
                         className={`text-xs mt-2 ${
                           message.sender === "user"
-                            ? "text-white/70"
+                            ? "text-gray-500"
                             : "text-gray-500"
                         }`}
                       >

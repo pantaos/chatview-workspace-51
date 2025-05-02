@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Search, UploadCloud, ArrowRight } from "lucide-react";
+import { Search, FileUp, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SearchChatProps {
@@ -61,7 +61,7 @@ const SearchChat = ({
           
           <div className="flex items-center">
             <label className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
-              <UploadCloud className="h-5 w-5 text-gray-500" />
+              <FileUp className="h-5 w-5 text-gray-500" />
               <input
                 type="file"
                 className="hidden"

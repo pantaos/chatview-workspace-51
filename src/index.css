@@ -117,4 +117,13 @@
   .navbar-item-active {
     @apply text-primary before:absolute before:bottom-0 before:left-0 before:h-0.5 before:w-full before:bg-primary;
   }
+
+  /* Chat Message Styles */
+  .chat-message-user {
+    @apply bg-gray-100 rounded-2xl p-4 inline-block ml-auto;
+  }
+  
+  .chat-message-bot {
+    @apply bg-white rounded-2xl p-4 inline-block mr-auto;
+  }
 }

@@ -39,10 +39,17 @@ const ChatInterface = ({
   ]
 }: ChatInterfaceProps) => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "bot-1",
+      sender: "bot",
+      content: "Hey there! 👋 What's on your mind today?",
+      timestamp: new Date(Date.now() - 60000),
+    },
+  ]);
   
   const [input, setInput] = useState("");
-  const [showStarters, setShowStarters] = useState(true);
+  const [showStarters, setShowStarters] = useState(false);
 
   const handleClose = () => {
     if (onClose) {
@@ -55,7 +62,7 @@ const ChatInterface = ({
   const handleStarterClick = (text: string) => {
     setInput(text);
     setShowStarters(false);
-    // In a real application, we would also send the message to the backend
+    
     const newMessage: Message = {
       id: `user-${Date.now()}`,
       sender: "user",
@@ -65,7 +72,6 @@ const ChatInterface = ({
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Simulate bot response
     setTimeout(() => {
       const botReply: Message = {
         id: `bot-${Date.now()}`,
@@ -91,16 +97,57 @@ const ChatInterface = ({
     setMessages(prev => [...prev, newMessage]);
     setInput("");
     
-    // Simulate bot response
     setTimeout(() => {
-      const botReply: Message = {
-        id: `bot-${Date.now()}`,
-        sender: "bot",
-        content: "I'm processing your request. Here's what I can help you with based on your message: " + text,
-        timestamp: new Date(),
-      };
-      
-      setMessages(prev => [...prev, botReply]);
+      if (text.toLowerCase().includes("story") || text.toLowerCase().includes("cool")) {
+        const botReplyFirst: Message = {
+          id: `bot-${Date.now()}`,
+          sender: "bot",
+          content: "Sure thing—here's a quick, breezy tale about someone undeniably cool.",
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, botReplyFirst]);
+        
+        setTimeout(() => {
+          const botReplySecond: Message = {
+            id: `bot-${Date.now() + 1}`,
+            sender: "bot",
+            content: "The Neon Jacket",
+            timestamp: new Date(),
+          };
+          
+          setMessages(prev => [...prev, botReplySecond]);
+          
+          setTimeout(() => {
+            const botReplyThird: Message = {
+              id: `bot-${Date.now() + 2}`,
+              sender: "bot",
+              content: "In the twilight-lit city of Lucent Falls, nobody stood out quite like Milo Vega. He wasn't famous for winning races or scaling mountains; he was famous for his jacket—a vintage biker cut saturated in shifting neon threads that pulsed faintly with every beat of the city's music. The jacket was rumored to house a tech-spirit: an old-school AI woven into the fabric back when clothing companies still tried to turn everything "smart."",
+              timestamp: new Date(),
+            };
+            
+            setMessages(prev => [...prev, botReplyThird]);
+          }, 1000);
+        }, 1000);
+      } else if (text.toLowerCase().includes("whats up")) {
+        const botReply: Message = {
+          id: `bot-${Date.now()}`,
+          sender: "bot",
+          content: "Just hanging out in the cloud, ready to brainstorm or dig up answers whenever you need. What's up with you? Anything in particular you feel like chatting about or working on?",
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, botReply]);
+      } else {
+        const botReply: Message = {
+          id: `bot-${Date.now()}`,
+          sender: "bot",
+          content: "I'm here to help! What would you like to know about?",
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, botReply]);
+      }
     }, 1000);
   };
 
@@ -124,29 +171,11 @@ const ChatInterface = ({
         </div>
       </header>
       
-      {/* Chat Interface without Sidebar */}
-      <div className="flex flex-col h-[calc(100vh-5rem)] bg-gray-50 relative">
+      {/* Chat Interface */}
+      <div className="flex flex-col h-[calc(100vh-5rem)] bg-white relative">
         <div className="flex-1 flex flex-col relative">
-          <ScrollArea className="flex-1 p-4 pt-6">
-            <div className="max-w-3xl mx-auto space-y-4">
-              {showStarters && messages.length === 0 && (
-                <div className="mb-8 flex flex-col items-center justify-center pt-12">
-                  <h2 className="text-2xl font-semibold mb-6 text-center">{workflowTitle}</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
-                    {conversationStarters.map((starter) => (
-                      <Button
-                        key={starter.id}
-                        variant="outline"
-                        className="text-left h-auto py-3 px-4 whitespace-normal hover:bg-black hover:text-white hover:border-black"
-                        onClick={() => handleStarterClick(starter.text)}
-                      >
-                        {starter.text}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
+          <ScrollArea className="flex-1 px-4 md:px-16 lg:px-32 xl:px-64 pt-6">
+            <div className="space-y-8 mb-8">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -160,25 +189,13 @@ const ChatInterface = ({
                     }`}
                   >
                     <div
-                      className={`rounded-lg p-4 ${
+                      className={`rounded-2xl p-4 ${
                         message.sender === "user"
-                          ? "bg-gray-200 text-gray-800"
-                          : "bg-white border border-gray-200 text-gray-800"
+                          ? "bg-gray-100 text-gray-800"
+                          : "bg-white text-gray-800"
                       }`}
                     >
-                      <p>{message.content}</p>
-                      <div
-                        className={`text-xs mt-2 ${
-                          message.sender === "user"
-                            ? "text-gray-500"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </div>
+                      <p className="text-base leading-relaxed">{message.content}</p>
                     </div>
                   </div>
                 </div>
@@ -193,10 +210,9 @@ const ChatInterface = ({
               onChange={(e) => setInput(e.target.value)} 
               onSubmit={handleSubmit}
               disableNavigation={true}
+              placeholder="Message..."
+              title=""
             />
-            <div className="text-xs text-center mt-3 text-gray-500">
-              PANTA Flows can make mistakes. Please check important information.
-            </div>
           </div>
         </div>
 

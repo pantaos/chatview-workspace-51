@@ -76,7 +76,7 @@
   }
   
   .ai-chat-input {
-    @apply w-full rounded-2xl focus:ring-2 focus:ring-panta-blue focus:outline-none;
+    @apply w-full rounded-2xl focus:outline-none;
   }
 
   .panta-gradient-text {
@@ -90,8 +90,8 @@
 
   .search-chat-glow::after {
     content: "";
-    @apply absolute -inset-0.5 rounded-2xl blur-sm bg-gradient-to-r from-panta-blue to-panta-orange opacity-0;
-    transition: opacity 0.3s ease;
+    @apply absolute -inset-1 rounded-3xl blur-md bg-gradient-to-r from-panta-blue to-panta-orange opacity-0;
+    transition: opacity 0.4s ease;
     z-index: -1;
   }
 

@@ -1,19 +1,20 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   FileText, 
   Image, 
   Code, 
   MessageSquare,
-  Search,
   ArrowLeft,
   LucideIcon
 } from "lucide-react";
 import HistoryItem from "@/components/HistoryItem";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Define the history item type with the correct LucideIcon type
 interface HistoryItemType {
@@ -104,7 +105,9 @@ const historyItems: HistoryItemType[] = [
 
 const History = () => {
   const navigate = useNavigate();
+  const { translate } = useLanguage();
   const [historyData, setHistoryData] = useState<HistoryItemType[]>(historyItems);
+  const [activeTab, setActiveTab] = useState("all");
   
   const toggleFavorite = (id: string) => {
     setHistoryData(prev =>
@@ -125,6 +128,18 @@ const History = () => {
   const deleteHistoryItem = (id: string) => {
     setHistoryData(prev => prev.filter(item => item.id !== id));
   };
+
+  // Filter history based on active tab
+  const filteredHistory = historyData.filter(item => {
+    if (activeTab === "all") return true;
+    if (activeTab === "favorites") return item.isFavorite;
+    if (activeTab === "recent") {
+      // Show items from the last 24 hours
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      return item.timestamp > oneDayAgo;
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -154,32 +169,106 @@ const History = () => {
           <h1 className="text-2xl font-semibold">Chat History</h1>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border">
-          {historyData.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <p>No history items found</p>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="mb-6">
+            <TabsTrigger value="all">
+              {translate('dashboard.all') || 'All'}
+            </TabsTrigger>
+            <TabsTrigger value="recent">
+              {translate('dashboard.recent') || 'Recent'}
+            </TabsTrigger>
+            <TabsTrigger value="favorites">
+              {translate('dashboard.favorites') || 'Favorites'}
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="animate-fade-in">
+            <div className="bg-white rounded-lg shadow-sm border">
+              {filteredHistory.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No history items found</p>
+                </div>
+              ) : (
+                filteredHistory.map((item) => (
+                  <HistoryItem
+                    key={item.id}
+                    title={item.title}
+                    workflowType={item.workflowType}
+                    timestamp={item.timestamp}
+                    icon={item.icon}
+                    status={item.status}
+                    isFavorite={item.isFavorite}
+                    onClick={() => {
+                      console.log(`History item clicked: ${item.id}`);
+                      navigate('/chat');
+                    }}
+                    onFavoriteToggle={() => toggleFavorite(item.id)}
+                    onRename={(newName) => renameHistoryItem(item.id, newName)}
+                    onDelete={() => deleteHistoryItem(item.id)}
+                  />
+                ))
+              )}
             </div>
-          ) : (
-            historyData.map((item) => (
-              <HistoryItem
-                key={item.id}
-                title={item.title}
-                workflowType={item.workflowType}
-                timestamp={item.timestamp}
-                icon={item.icon}
-                status={item.status}
-                isFavorite={item.isFavorite}
-                onClick={() => {
-                  console.log(`History item clicked: ${item.id}`);
-                  navigate('/chat');
-                }}
-                onFavoriteToggle={() => toggleFavorite(item.id)}
-                onRename={(newName) => renameHistoryItem(item.id, newName)}
-                onDelete={() => deleteHistoryItem(item.id)}
-              />
-            ))
-          )}
-        </div>
+          </TabsContent>
+          
+          <TabsContent value="recent" className="animate-fade-in">
+            <div className="bg-white rounded-lg shadow-sm border">
+              {filteredHistory.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No recent history items found</p>
+                </div>
+              ) : (
+                filteredHistory.map((item) => (
+                  <HistoryItem
+                    key={item.id}
+                    title={item.title}
+                    workflowType={item.workflowType}
+                    timestamp={item.timestamp}
+                    icon={item.icon}
+                    status={item.status}
+                    isFavorite={item.isFavorite}
+                    onClick={() => {
+                      console.log(`History item clicked: ${item.id}`);
+                      navigate('/chat');
+                    }}
+                    onFavoriteToggle={() => toggleFavorite(item.id)}
+                    onRename={(newName) => renameHistoryItem(item.id, newName)}
+                    onDelete={() => deleteHistoryItem(item.id)}
+                  />
+                ))
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="favorites" className="animate-fade-in">
+            <div className="bg-white rounded-lg shadow-sm border">
+              {filteredHistory.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No favorite items found</p>
+                </div>
+              ) : (
+                filteredHistory.map((item) => (
+                  <HistoryItem
+                    key={item.id}
+                    title={item.title}
+                    workflowType={item.workflowType}
+                    timestamp={item.timestamp}
+                    icon={item.icon}
+                    status={item.status}
+                    isFavorite={item.isFavorite}
+                    onClick={() => {
+                      console.log(`History item clicked: ${item.id}`);
+                      navigate('/chat');
+                    }}
+                    onFavoriteToggle={() => toggleFavorite(item.id)}
+                    onRename={(newName) => renameHistoryItem(item.id, newName)}
+                    onDelete={() => deleteHistoryItem(item.id)}
+                  />
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

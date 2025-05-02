@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -266,6 +265,7 @@ const Index = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onSubmit={handleSearchSubmit}
                   disableNavigation={true}
+                  title={translate('dashboard.howCanIHelp') || "How can I help you today?"}
                 />
               </section>
               

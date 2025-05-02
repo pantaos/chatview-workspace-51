@@ -122,7 +122,7 @@ const ChatInterface = ({
             const botReplyThird: Message = {
               id: `bot-${Date.now() + 2}`,
               sender: "bot",
-              content: "In the twilight-lit city of Lucent Falls, nobody stood out quite like Milo Vega. He wasn't famous for winning races or scaling mountains; he was famous for his jacket—a vintage biker cut saturated in shifting neon threads that pulsed faintly with every beat of the city's music. The jacket was rumored to house a tech-spirit: an old-school AI woven into the fabric back when clothing companies still tried to turn everything "smart."",
+              content: "In the twilight-lit city of Lucent Falls, nobody stood out quite like Milo Vega. He wasn't famous for winning races or scaling mountains; he was famous for his jacket—a vintage biker cut saturated in shifting neon threads that pulsed faintly with every beat of the city's music. The jacket was rumored to house a tech-spirit: an old-school AI woven into the fabric back when clothing companies still tried to turn everything 'smart.'",
               timestamp: new Date(),
             };
             

@@ -53,7 +53,7 @@ const WorkflowCard = ({
   return (
     <div 
       className={cn(
-        "workflow-card group transition-all duration-200 relative p-6 rounded-lg bg-white shadow-md border border-gray-100 hover:border-gray-300", 
+        "workflow-card group transition-all duration-200 relative p-4 rounded-lg bg-white shadow-md border border-gray-100 hover:border-gray-300", 
         className
       )}
       onClick={onClick}
@@ -74,8 +74,8 @@ const WorkflowCard = ({
         />
       </div>
       
-      <div className="workflow-icon bg-gray-50 p-5 rounded-full mb-4 group-hover:bg-black group-hover:text-white transition-colors duration-200">
-        <Icon className={cn("h-8 w-8", color, "group-hover:text-white")} />
+      <div className="workflow-icon bg-gray-50 p-3 rounded-full mb-3 group-hover:bg-black group-hover:text-white transition-colors duration-200">
+        <Icon className={cn("h-6 w-6", color, "group-hover:text-white")} />
       </div>
       <h3 className="font-medium text-sm text-center group-hover:text-black mb-1">{displayTitle}</h3>
       <p className="text-xs text-gray-500 text-center mt-1 line-clamp-2 group-hover:text-gray-700">{displayDescription}</p>

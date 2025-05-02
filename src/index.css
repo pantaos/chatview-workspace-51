@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -64,11 +63,13 @@
 
 @layer components {
   .workflow-card {
-    @apply relative flex flex-col items-center justify-center p-4 bg-white border rounded-xl transition-all duration-200 hover:shadow-md hover:border-black;
+    @apply relative flex flex-col items-center justify-center p-3 bg-white border rounded-xl transition-all duration-200 hover:shadow-md hover:border-black;
+    max-width: 240px;
+    min-height: 160px;
   }
   
   .workflow-icon {
-    @apply flex items-center justify-center w-16 h-16 mb-3 rounded-xl bg-accent text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
+    @apply flex items-center justify-center w-12 h-12 mb-2 rounded-xl bg-accent text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
   }
   
   .history-item {
@@ -82,6 +83,10 @@
   .panta-gradient-text {
     @apply text-transparent bg-clip-text;
     background-image: linear-gradient(90deg, #1cb5e0 0%, #ff8c00 100%);
+  }
+
+  .dashboard-gradient-bg {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
   }
 
   .search-chat-glow {

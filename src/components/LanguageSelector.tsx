@@ -22,7 +22,7 @@ const languages: LanguageOption[] = [
 ];
 
 const LanguageSelector: React.FC = () => {
-  const { language, setLanguage, translate } = useLanguage();
+  const { language, changeLanguage, translate } = useLanguage();
 
   return (
     <DropdownMenu>
@@ -35,7 +35,7 @@ const LanguageSelector: React.FC = () => {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.value}
-            onClick={() => setLanguage(lang.value)}
+            onClick={() => changeLanguage(lang.value)}
             className="flex items-center justify-between cursor-pointer"
           >
             <span className="flex items-center gap-2">

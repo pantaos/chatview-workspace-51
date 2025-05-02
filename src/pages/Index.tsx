@@ -270,79 +270,82 @@ const Index = () => {
               </section>
               
               <section className="mb-10">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-medium text-white">{translate('dashboard.workflows')}</h2>
-                  <Button 
-                    variant="outline" 
-                    className="gap-1 hover:bg-black hover:text-white bg-white/20 backdrop-blur-sm text-white border-white/30"
-                    onClick={() => setShowNewWorkflowDialog(true)}
-                  >
-                    <Plus className="h-4 w-4" />
-                    {translate('dashboard.newChatWorkflow')}
-                  </Button>
+                <h2 className="text-xl font-medium text-white mb-6">{translate('dashboard.workflows')}</h2>
+                
+                <div className="mb-6 flex flex-col">
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <div className="filters-with-button">
+                      <TabsList className="bg-white/20 backdrop-blur-sm">
+                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
+                          {translate('dashboard.all')}
+                        </TabsTrigger>
+                        <TabsTrigger value="recent" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
+                          {translate('dashboard.recent')}
+                        </TabsTrigger>
+                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
+                          {translate('dashboard.favorites')}
+                        </TabsTrigger>
+                      </TabsList>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="gap-1 hover:bg-black hover:text-white bg-white/20 backdrop-blur-sm text-white border-white/30"
+                        onClick={() => setShowNewWorkflowDialog(true)}
+                      >
+                        <Plus className="h-4 w-4" />
+                        {translate('dashboard.newChatWorkflow')}
+                      </Button>
+                    </div>
+                    
+                    <TabsContent value="all" className="animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                        {availableWorkflows.map((workflow) => (
+                          <WorkflowCard
+                            key={workflow.id}
+                            title={workflow.title}
+                            description={workflow.description}
+                            icon={workflow.icon}
+                            color={workflow.color}
+                            translationKey={workflow.translationKey}
+                            onClick={() => handleWorkflowClick(workflow)}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="recent" className="animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                        {workflows.slice(0, 3).map((workflow) => (
+                          <WorkflowCard
+                            key={workflow.id}
+                            title={workflow.title}
+                            description={workflow.description}
+                            icon={workflow.icon}
+                            translationKey={workflow.translationKey}
+                            onClick={() => handleWorkflowClick(workflow)}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="favorites" className="animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                        {workflows.slice(0, 2).map((workflow) => (
+                          <WorkflowCard
+                            key={workflow.id}
+                            title={workflow.title}
+                            description={workflow.description}
+                            icon={workflow.icon}
+                            translationKey={workflow.translationKey}
+                            onClick={() => handleWorkflowClick(workflow)}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
                 
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="mb-6 bg-white/20 backdrop-blur-sm">
-                    <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                      {translate('dashboard.all')}
-                    </TabsTrigger>
-                    <TabsTrigger value="recent" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                      {translate('dashboard.recent')}
-                    </TabsTrigger>
-                    <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                      {translate('dashboard.favorites')}
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="all" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                      {availableWorkflows.map((workflow) => (
-                        <WorkflowCard
-                          key={workflow.id}
-                          title={workflow.title}
-                          description={workflow.description}
-                          icon={workflow.icon}
-                          color={workflow.color}
-                          translationKey={workflow.translationKey}
-                          onClick={() => handleWorkflowClick(workflow)}
-                        />
-                      ))}
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="recent" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                      {workflows.slice(0, 3).map((workflow) => (
-                        <WorkflowCard
-                          key={workflow.id}
-                          title={workflow.title}
-                          description={workflow.description}
-                          icon={workflow.icon}
-                          translationKey={workflow.translationKey}
-                          onClick={() => handleWorkflowClick(workflow)}
-                        />
-                      ))}
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="favorites" className="animate-fade-in">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                      {workflows.slice(0, 2).map((workflow) => (
-                        <WorkflowCard
-                          key={workflow.id}
-                          title={workflow.title}
-                          description={workflow.description}
-                          icon={workflow.icon}
-                          translationKey={workflow.translationKey}
-                          onClick={() => handleWorkflowClick(workflow)}
-                        />
-                      ))}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-                
-                <div className="mt-8 bg-white/20 backdrop-blur-sm p-6 rounded-lg border border-white/30 text-white shadow-sm">
+                <div className="bg-white/20 backdrop-blur-sm p-6 rounded-lg border border-white/30 text-white shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <SlidersHorizontal size={20} className="text-white" />
                     <h3 className="font-medium">{translate('dashboard.workflowSettings')}</h3>
@@ -370,44 +373,119 @@ const Index = () => {
           <div className="py-8 bg-white flex-1">
             <div className="container mx-auto px-4">
               <section>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-medium text-gray-800">{translate('dashboard.recentHistory')}</h2>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="hover:bg-gray-100 text-gray-700"
-                    onClick={() => navigate("/history")}
-                  >
-                    {translate('app.viewAll')}
-                  </Button>
-                </div>
+                <h2 className="text-xl font-medium text-gray-800 mb-6">{translate('dashboard.recentHistory')}</h2>
                 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  {historyData.map((item) => (
-                    <HistoryItem
-                      key={item.id}
-                      title={item.title}
-                      workflowType={item.workflowType}
-                      timestamp={item.timestamp}
-                      icon={item.icon}
-                      status={item.status}
-                      isFavorite={item.isFavorite}
-                      onClick={() => {
-                        console.log(`History item clicked: ${item.id}`);
-                        setCurrentWorkflow({
-                          id: item.id,
-                          title: item.workflowType,
-                          description: item.title,
-                          icon: item.icon,
-                          type: "chat"
-                        });
-                        setShowChat(true);
-                      }}
-                      onFavoriteToggle={() => toggleFavorite(item.id)}
-                      onRename={(newName) => renameHistoryItem(item.id, newName)}
-                    />
-                  ))}
-                </div>
+                <Tabs defaultValue="all">
+                  <div className="filters-with-button">
+                    <TabsList className="mb-6">
+                      <TabsTrigger value="all">
+                        {translate('dashboard.all')}
+                      </TabsTrigger>
+                      <TabsTrigger value="recent">
+                        {translate('dashboard.recent')}
+                      </TabsTrigger>
+                      <TabsTrigger value="favorites">
+                        {translate('dashboard.favorites')}
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:bg-gray-100 text-gray-700"
+                      onClick={() => navigate("/history")}
+                    >
+                      {translate('app.viewAll')}
+                    </Button>
+                  </div>
+                  
+                  <TabsContent value="all">
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                      {historyData.map((item) => (
+                        <HistoryItem
+                          key={item.id}
+                          title={item.title}
+                          workflowType={item.workflowType}
+                          timestamp={item.timestamp}
+                          icon={item.icon}
+                          status={item.status}
+                          isFavorite={item.isFavorite}
+                          onClick={() => {
+                            console.log(`History item clicked: ${item.id}`);
+                            setCurrentWorkflow({
+                              id: item.id,
+                              title: item.workflowType,
+                              description: item.title,
+                              icon: item.icon,
+                              type: "chat"
+                            });
+                            setShowChat(true);
+                          }}
+                          onFavoriteToggle={() => toggleFavorite(item.id)}
+                          onRename={(newName) => renameHistoryItem(item.id, newName)}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="recent">
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                      {historyData.slice(0, 2).map((item) => (
+                        <HistoryItem
+                          key={item.id}
+                          title={item.title}
+                          workflowType={item.workflowType}
+                          timestamp={item.timestamp}
+                          icon={item.icon}
+                          status={item.status}
+                          isFavorite={item.isFavorite}
+                          onClick={() => {
+                            console.log(`History item clicked: ${item.id}`);
+                            setCurrentWorkflow({
+                              id: item.id,
+                              title: item.workflowType,
+                              description: item.title,
+                              icon: item.icon,
+                              type: "chat"
+                            });
+                            setShowChat(true);
+                          }}
+                          onFavoriteToggle={() => toggleFavorite(item.id)}
+                          onRename={(newName) => renameHistoryItem(item.id, newName)}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="favorites">
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                      {historyData.filter(item => item.isFavorite).map((item) => (
+                        <HistoryItem
+                          key={item.id}
+                          title={item.title}
+                          workflowType={item.workflowType}
+                          timestamp={item.timestamp}
+                          icon={item.icon}
+                          status={item.status}
+                          isFavorite={item.isFavorite}
+                          onClick={() => {
+                            console.log(`History item clicked: ${item.id}`);
+                            setCurrentWorkflow({
+                              id: item.id,
+                              title: item.workflowType,
+                              description: item.title,
+                              icon: item.icon,
+                              type: "chat"
+                            });
+                            setShowChat(true);
+                          }}
+                          onFavoriteToggle={() => toggleFavorite(item.id)}
+                          onRename={(newName) => renameHistoryItem(item.id, newName)}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </section>
             </div>
           </div>

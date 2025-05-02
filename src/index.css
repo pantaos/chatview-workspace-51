@@ -98,4 +98,9 @@
   .search-chat-glow:hover::after {
     @apply opacity-30;
   }
+
+  .filters-with-button {
+    @apply flex justify-between items-center;
+    padding-right: 0.5rem;
+  }
 }

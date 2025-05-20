@@ -13,16 +13,24 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const Settings = () => {
   const { theme, updateTheme } = useTheme();
-  const { currentLanguage, changeLanguage, languages } = useLanguage();
+  const { language, changeLanguage, translate } = useLanguage();
+  
+  // Define available languages
+  const availableLanguages = [
+    { code: "en" as LanguageType, name: "English" },
+    { code: "de" as LanguageType, name: "Deutsch" },
+    { code: "fr" as LanguageType, name: "Français" },
+    { code: "es" as LanguageType, name: "Español" },
+  ];
   
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
   const [selectedColor, setSelectedColor] = useState(theme.primaryColor);
   
-  const handleLanguageChange = (language: LanguageType) => {
-    changeLanguage(language);
-    toast.success(`Language changed to ${language}`);
+  const handleLanguageChange = (languageCode: LanguageType) => {
+    changeLanguage(languageCode);
+    toast.success(`Language changed to ${languageCode}`);
   };
   
   const handleThemeChange = (color: string) => {
@@ -54,10 +62,10 @@ const Settings = () => {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Language</h2>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                {languages.map((lang) => (
+                {availableLanguages.map((lang) => (
                   <Button
                     key={lang.code}
-                    variant={currentLanguage === lang.code ? "default" : "outline"}
+                    variant={language === lang.code ? "default" : "outline"}
                     onClick={() => handleLanguageChange(lang.code)}
                     className="w-full"
                   >

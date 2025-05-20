@@ -5,9 +5,8 @@ import { ArrowLeft, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import LanguageSelector from '@/components/LanguageSelector';
-import Logo from '@/components/Logo';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import Logo from '@/components/Logo';
 
 interface TrendcastLayoutProps {
   children: React.ReactNode;
@@ -43,24 +42,21 @@ const TrendcastLayout = ({
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white bg-opacity-80 backdrop-blur-sm shadow-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo />
-          
-          <div className="text-lg font-medium">Moin Arian</div>
           
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-black hover:text-white"
+              className="hover:bg-black hover:text-white rounded-full"
               onClick={() => navigate("/history")}
             >
               <History className="h-5 w-5" />
             </Button>
-            <LanguageSelector />
             <ProfileDropdown 
               name="Moin Arian" 
               email="moin@example.com"
@@ -71,32 +67,48 @@ const TrendcastLayout = ({
 
       <div className="flex-1">
         {/* Dashboard button */}
-        <div className="container mx-auto px-4 py-2">
+        <div className="container mx-auto px-4 py-4">
           <Button
             variant="ghost"
-            size="icon"
-            onClick={() => navigate('/dashboard')}
-            className="text-blue-600 hover:text-blue-800 flex items-center"
+            size="sm"
+            onClick={handleGoBack}
+            className="text-gray-500 hover:text-gray-800 flex items-center gap-1"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back</span>
           </Button>
         </div>
 
         {/* Steps indicator */}
-        <div className="container mx-auto pt-6 pb-4">
-          <div className="flex justify-center items-center mb-4 gap-2">
+        <div className="container mx-auto pt-8 pb-4">
+          <div className="text-center mb-6">
+            <h2 
+              className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500"
+            >
+              {title}
+            </h2>
+            <p className="text-gray-400 text-sm uppercase tracking-wider mt-2">VERSA Trendcast</p>
+          </div>
+          
+          <div className="flex justify-center items-center mb-12 gap-1">
             {[1, 2, 3, 4, 5].map((step) => (
               <React.Fragment key={step}>
                 {step > 1 && (
-                  <div className={`h-[2px] w-8 ${step <= currentStep ? 'bg-blue-600' : 'bg-gray-300'}`} />
+                  <div 
+                    className={`h-[1px] w-12 ${
+                      step <= currentStep 
+                        ? 'bg-gradient-to-r from-blue-400 to-indigo-500' 
+                        : 'bg-gray-200'
+                    }`} 
+                  />
                 )}
                 <div 
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                     step === currentStep 
-                      ? 'bg-blue-600 text-white' 
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white scale-110 shadow-lg' 
                       : step < currentStep 
-                        ? 'bg-blue-200 text-blue-800' 
-                        : 'bg-gray-200 text-gray-500'
+                        ? 'bg-gradient-to-r from-blue-200 to-indigo-200 text-white' 
+                        : 'bg-gray-100 text-gray-400 border border-gray-200'
                   }`}
                 >
                   {step}
@@ -104,21 +116,11 @@ const TrendcastLayout = ({
               </React.Fragment>
             ))}
           </div>
-          
-          <div className="text-center mb-8">
-            <h1 className="text-gray-500 text-lg font-medium">VERSA Trendcast</h1>
-            <h2 
-              className="text-4xl font-bold mt-2" 
-              style={{ color: theme.primaryColor }}
-            >
-              {title}
-            </h2>
-          </div>
         </div>
 
         {/* Main content */}
-        <div className="container mx-auto px-4 pb-12">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div className="container mx-auto px-4 pb-16">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition-shadow duration-300">
             {children}
           </div>
         </div>

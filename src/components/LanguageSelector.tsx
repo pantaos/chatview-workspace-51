@@ -1,48 +1,52 @@
 
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Check, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useLanguage, LanguageType } from '@/contexts/LanguageContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Check, Globe } from 'lucide-react';
 
-type LanguageOption = {
-  value: string;
-  label: string;
-  flag: string;
-};
-
-const languages: LanguageOption[] = [
-  { value: 'en', label: 'English', flag: '🇬🇧' },
-  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
+const languages: { code: LanguageType; name: string }[] = [
+  { code: 'en', name: 'English' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'fr', name: 'Français' },
+  { code: 'es', name: 'Español' },
 ];
 
-const LanguageSelector: React.FC = () => {
+const LanguageSelector = () => {
   const { language, changeLanguage, translate } = useLanguage();
+
+  const handleChange = (lang: LanguageType) => {
+    changeLanguage(lang);
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="hover:bg-black hover:text-white">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="hover:bg-black hover:text-white"
+        >
           <Globe className="h-5 w-5" />
+          <span className="sr-only">{translate('app.language')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {languages.map((lang) => (
           <DropdownMenuItem
-            key={lang.value}
-            onClick={() => changeLanguage(lang.value)}
-            className="flex items-center justify-between cursor-pointer"
+            key={lang.code}
+            className={language === lang.code ? 'bg-accent' : ''}
+            onClick={() => handleChange(lang.code)}
           >
-            <span className="flex items-center gap-2">
-              <span>{lang.flag}</span>
-              <span>{lang.label}</span>
+            <span className="flex items-center">
+              {language === lang.code && <Check className="mr-2 h-4 w-4" />}
+              {translate(`language.${lang.code}`)}
             </span>
-            {language === lang.value && <Check className="h-4 w-4 ml-2" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

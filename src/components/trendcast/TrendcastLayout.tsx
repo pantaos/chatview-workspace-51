@@ -67,9 +67,9 @@ const TrendcastLayout = ({
             <Logo />
           </div>
           
-          <div className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">
+          <h1 className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">
             VERSA Trendcast
-          </div>
+          </h1>
           
           <div className="flex items-center gap-3">
             <Button
@@ -89,13 +89,6 @@ const TrendcastLayout = ({
       </header>
 
       <div className="flex-1 container mx-auto px-4 py-8">
-        {/* Page title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">
-            {title}
-          </h1>
-        </div>
-        
         {/* Modern step bubbles */}
         <div className="flex justify-center mb-12 overflow-x-auto py-4">
           <div className="flex items-center">

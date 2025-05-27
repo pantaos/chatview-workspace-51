@@ -143,202 +143,207 @@ const ImageCropper = () => {
   };
 
   return (
-    <TrendcastLayout
-      title="Image Cropper"
-      currentStep={1}
-    >
-      <div className="space-y-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Resize & Crop Images
-          </h2>
-          <p className="text-gray-600">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white">
+      {/* Header with workflow name */}
+      <header className="bg-white bg-opacity-90 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 text-center">
+          <h1 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">
+            Image Cropper & Resizer
+          </h1>
+          <p className="text-gray-600 mt-1">
             Upload an image, choose your desired dimensions, and crop to fit perfectly
           </p>
         </div>
+      </header>
 
-        {/* Upload Area */}
-        {!selectedImage ? (
-          <div
-            className={`border-2 border-dashed rounded-xl p-12 text-center transition-colors ${
-              isDragging 
-                ? 'border-purple-400 bg-purple-50' 
-                : 'border-gray-300 hover:border-purple-400'
-            }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-700 mb-2">
-              Upload your image
-            </h3>
-            <p className="text-gray-500 mb-4">
-              Drag and drop your image here, or click to browse
-            </p>
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white"
-            >
-              Choose File
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileInput}
+      <div className="flex-1 container mx-auto px-4 py-8">
+        {/* Main content */}
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 hover:shadow-md transition-shadow duration-300">
+          <div className="space-y-8">
+            {/* Upload Area */}
+            {!selectedImage ? (
+              <div
+                className={`border-2 border-dashed rounded-xl p-12 text-center transition-colors ${
+                  isDragging 
+                    ? 'border-purple-400 bg-purple-50' 
+                    : 'border-gray-300 hover:border-purple-400'
+                }`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+              >
+                <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  Upload your image
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  Drag and drop your image here, or click to browse
+                </p>
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white"
+                >
+                  Choose File
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInput}
+                  className="hidden"
+                />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Size Options */}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-800 mb-4">Output Dimensions</h3>
+                  
+                  {/* Predefined Ratios */}
+                  <div className="mb-6">
+                    <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                      Predefined Ratios
+                    </Label>
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                      {predefinedSizes.map((size) => (
+                        <Button
+                          key={size.label}
+                          variant={selectedRatio === size.ratio ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handleRatioSelect(size.ratio)}
+                          className="text-xs"
+                        >
+                          {size.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Custom Dimensions */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="width" className="text-sm font-medium text-gray-700">
+                        Width (px)
+                      </Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={customWidth}
+                        onChange={(e) => {
+                          setCustomWidth(e.target.value);
+                          setSelectedRatio(null);
+                        }}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="height" className="text-sm font-medium text-gray-700">
+                        Height (px)
+                      </Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        value={customHeight}
+                        onChange={(e) => {
+                          setCustomHeight(e.target.value);
+                          setSelectedRatio(null);
+                        }}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-gray-500 mt-2">
+                    Output size: {customWidth} x {customHeight} pixels
+                  </p>
+                </div>
+
+                {/* Image Preview with Crop Area */}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-800">Image Preview</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={resetCrop}
+                      className="gap-2"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Reset Crop
+                    </Button>
+                  </div>
+                  
+                  <div className="relative max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-sm">
+                    <img
+                      ref={imageRef}
+                      src={imageUrl}
+                      alt="Preview"
+                      className="w-full h-auto max-h-96 object-contain"
+                      onLoad={() => {
+                        // Initialize crop area when image loads
+                        setCropArea({ x: 10, y: 10, width: 80, height: 80 });
+                      }}
+                    />
+                    
+                    {/* Crop Area Overlay */}
+                    <div
+                      className="absolute border-2 border-purple-500 bg-purple-500/20"
+                      style={{
+                        left: `${cropArea.x}%`,
+                        top: `${cropArea.y}%`,
+                        width: `${cropArea.width}%`,
+                        height: `${cropArea.height}%`,
+                        cursor: 'move'
+                      }}
+                    >
+                      <div className="absolute top-0 left-0 w-2 h-2 bg-purple-500 cursor-nw-resize" />
+                      <div className="absolute top-0 right-0 w-2 h-2 bg-purple-500 cursor-ne-resize" />
+                      <div className="absolute bottom-0 left-0 w-2 h-2 bg-purple-500 cursor-sw-resize" />
+                      <div className="absolute bottom-0 right-0 w-2 h-2 bg-purple-500 cursor-se-resize" />
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-gray-500 text-center mt-3">
+                    Drag the crop area to adjust the selection
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedImage(null);
+                      setImageUrl('');
+                      if (imageUrl) URL.revokeObjectURL(imageUrl);
+                    }}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Upload New Image
+                  </Button>
+
+                  <TrendcastButton
+                    onClick={downloadCroppedImage}
+                    disabled={!selectedImage}
+                    loading={isProcessing}
+                    icon={<Download className="ml-2 h-4 w-4" />}
+                  >
+                    {isProcessing ? 'Processing...' : 'Download Cropped Image'}
+                  </TrendcastButton>
+                </div>
+              </div>
+            )}
+
+            {/* Hidden Canvas for Processing */}
+            <canvas
+              ref={canvasRef}
               className="hidden"
             />
           </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Size Options */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Output Dimensions</h3>
-              
-              {/* Predefined Ratios */}
-              <div className="mb-6">
-                <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                  Predefined Ratios
-                </Label>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                  {predefinedSizes.map((size) => (
-                    <Button
-                      key={size.label}
-                      variant={selectedRatio === size.ratio ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleRatioSelect(size.ratio)}
-                      className="text-xs"
-                    >
-                      {size.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Custom Dimensions */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="width" className="text-sm font-medium text-gray-700">
-                    Width (px)
-                  </Label>
-                  <Input
-                    id="width"
-                    type="number"
-                    value={customWidth}
-                    onChange={(e) => {
-                      setCustomWidth(e.target.value);
-                      setSelectedRatio(null);
-                    }}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="height" className="text-sm font-medium text-gray-700">
-                    Height (px)
-                  </Label>
-                  <Input
-                    id="height"
-                    type="number"
-                    value={customHeight}
-                    onChange={(e) => {
-                      setCustomHeight(e.target.value);
-                      setSelectedRatio(null);
-                    }}
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-500 mt-2">
-                Output size: {customWidth} x {customHeight} pixels
-              </p>
-            </div>
-
-            {/* Image Preview with Crop Area */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-800">Image Preview</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={resetCrop}
-                  className="gap-2"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Reset Crop
-                </Button>
-              </div>
-              
-              <div className="relative max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-sm">
-                <img
-                  ref={imageRef}
-                  src={imageUrl}
-                  alt="Preview"
-                  className="w-full h-auto max-h-96 object-contain"
-                  onLoad={() => {
-                    // Initialize crop area when image loads
-                    setCropArea({ x: 10, y: 10, width: 80, height: 80 });
-                  }}
-                />
-                
-                {/* Crop Area Overlay */}
-                <div
-                  className="absolute border-2 border-purple-500 bg-purple-500/20"
-                  style={{
-                    left: `${cropArea.x}%`,
-                    top: `${cropArea.y}%`,
-                    width: `${cropArea.width}%`,
-                    height: `${cropArea.height}%`,
-                    cursor: 'move'
-                  }}
-                >
-                  <div className="absolute top-0 left-0 w-2 h-2 bg-purple-500 cursor-nw-resize" />
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-purple-500 cursor-ne-resize" />
-                  <div className="absolute bottom-0 left-0 w-2 h-2 bg-purple-500 cursor-sw-resize" />
-                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-purple-500 cursor-se-resize" />
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-500 text-center mt-3">
-                Drag the crop area to adjust the selection
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-4 justify-center">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSelectedImage(null);
-                  setImageUrl('');
-                  if (imageUrl) URL.revokeObjectURL(imageUrl);
-                }}
-                className="gap-2"
-              >
-                <Upload className="h-4 w-4" />
-                Upload New Image
-              </Button>
-
-              <TrendcastButton
-                onClick={downloadCroppedImage}
-                disabled={!selectedImage}
-                loading={isProcessing}
-                icon={<Download className="ml-2 h-4 w-4" />}
-              >
-                {isProcessing ? 'Processing...' : 'Download Cropped Image'}
-              </TrendcastButton>
-            </div>
-          </div>
-        )}
-
-        {/* Hidden Canvas for Processing */}
-        <canvas
-          ref={canvasRef}
-          className="hidden"
-        />
+        </div>
       </div>
-    </TrendcastLayout>
+    </div>
   );
 };
 

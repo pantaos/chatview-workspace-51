@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -10,7 +11,8 @@ import {
   Video,
   SlidersHorizontal,
   LucideIcon,
-  Rss
+  Rss,
+  Crop
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -93,6 +95,15 @@ const workflows: Workflow[] = [
     translationKey: "trendcast",
     type: "screen",
     route: "/trendcast"
+  },
+  {
+    id: "image-cropper",
+    title: "Image Cropper",
+    description: "Resize and crop images to fit specific dimensions",
+    icon: Crop,
+    translationKey: "imageCropper",
+    type: "screen",
+    route: "/image-cropper"
   }
 ];
 

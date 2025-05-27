@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { applyThemeColors } from "./lib/theme-utils";
 import VersionNumber from "./components/VersionNumber";
+import ImageCropper from "./components/ImageCropper";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -59,6 +59,9 @@ const App = () => (
                 <Route path="/trendcast/audio" element={<TrendcastAudio />} />
                 <Route path="/trendcast/video" element={<TrendcastVideo />} />
                 <Route path="/trendcast/preview" element={<TrendcastPreview />} />
+                
+                {/* Image Cropper Tool */}
+                <Route path="/image-cropper" element={<ImageCropper />} />
                 
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -12,7 +11,8 @@ import {
   SlidersHorizontal,
   LucideIcon,
   Rss,
-  Crop
+  Crop,
+  GraduationCap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -95,6 +95,15 @@ const workflows: Workflow[] = [
     translationKey: "trendcast",
     type: "screen",
     route: "/trendcast"
+  },
+  {
+    id: "reportcard",
+    title: "Report Card Generator",
+    description: "Generate professional report cards for students",
+    icon: GraduationCap,
+    translationKey: "reportCardGenerator",
+    type: "screen",
+    route: "/reportcard"
   },
   {
     id: "image-cropper",

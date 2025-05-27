@@ -20,7 +20,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { applyThemeColors } from "./lib/theme-utils";
 import VersionNumber from "./components/VersionNumber";
-import ImageCropper from "./components/ImageCropper";
+import ImageCropper from "./pages/ImageCropper";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {

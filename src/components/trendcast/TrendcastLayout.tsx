@@ -13,13 +13,15 @@ interface TrendcastLayoutProps {
   title: string;
   currentStep: number;
   goBack?: () => void;
+  stepLabels?: string[];
 }
 
 const TrendcastLayout = ({ 
   children, 
   title, 
   currentStep, 
-  goBack 
+  goBack,
+  stepLabels 
 }: TrendcastLayoutProps) => {
   const navigate = useNavigate();
   const { translate } = useLanguage();
@@ -41,14 +43,17 @@ const TrendcastLayout = ({
     }
   });
 
-  // Step labels
-  const stepLabels = [
+  // Use custom step labels if provided, otherwise use default Trendcast labels
+  const defaultStepLabels = [
     translate('trendcast.inputLinks'),
     translate('trendcast.editScript'),
     translate('trendcast.generateAudio'),
     translate('trendcast.createVideo'),
     translate('trendcast.preview')
   ];
+
+  const currentStepLabels = stepLabels || defaultStepLabels;
+  const totalSteps = currentStepLabels.length;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white">
@@ -68,7 +73,7 @@ const TrendcastLayout = ({
           </div>
           
           <h1 className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">
-            VERSA Trendcast
+            {title}
           </h1>
           
           <div className="flex items-center gap-3">
@@ -92,7 +97,7 @@ const TrendcastLayout = ({
         {/* Modern step bubbles */}
         <div className="flex justify-center mb-12 overflow-x-auto py-4">
           <div className="flex items-center">
-            {[1, 2, 3, 4, 5].map((step) => (
+            {Array.from({ length: totalSteps }, (_, index) => index + 1).map((step) => (
               <React.Fragment key={step}>
                 {step > 1 && (
                   <div 
@@ -118,7 +123,7 @@ const TrendcastLayout = ({
                   <span className={`text-xs whitespace-nowrap ${
                     step === currentStep ? 'text-gray-800 font-medium' : 'text-gray-500'
                   }`}>
-                    {stepLabels[step-1]}
+                    {currentStepLabels[step-1]}
                   </span>
                 </div>
               </React.Fragment>

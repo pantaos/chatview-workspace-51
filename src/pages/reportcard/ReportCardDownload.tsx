@@ -66,10 +66,13 @@ Report Card System - VERSA Studio
     navigate('/reportcard');
   };
 
+  const reportCardStepLabels = ['Information', 'Textfreigabe', 'Report Download'];
+
   return (
     <TrendcastLayout 
-      title="Report Card Generator" 
+      title="Report erstellen" 
       currentStep={3}
+      stepLabels={reportCardStepLabels}
       goBack={() => navigate('/reportcard/edit')}
     >
       <div className="space-y-8 text-center">
@@ -89,33 +92,26 @@ Report Card System - VERSA Studio
               </p>
             </div>
 
-            <div className="bg-gray-50 p-8 rounded-lg border-2 border-dashed border-gray-300">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Download className="h-8 w-8 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg">{location.state?.studentName}_Report_Card.txt</h3>
-                  <p className="text-sm text-gray-500">Text Document • Ready for download</p>
-                </div>
+            <div className="flex flex-col items-center space-y-6">
+              <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
+                <Download className="h-12 w-12 text-blue-600" />
               </div>
-            </div>
-
-            <div className="flex justify-center gap-4">
-              <TrendcastButton 
-                onClick={handleDownload}
-                loading={loading}
-                icon={<Download className="ml-2 h-4 w-4" />}
-              >
-                Download Report Card
-              </TrendcastButton>
               
-              <TrendcastButton 
-                onClick={handleCreateAnother}
-                variant="secondary"
-              >
-                Create Another Report
-              </TrendcastButton>
+              <div className="space-y-4">
+                <TrendcastButton 
+                  onClick={handleDownload}
+                  loading={loading}
+                >
+                  Download Report Card
+                </TrendcastButton>
+                
+                <TrendcastButton 
+                  onClick={handleCreateAnother}
+                  variant="secondary"
+                >
+                  Create Another Report
+                </TrendcastButton>
+              </div>
             </div>
           </>
         )}

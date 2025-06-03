@@ -82,10 +82,13 @@ ${studentData.studentName} is a pleasure to have in class and consistently demon
     }, 1500);
   };
 
+  const reportCardStepLabels = ['Information', 'Textfreigabe', 'Report Download'];
+
   return (
     <TrendcastLayout 
-      title="Report Card Generator" 
+      title="Report erstellen" 
       currentStep={2}
+      stepLabels={reportCardStepLabels}
       goBack={() => navigate('/reportcard')}
     >
       {generating ? (

@@ -52,29 +52,16 @@ const TagFilter = ({
         <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-white`}>
           {isMobile ? 'Tags' : 'Filter by Tags'}
         </h3>
-        <div className="flex gap-2">
-          {onCreateTag && (
-            <Button 
-              variant="ghost" 
-              size={isMobile ? "sm" : "sm"}
-              onClick={() => setShowCreateForm(!showCreateForm)}
-              className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
-            >
-              <Plus className={`${isMobile ? 'h-2 w-2 mr-0.5' : 'h-3 w-3 mr-1'}`} />
-              {isMobile ? 'New' : 'New Tag'}
-            </Button>
-          )}
-          {selectedTags.length > 0 && (
-            <Button 
-              variant="ghost" 
-              size={isMobile ? "sm" : "sm"}
-              onClick={onClearAll}
-              className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
-            >
-              {isMobile ? 'Clear' : 'Clear All'}
-            </Button>
-          )}
-        </div>
+        {selectedTags.length > 0 && (
+          <Button 
+            variant="ghost" 
+            size={isMobile ? "sm" : "sm"}
+            onClick={onClearAll}
+            className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
+          >
+            {isMobile ? 'Clear' : 'Clear All'}
+          </Button>
+        )}
       </div>
 
       {showCreateForm && onCreateTag && (
@@ -160,6 +147,17 @@ const TagFilter = ({
             </Badge>
           );
         })}
+        
+        {onCreateTag && (
+          <Badge
+            variant="outline"
+            className={`cursor-pointer transition-colors text-white border-white/30 hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
+            onClick={() => setShowCreateForm(!showCreateForm)}
+          >
+            <Plus className={`${isMobile ? 'h-2 w-2 mr-0.5' : 'h-3 w-3 mr-1'}`} />
+            {isMobile ? 'New' : 'New Tag'}
+          </Badge>
+        )}
       </div>
     </div>
   );

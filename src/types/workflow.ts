@@ -29,6 +29,7 @@ export interface BaseWorkflow {
   icon: string;
   tags: WorkflowTag[];
   translationKey?: string;
+  isFavorite?: boolean;
 }
 
 export interface Assistant extends BaseWorkflow {

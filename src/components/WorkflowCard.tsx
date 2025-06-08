@@ -17,7 +17,8 @@ import {
   Bot, 
   Rss, 
   Crop, 
-  GraduationCap 
+  GraduationCap,
+  Heart
 } from "lucide-react";
 
 const iconMap = {
@@ -41,6 +42,8 @@ interface WorkflowCardProps {
   className?: string;
   onClick?: () => void;
   translationKey?: string;
+  isFavorite?: boolean;
+  onFavoriteToggle?: () => void;
 }
 
 const WorkflowCard = ({ 
@@ -50,7 +53,9 @@ const WorkflowCard = ({
   tags = [],
   className,
   onClick,
-  translationKey
+  translationKey,
+  isFavorite = false,
+  onFavoriteToggle
 }: WorkflowCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const { translate } = useLanguage();
@@ -74,6 +79,11 @@ const WorkflowCard = ({
     });
   };
 
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onFavoriteToggle?.();
+  };
+
   const displayTitle = translationKey ? translate(`workflow.${translationKey}`) : title;
   const displayDescription = translationKey ? translate(`workflow.${translationKey}Desc`) : description;
   
@@ -92,17 +102,50 @@ const WorkflowCard = ({
     >
       {!isMobile && (
         <div className={cn(
-          "absolute top-2 right-2 transition-opacity", 
+          "absolute top-2 right-2 transition-opacity flex gap-1", 
           isHovering ? "opacity-100" : "opacity-0"
         )}
           onClick={(e) => e.stopPropagation()}
         >
+          {onFavoriteToggle && (
+            <button
+              onClick={handleFavoriteClick}
+              className={cn(
+                "p-1 rounded-full transition-colors",
+                isFavorite 
+                  ? "text-red-500 hover:text-red-600" 
+                  : "text-gray-400 hover:text-red-500"
+              )}
+            >
+              <Heart 
+                className="h-4 w-4" 
+                fill={isFavorite ? "currentColor" : "none"}
+              />
+            </button>
+          )}
           <WorkflowMenu
             onEdit={handleEdit}
             onSettings={handleSettings}
             onDelete={handleDelete}
           />
         </div>
+      )}
+
+      {isMobile && onFavoriteToggle && (
+        <button
+          onClick={handleFavoriteClick}
+          className={cn(
+            "absolute top-2 right-2 p-1 rounded-full transition-colors",
+            isFavorite 
+              ? "text-red-500" 
+              : "text-gray-400"
+          )}
+        >
+          <Heart 
+            className="h-3 w-3" 
+            fill={isFavorite ? "currentColor" : "none"}
+          />
+        </button>
       )}
       
       <div className={cn(

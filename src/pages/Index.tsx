@@ -43,7 +43,7 @@ const Index = () => {
     { id: "development", name: "Development", color: "#EF4444" },
   ]);
 
-  const [activeTab, setActiveTab] = useState("assistants");
+  const [activeTab, setActiveTab] = useState("all");
   const [showChat, setShowChat] = useState(false);
   const [historyData, setHistoryData] = useState([
     {
@@ -95,7 +95,8 @@ const Index = () => {
       translationKey: "chatAssistant",
       type: "assistant" as const,
       systemPrompt: "You are a helpful assistant.",
-      starters: []
+      starters: [],
+      isFavorite: false
     },
     {
       id: "code",
@@ -106,7 +107,8 @@ const Index = () => {
       translationKey: "codeHelper",
       type: "assistant" as const,
       systemPrompt: "You are a coding assistant.",
-      starters: []
+      starters: [],
+      isFavorite: false
     },
     {
       id: "image",
@@ -117,7 +119,8 @@ const Index = () => {
       translationKey: "imageCreator",
       type: "assistant" as const,
       systemPrompt: "You help create images.",
-      starters: []
+      starters: [],
+      isFavorite: true
     },
   ]);
   const [availableWorkflows, setAvailableWorkflows] = useState<Workflow[]>([
@@ -130,7 +133,8 @@ const Index = () => {
       translationKey: "trendcast",
       type: "workflow" as const,
       steps: [],
-      route: "/trendcast"
+      route: "/trendcast",
+      isFavorite: true
     },
     {
       id: "reportcard",
@@ -141,7 +145,8 @@ const Index = () => {
       translationKey: "reportCardGenerator",
       type: "workflow" as const,
       steps: [],
-      route: "/reportcard"
+      route: "/reportcard",
+      isFavorite: false
     },
     {
       id: "image-cropper",
@@ -152,7 +157,8 @@ const Index = () => {
       translationKey: "imageCropper",
       type: "workflow" as const,
       steps: [],
-      route: "/image-cropper"
+      route: "/image-cropper",
+      isFavorite: false
     }
   ]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -215,7 +221,8 @@ const Index = () => {
         tags: workflowData.tags || [],
         type: "assistant" as const,
         systemPrompt: workflowData.systemPrompt,
-        starters: workflowData.starters
+        starters: workflowData.starters,
+        isFavorite: false
       };
 
       setAvailableAssistants(prev => [...prev, newAssistant]);
@@ -228,7 +235,8 @@ const Index = () => {
         tags: workflowData.tags || [],
         type: "workflow" as const,
         steps: workflowData.steps,
-        route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`
+        route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`,
+        isFavorite: false
       };
 
       setAvailableWorkflows(prev => [...prev, newWorkflow]);
@@ -243,6 +251,22 @@ const Index = () => {
       setShowChat(true);
     } else if (workflow.type === "workflow" && workflow.route) {
       navigate(workflow.route);
+    }
+  };
+
+  const toggleWorkflowFavorite = (id: string, type: 'assistant' | 'workflow') => {
+    if (type === 'assistant') {
+      setAvailableAssistants(prev =>
+        prev.map(item => 
+          item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+        )
+      );
+    } else {
+      setAvailableWorkflows(prev =>
+        prev.map(item => 
+          item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+        )
+      );
     }
   };
 
@@ -265,8 +289,12 @@ const Index = () => {
     );
   };
 
+  const allWorkflowItems = [...availableAssistants, ...availableWorkflows];
   const filteredAssistants = filterByTags(availableAssistants);
   const filteredWorkflows = filterByTags(availableWorkflows);
+  const filteredAllItems = filterByTags(allWorkflowItems);
+  const favoriteItems = allWorkflowItems.filter(item => item.isFavorite);
+  const filteredFavorites = filterByTags(favoriteItems);
 
   useEffect(() => {
     setShowChat(false);
@@ -321,14 +349,17 @@ const Index = () => {
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <div className={`${isMobile ? 'flex flex-col space-y-3' : 'filters-with-button'}`}>
                       <TabsList className={`bg-white/20 backdrop-blur-sm ${isMobile ? 'w-full' : ''}`}>
+                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-black text-white flex-1">
+                          All
+                        </TabsTrigger>
                         <TabsTrigger value="assistants" className="data-[state=active]:bg-white data-[state=active]:text-black text-white flex-1">
                           {isMobile ? 'AI' : 'Assistants'}
                         </TabsTrigger>
                         <TabsTrigger value="workflows" className="data-[state=active]:bg-white data-[state=active]:text-black text-white flex-1">
                           Workflows
                         </TabsTrigger>
-                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-black text-white flex-1">
-                          All
+                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-black text-white flex-1">
+                          {isMobile ? 'Favs' : 'Favorites'}
                         </TabsTrigger>
                       </TabsList>
                       
@@ -355,6 +386,25 @@ const Index = () => {
                       </div>
                     )}
                     
+                    <TabsContent value="all" className={`animate-fade-in ${isMobile ? 'mt-4' : 'mt-8'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6'}`}>
+                        {filteredAllItems.map((item) => (
+                          <WorkflowCard
+                            key={item.id}
+                            title={item.title}
+                            description={item.description}
+                            icon={item.icon}
+                            tags={item.tags}
+                            translationKey={item.translationKey}
+                            onClick={() => handleWorkflowClick(item)}
+                            onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                            isFavorite={item.isFavorite}
+                            className={isMobile ? 'text-xs' : ''}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                    
                     <TabsContent value="assistants" className={`animate-fade-in ${isMobile ? 'mt-4' : 'mt-8'}`}>
                       <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6'}`}>
                         {filteredAssistants.map((assistant) => (
@@ -366,6 +416,8 @@ const Index = () => {
                             tags={assistant.tags}
                             translationKey={assistant.translationKey}
                             onClick={() => handleWorkflowClick(assistant)}
+                            onFavoriteToggle={() => toggleWorkflowFavorite(assistant.id, assistant.type)}
+                            isFavorite={assistant.isFavorite}
                             className={isMobile ? 'text-xs' : ''}
                           />
                         ))}
@@ -383,49 +435,36 @@ const Index = () => {
                             tags={workflow.tags}
                             translationKey={workflow.translationKey}
                             onClick={() => handleWorkflowClick(workflow)}
+                            onFavoriteToggle={() => toggleWorkflowFavorite(workflow.id, workflow.type)}
+                            isFavorite={workflow.isFavorite}
                             className={isMobile ? 'text-xs' : ''}
                           />
                         ))}
                       </div>
                     </TabsContent>
-                    
-                    <TabsContent value="all" className={`animate-fade-in ${isMobile ? 'mt-4' : 'mt-8'}`}>
-                      <div className={`space-y-${isMobile ? '6' : '8'}`}>
-                        <div>
-                          <h3 className={`${isMobile ? 'text-base' : 'text-lg'} font-medium text-white ${isMobile ? 'mb-3' : 'mb-4'}`}>Assistants</h3>
-                          <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6'}`}>
-                            {filteredAssistants.map((assistant) => (
-                              <WorkflowCard
-                                key={assistant.id}
-                                title={assistant.title}
-                                description={assistant.description}
-                                icon={assistant.icon}
-                                tags={assistant.tags}
-                                translationKey={assistant.translationKey}
-                                onClick={() => handleWorkflowClick(assistant)}
-                                className={isMobile ? 'text-xs' : ''}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className={`${isMobile ? 'text-base' : 'text-lg'} font-medium text-white ${isMobile ? 'mb-3' : 'mb-4'}`}>Workflows</h3>
-                          <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6'}`}>
-                            {filteredWorkflows.map((workflow) => (
-                              <WorkflowCard
-                                key={workflow.id}
-                                title={workflow.title}
-                                description={workflow.description}
-                                icon={workflow.icon}
-                                tags={workflow.tags}
-                                translationKey={workflow.translationKey}
-                                onClick={() => handleWorkflowClick(workflow)}
-                                className={isMobile ? 'text-xs' : ''}
-                              />
-                            ))}
-                          </div>
-                        </div>
+
+                    <TabsContent value="favorites" className={`animate-fade-in ${isMobile ? 'mt-4' : 'mt-8'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6'}`}>
+                        {filteredFavorites.map((item) => (
+                          <WorkflowCard
+                            key={item.id}
+                            title={item.title}
+                            description={item.description}
+                            icon={item.icon}
+                            tags={item.tags}
+                            translationKey={item.translationKey}
+                            onClick={() => handleWorkflowClick(item)}
+                            onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                            isFavorite={item.isFavorite}
+                            className={isMobile ? 'text-xs' : ''}
+                          />
+                        ))}
                       </div>
+                      {filteredFavorites.length === 0 && (
+                        <div className="text-center text-white/60 py-8">
+                          <p>No favorite items yet. Click the heart icon on any workflow or assistant to add it to favorites!</p>
+                        </div>
+                      )}
                     </TabsContent>
                   </Tabs>
                 </div>

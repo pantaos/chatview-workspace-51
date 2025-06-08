@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -85,7 +86,7 @@ const Index = () => {
   ]);
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
-  const [availableAssistants, setAvailableAssistants] = useState([
+  const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>([
     {
       id: "chat",
       title: "Chat Assistant",
@@ -93,7 +94,7 @@ const Index = () => {
       icon: "MessageSquare",
       tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
       translationKey: "chatAssistant",
-      type: "assistant",
+      type: "assistant" as const,
       systemPrompt: "You are a helpful assistant.",
       starters: []
     },
@@ -104,7 +105,7 @@ const Index = () => {
       icon: "Code",
       tags: [{ id: "development", name: "Development", color: "#EF4444" }],
       translationKey: "codeHelper",
-      type: "assistant",
+      type: "assistant" as const,
       systemPrompt: "You are a coding assistant.",
       starters: []
     },
@@ -115,12 +116,12 @@ const Index = () => {
       icon: "Image",
       tags: [{ id: "creative", name: "Creative", color: "#10B981" }],
       translationKey: "imageCreator",
-      type: "assistant",
+      type: "assistant" as const,
       systemPrompt: "You help create images.",
       starters: []
     },
   ]);
-  const [availableWorkflows, setAvailableWorkflows] = useState([
+  const [availableWorkflows, setAvailableWorkflows] = useState<Workflow[]>([
     {
       id: "trendcast",
       title: "Trendcast",
@@ -128,7 +129,7 @@ const Index = () => {
       icon: "Rss",
       tags: [{ id: "creative", name: "Creative", color: "#10B981" }, { id: "business", name: "Business", color: "#8B5CF6" }],
       translationKey: "trendcast",
-      type: "workflow",
+      type: "workflow" as const,
       steps: [],
       route: "/trendcast"
     },
@@ -139,7 +140,7 @@ const Index = () => {
       icon: "GraduationCap",
       tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
       translationKey: "reportCardGenerator",
-      type: "workflow",
+      type: "workflow" as const,
       steps: [],
       route: "/reportcard"
     },
@@ -150,7 +151,7 @@ const Index = () => {
       icon: "Crop",
       tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
       translationKey: "imageCropper",
-      type: "workflow",
+      type: "workflow" as const,
       steps: [],
       route: "/image-cropper"
     }
@@ -213,7 +214,7 @@ const Index = () => {
         description: workflowData.description,
         icon: iconMap[workflowData.selectedIcon] || "MessageSquare",
         tags: workflowData.tags || [],
-        type: "assistant",
+        type: "assistant" as const,
         systemPrompt: workflowData.systemPrompt,
         starters: workflowData.starters
       };
@@ -226,7 +227,7 @@ const Index = () => {
         description: workflowData.description,
         icon: workflowData.selectedIcon,
         tags: workflowData.tags || [],
-        type: "workflow",
+        type: "workflow" as const,
         steps: workflowData.steps,
         route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`
       };
@@ -495,12 +496,12 @@ const Index = () => {
                           isFavorite={item.isFavorite}
                           onClick={() => {
                             console.log(`History item clicked: ${item.id}`);
-                            const workflowItem: WorkflowItem = {
+                            const workflowItem: Assistant = {
                               id: item.id,
                               title: item.workflowType,
                               description: item.title,
                               icon: "MessageSquare",
-                              type: "assistant",
+                              type: "assistant" as const,
                               tags: [],
                               systemPrompt: "You are a helpful assistant.",
                               starters: []
@@ -527,12 +528,12 @@ const Index = () => {
                           isFavorite={item.isFavorite}
                           onClick={() => {
                             console.log(`History item clicked: ${item.id}`);
-                            const workflowItem: WorkflowItem = {
+                            const workflowItem: Assistant = {
                               id: item.id,
                               title: item.workflowType,
                               description: item.title,
                               icon: "MessageSquare",
-                              type: "assistant",
+                              type: "assistant" as const,
                               tags: [],
                               systemPrompt: "You are a helpful assistant.",
                               starters: []
@@ -563,116 +564,5 @@ const Index = () => {
     </div>
   );
 };
-
-const assistants: Assistant[] = [
-  {
-    id: "chat",
-    title: "Chat Assistant",
-    description: "General purpose AI chat assistant",
-    icon: "MessageSquare",
-    tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
-    translationKey: "chatAssistant",
-    type: "assistant",
-    systemPrompt: "You are a helpful assistant.",
-    starters: []
-  },
-  {
-    id: "code",
-    title: "Code Helper",
-    description: "Generate and explain code",
-    icon: "Code",
-    tags: [{ id: "development", name: "Development", color: "#EF4444" }],
-    translationKey: "codeHelper",
-    type: "assistant",
-    systemPrompt: "You are a coding assistant.",
-    starters: []
-  },
-  {
-    id: "image",
-    title: "Image Creator",
-    description: "Create images from text descriptions",
-    icon: "Image",
-    tags: [{ id: "creative", name: "Creative", color: "#10B981" }],
-    translationKey: "imageCreator",
-    type: "assistant",
-    systemPrompt: "You help create images.",
-    starters: []
-  },
-];
-
-const workflows: Workflow[] = [
-  {
-    id: "trendcast",
-    title: "Trendcast",
-    description: "Turn website content into professional videos",
-    icon: "Rss",
-    tags: [{ id: "creative", name: "Creative", color: "#10B981" }, { id: "business", name: "Business", color: "#8B5CF6" }],
-    translationKey: "trendcast",
-    type: "workflow",
-    steps: [],
-    route: "/trendcast"
-  },
-  {
-    id: "reportcard",
-    title: "Report Card Generator",
-    description: "Generate professional report cards for students",
-    icon: "GraduationCap",
-    tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
-    translationKey: "reportCardGenerator",
-    type: "workflow",
-    steps: [],
-    route: "/reportcard"
-  },
-  {
-    id: "image-cropper",
-    title: "Image Cropper",
-    description: "Resize and crop images to fit specific dimensions",
-    icon: "Crop",
-    tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
-    translationKey: "imageCropper",
-    type: "workflow",
-    steps: [],
-    route: "/image-cropper"
-  }
-];
-
-const historyItems = [
-  {
-    id: "hist1",
-    title: "Summarized quarterly report",
-    workflowType: "Document Helper",
-    timestamp: new Date(Date.now() - 1000 * 60 * 30),
-    icon: FileText,
-    status: "completed" as const,
-    isFavorite: false
-  },
-  {
-    id: "hist2",
-    title: "Generated product images",
-    workflowType: "Image Creator",
-    timestamp: new Date(Date.now() - 1000 * 60 * 120),
-    icon: Image,
-    status: "completed" as const,
-    isFavorite: true
-  },
-  {
-    id: "hist3",
-    title: "Code refactoring assistant",
-    workflowType: "Code Helper",
-    timestamp: new Date(Date.now() - 1000 * 60 * 240),
-    icon: Code,
-    status: "failed" as const,
-    isFavorite: false
-  },
-  {
-    id: "hist4",
-    title: "Customer support chat analysis",
-    workflowType: "Chat Assistant",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    icon: MessageSquare,
-    status: "completed" as const,
-    isFavorite: false
-  },
-];
 
 export default Index;

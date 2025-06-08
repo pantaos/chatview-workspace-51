@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { MessageSquare, Workflow, Bot, Settings } from "lucide-react";
 import {
@@ -12,17 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import NewWorkflowDialog from "./NewWorkflowDialog";
 import WorkflowBuilderDialog from "./WorkflowBuilderDialog";
+import { WorkflowTag } from "@/types/workflow";
 
 interface WorkflowCreationDialogProps {
   open: boolean;
   onClose: () => void;
   onCreateWorkflow: (workflow: any) => void;
+  availableTags?: WorkflowTag[];
+  onCreateTag?: (tag: { name: string; color: string }) => void;
 }
 
 const WorkflowCreationDialog = ({
   open,
   onClose,
   onCreateWorkflow,
+  availableTags = [],
+  onCreateTag,
 }: WorkflowCreationDialogProps) => {
   const [selectedType, setSelectedType] = useState<'assistant' | 'workflow' | null>(null);
 
@@ -46,6 +50,8 @@ const WorkflowCreationDialog = ({
         open={true}
         onClose={handleClose}
         onCreateWorkflow={handleWorkflowCreate}
+        availableTags={availableTags}
+        onCreateTag={onCreateTag}
       />
     );
   }
@@ -56,6 +62,8 @@ const WorkflowCreationDialog = ({
         open={true}
         onClose={handleClose}
         onCreateWorkflow={handleWorkflowCreate}
+        availableTags={availableTags}
+        onCreateTag={onCreateTag}
       />
     );
   }

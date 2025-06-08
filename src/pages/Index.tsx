@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -31,142 +30,137 @@ import ModernNavbar from "@/components/ModernNavbar";
 import { WorkflowItem, Assistant, Workflow, WorkflowTag } from "@/types/workflow";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const defaultTags: WorkflowTag[] = [
-  { id: "productivity", name: "Productivity", color: "#3B82F6" },
-  { id: "creative", name: "Creative", color: "#10B981" },
-  { id: "education", name: "Education", color: "#F59E0B" },
-  { id: "business", name: "Business", color: "#8B5CF6" },
-  { id: "development", name: "Development", color: "#EF4444" },
-];
-
-const assistants: Assistant[] = [
-  {
-    id: "chat",
-    title: "Chat Assistant",
-    description: "General purpose AI chat assistant",
-    icon: "MessageSquare",
-    tags: [defaultTags[0]],
-    translationKey: "chatAssistant",
-    type: "assistant",
-    systemPrompt: "You are a helpful assistant.",
-    starters: []
-  },
-  {
-    id: "code",
-    title: "Code Helper",
-    description: "Generate and explain code",
-    icon: "Code",
-    tags: [defaultTags[4]],
-    translationKey: "codeHelper",
-    type: "assistant",
-    systemPrompt: "You are a coding assistant.",
-    starters: []
-  },
-  {
-    id: "image",
-    title: "Image Creator",
-    description: "Create images from text descriptions",
-    icon: "Image",
-    tags: [defaultTags[1]],
-    translationKey: "imageCreator",
-    type: "assistant",
-    systemPrompt: "You help create images.",
-    starters: []
-  },
-];
-
-const workflows: Workflow[] = [
-  {
-    id: "trendcast",
-    title: "Trendcast",
-    description: "Turn website content into professional videos",
-    icon: "Rss",
-    tags: [defaultTags[1], defaultTags[3]],
-    translationKey: "trendcast",
-    type: "workflow",
-    steps: [],
-    route: "/trendcast"
-  },
-  {
-    id: "reportcard",
-    title: "Report Card Generator",
-    description: "Generate professional report cards for students",
-    icon: "GraduationCap",
-    tags: [defaultTags[2]],
-    translationKey: "reportCardGenerator",
-    type: "workflow",
-    steps: [],
-    route: "/reportcard"
-  },
-  {
-    id: "image-cropper",
-    title: "Image Cropper",
-    description: "Resize and crop images to fit specific dimensions",
-    icon: "Crop",
-    tags: [defaultTags[0]],
-    translationKey: "imageCropper",
-    type: "workflow",
-    steps: [],
-    route: "/image-cropper"
-  }
-];
-
-const historyItems = [
-  {
-    id: "hist1",
-    title: "Summarized quarterly report",
-    workflowType: "Document Helper",
-    timestamp: new Date(Date.now() - 1000 * 60 * 30),
-    icon: FileText,
-    status: "completed" as const,
-    isFavorite: false
-  },
-  {
-    id: "hist2",
-    title: "Generated product images",
-    workflowType: "Image Creator",
-    timestamp: new Date(Date.now() - 1000 * 60 * 120),
-    icon: Image,
-    status: "completed" as const,
-    isFavorite: true
-  },
-  {
-    id: "hist3",
-    title: "Code refactoring assistant",
-    workflowType: "Code Helper",
-    timestamp: new Date(Date.now() - 1000 * 60 * 240),
-    icon: Code,
-    status: "failed" as const,
-    isFavorite: false
-  },
-  {
-    id: "hist4",
-    title: "Customer support chat analysis",
-    workflowType: "Chat Assistant",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    icon: MessageSquare,
-    status: "completed" as const,
-    isFavorite: false
-  },
-];
-
 const Index = () => {
   const navigate = useNavigate();
   const { translate } = useLanguage();
   const isMobile = useIsMobile();
+  
+  const [defaultTags, setDefaultTags] = useState<WorkflowTag[]>([
+    { id: "productivity", name: "Productivity", color: "#3B82F6" },
+    { id: "creative", name: "Creative", color: "#10B981" },
+    { id: "education", name: "Education", color: "#F59E0B" },
+    { id: "business", name: "Business", color: "#8B5CF6" },
+    { id: "development", name: "Development", color: "#EF4444" },
+  ]);
+
   const [activeTab, setActiveTab] = useState("assistants");
   const [showChat, setShowChat] = useState(false);
-  const [historyData, setHistoryData] = useState(historyItems);
+  const [historyData, setHistoryData] = useState([
+    {
+      id: "hist1",
+      title: "Summarized quarterly report",
+      workflowType: "Document Helper",
+      timestamp: new Date(Date.now() - 1000 * 60 * 30),
+      icon: FileText,
+      status: "completed" as const,
+      isFavorite: false
+    },
+    {
+      id: "hist2",
+      title: "Generated product images",
+      workflowType: "Image Creator",
+      timestamp: new Date(Date.now() - 1000 * 60 * 120),
+      icon: Image,
+      status: "completed" as const,
+      isFavorite: true
+    },
+    {
+      id: "hist3",
+      title: "Code refactoring assistant",
+      workflowType: "Code Helper",
+      timestamp: new Date(Date.now() - 1000 * 60 * 240),
+      icon: Code,
+      status: "failed" as const,
+      isFavorite: false
+    },
+    {
+      id: "hist4",
+      title: "Customer support chat analysis",
+      workflowType: "Chat Assistant",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
+      icon: MessageSquare,
+      status: "completed" as const,
+      isFavorite: false
+    },
+  ]);
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
-  const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>(assistants);
-  const [availableWorkflows, setAvailableWorkflows] = useState<Workflow[]>(workflows);
+  const [availableAssistants, setAvailableAssistants] = useState([
+    {
+      id: "chat",
+      title: "Chat Assistant",
+      description: "General purpose AI chat assistant",
+      icon: "MessageSquare",
+      tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
+      translationKey: "chatAssistant",
+      type: "assistant",
+      systemPrompt: "You are a helpful assistant.",
+      starters: []
+    },
+    {
+      id: "code",
+      title: "Code Helper",
+      description: "Generate and explain code",
+      icon: "Code",
+      tags: [{ id: "development", name: "Development", color: "#EF4444" }],
+      translationKey: "codeHelper",
+      type: "assistant",
+      systemPrompt: "You are a coding assistant.",
+      starters: []
+    },
+    {
+      id: "image",
+      title: "Image Creator",
+      description: "Create images from text descriptions",
+      icon: "Image",
+      tags: [{ id: "creative", name: "Creative", color: "#10B981" }],
+      translationKey: "imageCreator",
+      type: "assistant",
+      systemPrompt: "You help create images.",
+      starters: []
+    },
+  ]);
+  const [availableWorkflows, setAvailableWorkflows] = useState([
+    {
+      id: "trendcast",
+      title: "Trendcast",
+      description: "Turn website content into professional videos",
+      icon: "Rss",
+      tags: [{ id: "creative", name: "Creative", color: "#10B981" }, { id: "business", name: "Business", color: "#8B5CF6" }],
+      translationKey: "trendcast",
+      type: "workflow",
+      steps: [],
+      route: "/trendcast"
+    },
+    {
+      id: "reportcard",
+      title: "Report Card Generator",
+      description: "Generate professional report cards for students",
+      icon: "GraduationCap",
+      tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
+      translationKey: "reportCardGenerator",
+      type: "workflow",
+      steps: [],
+      route: "/reportcard"
+    },
+    {
+      id: "image-cropper",
+      title: "Image Cropper",
+      description: "Resize and crop images to fit specific dimensions",
+      icon: "Crop",
+      tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
+      translationKey: "imageCropper",
+      type: "workflow",
+      steps: [],
+      route: "/image-cropper"
+    }
+  ]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentWorkflow, setCurrentWorkflow] = useState<WorkflowItem | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  
+
   const handleSearchSubmit = (text: string, files: File[]) => {
-    setCurrentWorkflow(assistants[0]);
+    setCurrentWorkflow(availableAssistants[0]);
     setShowChat(true);
   };
 
@@ -191,6 +185,16 @@ const Index = () => {
     );
   };
 
+  const handleCreateTag = (tagData: { name: string; color: string }) => {
+    const newTag: WorkflowTag = {
+      id: `tag-${Date.now()}`,
+      name: tagData.name,
+      color: tagData.color,
+    };
+    setDefaultTags(prev => [...prev, newTag]);
+    toast.success(`Tag "${tagData.name}" created successfully!`);
+  };
+
   const handleCreateWorkflow = (workflowData: any) => {
     if (workflowData.type === 'assistant') {
       const iconMap: Record<string, string> = {
@@ -208,7 +212,7 @@ const Index = () => {
         title: workflowData.title,
         description: workflowData.description,
         icon: iconMap[workflowData.selectedIcon] || "MessageSquare",
-        tags: [],
+        tags: workflowData.tags || [],
         type: "assistant",
         systemPrompt: workflowData.systemPrompt,
         starters: workflowData.starters
@@ -221,7 +225,7 @@ const Index = () => {
         title: workflowData.title,
         description: workflowData.description,
         icon: workflowData.selectedIcon,
-        tags: [],
+        tags: workflowData.tags || [],
         type: "workflow",
         steps: workflowData.steps,
         route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`
@@ -551,11 +555,124 @@ const Index = () => {
             open={showNewWorkflowDialog}
             onClose={() => setShowNewWorkflowDialog(false)}
             onCreateWorkflow={handleCreateWorkflow}
+            availableTags={defaultTags}
+            onCreateTag={handleCreateTag}
           />
         </>
       )}
     </div>
   );
 };
+
+const assistants: Assistant[] = [
+  {
+    id: "chat",
+    title: "Chat Assistant",
+    description: "General purpose AI chat assistant",
+    icon: "MessageSquare",
+    tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
+    translationKey: "chatAssistant",
+    type: "assistant",
+    systemPrompt: "You are a helpful assistant.",
+    starters: []
+  },
+  {
+    id: "code",
+    title: "Code Helper",
+    description: "Generate and explain code",
+    icon: "Code",
+    tags: [{ id: "development", name: "Development", color: "#EF4444" }],
+    translationKey: "codeHelper",
+    type: "assistant",
+    systemPrompt: "You are a coding assistant.",
+    starters: []
+  },
+  {
+    id: "image",
+    title: "Image Creator",
+    description: "Create images from text descriptions",
+    icon: "Image",
+    tags: [{ id: "creative", name: "Creative", color: "#10B981" }],
+    translationKey: "imageCreator",
+    type: "assistant",
+    systemPrompt: "You help create images.",
+    starters: []
+  },
+];
+
+const workflows: Workflow[] = [
+  {
+    id: "trendcast",
+    title: "Trendcast",
+    description: "Turn website content into professional videos",
+    icon: "Rss",
+    tags: [{ id: "creative", name: "Creative", color: "#10B981" }, { id: "business", name: "Business", color: "#8B5CF6" }],
+    translationKey: "trendcast",
+    type: "workflow",
+    steps: [],
+    route: "/trendcast"
+  },
+  {
+    id: "reportcard",
+    title: "Report Card Generator",
+    description: "Generate professional report cards for students",
+    icon: "GraduationCap",
+    tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
+    translationKey: "reportCardGenerator",
+    type: "workflow",
+    steps: [],
+    route: "/reportcard"
+  },
+  {
+    id: "image-cropper",
+    title: "Image Cropper",
+    description: "Resize and crop images to fit specific dimensions",
+    icon: "Crop",
+    tags: [{ id: "productivity", name: "Productivity", color: "#3B82F6" }],
+    translationKey: "imageCropper",
+    type: "workflow",
+    steps: [],
+    route: "/image-cropper"
+  }
+];
+
+const historyItems = [
+  {
+    id: "hist1",
+    title: "Summarized quarterly report",
+    workflowType: "Document Helper",
+    timestamp: new Date(Date.now() - 1000 * 60 * 30),
+    icon: FileText,
+    status: "completed" as const,
+    isFavorite: false
+  },
+  {
+    id: "hist2",
+    title: "Generated product images",
+    workflowType: "Image Creator",
+    timestamp: new Date(Date.now() - 1000 * 60 * 120),
+    icon: Image,
+    status: "completed" as const,
+    isFavorite: true
+  },
+  {
+    id: "hist3",
+    title: "Code refactoring assistant",
+    workflowType: "Code Helper",
+    timestamp: new Date(Date.now() - 1000 * 60 * 240),
+    icon: Code,
+    status: "failed" as const,
+    isFavorite: false
+  },
+  {
+    id: "hist4",
+    title: "Customer support chat analysis",
+    workflowType: "Chat Assistant",
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    icon: MessageSquare,
+    status: "completed" as const,
+    isFavorite: false
+  },
+];
 
 export default Index;

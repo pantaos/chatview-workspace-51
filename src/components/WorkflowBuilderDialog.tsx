@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import {
@@ -21,24 +20,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { WorkflowStep, WorkflowField } from "@/types/workflow";
+import { WorkflowStep, WorkflowField, WorkflowTag } from "@/types/workflow";
+import TagManager from "./TagManager";
 
 interface WorkflowBuilderDialogProps {
   open: boolean;
   onClose: () => void;
   onCreateWorkflow: (workflow: any) => void;
+  availableTags?: WorkflowTag[];
+  onCreateTag?: (tag: { name: string; color: string }) => void;
 }
 
 const WorkflowBuilderDialog = ({
   open,
   onClose,
   onCreateWorkflow,
+  availableTags = [],
+  onCreateTag,
 }: WorkflowBuilderDialogProps) => {
   const [workflowData, setWorkflowData] = useState({
     title: "",
     description: "",
     selectedIcon: "FileText",
     steps: [] as WorkflowStep[],
+    selectedTags: [] as WorkflowTag[],
   });
 
   const addStep = () => {
@@ -95,12 +100,22 @@ const WorkflowBuilderDialog = ({
     updateStep(stepIndex, { fields: updatedFields });
   };
 
+  const handleTagsChange = (tags: WorkflowTag[]) => {
+    setWorkflowData(prev => ({ ...prev, selectedTags: tags }));
+  };
+
+  const handleCreateTag = (tagData: { name: string; color: string }) => {
+    if (onCreateTag) {
+      onCreateTag(tagData);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreateWorkflow({
       ...workflowData,
       type: 'workflow',
-      tags: [],
+      tags: workflowData.selectedTags,
     });
     onClose();
   };
@@ -138,6 +153,13 @@ const WorkflowBuilderDialog = ({
                 required
               />
             </div>
+
+            <TagManager
+              availableTags={availableTags}
+              selectedTags={workflowData.selectedTags}
+              onTagsChange={handleTagsChange}
+              onCreateTag={handleCreateTag}
+            />
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">

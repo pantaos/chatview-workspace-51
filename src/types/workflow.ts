@@ -47,3 +47,8 @@ export interface Workflow extends BaseWorkflow {
 }
 
 export type WorkflowItem = Assistant | Workflow;
+
+export interface TagCreationData {
+  name: string;
+  color: string;
+}

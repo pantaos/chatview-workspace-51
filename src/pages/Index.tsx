@@ -21,97 +21,90 @@ import WorkflowCard from "@/components/WorkflowCard";
 import HistoryItem from "@/components/HistoryItem";
 import ChatInterface from "@/components/ChatInterface";
 import { Slider } from "@/components/ui/slider";
-import NewWorkflowDialog from "@/components/NewWorkflowDialog";
+import WorkflowCreationDialog from "@/components/WorkflowCreationDialog";
+import TagFilter from "@/components/TagFilter";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ModernNavbar from "@/components/ModernNavbar";
+import { WorkflowItem, Assistant, Workflow, WorkflowTag } from "@/types/workflow";
 
-interface Workflow {
-  id: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  color?: string;
-  translationKey?: string;
-  type: "chat" | "screen";
-  route?: string;
-}
+const defaultTags: WorkflowTag[] = [
+  { id: "productivity", name: "Productivity", color: "#3B82F6" },
+  { id: "creative", name: "Creative", color: "#10B981" },
+  { id: "education", name: "Education", color: "#F59E0B" },
+  { id: "business", name: "Business", color: "#8B5CF6" },
+  { id: "development", name: "Development", color: "#EF4444" },
+];
 
-const workflows: Workflow[] = [
+const assistants: Assistant[] = [
   {
     id: "chat",
     title: "Chat Assistant",
     description: "General purpose AI chat assistant",
-    icon: MessageSquare,
+    icon: "MessageSquare",
+    tags: [defaultTags[0]],
     translationKey: "chatAssistant",
-    type: "chat"
+    type: "assistant",
+    systemPrompt: "You are a helpful assistant.",
+    starters: []
   },
   {
     id: "code",
     title: "Code Helper",
     description: "Generate and explain code",
-    icon: Code,
+    icon: "Code",
+    tags: [defaultTags[4]],
     translationKey: "codeHelper",
-    type: "chat"
+    type: "assistant",
+    systemPrompt: "You are a coding assistant.",
+    starters: []
   },
   {
     id: "image",
     title: "Image Creator",
     description: "Create images from text descriptions",
-    icon: Image,
+    icon: "Image",
+    tags: [defaultTags[1]],
     translationKey: "imageCreator",
-    type: "chat"
+    type: "assistant",
+    systemPrompt: "You help create images.",
+    starters: []
   },
-  {
-    id: "doc",
-    title: "Document Helper",
-    description: "Summarize and extract from documents",
-    icon: FileText,
-    translationKey: "documentHelper",
-    type: "chat"
-  },
-  {
-    id: "video",
-    title: "Video Generator",
-    description: "Create videos from text prompts",
-    icon: Video,
-    translationKey: "videoGenerator",
-    type: "chat"
-  },
-  {
-    id: "music",
-    title: "Music Composer",
-    description: "Generate music and audio",
-    icon: Music,
-    translationKey: "musicComposer",
-    type: "chat"
-  },
+];
+
+const workflows: Workflow[] = [
   {
     id: "trendcast",
     title: "Trendcast",
     description: "Turn website content into professional videos",
-    icon: Rss,
+    icon: "Rss",
+    tags: [defaultTags[1], defaultTags[3]],
     translationKey: "trendcast",
-    type: "screen",
+    type: "workflow",
+    steps: [],
     route: "/trendcast"
   },
   {
     id: "reportcard",
     title: "Report Card Generator",
     description: "Generate professional report cards for students",
-    icon: GraduationCap,
+    icon: "GraduationCap",
+    tags: [defaultTags[2]],
     translationKey: "reportCardGenerator",
-    type: "screen",
+    type: "workflow",
+    steps: [],
     route: "/reportcard"
   },
   {
     id: "image-cropper",
     title: "Image Cropper",
     description: "Resize and crop images to fit specific dimensions",
-    icon: Crop,
+    icon: "Crop",
+    tags: [defaultTags[0]],
     translationKey: "imageCropper",
-    type: "screen",
+    type: "workflow",
+    steps: [],
     route: "/image-cropper"
   }
 ];
@@ -158,23 +151,19 @@ const historyItems = [
 const Index = () => {
   const navigate = useNavigate();
   const { translate } = useLanguage();
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("assistants");
   const [showChat, setShowChat] = useState(false);
   const [historyData, setHistoryData] = useState(historyItems);
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
+  const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>(assistants);
   const [availableWorkflows, setAvailableWorkflows] = useState<Workflow[]>(workflows);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentWorkflow, setCurrentWorkflow] = useState<Workflow | null>(null);
+  const [currentWorkflow, setCurrentWorkflow] = useState<WorkflowItem | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   
   const handleSearchSubmit = (text: string, files: File[]) => {
-    setCurrentWorkflow({
-      id: "chat",
-      title: "Chat Assistant",
-      description: "General purpose AI chat assistant",
-      icon: MessageSquare,
-      type: "chat"
-    });
+    setCurrentWorkflow(assistants[0]);
     setShowChat(true);
   };
 
@@ -200,39 +189,77 @@ const Index = () => {
   };
 
   const handleCreateWorkflow = (workflowData: any) => {
-    const iconMap: Record<string, LucideIcon> = {
-      "Chat": MessageSquare,
-      "Code": Code,
-      "Image": Image,
-      "Document": FileText,
-      "Video": Video,
-      "Music": Music,
-      "Bot": Bot
-    };
+    if (workflowData.type === 'assistant') {
+      const iconMap: Record<string, string> = {
+        "Chat": "MessageSquare",
+        "Code": "Code",
+        "Image": "Image",
+        "Document": "FileText",
+        "Video": "Video",
+        "Music": "Music",
+        "Bot": "Bot"
+      };
 
-    const iconComponent = iconMap[workflowData.selectedIcon] || MessageSquare;
+      const newAssistant: Assistant = {
+        id: `assistant-${Date.now()}`,
+        title: workflowData.title,
+        description: workflowData.description,
+        icon: iconMap[workflowData.selectedIcon] || "MessageSquare",
+        tags: [],
+        type: "assistant",
+        systemPrompt: workflowData.systemPrompt,
+        starters: workflowData.starters
+      };
 
-    const newWorkflow = {
-      id: `workflow-${Date.now()}`,
-      title: workflowData.title,
-      description: workflowData.description,
-      icon: iconComponent,
-      color: workflowData.iconColor,
-      type: "chat" as const
-    };
+      setAvailableAssistants(prev => [...prev, newAssistant]);
+    } else {
+      const newWorkflow: Workflow = {
+        id: `workflow-${Date.now()}`,
+        title: workflowData.title,
+        description: workflowData.description,
+        icon: workflowData.selectedIcon,
+        tags: [],
+        type: "workflow",
+        steps: workflowData.steps,
+        route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`
+      };
 
-    setAvailableWorkflows(prev => [...prev, newWorkflow]);
+      setAvailableWorkflows(prev => [...prev, newWorkflow]);
+    }
+    
     toast.success("New workflow created successfully!");
   };
 
-  const handleWorkflowClick = (workflow: Workflow) => {
-    if (workflow.type === "chat") {
+  const handleWorkflowClick = (workflow: WorkflowItem) => {
+    if (workflow.type === "assistant") {
       setCurrentWorkflow(workflow);
       setShowChat(true);
-    } else if (workflow.type === "screen" && workflow.route) {
+    } else if (workflow.type === "workflow" && workflow.route) {
       navigate(workflow.route);
     }
   };
+
+  const handleTagSelect = (tagId: string) => {
+    setSelectedTags(prev => [...prev, tagId]);
+  };
+
+  const handleTagRemove = (tagId: string) => {
+    setSelectedTags(prev => prev.filter(id => id !== tagId));
+  };
+
+  const handleClearAllTags = () => {
+    setSelectedTags([]);
+  };
+
+  const filterByTags = (items: WorkflowItem[]) => {
+    if (selectedTags.length === 0) return items;
+    return items.filter(item => 
+      item.tags.some(tag => selectedTags.includes(tag.id))
+    );
+  };
+
+  const filteredAssistants = filterByTags(availableAssistants);
+  const filteredWorkflows = filterByTags(availableWorkflows);
 
   useEffect(() => {
     setShowChat(false);
@@ -266,20 +293,30 @@ const Index = () => {
               </section>
               
               <section className="mb-10">
-                <h2 className="text-xl font-medium text-white mb-8">{translate('dashboard.workflows')}</h2>
+                <h2 className="text-xl font-medium text-white mb-8">Workflows & Assistants</h2>
+                
+                <div className="mb-8">
+                  <TagFilter
+                    tags={defaultTags}
+                    selectedTags={selectedTags}
+                    onTagSelect={handleTagSelect}
+                    onTagRemove={handleTagRemove}
+                    onClearAll={handleClearAllTags}
+                  />
+                </div>
                 
                 <div className="mb-10 flex flex-col">
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <div className="filters-with-button">
                       <TabsList className="bg-white/20 backdrop-blur-sm">
+                        <TabsTrigger value="assistants" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
+                          Assistants
+                        </TabsTrigger>
+                        <TabsTrigger value="workflows" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
+                          Workflows
+                        </TabsTrigger>
                         <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                          {translate('dashboard.all')}
-                        </TabsTrigger>
-                        <TabsTrigger value="recent" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                          {translate('dashboard.recent')}
-                        </TabsTrigger>
-                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-black text-white">
-                          {translate('dashboard.favorites')}
+                          All
                         </TabsTrigger>
                       </TabsList>
                       
@@ -289,19 +326,35 @@ const Index = () => {
                         onClick={() => setShowNewWorkflowDialog(true)}
                       >
                         <Plus className="h-4 w-4" />
-                        {translate('dashboard.newChatWorkflow')}
+                        Create New
                       </Button>
                     </div>
                     
-                    <TabsContent value="all" className="animate-fade-in mt-8">
+                    <TabsContent value="assistants" className="animate-fade-in mt-8">
                       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
-                        {availableWorkflows.map((workflow) => (
+                        {filteredAssistants.map((assistant) => (
+                          <WorkflowCard
+                            key={assistant.id}
+                            title={assistant.title}
+                            description={assistant.description}
+                            icon={assistant.icon}
+                            tags={assistant.tags}
+                            translationKey={assistant.translationKey}
+                            onClick={() => handleWorkflowClick(assistant)}
+                          />
+                        ))}
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="workflows" className="animate-fade-in mt-8">
+                      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
+                        {filteredWorkflows.map((workflow) => (
                           <WorkflowCard
                             key={workflow.id}
                             title={workflow.title}
                             description={workflow.description}
                             icon={workflow.icon}
-                            color={workflow.color}
+                            tags={workflow.tags}
                             translationKey={workflow.translationKey}
                             onClick={() => handleWorkflowClick(workflow)}
                           />
@@ -309,33 +362,40 @@ const Index = () => {
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="recent" className="animate-fade-in mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                        {workflows.slice(0, 3).map((workflow) => (
-                          <WorkflowCard
-                            key={workflow.id}
-                            title={workflow.title}
-                            description={workflow.description}
-                            icon={workflow.icon}
-                            translationKey={workflow.translationKey}
-                            onClick={() => handleWorkflowClick(workflow)}
-                          />
-                        ))}
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="favorites" className="animate-fade-in mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                        {workflows.slice(0, 2).map((workflow) => (
-                          <WorkflowCard
-                            key={workflow.id}
-                            title={workflow.title}
-                            description={workflow.description}
-                            icon={workflow.icon}
-                            translationKey={workflow.translationKey}
-                            onClick={() => handleWorkflowClick(workflow)}
-                          />
-                        ))}
+                    <TabsContent value="all" className="animate-fade-in mt-8">
+                      <div className="space-y-8">
+                        <div>
+                          <h3 className="text-lg font-medium text-white mb-4">Assistants</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
+                            {filteredAssistants.map((assistant) => (
+                              <WorkflowCard
+                                key={assistant.id}
+                                title={assistant.title}
+                                description={assistant.description}
+                                icon={assistant.icon}
+                                tags={assistant.tags}
+                                translationKey={assistant.translationKey}
+                                onClick={() => handleWorkflowClick(assistant)}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-medium text-white mb-4">Workflows</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6">
+                            {filteredWorkflows.map((workflow) => (
+                              <WorkflowCard
+                                key={workflow.id}
+                                title={workflow.title}
+                                description={workflow.description}
+                                icon={workflow.icon}
+                                tags={workflow.tags}
+                                translationKey={workflow.translationKey}
+                                onClick={() => handleWorkflowClick(workflow)}
+                              />
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -452,7 +512,7 @@ const Index = () => {
             </div>
           </div>
 
-          <NewWorkflowDialog
+          <WorkflowCreationDialog
             open={showNewWorkflowDialog}
             onClose={() => setShowNewWorkflowDialog(false)}
             onCreateWorkflow={handleCreateWorkflow}

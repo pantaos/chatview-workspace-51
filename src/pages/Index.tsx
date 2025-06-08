@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -313,6 +312,7 @@ const Index = () => {
                       onTagSelect={handleTagSelect}
                       onTagRemove={handleTagRemove}
                       onClearAll={handleClearAllTags}
+                      onCreateTag={handleCreateTag}
                     />
                   </div>
                 )}
@@ -350,6 +350,7 @@ const Index = () => {
                           onTagSelect={handleTagSelect}
                           onTagRemove={handleTagRemove}
                           onClearAll={handleClearAllTags}
+                          onCreateTag={handleCreateTag}
                         />
                       </div>
                     )}

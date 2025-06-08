@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { X, Plus } from "lucide-react";
 import { WorkflowTag } from "@/types/workflow";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -12,7 +14,13 @@ interface TagFilterProps {
   onTagSelect: (tagId: string) => void;
   onTagRemove: (tagId: string) => void;
   onClearAll: () => void;
+  onCreateTag?: (tag: { name: string; color: string }) => void;
 }
+
+const predefinedColors = [
+  "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EF4444",
+  "#06B6D4", "#84CC16", "#F97316", "#EC4899", "#6366F1"
+];
 
 const TagFilter = ({
   tags,
@@ -20,8 +28,23 @@ const TagFilter = ({
   onTagSelect,
   onTagRemove,
   onClearAll,
+  onCreateTag,
 }: TagFilterProps) => {
   const isMobile = useIsMobile();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newTagName, setNewTagName] = useState("");
+  const [selectedColor, setSelectedColor] = useState(predefinedColors[0]);
+
+  const handleCreateTag = () => {
+    if (newTagName.trim() && onCreateTag) {
+      onCreateTag({
+        name: newTagName.trim(),
+        color: selectedColor
+      });
+      setNewTagName("");
+      setShowCreateForm(false);
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -29,17 +52,86 @@ const TagFilter = ({
         <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-white`}>
           {isMobile ? 'Tags' : 'Filter by Tags'}
         </h3>
-        {selectedTags.length > 0 && (
-          <Button 
-            variant="ghost" 
-            size={isMobile ? "sm" : "sm"}
-            onClick={onClearAll}
-            className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
-          >
-            {isMobile ? 'Clear' : 'Clear All'}
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {onCreateTag && (
+            <Button 
+              variant="ghost" 
+              size={isMobile ? "sm" : "sm"}
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
+            >
+              <Plus className={`${isMobile ? 'h-2 w-2 mr-0.5' : 'h-3 w-3 mr-1'}`} />
+              {isMobile ? 'New' : 'New Tag'}
+            </Button>
+          )}
+          {selectedTags.length > 0 && (
+            <Button 
+              variant="ghost" 
+              size={isMobile ? "sm" : "sm"}
+              onClick={onClearAll}
+              className={`text-white hover:bg-white/20 ${isMobile ? 'text-xs px-2 py-1' : ''}`}
+            >
+              {isMobile ? 'Clear' : 'Clear All'}
+            </Button>
+          )}
+        </div>
       </div>
+
+      {showCreateForm && onCreateTag && (
+        <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-3 space-y-3">
+          <div>
+            <Label htmlFor="tagName" className="text-xs text-white">Tag Name</Label>
+            <Input
+              id="tagName"
+              value={newTagName}
+              onChange={(e) => setNewTagName(e.target.value)}
+              placeholder="Enter tag name"
+              className="mt-1 bg-white/10 border-white/30 text-white placeholder:text-white/60"
+            />
+          </div>
+          
+          <div>
+            <Label className="text-xs text-white">Color</Label>
+            <div className="flex gap-2 mt-1">
+              {predefinedColors.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className={`w-6 h-6 rounded-full border-2 ${
+                    selectedColor === color ? 'border-white' : 'border-white/30'
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setSelectedColor(color)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleCreateTag}
+              disabled={!newTagName.trim()}
+              className="bg-white text-black hover:bg-white/90"
+            >
+              Create
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setShowCreateForm(false);
+                setNewTagName("");
+              }}
+              className="border-white/30 text-white hover:bg-white/20"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
       
       <div className={`flex flex-wrap ${isMobile ? 'gap-1' : 'gap-2'}`}>
         {tags.map((tag) => {

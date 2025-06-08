@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { MessageSquare, Workflow, Bot, Settings } from "lucide-react";
 import {
@@ -51,6 +50,8 @@ const WorkflowCreationDialog = ({
         open={true}
         onClose={handleClose}
         onCreateWorkflow={handleWorkflowCreate}
+        availableTags={availableTags}
+        onCreateTag={onCreateTag}
       />
     );
   }

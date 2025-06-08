@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { WorkflowTag } from "@/types/workflow";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   MessageSquare, 
   Code, 
@@ -53,6 +54,7 @@ const WorkflowCard = ({
 }: WorkflowCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const { translate } = useLanguage();
+  const isMobile = useIsMobile();
   
   const handleEdit = () => {
     toast.info(`${translate('menu.editWorkflow')}: ${title}`);
@@ -80,34 +82,54 @@ const WorkflowCard = ({
   return (
     <div 
       className={cn(
-        "workflow-card group transition-all duration-200 relative p-4 rounded-lg bg-white shadow-sm border border-gray-100 hover:border-gray-300", 
+        "workflow-card group transition-all duration-200 relative rounded-lg bg-white shadow-sm border border-gray-100 hover:border-gray-300 cursor-pointer",
+        isMobile ? "p-3" : "p-4",
         className
       )}
       onClick={onClick}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className={cn(
-        "absolute top-2 right-2 transition-opacity", 
-        isHovering ? "opacity-100" : "opacity-0"
+      {!isMobile && (
+        <div className={cn(
+          "absolute top-2 right-2 transition-opacity", 
+          isHovering ? "opacity-100" : "opacity-0"
+        )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <WorkflowMenu
+            onEdit={handleEdit}
+            onSettings={handleSettings}
+            onDelete={handleDelete}
+          />
+        </div>
       )}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <WorkflowMenu
-          onEdit={handleEdit}
-          onSettings={handleSettings}
-          onDelete={handleDelete}
-        />
+      
+      <div className={cn(
+        "workflow-icon bg-gray-200 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-200 flex items-center justify-center",
+        isMobile ? "p-2 mb-2 w-8 h-8" : "p-4 mb-3"
+      )}>
+        <IconComponent className={cn(
+          "text-gray-600 group-hover:text-white",
+          isMobile ? "h-4 w-4" : "h-6 w-6"
+        )} />
       </div>
       
-      <div className="workflow-icon bg-gray-200 p-4 rounded-full mb-3 group-hover:bg-black group-hover:text-white transition-colors duration-200">
-        <IconComponent className="h-6 w-6 text-gray-600 group-hover:text-white" />
-      </div>
+      <h3 className={cn(
+        "font-medium text-center group-hover:text-black mb-1",
+        isMobile ? "text-xs leading-tight" : "text-sm"
+      )}>
+        {displayTitle}
+      </h3>
       
-      <h3 className="font-medium text-sm text-center group-hover:text-black mb-1">{displayTitle}</h3>
-      <p className="text-xs text-gray-500 text-center mt-1 line-clamp-2 group-hover:text-gray-700 mb-3">{displayDescription}</p>
+      <p className={cn(
+        "text-gray-500 text-center mt-1 line-clamp-2 group-hover:text-gray-700",
+        isMobile ? "text-xs mb-2" : "text-xs mb-3"
+      )}>
+        {isMobile ? displayTitle : displayDescription}
+      </p>
       
-      {tags.length > 0 && (
+      {tags.length > 0 && !isMobile && (
         <div className="flex flex-wrap gap-1 justify-center">
           {tags.map((tag) => (
             <Badge 

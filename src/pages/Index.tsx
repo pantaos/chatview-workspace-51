@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -313,7 +314,7 @@ const Index = () => {
           <ModernNavbar />
           
           <div className={`${isMobile ? 'py-6' : 'py-12'}`} style={{ 
-            background: `linear-gradient(135deg, #0A2E50 0%, #1E3A8A 50%, #0EA5E9 100%)`,
+            background: `linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)`,
           }}>
             <div className={`container mx-auto ${isMobile ? 'px-3' : 'px-4'}`}>
               <section className={`${isMobile ? 'mb-8' : 'mb-16'}`}>

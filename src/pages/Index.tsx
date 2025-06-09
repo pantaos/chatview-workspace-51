@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect } from "react";
 import { 
   Bot, 
@@ -314,7 +315,7 @@ const Index = () => {
           <ModernNavbar />
           
           <div className={`${isMobile ? 'py-6' : 'py-12'}`} style={{ 
-            background: `linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)`,
+            background: `linear-gradient(135deg, #FF8C00 0%, #FF6B35 50%, #F55A2C 100%)`,
           }}>
             <div className={`container mx-auto ${isMobile ? 'px-3' : 'px-4'}`}>
               <section className={`${isMobile ? 'mb-8' : 'mb-16'}`}>
@@ -607,3 +608,4 @@ const Index = () => {
 };
 
 export default Index;
+

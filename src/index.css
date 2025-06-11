@@ -47,7 +47,42 @@
   }
 
   .dark {
-    /* ... keep existing code (dark mode styles) */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 198 100% 50%;
+    --primary-foreground: 240 5.9% 10%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 198 100% 50%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 198 100% 50%;
   }
 }
 
@@ -59,24 +94,25 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
 @layer components {
   .workflow-card {
-    @apply relative flex flex-col items-center justify-center p-3 bg-white border rounded-xl transition-all duration-200 hover:shadow-md hover:border-black;
+    @apply relative flex flex-col items-center justify-center p-4 bg-card border rounded-2xl transition-all duration-300 hover:shadow-2xl hover:border-primary/50 transform hover:-translate-y-1;
   }
   
   .workflow-icon {
-    @apply flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-gray-300 text-panta-teal transition-all duration-200 group-hover:bg-black group-hover:text-white;
+    @apply flex items-center justify-center w-14 h-14 mb-3 rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110;
   }
   
   .history-item {
-    @apply flex items-center p-3 border-b border-gray-100 last:border-0 hover:bg-black hover:text-white transition-colors rounded-lg;
+    @apply flex items-center p-4 border-b border-border last:border-0 hover:bg-accent/50 transition-all duration-300 rounded-lg hover:scale-[1.01];
   }
   
   .ai-chat-input {
-    @apply w-full rounded-2xl focus:outline-none;
+    @apply w-full rounded-2xl focus:outline-none transition-all duration-300;
   }
 
   .panta-gradient-text {
@@ -90,13 +126,13 @@
 
   .search-chat-glow::after {
     content: "";
-    @apply absolute -inset-1 rounded-3xl blur-md bg-gradient-to-r from-panta-blue to-panta-orange opacity-0;
+    @apply absolute -inset-1 rounded-3xl blur-md bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0;
     transition: opacity 0.4s ease;
     z-index: -1;
   }
 
   .search-chat-glow:hover::after {
-    @apply opacity-30;
+    @apply opacity-50;
   }
 
   .filters-with-button {
@@ -106,12 +142,13 @@
   
   /* Modern navbar styles */
   .navbar-glass {
-    @apply backdrop-blur-md bg-white/75;
+    @apply backdrop-blur-md bg-background/75 border-b border-border/50;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
   }
   
   .navbar-item {
-    @apply relative flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-black rounded-md transition-all;
+    @apply relative flex items-center px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground rounded-md transition-all duration-200 hover:bg-accent/50;
   }
   
   .navbar-item-active {
@@ -120,10 +157,29 @@
 
   /* Chat Message Styles */
   .chat-message-user {
-    @apply bg-gray-100 rounded-2xl p-4 inline-block ml-auto;
+    @apply bg-primary/10 border border-primary/20 rounded-2xl p-4 inline-block ml-auto transition-all duration-300 hover:shadow-lg;
   }
   
   .chat-message-bot {
-    @apply bg-white rounded-2xl p-4 inline-block mr-auto;
+    @apply bg-card border border-border rounded-2xl p-4 inline-block mr-auto transition-all duration-300 hover:shadow-lg;
+  }
+
+  /* Enhanced animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(28, 181, 224, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(28, 181, 224, 0.4); }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
   }
 }

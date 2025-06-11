@@ -13,7 +13,8 @@ export const clientThemes: ClientTheme = {
     accentColor: "#26A69A",
     logo: "/panta-logo.png",
     clientName: "PANTA",
-    tagline: "discover designInspiration"
+    tagline: "discover designInspiration",
+    isDarkMode: false
   },
   acme: {
     primaryColor: "#3B82F6",
@@ -21,7 +22,8 @@ export const clientThemes: ClientTheme = {
     accentColor: "#8B5CF6",
     logo: "https://placehold.co/200x200?text=ACME",
     clientName: "ACME Corp",
-    tagline: "Build better, faster"
+    tagline: "Build better, faster",
+    isDarkMode: false
   },
   globex: {
     primaryColor: "#EC4899",
@@ -29,7 +31,8 @@ export const clientThemes: ClientTheme = {
     accentColor: "#F59E0B",
     logo: "https://placehold.co/200x200?text=GLOBEX",
     clientName: "Globex",
-    tagline: "Future-ready solutions"
+    tagline: "Future-ready solutions",
+    isDarkMode: false
   }
 };
 

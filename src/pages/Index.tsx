@@ -302,10 +302,6 @@ const Index = () => {
     setShowChat(false);
   }, []);
 
-  const gradientClass = theme.isDarkMode 
-    ? "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
-    : "bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500";
-
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
       {showChat ? (
@@ -318,14 +314,7 @@ const Index = () => {
         <>
           <ModernNavbar />
           
-          <div className={`${isMobile ? 'py-8' : 'py-16'} ${gradientClass} relative overflow-hidden`}>
-            {/* Animated background elements */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
-              <div className="absolute top-40 right-20 w-24 h-24 bg-white rounded-full animate-pulse delay-1000"></div>
-              <div className="absolute bottom-20 left-1/3 w-20 h-20 bg-white rounded-full animate-pulse delay-500"></div>
-            </div>
-            
+          <div className={`${isMobile ? 'py-8' : 'py-16'} bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950 relative overflow-hidden`}>
             <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'} relative z-10`}>
               <section className={`${isMobile ? 'mb-10' : 'mb-20'} transform transition-all duration-500 hover:scale-[1.02]`}>
                 <SearchChat 

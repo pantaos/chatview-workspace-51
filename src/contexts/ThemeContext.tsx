@@ -51,7 +51,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(theme));
-    document.documentElement.classList.toggle('dark', theme.isDarkMode);
+    
+    // Apply dark mode class to html element for proper Tailwind dark mode
+    if (theme.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, [theme]);
 
   const updateTheme = (newTheme: Partial<ThemeConfig>) => {

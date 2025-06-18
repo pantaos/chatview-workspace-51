@@ -85,10 +85,12 @@ const LiquidGlassHeader = ({
       
       {/* Page title section for desktop */}
       {!isMobile && title && (
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-2">{title}</h1>
-            {subtitle && <p className="text-white/80 text-lg">{subtitle}</p>}
+        <div className="bg-white dark:bg-slate-900">
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center text-slate-900 dark:text-white">
+              <h1 className="text-4xl font-bold mb-2">{title}</h1>
+              {subtitle && <p className="text-slate-600 dark:text-slate-400 text-lg">{subtitle}</p>}
+            </div>
           </div>
         </div>
       )}

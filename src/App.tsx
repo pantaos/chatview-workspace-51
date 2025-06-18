@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import History from "./pages/History";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import AdminSettings from "./pages/AdminSettings";
 import ChatInterface from "./components/ChatInterface";
 import TrendcastUploadLinks from "./pages/trendcast/TrendcastUploadLinks";
 import TrendcastEditScript from "./pages/trendcast/TrendcastEditScript";
@@ -54,6 +56,7 @@ const App = () => (
                 <Route path="/history" element={<History />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/admin-settings" element={<AdminSettings />} />
                 <Route path="/chat" element={<ChatInterface />} />
                 
                 {/* Trendcast Workflow Routes */}

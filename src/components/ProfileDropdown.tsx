@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Settings, LogOut, User, LayoutDashboard, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ProfileDropdownProps {
@@ -24,6 +24,9 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
     .map(n => n[0])
     .join('')
     .toUpperCase();
+
+  // Mock user type - in real app this would come from auth context
+  const userType = "Admin"; // This should come from user context
 
   return (
     <DropdownMenu>
@@ -70,6 +73,15 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>
+        {(userType === "Admin" || userType === "Super Admin") && (
+          <DropdownMenuItem 
+            className="cursor-pointer hover:bg-black hover:text-white transition-colors"
+            onClick={() => navigate('/admin-settings')}
+          >
+            <Shield className="mr-2 h-4 w-4" />
+            <span>Admin Settings</span>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-red-500 focus:text-white hover:bg-black hover:text-white transition-colors">
           <LogOut className="mr-2 h-4 w-4" />

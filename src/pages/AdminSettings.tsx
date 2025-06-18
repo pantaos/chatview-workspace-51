@@ -52,15 +52,15 @@ const AdminSettings = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      {/* Header with gradient background */}
+      {/* Header with liquid glass style */}
       <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950">
-        <header className="backdrop-blur-md bg-white/10 dark:bg-black/10 border-b border-white/20">
+        <header className="liquid-glass-header">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-white/20 text-white"
+                className="hover:bg-black hover:text-white text-white"
                 onClick={() => navigate(-1)}
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -100,7 +100,7 @@ const AdminSettings = () => {
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                           activeTab === tab.id
                             ? "bg-primary text-primary-foreground shadow-md"
-                            : "hover:bg-accent text-muted-foreground hover:text-foreground"
+                            : "hover:bg-black hover:text-white text-muted-foreground"
                         }`}
                       >
                         <Icon className="w-5 h-5" />

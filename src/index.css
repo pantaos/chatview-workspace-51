@@ -108,7 +108,7 @@
   }
   
   .history-item {
-    @apply flex items-center p-4 border-b border-border last:border-0 hover:bg-accent/50 transition-all duration-300 rounded-lg hover:scale-[1.01];
+    @apply flex items-center p-4 border-b border-border last:border-0 hover:bg-black hover:text-white transition-all duration-300 rounded-lg hover:scale-[1.01];
   }
   
   .ai-chat-input {
@@ -140,6 +140,16 @@
     padding-right: 0.5rem;
   }
   
+  /* Liquid glass header styles */
+  .liquid-glass-header {
+    @apply backdrop-blur-md bg-white/10 dark:bg-black/10 border-b border-white/20;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
   /* Modern navbar styles */
   .navbar-glass {
     @apply backdrop-blur-md bg-background/75 border-b border-border/50;
@@ -148,7 +158,7 @@
   }
   
   .navbar-item {
-    @apply relative flex items-center px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground rounded-md transition-all duration-200 hover:bg-accent/50;
+    @apply relative flex items-center px-3 py-2 text-sm font-medium text-foreground/70 hover:text-white hover:bg-black rounded-md transition-all duration-200;
   }
   
   .navbar-item-active {

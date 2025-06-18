@@ -1,6 +1,6 @@
 
 import React from "react";
-import { History } from "lucide-react";
+import { History, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -14,14 +14,22 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
   const navigate = useNavigate();
 
   return (
-    <header className={cn("backdrop-blur-md bg-white/10 dark:bg-black/10 border-b border-white/20", className)}>
+    <header className={cn("liquid-glass-header", className)}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Logo variant="white" />
           
           <div className="flex items-center space-x-4">
             <button
-              className="rounded-full p-2 hover:bg-white/20 transition-colors text-white"
+              className="rounded-full p-2 hover:bg-black hover:text-white transition-colors text-white"
+              onClick={() => navigate("/dashboard")}
+              title="Dashboard"
+            >
+              <LayoutDashboard className="h-5 w-5" />
+            </button>
+            
+            <button
+              className="rounded-full p-2 hover:bg-black hover:text-white transition-colors text-white"
               onClick={() => navigate("/history")}
               title="History"
             >

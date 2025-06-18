@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserPlus, Search, Edit, Trash2, Filter } from "lucide-react";
+import { UserPlus, Search, Edit, Trash2, Filter, X } from "lucide-react";
 import { User, UserTeam } from "@/types/admin";
 import AddUserDialog from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
@@ -69,6 +68,14 @@ const AdminUsers = () => {
   const allTeams = Array.from(
     new Set(users.flatMap(user => user.teams.map(team => team.name)))
   );
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedFilter("all");
+    setTeamFilter("all");
+  };
+
+  const hasActiveFilters = searchTerm !== "" || selectedFilter !== "all" || teamFilter !== "all";
 
   const handleDeleteUser = (userId: string) => {
     setUsers(users.filter(user => user.id !== userId));
@@ -166,6 +173,19 @@ const AdminUsers = () => {
               ))}
             </SelectContent>
           </Select>
+
+          {/* Clear Filters Button */}
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4 mr-1" />
+              Clear Filters
+            </Button>
+          )}
         </div>
       </div>
 

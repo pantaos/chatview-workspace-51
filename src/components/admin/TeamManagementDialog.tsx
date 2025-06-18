@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, Trash2, Settings, Users } from "lucide-react";
 import { Team, TeamMember } from "@/types/admin";
+import AddTeamMemberDialog from "./AddTeamMemberDialog";
 
 interface TeamManagementDialogProps {
   team: Team;
@@ -26,6 +26,7 @@ const TeamManagementDialog = ({
   onTeamDeleted 
 }: TeamManagementDialogProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
   const [editData, setEditData] = useState({
     name: team.name,
     description: team.description || "",
@@ -87,41 +88,50 @@ const TeamManagementDialog = ({
     onTeamUpdated(updatedTeam);
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getTeamColor(team.color)} flex items-center justify-center`}>
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <DialogTitle className="text-xl">{team.name}</DialogTitle>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditing(!isEditing)}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                {isEditing ? "Cancel" : "Edit"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDelete}
-                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </DialogHeader>
+  const handleMembersAdded = (newMembers: TeamMember[]) => {
+    const updatedTeam: Team = {
+      ...team,
+      members: [...team.members, ...newMembers]
+    };
+    onTeamUpdated(updatedTeam);
+  };
 
-        <div className="space-y-6">
-          {isEditing ? (
-            <div className="space-y-4">
+  return (
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getTeamColor(team.color)} flex items-center justify-center`}>
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <DialogTitle className="text-xl">{team.name}</DialogTitle>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  {isEditing ? "Cancel" : "Edit"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDelete}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {isEditing ? (
+              <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="edit-name">Team Name</Label>
                 <Input
@@ -162,57 +172,69 @@ const TeamManagementDialog = ({
                 Save Changes
               </Button>
             </div>
-          ) : (
-            <div className="space-y-4">
-              {team.description && (
-                <p className="text-muted-foreground">{team.description}</p>
-              )}
-              
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Team Members ({team.members.length})</h3>
-                <Button size="sm" className="bg-primary hover:bg-black hover:text-white">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Add Member
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                {team.members.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No members in this team yet.
-                  </div>
-                ) : (
-                  team.members.map((member) => (
-                    <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={member.avatarUrl} />
-                          <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
-                            {member.firstName[0]}{member.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{member.firstName} {member.lastName}</div>
-                          <div className="text-sm text-muted-foreground">{member.email}</div>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveMember(member.id)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))
+            ) : (
+              <div className="space-y-4">
+                {team.description && (
+                  <p className="text-muted-foreground">{team.description}</p>
                 )}
+                
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Team Members ({team.members.length})</h3>
+                  <Button 
+                    size="sm" 
+                    className="bg-primary hover:bg-black hover:text-white"
+                    onClick={() => setShowAddMemberDialog(true)}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Add Member
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {team.members.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      No members in this team yet.
+                    </div>
+                  ) : (
+                    team.members.map((member) => (
+                      <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage src={member.avatarUrl} />
+                            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
+                              {member.firstName[0]}{member.lastName[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{member.firstName} {member.lastName}</div>
+                            <div className="text-sm text-muted-foreground">{member.email}</div>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveMember(member.id)}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <AddTeamMemberDialog
+        open={showAddMemberDialog}
+        onOpenChange={setShowAddMemberDialog}
+        onMembersAdded={handleMembersAdded}
+        existingMembers={team.members}
+      />
+    </>
   );
 };
 

@@ -6,13 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Upload, User, Mail, Edit, Camera } from "lucide-react";
+import { Upload, User, Mail, Edit, Camera } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ProfileDropdown from "@/components/ProfileDropdown";
-import Logo from "@/components/Logo";
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import LiquidGlassHeader from "@/components/LiquidGlassHeader";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -26,6 +25,7 @@ const Profile = () => {
   const [userType] = useState("Admin");
   
   const fullName = `${firstName} ${lastName}`;
+  const currentUser = { firstName, lastName, email };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -58,58 +58,17 @@ const Profile = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      {/* Mobile-optimized Header */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "icon"}
-                className="hover:bg-slate-100 dark:hover:bg-slate-800"
-                onClick={() => navigate(-1)}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                {isMobile && <span className="ml-1">Back</span>}
-              </Button>
-              {!isMobile && <Logo />}
-            </div>
-            
-            {/* Mobile title */}
-            {isMobile && (
-              <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                Profile
-              </h1>
-            )}
-            
-            {!isMobile && (
-              <ProfileDropdown 
-                name={fullName} 
-                email={email} 
-                avatarUrl={avatarUrl}
-              />
-            )}
-          </div>
-        </div>
-      </header>
+      <LiquidGlassHeader
+        title="Profile Settings"
+        subtitle="Manage your account and preferences"
+        currentUser={currentUser}
+      />
 
       {/* Main content */}
-      <main className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* Page title for desktop */}
-        {!isMobile && (
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-              Profile Settings
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              Manage your account and preferences
-            </p>
-          </div>
-        )}
-
+      <main className="container mx-auto px-4 py-6 max-w-4xl -mt-8 relative z-10">
         <div className="space-y-6">
           {/* Profile Picture Card - Mobile Optimized */}
-          <Card className="border-0 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
             <CardContent className="p-6">
               <div className={`flex ${isMobile ? 'flex-col items-center text-center' : 'items-center'} gap-6`}>
                 <div className="relative group">
@@ -150,7 +109,7 @@ const Profile = () => {
                       size="sm"
                       onClick={() => document.getElementById('avatar-upload')?.click()}
                       disabled={isUploading}
-                      className="hover:bg-primary/5"
+                      className="hover:bg-black hover:text-white"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       {isUploading ? "Uploading..." : "Change"}
@@ -165,7 +124,7 @@ const Profile = () => {
           </Card>
 
           {/* Personal Information Card */}
-          <Card className="border-0 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-3 text-lg">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary">
@@ -229,13 +188,13 @@ const Profile = () => {
             <Button 
               variant="outline"
               onClick={() => navigate(-1)}
-              className={`${isMobile ? 'order-2' : ''} bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700`}
+              className={`${isMobile ? 'order-2' : ''} bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-black hover:text-white`}
             >
               Cancel
             </Button>
             <Button 
               onClick={handleSave}
-              className={`${isMobile ? 'order-1' : ''} bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg`}
+              className={`${isMobile ? 'order-1' : ''} bg-gradient-to-r from-primary to-accent hover:bg-black hover:text-white shadow-lg`}
             >
               <Edit className="w-4 h-4 mr-2" />
               Save Changes

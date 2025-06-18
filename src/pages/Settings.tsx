@@ -6,16 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import ProfileDropdown from "@/components/ProfileDropdown";
-import Logo from "@/components/Logo";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import LiquidGlassHeader from "@/components/LiquidGlassHeader";
 
 const Settings = () => {
-  const navigate = useNavigate();
   const { theme, updateTheme, toggleDarkMode } = useTheme();
   const { language, changeLanguage } = useLanguage();
   
@@ -71,41 +67,16 @@ const Settings = () => {
   
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      {/* Header with liquid glass style */}
-      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950">
-        <header className="liquid-glass-header">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-black hover:text-white text-white"
-                onClick={() => navigate(-1)}
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <Logo variant="white" />
-            </div>
-            <ProfileDropdown 
-              name={`${currentUser.firstName} ${currentUser.lastName}`} 
-              email={currentUser.email} 
-            />
-          </div>
-        </header>
-        
-        {/* Page title section */}
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-2">Settings</h1>
-            <p className="text-white/80 text-lg">Customize your experience and preferences</p>
-          </div>
-        </div>
-      </div>
+      <LiquidGlassHeader
+        title="Settings"
+        subtitle="Customize your experience and preferences"
+        currentUser={currentUser}
+      />
 
       {/* Main content */}
       <main className="container mx-auto px-4 py-8 -mt-8 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
             <Tabs defaultValue="general" className="w-full">
               <div className="border-b border-border p-6">
                 <TabsList className="grid w-full grid-cols-4">
@@ -126,7 +97,7 @@ const Settings = () => {
                           key={lang.code}
                           variant={language === lang.code ? "default" : "outline"}
                           onClick={() => handleLanguageChange(lang.code)}
-                          className="w-full"
+                          className="w-full hover:bg-black hover:text-white"
                         >
                           {lang.name}
                         </Button>

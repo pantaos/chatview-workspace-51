@@ -3,9 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X } from "lucide-react";
-import ProfileDropdown from "@/components/ProfileDropdown";
-import Logo from "@/components/Logo";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -13,6 +11,7 @@ import AdminUsers from "@/components/admin/AdminUsers";
 import AdminWorkflows from "@/components/admin/AdminWorkflows";
 import AdminTeams from "@/components/admin/AdminTeams";
 import AdminCreditUsage from "@/components/admin/AdminCreditUsage";
+import LiquidGlassHeader from "@/components/LiquidGlassHeader";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
@@ -101,66 +100,20 @@ const AdminSettings = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      {/* Mobile-optimized Header */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {isMobile ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-                </Button>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-slate-100 dark:hover:bg-slate-800"
-                  onClick={() => navigate(-1)}
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              )}
-              {!isMobile && <Logo />}
-            </div>
-            
-            {/* Mobile title */}
-            {isMobile && (
-              <div className="text-center">
-                <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  {currentTab?.label || 'Admin Panel'}
-                </h1>
-              </div>
-            )}
-            
-            {!isMobile && (
-              <ProfileDropdown 
-                name={`${currentUser.firstName} ${currentUser.lastName}`} 
-                email={currentUser.email} 
-              />
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* Page title for desktop */}
-      {!isMobile && (
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-2 text-slate-900 dark:text-slate-100">Admin Panel</h1>
-            <p className="text-slate-600 dark:text-slate-400 text-lg">Manage users, teams, workflows, and system settings</p>
-          </div>
-        </div>
-      )}
+      <LiquidGlassHeader
+        title="Admin Panel"
+        subtitle="Manage users, teams, workflows, and system settings"
+        currentUser={currentUser}
+        showBackButton={!isMobile}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        showSidebarToggle={true}
+      />
 
       {/* Main content */}
-      <main className="container mx-auto px-4 pb-8">
+      <main className="container mx-auto px-4 pb-8 -mt-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <Card className={`border-0 shadow-sm bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'}`}>
+          <Card className={`border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'}`}>
             <div className="flex h-full">
               {/* Mobile Sidebar Overlay */}
               {isMobile && sidebarOpen && (
@@ -198,15 +151,15 @@ const AdminSettings = () => {
                           className={`w-full flex items-start gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
                             isActive
                               ? "bg-primary text-primary-foreground shadow-md"
-                              : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                              : "hover:bg-black hover:text-white text-slate-700 dark:text-slate-300"
                           }`}
                         >
-                          <Icon className={`w-5 h-5 mt-0.5 ${isActive ? "text-primary-foreground" : "group-hover:text-slate-900 dark:group-hover:text-slate-100"}`} />
+                          <Icon className={`w-5 h-5 mt-0.5 ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`} />
                           <div className="flex-1 min-w-0">
-                            <div className={`font-medium ${isActive ? "text-primary-foreground" : "group-hover:text-slate-900 dark:group-hover:text-slate-100"}`}>
+                            <div className={`font-medium ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`}>
                               {tab.label}
                             </div>
-                            <div className={`text-xs ${isActive ? "text-primary-foreground/80" : "text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"}`}>
+                            <div className={`text-xs ${isActive ? "text-primary-foreground/80" : "text-slate-500 dark:text-slate-400 group-hover:text-white/80 dark:group-hover:text-white/80"}`}>
                               {tab.description}
                             </div>
                           </div>

@@ -32,6 +32,7 @@ const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
   const { theme } = useTheme();
   
   useEffect(() => {
+    console.log("Applying theme colors:", theme);
     applyThemeColors(theme);
   }, [theme]);
   
@@ -40,50 +41,54 @@ const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <ThemeApplier>
-            <Toaster />
-            <Sonner />
-            <VersionNumber />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={<Index />} />
-                <Route path="/history" element={<History />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/admin-settings" element={<AdminSettings />} />
-                <Route path="/chat" element={<ChatInterface />} />
-                
-                {/* Trendcast Workflow Routes */}
-                <Route path="/trendcast" element={<TrendcastUploadLinks />} />
-                <Route path="/trendcast/script" element={<TrendcastEditScript />} />
-                <Route path="/trendcast/audio" element={<TrendcastAudio />} />
-                <Route path="/trendcast/video" element={<TrendcastVideo />} />
-                <Route path="/trendcast/preview" element={<TrendcastPreview />} />
-                
-                {/* Report Card Workflow Routes */}
-                <Route path="/reportcard" element={<ReportCardInput />} />
-                <Route path="/reportcard/edit" element={<ReportCardEdit />} />
-                <Route path="/reportcard/download" element={<ReportCardDownload />} />
-                
-                {/* Image Cropper Tool */}
-                <Route path="/image-cropper" element={<ImageCropper />} />
-                
-                <Route path="/" element={<Navigate to="/login" replace />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </ThemeApplier>
-        </LanguageProvider>
-      </ThemeProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log("App component rendering...");
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider delayDuration={300}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <ThemeApplier>
+              <Toaster />
+              <Sonner />
+              <VersionNumber />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/dashboard" element={<Index />} />
+                  <Route path="/history" element={<History />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/admin-settings" element={<AdminSettings />} />
+                  <Route path="/chat" element={<ChatInterface />} />
+                  
+                  {/* Trendcast Workflow Routes */}
+                  <Route path="/trendcast" element={<TrendcastUploadLinks />} />
+                  <Route path="/trendcast/script" element={<TrendcastEditScript />} />
+                  <Route path="/trendcast/audio" element={<TrendcastAudio />} />
+                  <Route path="/trendcast/video" element={<TrendcastVideo />} />
+                  <Route path="/trendcast/preview" element={<TrendcastPreview />} />
+                  
+                  {/* Report Card Workflow Routes */}
+                  <Route path="/reportcard" element={<ReportCardInput />} />
+                  <Route path="/reportcard/edit" element={<ReportCardEdit />} />
+                  <Route path="/reportcard/download" element={<ReportCardDownload />} />
+                  
+                  {/* Image Cropper Tool */}
+                  <Route path="/image-cropper" element={<ImageCropper />} />
+                  
+                  <Route path="/" element={<Navigate to="/login" replace />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </ThemeApplier>
+          </LanguageProvider>
+        </ThemeProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

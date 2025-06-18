@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, Database, Settings, TrendingUp, UserPlus, Workflow } from "lucide-react";
+import { ArrowLeft, Users, Database, Settings, TrendingUp, UserPlus, Workflow, UsersIcon, CreditCard } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminUsers from "@/components/admin/AdminUsers";
 import AdminWorkflows from "@/components/admin/AdminWorkflows";
+import AdminTeams from "@/components/admin/AdminTeams";
+import AdminCreditUsage from "@/components/admin/AdminCreditUsage";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
@@ -34,7 +36,9 @@ const AdminSettings = () => {
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: TrendingUp },
     { id: "users", label: "Users", icon: Users },
-    { id: "workflows", label: "Workflows & Assistants", icon: Workflow }
+    { id: "teams", label: "Teams", icon: UsersIcon },
+    { id: "workflows", label: "Workflows & Assistants", icon: Workflow },
+    { id: "credits", label: "Credit Usage", icon: CreditCard }
   ];
 
   const renderContent = () => {
@@ -43,8 +47,12 @@ const AdminSettings = () => {
         return <AdminDashboard onNavigateToUsers={() => setActiveTab("users")} />;
       case "users":
         return <AdminUsers />;
+      case "teams":
+        return <AdminTeams />;
       case "workflows":
         return <AdminWorkflows />;
+      case "credits":
+        return <AdminCreditUsage />;
       default:
         return <AdminDashboard onNavigateToUsers={() => setActiveTab("users")} />;
     }
@@ -78,7 +86,7 @@ const AdminSettings = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="text-center text-white">
             <h1 className="text-4xl font-bold mb-2">Admin Settings</h1>
-            <p className="text-white/80 text-lg">Manage users, workflows, and system settings</p>
+            <p className="text-white/80 text-lg">Manage users, teams, workflows, and system settings</p>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserPlus, Search, Edit, Trash2, Filter } from "lucide-react";
 import { User, UserTeam } from "@/types/admin";
 import AddUserDialog from "./AddUserDialog";
@@ -16,6 +17,7 @@ const AdminUsers = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [teamFilter, setTeamFilter] = useState("all");
 
   // Mock data - in real app this would come from API
   const [users, setUsers] = useState<User[]>([
@@ -63,6 +65,11 @@ const AdminUsers = () => {
     }
   ]);
 
+  // Get unique teams for filter
+  const allTeams = Array.from(
+    new Set(users.flatMap(user => user.teams.map(team => team.name)))
+  );
+
   const handleDeleteUser = (userId: string) => {
     setUsers(users.filter(user => user.id !== userId));
     toast.success("User deleted successfully");
@@ -78,8 +85,11 @@ const AdminUsers = () => {
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
-    if (selectedFilter === "all") return matchesSearch;
-    return matchesSearch && user.accountType.toLowerCase() === selectedFilter;
+    const matchesAccountType = selectedFilter === "all" || user.accountType.toLowerCase() === selectedFilter;
+    
+    const matchesTeam = teamFilter === "all" || user.teams.some(team => team.name === teamFilter);
+    
+    return matchesSearch && matchesAccountType && matchesTeam;
   });
 
   const getAccountTypeBadgeVariant = (type: string) => {
@@ -111,14 +121,14 @@ const AdminUsers = () => {
           <h2 className="text-2xl font-bold mb-2">User Management</h2>
           <p className="text-muted-foreground">Manage user accounts, permissions, and teams</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)} className="bg-primary hover:bg-primary/90">
+        <Button onClick={() => setShowAddDialog(true)} className="bg-primary hover:bg-black hover:text-white">
           <UserPlus className="w-4 h-4 mr-2" />
           Add User
         </Button>
       </div>
 
-      {/* Search and Filter */}
-      <div className="flex gap-4 items-center">
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
@@ -128,19 +138,40 @@ const AdminUsers = () => {
             className="pl-10"
           />
         </div>
-        <div className="flex gap-2">
-          {["all", "admin", "user"].map((filter) => (
-            <Button
-              key={filter}
-              variant={selectedFilter === filter ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedFilter(filter)}
-              className="capitalize"
-            >
-              {filter === "all" ? "All Users" : filter}
-            </Button>
-          ))}
+        
+        <div className="flex gap-2 items-center">
+          <Filter className="w-4 h-4 text-muted-foreground" />
+          
+          {/* Account Type Filter */}
+          <Select value={selectedFilter} onValueChange={setSelectedFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Account Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">User</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          {/* Team Filter */}
+          <Select value={teamFilter} onValueChange={setTeamFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Team" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Teams</SelectItem>
+              {allTeams.map((team) => (
+                <SelectItem key={team} value={team}>{team}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+      </div>
+
+      {/* Results Summary */}
+      <div className="text-sm text-muted-foreground">
+        Showing {filteredUsers.length} of {users.length} users
       </div>
 
       {/* Users Table */}
@@ -219,6 +250,13 @@ const AdminUsers = () => {
           </TableBody>
         </Table>
       </div>
+
+      {/* No results message */}
+      {filteredUsers.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          No users found matching your filters.
+        </div>
+      )}
 
       {/* Dialogs */}
       <AddUserDialog 

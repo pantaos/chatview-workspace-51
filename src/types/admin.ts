@@ -20,6 +20,24 @@ export interface UserTeam {
   color: string;
 }
 
+export interface Team {
+  id: string;
+  name: string;
+  color: string;
+  members: TeamMember[];
+  createdAt: string;
+  description?: string;
+}
+
+export interface TeamMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatarUrl?: string;
+  role?: string;
+}
+
 export interface AdminStats {
   totalUsers: number;
   totalTokensUsed: number;
@@ -27,6 +45,28 @@ export interface AdminStats {
   totalAssistants: number;
   activeUsers: number;
   newUsersThisMonth: number;
+}
+
+export interface AIModel {
+  id: string;
+  name: string;
+  description: string;
+  creditsPerRequest: number;
+  totalRequests: number;
+  totalCreditsUsed: number;
+  icon: string;
+  category: 'Text' | 'Image' | 'Audio' | 'Video';
+}
+
+export interface CreditUsage {
+  totalCreditsAvailable: number;
+  totalCreditsUsed: number;
+  creditsRemaining: number;
+  usageByModel: AIModel[];
+  usageByPeriod: {
+    period: string;
+    credits: number;
+  }[];
 }
 
 export interface AccessPermission {
@@ -44,4 +84,10 @@ export interface NewUserData {
   password: string;
   accountType: 'User' | 'Admin';
   teams: string[];
+}
+
+export interface NewTeamData {
+  name: string;
+  color: string;
+  description?: string;
 }

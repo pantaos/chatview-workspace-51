@@ -20,8 +20,8 @@ const Logo = ({ className, variant = "default", onClick, small = false }: LogoPr
         )}
       >
         <img 
-          src="/panta-logo.png" 
-          alt="Panta Rhai Logo" 
+          src="/lovable-uploads/7a507605-9b7e-466b-8f20-bb8c9e8d9c68.png" 
+          alt="Panta Logo" 
           className={cn(small ? "h-7 mr-1" : "h-10 mr-2")} 
         />
         {!small && (
@@ -33,7 +33,7 @@ const Logo = ({ className, variant = "default", onClick, small = false }: LogoPr
             <span className={cn(
               "font-light tracking-wider", 
               variant === "white" ? "text-white" : "text-black"
-            )}>RHAI</span>
+            )}>Flows</span>
           </>
         )}
       </div>

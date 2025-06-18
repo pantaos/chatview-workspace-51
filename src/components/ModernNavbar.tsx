@@ -14,18 +14,18 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
   const navigate = useNavigate();
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full backdrop-blur-md bg-white/75 border-b border-gray-100 shadow-sm", className)}>
+    <header className={cn("backdrop-blur-md bg-white/10 dark:bg-black/10 border-b border-white/20", className)}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Logo />
+          <Logo variant="white" />
           
           <div className="flex items-center space-x-4">
             <button
-              className="rounded-full p-2 hover:bg-gray-100 transition-colors"
+              className="rounded-full p-2 hover:bg-white/20 transition-colors text-white"
               onClick={() => navigate("/history")}
               title="History"
             >
-              <History className="h-5 w-5 text-gray-600" />
+              <History className="h-5 w-5" />
             </button>
             
             <ProfileDropdown 

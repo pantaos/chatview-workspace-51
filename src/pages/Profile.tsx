@@ -10,7 +10,6 @@ import { ArrowLeft, Upload, User, Mail, Edit } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
-import AdminSettings from "@/components/AdminSettings";
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -93,9 +92,6 @@ const Profile = () => {
       {/* Main content */}
       <main className="container mx-auto px-4 py-8 -mt-8 relative z-10">
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Admin Settings */}
-          <AdminSettings userType={userType} />
-
           {/* Profile Information Card */}
           <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
             <CardHeader className="pb-6">

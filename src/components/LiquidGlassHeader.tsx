@@ -85,7 +85,7 @@ const LiquidGlassHeader = ({
       
       {/* Page title section for desktop */}
       {!isMobile && title && (
-        <div className="bg-gray-50 dark:bg-slate-900">
+        <div className="bg-gray-100 dark:bg-slate-900">
           <div className="container mx-auto px-4 py-12">
             <div className="text-center text-slate-900 dark:text-white">
               <h1 className="text-4xl font-bold mb-2">{title}</h1>

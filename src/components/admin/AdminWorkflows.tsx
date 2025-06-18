@@ -5,15 +5,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Bot, Workflow, Search, Users, Edit, Settings } from "lucide-react";
-import { WorkflowItem, Assistant, Workflow as WorkflowType } from "@/types/workflow";
+import { WorkflowItem, Assistant, Workflow as WorkflowType, WorkflowTag } from "@/types/workflow";
 import { User, UserTeam, AccessPermission } from "@/types/admin";
+import WorkflowCreationDialog from "@/components/WorkflowCreationDialog";
+import { toast } from "sonner";
 
 const AdminWorkflows = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
+
+  // Default tags
+  const [defaultTags] = useState<WorkflowTag[]>([
+    { id: "productivity", name: "Productivity", color: "#3B82F6" },
+    { id: "creative", name: "Creative", color: "#10B981" },
+    { id: "education", name: "Education", color: "#F59E0B" },
+    { id: "business", name: "Business", color: "#8B5CF6" },
+    { id: "development", name: "Development", color: "#EF4444" },
+  ]);
 
   // Mock data for workflows and assistants
-  const workflowItems: WorkflowItem[] = [
+  const [workflowItems, setWorkflowItems] = useState<WorkflowItem[]>([
     {
       id: "1",
       title: "Trendcast Video Creator",
@@ -44,7 +56,7 @@ const AdminWorkflows = () => {
       steps: [],
       route: "/reportcard"
     }
-  ];
+  ]);
 
   // Mock permissions data
   const [permissions, setPermissions] = useState<AccessPermission[]>([
@@ -95,6 +107,55 @@ const AdminWorkflows = () => {
     return [...displayUsers, ...displayTeams];
   };
 
+  const handleCreateWorkflow = (workflowData: any) => {
+    if (workflowData.type === 'assistant') {
+      const iconMap: Record<string, string> = {
+        "Chat": "MessageSquare",
+        "Code": "Code",
+        "Image": "Image",
+        "Document": "FileText",
+        "Video": "Video",
+        "Music": "Music",
+        "Bot": "Bot"
+      };
+
+      const newAssistant: Assistant = {
+        id: `assistant-${Date.now()}`,
+        title: workflowData.title,
+        description: workflowData.description,
+        icon: iconMap[workflowData.selectedIcon] || "MessageSquare",
+        tags: workflowData.tags || [],
+        type: "assistant" as const,
+        systemPrompt: workflowData.systemPrompt,
+        starters: workflowData.starters,
+        isFavorite: false
+      };
+
+      setWorkflowItems(prev => [...prev, newAssistant]);
+    } else {
+      const newWorkflow: WorkflowType = {
+        id: `workflow-${Date.now()}`,
+        title: workflowData.title,
+        description: workflowData.description,
+        icon: workflowData.selectedIcon,
+        tags: workflowData.tags || [],
+        type: "workflow" as const,
+        steps: workflowData.steps,
+        route: `/workflow/${workflowData.title.toLowerCase().replace(/\s+/g, '-')}`,
+        isFavorite: false
+      };
+
+      setWorkflowItems(prev => [...prev, newWorkflow]);
+    }
+    
+    toast.success("New workflow created successfully!");
+  };
+
+  const handleCreateTag = (tagData: { name: string; color: string }) => {
+    // In a real app, this would update the tags in a global state or database
+    toast.success(`Tag "${tagData.name}" created successfully!`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,7 +163,10 @@ const AdminWorkflows = () => {
           <h2 className="text-2xl font-bold mb-2">Workflows & Assistants</h2>
           <p className="text-muted-foreground">Manage content access and permissions</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button 
+          className="bg-primary hover:bg-primary/90"
+          onClick={() => setShowNewWorkflowDialog(true)}
+        >
           <Bot className="w-4 h-4 mr-2" />
           Add Assistant
         </Button>
@@ -220,6 +284,14 @@ const AdminWorkflows = () => {
           <p className="text-muted-foreground">Try adjusting your search or filters</p>
         </div>
       )}
+
+      <WorkflowCreationDialog
+        open={showNewWorkflowDialog}
+        onClose={() => setShowNewWorkflowDialog(false)}
+        onCreateWorkflow={handleCreateWorkflow}
+        availableTags={defaultTags}
+        onCreateTag={handleCreateTag}
+      />
     </div>
   );
 };

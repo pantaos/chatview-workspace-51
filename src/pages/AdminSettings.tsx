@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Users, TrendingUp, Workflow, UsersIcon, CreditCard, Settings, Menu, X } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -63,12 +63,6 @@ const AdminSettings = () => {
       label: "Credits", 
       icon: CreditCard,
       description: "Usage & Billing"
-    },
-    { 
-      id: "system", 
-      label: "System", 
-      icon: Settings,
-      description: "System Configuration"
     }
   ], []);
 
@@ -98,18 +92,6 @@ const AdminSettings = () => {
         return <AdminWorkflows />;
       case "credits":
         return <AdminCreditUsage />;
-      case "system":
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-2 text-slate-900 dark:text-slate-100">System Configuration</h2>
-              <p className="text-slate-600 dark:text-slate-400">Configure system-wide settings and preferences</p>
-            </div>
-            <Card className="p-6 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border-0 shadow-sm">
-              <p className="text-slate-600 dark:text-slate-400">System settings will be available in future updates.</p>
-            </Card>
-          </div>
-        );
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }

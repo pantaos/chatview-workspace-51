@@ -6,9 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Trash2, Settings, Users } from "lucide-react";
+import { UserPlus, Trash2, Settings, Users, Workflow } from "lucide-react";
 import { Team, TeamMember } from "@/types/admin";
 import AddTeamMemberDialog from "./AddTeamMemberDialog";
+import WorkflowAllocationDialog from "./WorkflowAllocationDialog";
+import { toast } from "sonner";
 
 interface TeamManagementDialogProps {
   team: Team;
@@ -27,6 +29,7 @@ const TeamManagementDialog = ({
 }: TeamManagementDialogProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
+  const [showWorkflowDialog, setShowWorkflowDialog] = useState(false);
   const [editData, setEditData] = useState({
     name: team.name,
     description: team.description || "",
@@ -94,6 +97,12 @@ const TeamManagementDialog = ({
       members: [...team.members, ...newMembers]
     };
     onTeamUpdated(updatedTeam);
+  };
+
+  const handleWorkflowsUpdated = (teamId: string, workflowIds: string[]) => {
+    toast.success(`${workflowIds.length} workflows allocated to ${team.name}`);
+    // In a real app, this would update the backend
+    console.log(`Allocated workflows ${workflowIds} to team ${teamId}`);
   };
 
   return (
@@ -180,14 +189,25 @@ const TeamManagementDialog = ({
                 
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Team Members ({team.members.length})</h3>
-                  <Button 
-                    size="sm" 
-                    className="bg-primary hover:bg-black hover:text-white"
-                    onClick={() => setShowAddMemberDialog(true)}
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Add Member
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="bg-primary/10 hover:bg-primary hover:text-white"
+                      onClick={() => setShowWorkflowDialog(true)}
+                    >
+                      <Workflow className="w-4 h-4 mr-2" />
+                      Allocate Workflows
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      className="bg-primary hover:bg-black hover:text-white"
+                      onClick={() => setShowAddMemberDialog(true)}
+                    >
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Add Member
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="space-y-3">
@@ -233,6 +253,13 @@ const TeamManagementDialog = ({
         onOpenChange={setShowAddMemberDialog}
         onMembersAdded={handleMembersAdded}
         existingMembers={team.members}
+      />
+
+      <WorkflowAllocationDialog
+        team={team}
+        open={showWorkflowDialog}
+        onOpenChange={setShowWorkflowDialog}
+        onWorkflowsUpdated={handleWorkflowsUpdated}
       />
     </>
   );

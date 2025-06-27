@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   firstName: string;
@@ -75,6 +74,17 @@ export interface AccessPermission {
   userId?: string;
   teamId?: string;
   type: 'user' | 'team';
+}
+
+export interface Workflow {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  createdBy: string;
+  createdAt: string;
+  isPublic: boolean;
+  tags: string[];
 }
 
 export interface NewUserData {

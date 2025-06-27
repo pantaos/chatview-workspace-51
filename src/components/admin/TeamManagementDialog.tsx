@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Trash2, Settings, Users, Workflow } from "lucide-react";
+import { UserPlus, Trash2, Settings, Users, Plus, X } from "lucide-react";
 import { Team, TeamMember } from "@/types/admin";
 import AddTeamMemberDialog from "./AddTeamMemberDialog";
 import WorkflowAllocationDialog from "./WorkflowAllocationDialog";
@@ -35,6 +36,12 @@ const TeamManagementDialog = ({
     description: team.description || "",
     color: team.color
   });
+
+  // Mock allocated workflows - in real app this would come from API
+  const [allocatedWorkflows, setAllocatedWorkflows] = useState([
+    { id: "1", title: "Content Generator", icon: "✨" },
+    { id: "2", title: "Code Review Assistant", icon: "💻" }
+  ]);
 
   const colors = [
     { name: "Blue", value: "blue" },
@@ -105,6 +112,11 @@ const TeamManagementDialog = ({
     console.log(`Allocated workflows ${workflowIds} to team ${teamId}`);
   };
 
+  const handleRemoveWorkflow = (workflowId: string) => {
+    setAllocatedWorkflows(prev => prev.filter(w => w.id !== workflowId));
+    toast.success("Workflow removed from team");
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -141,64 +153,99 @@ const TeamManagementDialog = ({
           <div className="space-y-6">
             {isEditing ? (
               <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">Team Name</Label>
-                <Input
-                  id="edit-name"
-                  value={editData.name}
-                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Team Color</Label>
-                <div className="flex gap-2">
-                  {colors.map((color) => (
-                    <button
-                      key={color.value}
-                      type="button"
-                      onClick={() => setEditData({ ...editData, color: color.value })}
-                      className={`w-8 h-8 rounded-full ${getColorPreview(color.value)} ${
-                        editData.color === color.value ? "ring-2 ring-primary ring-offset-2" : ""
-                      }`}
-                      title={color.name}
-                    />
-                  ))}
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name">Team Name</Label>
+                  <Input
+                    id="edit-name"
+                    value={editData.name}
+                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  />
                 </div>
-              </div>
+                
+                <div className="space-y-2">
+                  <Label>Team Color</Label>
+                  <div className="flex gap-2">
+                    {colors.map((color) => (
+                      <button
+                        key={color.value}
+                        type="button"
+                        onClick={() => setEditData({ ...editData, color: color.value })}
+                        className={`w-8 h-8 rounded-full ${getColorPreview(color.value)} ${
+                          editData.color === color.value ? "ring-2 ring-primary ring-offset-2" : ""
+                        }`}
+                        title={color.name}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-description">Description</Label>
-                <Textarea
-                  id="edit-description"
-                  value={editData.description}
-                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  rows={3}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={editData.description}
+                    onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                    rows={3}
+                  />
+                </div>
 
-              <Button onClick={handleSave} className="bg-primary hover:bg-black hover:text-white">
-                Save Changes
-              </Button>
-            </div>
+                <Button onClick={handleSave} className="bg-primary hover:bg-black hover:text-white">
+                  Save Changes
+                </Button>
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {team.description && (
                   <p className="text-muted-foreground">{team.description}</p>
                 )}
                 
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Team Members ({team.members.length})</h3>
-                  <div className="flex gap-2">
+                {/* Workflows Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">Allocated Workflows ({allocatedWorkflows.length})</h3>
                     <Button 
                       size="sm" 
                       variant="outline"
                       className="bg-primary/10 hover:bg-primary hover:text-white"
                       onClick={() => setShowWorkflowDialog(true)}
                     >
-                      <Workflow className="w-4 h-4 mr-2" />
-                      Allocate Workflows
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Workflows
                     </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {allocatedWorkflows.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground border-2 border-dashed border-muted rounded-lg">
+                        No workflows allocated to this team yet.
+                      </div>
+                    ) : (
+                      <div className="grid gap-2">
+                        {allocatedWorkflows.map((workflow) => (
+                          <div key={workflow.id} className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+                            <div className="flex items-center gap-3">
+                              <span className="text-lg">{workflow.icon}</span>
+                              <div className="font-medium">{workflow.title}</div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveWorkflow(workflow.id)}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Team Members Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">Team Members ({team.members.length})</h3>
                     <Button 
                       size="sm" 
                       className="bg-primary hover:bg-black hover:text-white"
@@ -208,39 +255,39 @@ const TeamManagementDialog = ({
                       Add Member
                     </Button>
                   </div>
-                </div>
 
-                <div className="space-y-3">
-                  {team.members.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      No members in this team yet.
-                    </div>
-                  ) : (
-                    team.members.map((member) => (
-                      <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={member.avatarUrl} />
-                            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
-                              {member.firstName[0]}{member.lastName[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{member.firstName} {member.lastName}</div>
-                            <div className="text-sm text-muted-foreground">{member.email}</div>
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleRemoveMember(member.id)}
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                  <div className="space-y-3">
+                    {team.members.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground border-2 border-dashed border-muted rounded-lg">
+                        No members in this team yet.
                       </div>
-                    ))
-                  )}
+                    ) : (
+                      team.members.map((member) => (
+                        <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-10 h-10">
+                              <AvatarImage src={member.avatarUrl} />
+                              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
+                                {member.firstName[0]}{member.lastName[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{member.firstName} {member.lastName}</div>
+                              <div className="text-sm text-muted-foreground">{member.email}</div>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveMember(member.id)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             )}

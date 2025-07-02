@@ -1,7 +1,6 @@
-
 import { useState, useRef, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Download, Bot, User } from "lucide-react";
+import { X, Download, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,9 @@ import Logo from "./Logo";
 import ProfileDropdown from "./ProfileDropdown";
 import SearchChat from "./SearchChat";
 import FormOverlay from "./FormOverlay";
+import InlineChatForm from "./InlineChatForm";
+import SlideUpFormPanel from "./SlideUpFormPanel";
+import ChatMessage from "./ChatMessage";
 import ProgressIndicator from "./ProgressIndicator";
 import { ConversationalWorkflow as ConversationalWorkflowType, ConversationalStep } from "@/types/workflow";
 import { toast } from "sonner";
@@ -18,10 +20,11 @@ interface Message {
   sender: "user" | "bot";
   content: string;
   timestamp: Date;
-  type?: "system" | "completion" | "download";
+  type?: "system" | "completion" | "download" | "form";
 }
 
-type ChatState = "normal" | "form-active" | "minimized";
+type ChatState = "normal" | "form-inline" | "form-panel" | "form-overlay" | "minimized";
+type FormDisplayMode = "auto" | "inline" | "panel" | "overlay";
 
 interface ConversationalWorkflowProps {
   workflow: ConversationalWorkflowType;
@@ -52,6 +55,7 @@ const ConversationalWorkflow = ({
   const [chatState, setChatState] = useState<ChatState>("normal");
   const [activeStep, setActiveStep] = useState<ConversationalStep | null>(null);
   const [input, setInput] = useState("");
+  const [formDisplayMode, setFormDisplayMode] = useState<FormDisplayMode>("auto");
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,15 +79,31 @@ const ConversationalWorkflow = ({
     }
   };
 
+  const determineFormDisplayMode = (step: ConversationalStep): ChatState => {
+    if (formDisplayMode === "inline") return "form-inline";
+    if (formDisplayMode === "panel") return "form-panel";
+    if (formDisplayMode === "overlay") return "form-overlay";
+    
+    // Auto mode logic
+    const fieldCount = step.fields.length;
+    if (fieldCount <= 2) return "form-inline";
+    if (fieldCount <= 5) return "form-panel";
+    return "form-overlay";
+  };
+
   const showStepForm = (step: ConversationalStep) => {
     setActiveStep(step);
-    setChatState("form-active");
+    const displayMode = determineFormDisplayMode(step);
+    setChatState(displayMode);
     
     const formMessage: Message = {
       id: `form-${step.id}`,
       sender: "bot",
-      content: `I need some information for "${step.title}". Please fill out the form that just appeared.`,
-      timestamp: new Date()
+      content: displayMode === "form-inline" 
+        ? `I need some information for "${step.title}". Please fill out the form below:`
+        : `I need some information for "${step.title}". Please fill out the form that just appeared.`,
+      timestamp: new Date(),
+      type: "form"
     };
     
     setMessages(prev => [...prev, formMessage]);
@@ -150,6 +170,12 @@ const ConversationalWorkflow = ({
     setMessages(prev => [...prev, cancelMessage]);
   };
 
+  const handleExpandToPanel = () => {
+    if (activeStep) {
+      setChatState("form-panel");
+    }
+  };
+
   const handleChatSubmit = (text: string, files: File[]) => {
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -212,17 +238,33 @@ Generated on: ${new Date().toLocaleDateString()}`;
   };
 
   const isWorkflowComplete = completedSteps.size === workflow.steps.length;
+  const shouldShowFormInChat = chatState === "form-inline" && activeStep;
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm z-10 sticky top-0">
+      <header className="bg-white shadow-sm z-50 sticky top-0">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo />
           <div className="text-xl font-medium panta-gradient-text">
             {workflow.title}
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                const modes: FormDisplayMode[] = ["auto", "inline", "panel", "overlay"];
+                const currentIndex = modes.indexOf(formDisplayMode);
+                const nextMode = modes[(currentIndex + 1) % modes.length];
+                setFormDisplayMode(nextMode);
+                toast.success(`Form display mode: ${nextMode}`);
+              }}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              <Settings2 className="h-4 w-4 mr-1" />
+              {formDisplayMode}
+            </Button>
             <ProfileDropdown name={userName} email="moin@example.com" />
           </div>
         </div>
@@ -236,39 +278,26 @@ Generated on: ${new Date().toLocaleDateString()}`;
       />
       
       {/* Chat Interface */}
-      <div className="flex flex-col flex-1 bg-white relative">
-        <div className="flex-1 flex flex-col relative overflow-hidden">
+      <div className="flex flex-col flex-1 bg-white relative overflow-hidden">
+        <div className={`flex-1 flex flex-col relative transition-all duration-500 ease-in-out ${
+          chatState === "form-panel" ? "pb-80" : ""
+        }`}>
           <ScrollArea className="flex-1 px-4 md:px-16 lg:px-32 xl:px-64 pt-6">
-            <div className="space-y-6 mb-8">
-              {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] ${message.sender === "user" ? "ml-auto" : "mr-auto"}`}>
-                    <div className="flex items-start gap-3">
-                      {message.sender === "bot" && (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
-                          <Bot className="h-4 w-4 text-white" />
-                        </div>
-                      )}
-                      
-                      <div className={`rounded-2xl p-4 ${
-                        message.sender === "user"
-                          ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
-                          : message.type === "system"
-                          ? "bg-blue-50 text-blue-900 border border-blue-200"
-                          : message.type === "completion"
-                          ? "bg-green-50 text-green-900 border border-green-200"
-                          : "bg-gray-50 text-gray-800 border"
-                      }`}>
-                        <p className="text-base leading-relaxed">{message.content}</p>
-                      </div>
-                      
-                      {message.sender === "user" && (
-                        <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center flex-shrink-0">
-                          <User className="h-4 w-4 text-white" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            <div className="space-y-2 mb-8">
+              {messages.map((message, index) => (
+                <div key={message.id}>
+                  <ChatMessage message={message}>
+                    {shouldShowFormInChat && 
+                     message.type === "form" && 
+                     index === messages.length - 1 && 
+                     activeStep && (
+                      <InlineChatForm
+                        step={activeStep}
+                        onSubmit={(data) => handleStepSubmit(activeStep.id, data)}
+                        onExpand={handleExpandToPanel}
+                      />
+                    )}
+                  </ChatMessage>
                 </div>
               ))}
               
@@ -299,10 +328,12 @@ Generated on: ${new Date().toLocaleDateString()}`;
           
           {/* Chat Input */}
           <div className={`border-t bg-white transition-all duration-500 ease-in-out ${
-            chatState === "form-active" ? "h-16 opacity-50" : "h-auto opacity-100"
+            chatState === "form-panel" ? "h-16 opacity-75" : 
+            chatState === "form-inline" ? "h-auto opacity-90" : 
+            "h-auto opacity-100"
           }`}>
             <div className={`p-4 transition-all duration-300 ${
-              chatState === "form-active" ? "pointer-events-none" : ""
+              chatState === "form-panel" ? "pointer-events-none" : ""
             }`}>
               <SearchChat 
                 autoFocus={chatState === "normal"} 
@@ -310,20 +341,33 @@ Generated on: ${new Date().toLocaleDateString()}`;
                 onChange={(e) => setInput(e.target.value)} 
                 onSubmit={handleChatSubmit}
                 disableNavigation={true}
-                placeholder={chatState === "form-active" ? "Please complete the form above..." : "Type your message..."}
+                placeholder={
+                  chatState === "form-panel" ? "Complete the form above to continue..." :
+                  chatState === "form-inline" ? "Fill the form above or ask a question..." :
+                  "Type your message..."
+                }
                 title=""
               />
             </div>
           </div>
         </div>
 
-        {/* Form Overlay */}
-        {activeStep && (
+        {/* Form Overlays */}
+        {activeStep && chatState === "form-overlay" && (
           <FormOverlay
             step={activeStep}
             onSubmit={(data) => handleStepSubmit(activeStep.id, data)}
             onClose={handleFormClose}
-            isVisible={chatState === "form-active"}
+            isVisible={true}
+          />
+        )}
+
+        {activeStep && chatState === "form-panel" && (
+          <SlideUpFormPanel
+            step={activeStep}
+            onSubmit={(data) => handleStepSubmit(activeStep.id, data)}
+            onClose={handleFormClose}
+            isVisible={true}
           />
         )}
 

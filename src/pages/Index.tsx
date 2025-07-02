@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ModernNavbar from "@/components/ModernNavbar";
-import { WorkflowItem, Assistant, Workflow, WorkflowTag } from "@/types/workflow";
+import { WorkflowItem, Assistant, Workflow, WorkflowTag, ConversationalWorkflow } from "@/types/workflow";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -163,6 +163,23 @@ const Index = () => {
       isFavorite: false
     }
   ]);
+
+  // Add conversational workflows state
+  const [availableConversationalWorkflows, setAvailableConversationalWorkflows] = useState<ConversationalWorkflow[]>([
+    {
+      id: "greenstone-report",
+      title: "Green Stone Report",
+      description: "Step-by-step student progress report creation for Green Stone School",
+      icon: "GraduationCap",
+      tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
+      type: "conversational" as const,
+      route: "/greenstone-report",
+      initialMessage: "Welcome to the Student Progress Report Workflow 👋\n\nLet's get started! Please fill out the student information form below.",
+      steps: [],
+      isFavorite: false
+    }
+  ]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [currentWorkflow, setCurrentWorkflow] = useState<WorkflowItem | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -251,7 +268,7 @@ const Index = () => {
     if (workflow.type === "assistant") {
       setCurrentWorkflow(workflow);
       setShowChat(true);
-    } else if (workflow.type === "workflow" && workflow.route) {
+    } else if ((workflow.type === "workflow" || workflow.type === "conversational") && workflow.route) {
       navigate(workflow.route);
     }
   };
@@ -269,8 +286,13 @@ const Index = () => {
           item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
         )
       );
+    } else if (type === 'conversational') {
+      setAvailableConversationalWorkflows(prev =>
+        prev.map(item => 
+          item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+        )
+      );
     }
-    // Note: conversational workflows are handled in App.tsx routing, not in state here
   };
 
   const handleTagSelect = (tagId: string) => {
@@ -292,9 +314,9 @@ const Index = () => {
     );
   };
 
-  const allWorkflowItems = [...availableAssistants, ...availableWorkflows];
+  const allWorkflowItems = [...availableAssistants, ...availableWorkflows, ...availableConversationalWorkflows];
   const filteredAssistants = filterByTags(availableAssistants);
-  const filteredWorkflows = filterByTags(availableWorkflows);
+  const filteredWorkflows = filterByTags([...availableWorkflows, ...availableConversationalWorkflows]);
   const filteredAllItems = filterByTags(allWorkflowItems);
   const favoriteItems = allWorkflowItems.filter(item => item.isFavorite);
   const filteredFavorites = filterByTags(favoriteItems);

@@ -256,20 +256,21 @@ const Index = () => {
     }
   };
 
-  const toggleWorkflowFavorite = (id: string, type: 'assistant' | 'workflow') => {
+  const toggleWorkflowFavorite = (id: string, type: 'assistant' | 'workflow' | 'conversational') => {
     if (type === 'assistant') {
       setAvailableAssistants(prev =>
         prev.map(item => 
           item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
         )
       );
-    } else {
+    } else if (type === 'workflow') {
       setAvailableWorkflows(prev =>
         prev.map(item => 
           item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
         )
       );
     }
+    // Note: conversational workflows are handled in App.tsx routing, not in state here
   };
 
   const handleTagSelect = (tagId: string) => {

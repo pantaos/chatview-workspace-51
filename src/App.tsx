@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -85,6 +86,7 @@ const App = () => {
                         icon: "GraduationCap",
                         tags: [{ id: "4", name: "Education", color: "green" }],
                         type: "conversational",
+                        route: "/greenstone-report",
                         steps: [
                           {
                             id: "student-info",

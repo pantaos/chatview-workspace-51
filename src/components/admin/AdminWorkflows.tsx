@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,6 +62,7 @@ const AdminWorkflows = () => {
       icon: "GraduationCap",
       tags: [{ id: "4", name: "Education", color: "green" }],
       type: "conversational",
+      route: "/greenstone-report",
       steps: [
         {
           id: "student-info",

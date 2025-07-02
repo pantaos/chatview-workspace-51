@@ -55,6 +55,37 @@ const AdminWorkflows = () => {
       type: "workflow",
       steps: [],
       route: "/reportcard"
+    },
+    {
+      id: "4",
+      title: "Green Stone Report",
+      description: "Step-by-step student progress report creation for Green Stone School",
+      icon: "GraduationCap",
+      tags: [{ id: "4", name: "Education", color: "green" }],
+      type: "conversational",
+      steps: [
+        {
+          id: "student-info",
+          title: "Student Information",
+          description: "Fill in the student details for the report.",
+          fields: [
+            { id: "studentName", type: "text", label: "Student Name", placeholder: "Enter the student's name", required: true },
+            { id: "term", type: "text", label: "Term", placeholder: "e.g. Fall 2024", required: true },
+            { id: "className", type: "text", label: "Class Name", placeholder: "e.g. ML101", required: true },
+            { id: "tutor", type: "text", label: "Tutor/Teacher", placeholder: "e.g. Mr. Kim", required: true },
+            { id: "daysAbsent", type: "text", label: "Days Absent", placeholder: "e.g. 1", required: true }
+          ]
+        },
+        {
+          id: "report-template",
+          title: "Report Template",
+          description: "Provide the report template URL.",
+          fields: [
+            { id: "templateUrl", type: "url", label: "Report Template URL", placeholder: "Enter the template URL", required: true }
+          ]
+        }
+      ],
+      initialMessage: "Welcome to the Student Progress Report Workflow 👋\n\nLet's get started! Please fill out the student information form below."
     }
   ]);
 
@@ -208,6 +239,8 @@ const AdminWorkflows = () => {
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     {item.type === "workflow" ? (
                       <Workflow className="w-5 h-5 text-primary" />
+                    ) : item.type === "conversational" ? (
+                      <Bot className="w-5 h-5 text-green-600" />
                     ) : (
                       <Bot className="w-5 h-5 text-primary" />
                     )}

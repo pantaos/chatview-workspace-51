@@ -22,6 +22,14 @@ export interface WorkflowStep {
   description?: string;
 }
 
+export interface ConversationalStep {
+  id: string;
+  title: string;
+  description: string;
+  fields: WorkflowField[];
+  nextStep?: string;
+}
+
 export interface BaseWorkflow {
   id: string;
   title: string;
@@ -47,7 +55,13 @@ export interface Workflow extends BaseWorkflow {
   route: string;
 }
 
-export type WorkflowItem = Assistant | Workflow;
+export interface ConversationalWorkflow extends BaseWorkflow {
+  type: 'conversational';
+  steps: ConversationalStep[];
+  initialMessage: string;
+}
+
+export type WorkflowItem = Assistant | Workflow | ConversationalWorkflow;
 
 export interface TagCreationData {
   name: string;

@@ -59,6 +59,7 @@ export interface ConversationalWorkflow extends BaseWorkflow {
   type: 'conversational';
   steps: ConversationalStep[];
   initialMessage: string;
+  route: string;
 }
 
 export type WorkflowItem = Assistant | Workflow | ConversationalWorkflow;

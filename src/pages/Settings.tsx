@@ -182,64 +182,6 @@ const Settings = () => {
                   </Card>
 
                   <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Notification Preferences</h2>
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label htmlFor="enable-notifs" className="text-base font-medium">Enable Notifications</Label>
-                          <p className="text-sm text-muted-foreground">Receive notifications for important events</p>
-                        </div>
-                        <Switch 
-                          id="enable-notifs" 
-                          checked={settings.notifications}
-                          onCheckedChange={(value) => handleSettingChange('notifications', value)}
-                        />
-                      </div>
-                      
-                      {settings.notifications && (
-                        <>
-                          <Separator />
-                          <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <Label htmlFor="chat-notifs" className="text-base font-medium">Chat Messages</Label>
-                                <p className="text-sm text-muted-foreground">Get notified about new chat messages</p>
-                              </div>
-                              <Switch 
-                                id="chat-notifs" 
-                                checked={settings.chatNotifications}
-                                onCheckedChange={(value) => handleSettingChange('chatNotifications', value)}
-                              />
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <Label htmlFor="workflow-notifs" className="text-base font-medium">Workflow Updates</Label>
-                                <p className="text-sm text-muted-foreground">Notifications when workflows complete</p>
-                              </div>
-                              <Switch 
-                                id="workflow-notifs" 
-                                checked={settings.workflowNotifications}
-                                onCheckedChange={(value) => handleSettingChange('workflowNotifications', value)}
-                              />
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <Label htmlFor="update-notifs" className="text-base font-medium">Product Updates</Label>
-                                <p className="text-sm text-muted-foreground">News about new features and improvements</p>
-                              </div>
-                              <Switch 
-                                id="update-notifs" 
-                                checked={settings.updateNotifications}
-                                onCheckedChange={(value) => handleSettingChange('updateNotifications', value)}
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </Card>
-
-                  <Card className="p-6">
                     <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
                     <div className="space-y-6">
                       <div>

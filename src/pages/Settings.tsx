@@ -1,18 +1,20 @@
-
 import React, { useState, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
+import { Camera, Trash2, Key, Mail } from "lucide-react";
 
 const Settings = () => {
-  const { theme, updateTheme, toggleDarkMode } = useTheme();
+  const { theme } = useTheme();
   const { language, changeLanguage } = useLanguage();
   
   // Mock user data
@@ -22,6 +24,13 @@ const Settings = () => {
     email: "moin@example.com",
     userType: "Admin"
   };
+
+  const [userProfile, setUserProfile] = useState({
+    firstName: currentUser.firstName,
+    lastName: currentUser.lastName,
+    email: currentUser.email,
+    profilePicture: ""
+  });
   
   // Define available languages
   const availableLanguages = [
@@ -44,10 +53,26 @@ const Settings = () => {
     toast.success(`Language changed to ${languageCode.toUpperCase()}`);
   }, [changeLanguage]);
   
-  const handleThemeChange = useCallback((color: string) => {
-    updateTheme({ primaryColor: color });
-    toast.success("Theme color updated");
-  }, [updateTheme]);
+  const handleProfileChange = useCallback((field: string, value: string) => {
+    setUserProfile(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleProfilePictureChange = useCallback(() => {
+    // Mock file input trigger
+    toast.success("Profile picture updated!");
+  }, []);
+
+  const handleClearHistory = useCallback(() => {
+    toast.success("Conversation history cleared!");
+  }, []);
+
+  const handleChangePassword = useCallback(() => {
+    toast.info("Redirecting to password change...");
+  }, []);
+
+  const handleChangeEmail = useCallback(() => {
+    toast.info("Email verification sent!");
+  }, []);
   
   const handleSettingChange = useCallback((key: string, value: boolean) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -56,14 +81,6 @@ const Settings = () => {
   const handleSaveSettings = useCallback(() => {
     toast.success("Settings saved successfully!");
   }, []);
-
-  const themeColors = [
-    { color: "#1CB5E0", name: "PANTA Blue" },
-    { color: "#FF8C00", name: "PANTA Orange" },
-    { color: "#26A69A", name: "PANTA Teal" },
-    { color: "#7C4DFF", name: "Purple" },
-    { color: "#F44336", name: "Red" }
-  ];
   
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
@@ -79,11 +96,9 @@ const Settings = () => {
           <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
             <Tabs defaultValue="general" className="w-full">
               <div className="border-b border-border p-6">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="general">General</TabsTrigger>
-                  <TabsTrigger value="appearance">Appearance</TabsTrigger>
-                  <TabsTrigger value="notifications">Notifications</TabsTrigger>
-                  <TabsTrigger value="privacy">Privacy</TabsTrigger>
+                  <TabsTrigger value="account">Account</TabsTrigger>
                 </TabsList>
               </div>
               
@@ -104,64 +119,68 @@ const Settings = () => {
                       ))}
                     </div>
                   </Card>
-                  
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Workspace</h2>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="auto-save" className="text-base font-medium">Auto Save</Label>
-                        <p className="text-sm text-muted-foreground">Automatically save conversations and workflows</p>
-                      </div>
-                      <Switch 
-                        id="auto-save" 
-                        checked={settings.autoSave}
-                        onCheckedChange={(value) => handleSettingChange('autoSave', value)}
-                      />
-                    </div>
-                  </Card>
                 </TabsContent>
                 
-                <TabsContent value="appearance" className="space-y-6 mt-0">
+                <TabsContent value="account" className="space-y-6 mt-0">
                   <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Theme Settings</h2>
-                    <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold mb-6">Profile Information</h2>
+                    
+                    {/* Profile Picture Section */}
+                    <div className="flex items-center space-x-4 mb-6">
+                      <Avatar className="w-20 h-20">
+                        <AvatarImage src={userProfile.profilePicture} />
+                        <AvatarFallback className="text-lg">
+                          {userProfile.firstName[0]}{userProfile.lastName[0]}
+                        </AvatarFallback>
+                      </Avatar>
                       <div>
-                        <Label htmlFor="dark-mode" className="text-base font-medium">Dark Mode</Label>
-                        <p className="text-sm text-muted-foreground">Toggle between light and dark themes</p>
-                      </div>
-                      <Switch 
-                        id="dark-mode" 
-                        checked={theme.isDarkMode}
-                        onCheckedChange={toggleDarkMode}
-                      />
-                    </div>
-                    
-                    <Separator className="my-6" />
-                    
-                    <h3 className="text-lg font-medium mb-4">Brand Colors</h3>
-                    <div className="grid grid-cols-5 gap-4">
-                      {themeColors.map(({ color, name }) => (
-                        <button
-                          key={color}
-                          className={`group flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
-                            theme.primaryColor === color 
-                              ? "border-primary bg-primary/5" 
-                              : "border-transparent hover:border-border hover:bg-muted/50"
-                          }`}
-                          onClick={() => handleThemeChange(color)}
+                        <Button
+                          variant="outline"
+                          onClick={handleProfilePictureChange}
+                          className="hover:bg-black hover:text-white"
                         >
-                          <div 
-                            className="w-8 h-8 rounded-full shadow-md"
-                            style={{ backgroundColor: color }}
-                          />
-                          <span className="text-xs font-medium text-center">{name}</span>
-                        </button>
-                      ))}
+                          <Camera className="w-4 h-4 mr-2" />
+                          Change Picture
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Separator className="mb-6" />
+                    
+                    {/* Name and Email Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <Label htmlFor="firstName" className="text-base font-medium">First Name</Label>
+                        <Input
+                          id="firstName"
+                          value={userProfile.firstName}
+                          onChange={(e) => handleProfileChange('firstName', e.target.value)}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName" className="text-base font-medium">Last Name</Label>
+                        <Input
+                          id="lastName"
+                          value={userProfile.lastName}
+                          onChange={(e) => handleProfileChange('lastName', e.target.value)}
+                          className="mt-2"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={userProfile.email}
+                        onChange={(e) => handleProfileChange('email', e.target.value)}
+                        className="mt-2"
+                      />
                     </div>
                   </Card>
-                </TabsContent>
-                
-                <TabsContent value="notifications" className="space-y-6 mt-0">
+
                   <Card className="p-6">
                     <h2 className="text-xl font-semibold mb-4">Notification Preferences</h2>
                     <div className="space-y-6">
@@ -219,9 +238,7 @@ const Settings = () => {
                       )}
                     </div>
                   </Card>
-                </TabsContent>
-                
-                <TabsContent value="privacy" className="space-y-6 mt-0">
+
                   <Card className="p-6">
                     <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
                     <div className="space-y-6">
@@ -231,23 +248,38 @@ const Settings = () => {
                           We securely store your conversations to provide personalized experiences. 
                           You can clear your data at any time.
                         </p>
-                        <Button variant="outline" className="hover:bg-black hover:text-white">
+                        <Button 
+                          variant="outline" 
+                          onClick={handleClearHistory}
+                          className="hover:bg-destructive hover:text-destructive-foreground"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
                           Clear All History
                         </Button>
                       </div>
-                      
-                      <Separator />
-                      
-                      <div>
-                        <h3 className="text-base font-medium mb-2">Account Security</h3>
-                        <div className="space-y-3">
-                          <Button variant="outline" className="w-full sm:w-auto hover:bg-black hover:text-white">
-                            Change Password
-                          </Button>
-                          <Button variant="outline" className="w-full sm:w-auto hover:bg-black hover:text-white">
-                            Two-Factor Authentication
-                          </Button>
-                        </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h2 className="text-xl font-semibold mb-4">Account Security</h2>
+                    <div className="space-y-4">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button 
+                          variant="outline" 
+                          onClick={handleChangePassword}
+                          className="hover:bg-black hover:text-white"
+                        >
+                          <Key className="w-4 h-4 mr-2" />
+                          Change Password
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={handleChangeEmail}
+                          className="hover:bg-black hover:text-white"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          Change Email Address
+                        </Button>
                       </div>
                     </div>
                   </Card>

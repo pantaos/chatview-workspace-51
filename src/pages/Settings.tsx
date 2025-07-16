@@ -45,7 +45,8 @@ const Settings = () => {
     autoSave: true,
     chatNotifications: true,
     workflowNotifications: true,
-    updateNotifications: false
+    updateNotifications: false,
+    assistantVisibility: 'private' as 'public' | 'private'
   });
   
   const handleLanguageChange = useCallback((languageCode: LanguageType) => {
@@ -74,7 +75,7 @@ const Settings = () => {
     toast.info("Email verification sent!");
   }, []);
   
-  const handleSettingChange = useCallback((key: string, value: boolean) => {
+  const handleSettingChange = useCallback((key: string, value: boolean | string) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
   
@@ -178,6 +179,39 @@ const Settings = () => {
                         onChange={(e) => handleProfileChange('email', e.target.value)}
                         className="mt-2"
                       />
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h2 className="text-xl font-semibold mb-4">Assistant Visibility</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-base font-medium mb-2">Admin Visibility</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Control whether administrators can view your assistant activities and conversations.
+                        </p>
+                        <div className="flex items-center space-x-4">
+                          <Button
+                            variant={settings.assistantVisibility === 'private' ? "default" : "outline"}
+                            onClick={() => handleSettingChange('assistantVisibility', 'private')}
+                            className="hover:bg-black hover:text-white"
+                          >
+                            Private
+                          </Button>
+                          <Button
+                            variant={settings.assistantVisibility === 'public' ? "default" : "outline"}
+                            onClick={() => handleSettingChange('assistantVisibility', 'public')}
+                            className="hover:bg-black hover:text-white"
+                          >
+                            Public
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {settings.assistantVisibility === 'private' 
+                            ? 'Your assistant activities are only visible to you.' 
+                            : 'Administrators can view your assistant activities for support and improvement purposes.'}
+                        </p>
+                      </div>
                     </div>
                   </Card>
 

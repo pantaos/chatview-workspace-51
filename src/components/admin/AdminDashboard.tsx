@@ -158,19 +158,95 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         })}
       </div>
 
-      {/* Main Usage Chart */}
+      {/* Token Usage by User */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold">Active Users</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              <span className="text-2xl font-bold text-foreground">{stats.activeUsers}</span> Unique users
-            </p>
+            <h3 className="text-lg font-semibold">Token Usage by User</h3>
+            <p className="text-sm text-muted-foreground">Compare token consumption across different users</p>
           </div>
         </div>
         <ChartContainer config={chartConfig} className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={dailyLogins} margin={{ top: 10, right: 30, left: 10, bottom: 5 }}>
+            <BarChart data={tokenUsageByUser} margin={{ top: 10, right: 30, left: 10, bottom: 60 }}>
+              <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 12 }}
+                angle={-45}
+                textAnchor="end"
+                height={60}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                axisLine={false} 
+                tickLine={false}
+                tickFormatter={(value) => `${value.toLocaleString()}`}
+              />
+              <ChartTooltip 
+                content={<ChartTooltipContent />}
+                formatter={(value) => [`${value.toLocaleString()} tokens`, 'Usage']}
+              />
+              <Bar 
+                dataKey="tokens" 
+                fill="hsl(var(--primary))" 
+                radius={[4, 4, 0, 0]}
+                className="hover:opacity-80"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </Card>
+
+      {/* Token Usage by Organization */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold">Token Usage by Organization</h3>
+            <p className="text-sm text-muted-foreground">Departmental usage with growth trends</p>
+          </div>
+        </div>
+        <div className="space-y-4">
+          {tokenUsageByOrg.map((org, index) => (
+            <div key={org.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className={`w-4 h-4 rounded-full`} style={{ backgroundColor: `hsl(${220 + index * 40}, 65%, 55%)` }} />
+                <div>
+                  <div className="font-medium">{org.name}</div>
+                  <div className="text-sm text-muted-foreground">{org.tokens.toLocaleString()} tokens used</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold">{org.tokens.toLocaleString()}</div>
+                <div className="text-sm text-green-600 font-medium flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  {org.trend}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Daily Logins */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold">Daily Logins</h3>
+            <p className="text-sm text-muted-foreground">User engagement trends over the past 2 weeks</p>
+          </div>
+        </div>
+        <ChartContainer config={chartConfig} className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={dailyLogins} margin={{ top: 10, right: 30, left: 10, bottom: 5 }}>
+              <defs>
+                <linearGradient id="loginGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.05}/>
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
               <XAxis 
                 dataKey="date" 
@@ -179,7 +255,12 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
                 axisLine={false}
                 tickLine={false}
               />
-              <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                axisLine={false} 
+                tickLine={false}
+                tickFormatter={(value) => `${value}`}
+              />
               <ChartTooltip 
                 content={<ChartTooltipContent />}
                 labelFormatter={(value) => new Date(value).toLocaleDateString('en-US', { 
@@ -187,138 +268,113 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
                   month: 'short', 
                   day: 'numeric' 
                 })}
+                formatter={(value) => [`${value} logins`, 'Daily Logins']}
               />
-              <Bar 
-                dataKey="logins" 
-                fill="hsl(var(--primary))" 
-                radius={[3, 3, 0, 0]}
-                className="hover:opacity-80"
+              <Area
+                type="monotone"
+                dataKey="logins"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2}
+                fill="url(#loginGradient)"
               />
-            </BarChart>
+            </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
       </Card>
 
-      {/* Usage Breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Chat Usage */}
+      {/* Top Assistants and Categories */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* Top Assistants by Usage */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-semibold">Chat</h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="text-xl font-bold text-foreground">{(stats.totalTokensUsed * 0.6).toLocaleString()}</span> Messages
-              </p>
+              <h3 className="text-lg font-semibold">Top Assistants by Usage</h3>
+              <p className="text-sm text-muted-foreground">Most popular AI assistants ranked by token consumption</p>
             </div>
           </div>
-          <ChartContainer config={chartConfig} className="h-[120px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dailyLogins.slice(0, 10)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                <Bar 
-                  dataKey="logins" 
-                  fill="hsl(var(--primary))" 
-                  radius={[2, 2, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <div className="space-y-4">
+            {topAssistants.map((assistant, index) => (
+              <div key={assistant.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                    #{index + 1}
+                  </div>
+                  <div>
+                    <div className="font-medium">{assistant.name}</div>
+                    <div className="text-sm text-muted-foreground">{assistant.requests} requests</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold">{assistant.usage.toLocaleString()}</div>
+                  <div className="text-sm text-muted-foreground">tokens</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </Card>
 
-        {/* Assistants Usage */}
+        {/* Top Assistants by Workflow Category */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-semibold">Assistants</h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="text-xl font-bold text-foreground">{(stats.totalTokensUsed * 0.4).toLocaleString()}</span> Messages
-              </p>
+              <h3 className="text-lg font-semibold">Top Assistants by Category</h3>
+              <p className="text-sm text-muted-foreground">Popular assistants grouped by workflow type</p>
             </div>
           </div>
-          <ChartContainer config={chartConfig} className="h-[120px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dailyLogins.slice(0, 10)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                <Bar 
-                  dataKey="logins" 
-                  fill="#5673eb" 
-                  radius={[2, 2, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
+                <Bot className="w-4 h-4" />
+                Content Creation
+              </h4>
+              <div className="space-y-2 ml-6">
+                <div className="flex justify-between items-center text-sm">
+                  <span>Content Writer</span>
+                  <span className="font-medium">8.9k tokens</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Blog Assistant</span>
+                  <span className="font-medium">6.2k tokens</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
+                <Workflow className="w-4 h-4" />
+                Development
+              </h4>
+              <div className="space-y-2 ml-6">
+                <div className="flex justify-between items-center text-sm">
+                  <span>Code Helper</span>
+                  <span className="font-medium">7.2k tokens</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Debug Assistant</span>
+                  <span className="font-medium">4.1k tokens</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                Analytics
+              </h4>
+              <div className="space-y-2 ml-6">
+                <div className="flex justify-between items-center text-sm">
+                  <span>Data Analyst</span>
+                  <span className="font-medium">6.4k tokens</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Report Generator</span>
+                  <span className="font-medium">3.8k tokens</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </Card>
       </div>
-
-      {/* Member Leaderboard */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold">Member leaderboard</h3>
-          </div>
-          <div className="flex items-center gap-4">
-            <select className="px-3 py-2 text-sm border rounded-lg bg-background">
-              <option>Last 30 days</option>
-              <option>Last 7 days</option>
-              <option>Last 90 days</option>
-            </select>
-            <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg bg-background">
-              <Calendar className="w-4 h-4" />
-              <span>Dec 10 - Jan 08</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-6 mb-6 border-b">
-          <button className="flex items-center gap-2 px-1 pb-3 border-b-2 border-primary text-primary font-medium">
-            <Activity className="w-4 h-4" />
-            Chat
-          </button>
-          <button className="flex items-center gap-2 px-1 pb-3 text-muted-foreground hover:text-foreground">
-            <Bot className="w-4 h-4" />
-            Assistants
-          </button>
-        </div>
-
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search members"
-              className="w-full pl-10 pr-4 py-3 border rounded-lg bg-muted/30 focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* Leaderboard */}
-        <div className="space-y-3">
-          {tokenUsageByUser.slice(0, 5).map((user, index) => (
-            <div key={user.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-semibold">
-                  #{index + 1}
-                </div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-semibold">
-                  {user.name.split(' ').map(n => n[0]).join('')}
-                </div>
-                <div>
-                  <div className="font-medium">{user.name}</div>
-                  <div className="text-sm text-muted-foreground">Member</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-semibold">{user.tokens.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">messages</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
 
       {/* Quick Actions */}
       <Card>

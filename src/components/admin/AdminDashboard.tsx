@@ -200,12 +200,12 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         </ChartContainer>
       </Card>
 
-      {/* Token Usage by Organization */}
+      {/* Token Usage by Team */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold">Token Usage by Organization</h3>
-            <p className="text-sm text-muted-foreground">Departmental usage with growth trends</p>
+            <h3 className="text-lg font-semibold">Token Usage by Team</h3>
+            <p className="text-sm text-muted-foreground">Team usage with growth trends</p>
           </div>
         </div>
         <div className="space-y-4">

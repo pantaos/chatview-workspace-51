@@ -44,9 +44,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
   const topAssistants = [
     { name: 'Content Writer', usage: 8900, requests: 456, color: 'hsl(var(--primary))' },
     { name: 'Code Helper', usage: 7200, requests: 382, color: 'hsl(var(--primary))' },
-    { name: 'Data Analyst', usage: 6400, requests: 298, color: 'hsl(280, 65%, 55%)' },
-    { name: 'Email Assistant', usage: 4800, requests: 267, color: 'hsl(160, 60%, 45%)' },
-    { name: 'Research Bot', usage: 3900, requests: 189, color: 'hsl(30, 75%, 55%)' }
+    { name: 'Data Analyst', usage: 6400, requests: 298, color: 'hsl(280, 65%, 55%)' }
   ];
 
   const dailyLogins = [

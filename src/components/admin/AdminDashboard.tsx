@@ -337,7 +337,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
           <p className="text-sm text-muted-foreground">Common administrative tasks</p>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button 
               onClick={onNavigateToUsers}
               className="p-4 text-left bg-primary/5 hover:bg-primary/10 rounded-lg transition-all duration-200 border border-primary/20 hover:border-primary/30 group"
@@ -347,14 +347,6 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
                 <div className="font-medium">Manage Users</div>
               </div>
               <div className="text-sm text-muted-foreground">Add, edit, or remove users</div>
-            </button>
-            
-            <button className="p-4 text-left bg-muted/20 hover:bg-muted/30 rounded-lg transition-all duration-200 border border-border hover:border-border/60 group">
-              <div className="flex items-center gap-3 mb-2">
-                <Workflow className="w-5 h-5 text-foreground" />
-                <div className="font-medium">System Settings</div>
-              </div>
-              <div className="text-sm text-muted-foreground">Configure application settings</div>
             </button>
 
             <button className="p-4 text-left bg-muted/20 hover:bg-muted/30 rounded-lg transition-all duration-200 border border-border hover:border-border/60 group">

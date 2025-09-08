@@ -94,7 +94,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
     {
       title: "Tokens Used",
       value: stats.totalTokensUsed.toLocaleString(),
-      description: "Across all users",
+      description: "of 60,000 limit",
       icon: Zap,
       gradient: "from-yellow-500 to-orange-500"
     },

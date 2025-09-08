@@ -41,7 +41,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
 
   const topAssistants = [
     { name: 'Content Writer', usage: 8900, requests: 456, color: 'hsl(var(--primary))' },
-    { name: 'Code Helper', usage: 7200, requests: 382, color: 'hsl(220, 70%, 50%)' },
+    { name: 'Code Helper', usage: 7200, requests: 382, color: 'hsl(var(--primary))' },
     { name: 'Data Analyst', usage: 6400, requests: 298, color: 'hsl(280, 65%, 55%)' },
     { name: 'Email Assistant', usage: 4800, requests: 267, color: 'hsl(160, 60%, 45%)' },
     { name: 'Research Bot', usage: 3900, requests: 189, color: 'hsl(30, 75%, 55%)' }
@@ -239,7 +239,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
               <BarChart data={dailyLogins.slice(0, 10)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                 <Bar 
                   dataKey="logins" 
-                  fill="hsl(220, 70%, 50%)" 
+                  fill="hsl(var(--primary))" 
                   radius={[2, 2, 0, 0]}
                 />
               </BarChart>

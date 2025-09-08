@@ -19,7 +19,7 @@ interface ThemeContextType {
 
 // Default theme based on PANTA branding
 const defaultTheme: ThemeConfig = {
-  primaryColor: "#1CB5E0", // PANTA blue
+  primaryColor: "#5673eb", // Updated blue
   secondaryColor: "#FF8C00", // PANTA orange
   accentColor: "#26A69A", // PANTA teal
   logo: "/panta-logo.png",

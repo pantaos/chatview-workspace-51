@@ -117,7 +117,7 @@
 
   .panta-gradient-text {
     @apply text-transparent bg-clip-text;
-    background-image: linear-gradient(90deg, #1cb5e0 0%, #ff8c00 100%);
+    background-image: linear-gradient(90deg, #5673eb 0%, #ff8c00 100%);
   }
 
   .search-chat-glow {
@@ -181,8 +181,8 @@
   }
   
   @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(28, 181, 224, 0.2); }
-    50% { box-shadow: 0 0 40px rgba(28, 181, 224, 0.4); }
+    0%, 100% { box-shadow: 0 0 20px rgba(86, 115, 235, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(86, 115, 235, 0.4); }
   }
   
   .animate-float {

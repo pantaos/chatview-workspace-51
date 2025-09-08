@@ -8,7 +8,7 @@ interface ClientTheme {
 // Sample client themes
 export const clientThemes: ClientTheme = {
   panta: {
-    primaryColor: "#1CB5E0",
+    primaryColor: "#5673eb",
     secondaryColor: "#FF8C00",
     accentColor: "#26A69A",
     logo: "/panta-logo.png",

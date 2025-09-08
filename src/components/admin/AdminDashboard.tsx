@@ -229,20 +229,11 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         </div>
         <div className="space-y-4">
           {tokenUsageByOrg.map((org, index) => (
-            <div key={org.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className={`w-4 h-4 rounded-full`} style={{ backgroundColor: `hsl(${220 + index * 40}, 65%, 55%)` }} />
-                <div>
-                  <div className="font-medium">{org.name}</div>
-                  <div className="text-sm text-muted-foreground">{org.tokens.toLocaleString()} tokens used</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold">{org.tokens.toLocaleString()}</div>
-                <div className="text-sm text-green-600 font-medium flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
-                  {org.trend}
-                </div>
+            <div key={org.name} className="flex items-center gap-4 p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
+              <div className={`w-4 h-4 rounded-full`} style={{ backgroundColor: `hsl(${220 + index * 40}, 65%, 55%)` }} />
+              <div>
+                <div className="font-medium">{org.name}</div>
+                <div className="text-sm text-muted-foreground">{org.tokens.toLocaleString()} tokens used</div>
               </div>
             </div>
           ))}

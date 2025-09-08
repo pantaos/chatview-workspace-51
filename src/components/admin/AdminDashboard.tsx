@@ -91,18 +91,10 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
     },
     {
       title: "Tokens Used",
-      value: null,
+      value: stats.totalTokensUsed.toLocaleString(),
       description: "Limit: 60,000",
       icon: Coins,
-      gradient: "from-yellow-500 to-orange-500",
-      customContent: (
-        <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded-full bg-primary opacity-100"></div>
-          <div className="w-3 h-3 rounded-full bg-primary opacity-75 -ml-1"></div>
-          <div className="w-3 h-3 rounded-full bg-primary opacity-50 -ml-1"></div>
-          <div className="w-3 h-3 rounded-full bg-primary opacity-25 -ml-1"></div>
-        </div>
-      )
+      gradient: "from-yellow-500 to-orange-500"
     },
     {
       title: "Workflows",
@@ -164,11 +156,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
                   <Icon className="w-5 h-5 text-muted-foreground" />
                 </div>
                 <div>
-                  {stat.customContent ? (
-                    <div className="mb-2">{stat.customContent}</div>
-                  ) : (
-                    <div className="text-3xl font-bold">{stat.value}</div>
-                  )}
+                  <div className="text-3xl font-bold">{stat.value}</div>
                   <div className="text-sm text-muted-foreground mt-1">{stat.description}</div>
                 </div>
               </div>

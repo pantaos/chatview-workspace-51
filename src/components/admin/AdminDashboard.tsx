@@ -239,7 +239,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
               <BarChart data={dailyLogins.slice(0, 10)} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                 <Bar 
                   dataKey="logins" 
-                  fill="hsl(220, 70%, 50%)" 
+                  fill="#5673eb" 
                   radius={[2, 2, 0, 0]}
                 />
               </BarChart>

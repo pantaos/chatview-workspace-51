@@ -298,99 +298,34 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         </ChartContainer>
       </Card>
 
-      {/* Top Assistants and Categories */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Top Assistants by Usage */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold">Top Assistants by Usage</h3>
-              <p className="text-sm text-muted-foreground">Most popular AI assistants ranked by token consumption</p>
-            </div>
+      {/* Top Assistants by Usage */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold">Top Assistants by Usage</h3>
+            <p className="text-sm text-muted-foreground">Most popular AI assistants ranked by token consumption</p>
           </div>
-          <div className="space-y-4">
-            {topAssistants.map((assistant, index) => (
-              <div key={assistant.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
-                    #{index + 1}
-                  </div>
-                  <div>
-                    <div className="font-medium">{assistant.name}</div>
-                    <div className="text-sm text-muted-foreground">{assistant.requests} requests</div>
-                  </div>
+        </div>
+        <div className="space-y-4">
+          {topAssistants.map((assistant, index) => (
+            <div key={assistant.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                  #{index + 1}
                 </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold">{assistant.usage.toLocaleString()}</div>
-                  <div className="text-sm text-muted-foreground">tokens</div>
+                <div>
+                  <div className="font-medium">{assistant.name}</div>
+                  <div className="text-sm text-muted-foreground">{assistant.requests} requests</div>
                 </div>
               </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Top Assistants by Workflow Category */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold">Top Assistants by Category</h3>
-              <p className="text-sm text-muted-foreground">Popular assistants grouped by workflow type</p>
-            </div>
-          </div>
-          <div className="space-y-6">
-            <div>
-              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
-                <Bot className="w-4 h-4" />
-                Content Creation
-              </h4>
-              <div className="space-y-2 ml-6">
-                <div className="flex justify-between items-center text-sm">
-                  <span>Content Writer</span>
-                  <span className="font-medium">8.9k tokens</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span>Blog Assistant</span>
-                  <span className="font-medium">6.2k tokens</span>
-                </div>
+              <div className="text-right">
+                <div className="text-lg font-bold">{assistant.usage.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">tokens</div>
               </div>
             </div>
-            
-            <div>
-              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
-                <Workflow className="w-4 h-4" />
-                Development
-              </h4>
-              <div className="space-y-2 ml-6">
-                <div className="flex justify-between items-center text-sm">
-                  <span>Code Helper</span>
-                  <span className="font-medium">7.2k tokens</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span>Debug Assistant</span>
-                  <span className="font-medium">4.1k tokens</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-sm text-primary mb-3 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Analytics
-              </h4>
-              <div className="space-y-2 ml-6">
-                <div className="flex justify-between items-center text-sm">
-                  <span>Data Analyst</span>
-                  <span className="font-medium">6.4k tokens</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span>Report Generator</span>
-                  <span className="font-medium">3.8k tokens</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Quick Actions */}
       <Card>

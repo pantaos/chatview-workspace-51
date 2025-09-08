@@ -44,6 +44,8 @@ export interface AdminStats {
   totalAssistants: number;
   activeUsers: number;
   newUsersThisMonth: number;
+  totalQueriesSent: number;
+  hoursSaved: number;
 }
 
 export interface AIModel {

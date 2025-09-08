@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Zap, Workflow, Bot, TrendingUp, ArrowUpRight, Calendar, Activity, Crown, BarChart3 } from "lucide-react";
+import { Users, Zap, Workflow, Bot, TrendingUp, ArrowUpRight, Calendar, Activity, Crown, BarChart3, MessageSquare, Clock } from "lucide-react";
 import { AdminStats } from "@/types/admin";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -17,7 +17,9 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
     totalWorkflows: 23,
     totalAssistants: 8,
     activeUsers: 89,
-    newUsersThisMonth: 12
+    newUsersThisMonth: 12,
+    totalQueriesSent: 12847,
+    hoursSaved: 3294
   };
 
   // Mock data for charts
@@ -109,6 +111,20 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
       description: "AI assistants",
       icon: Bot,
       gradient: "from-purple-500 to-violet-500"
+    },
+    {
+      title: "Total Queries",
+      value: stats.totalQueriesSent.toLocaleString(),
+      description: "Queries sent",
+      icon: MessageSquare,
+      gradient: "from-cyan-500 to-blue-500"
+    },
+    {
+      title: "Hours Saved",
+      value: stats.hoursSaved.toLocaleString(),
+      description: "Time automation",
+      icon: Clock,
+      gradient: "from-pink-500 to-rose-500"
     }
   ];
 
@@ -134,8 +150,8 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {statCards.slice(0, 3).map((stat) => {
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card 

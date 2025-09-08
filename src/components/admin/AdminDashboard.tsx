@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Zap, Workflow, Bot, TrendingUp, ArrowUpRight, Calendar, Activity, Crown, BarChart3, MessageSquare, Clock } from "lucide-react";
+import { Users, Coins, Workflow, Bot, TrendingUp, ArrowUpRight, Calendar, Activity, Crown, BarChart3, MessageSquare, Clock } from "lucide-react";
 import { AdminStats } from "@/types/admin";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -93,7 +93,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
       title: "Tokens Used",
       value: stats.totalTokensUsed.toLocaleString(),
       description: "Limit: 60,000",
-      icon: Zap,
+      icon: Coins,
       gradient: "from-yellow-500 to-orange-500"
     },
     {

@@ -165,7 +165,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         })}
       </div>
 
-      {/* Token Usage Charts */}
+      {/* Token Usage Charts - Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Token Usage by User */}
         <Card className="p-6">
@@ -245,86 +245,89 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         </Card>
       </div>
 
-      {/* Daily Logins */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold">Daily Logins</h3>
-            <p className="text-sm text-muted-foreground">User engagement trends over the past 2 weeks</p>
-          </div>
-        </div>
-        <ChartContainer config={chartConfig} className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={dailyLogins} margin={{ top: 10, right: 30, left: 10, bottom: 5 }}>
-              <defs>
-                <linearGradient id="loginGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.05}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }} 
-                axisLine={false} 
-                tickLine={false}
-                tickFormatter={(value) => `${value}`}
-              />
-              <ChartTooltip 
-                content={<ChartTooltipContent />}
-                labelFormatter={(value) => new Date(value).toLocaleDateString('en-US', { 
-                  weekday: 'short', 
-                  month: 'short', 
-                  day: 'numeric' 
-                })}
-                formatter={(value) => [`${value} logins`, 'Daily Logins']}
-              />
-              <Area
-                type="monotone"
-                dataKey="logins"
-                stroke="hsl(var(--primary))"
-                strokeWidth={2}
-                fill="url(#loginGradient)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </Card>
-
-      {/* Top Assistants by Usage */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold">Top Assistants by Usage</h3>
-            <p className="text-sm text-muted-foreground">Most popular AI assistants ranked by token consumption</p>
-          </div>
-        </div>
-        <div className="space-y-4">
-          {topAssistants.map((assistant, index) => (
-            <div key={assistant.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
-                  #{index + 1}
-                </div>
-                <div>
-                  <div className="font-medium">{assistant.name}</div>
-                  <div className="text-sm text-muted-foreground">{assistant.requests} requests</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold">{assistant.usage.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">tokens</div>
-              </div>
+      {/* Activity Charts - Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Daily Logins */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold">Daily Logins</h3>
+              <p className="text-sm text-muted-foreground">User engagement trends over the past 2 weeks</p>
             </div>
-          ))}
-        </div>
-      </Card>
+          </div>
+          <ChartContainer config={chartConfig} className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailyLogins} margin={{ top: 10, right: 30, left: 10, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="loginGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.05}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis 
+                  dataKey="date" 
+                  tick={{ fontSize: 12 }}
+                  tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis 
+                  tick={{ fontSize: 12 }} 
+                  axisLine={false} 
+                  tickLine={false}
+                  tickFormatter={(value) => `${value}`}
+                />
+                <ChartTooltip 
+                  content={<ChartTooltipContent />}
+                  labelFormatter={(value) => new Date(value).toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })}
+                  formatter={(value) => [`${value} logins`, 'Daily Logins']}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="logins"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2}
+                  fill="url(#loginGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </Card>
+
+        {/* Top Assistants by Usage */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold">Top Assistants by Usage</h3>
+              <p className="text-sm text-muted-foreground">Most popular AI assistants ranked by token consumption</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            {topAssistants.map((assistant, index) => (
+              <div key={assistant.name} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                    #{index + 1}
+                  </div>
+                  <div>
+                    <div className="font-medium">{assistant.name}</div>
+                    <div className="text-sm text-muted-foreground">{assistant.requests} requests</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold">{assistant.usage.toLocaleString()}</div>
+                  <div className="text-sm text-muted-foreground">tokens</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
 
       {/* Quick Actions */}
       <Card>

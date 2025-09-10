@@ -165,82 +165,85 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         })}
       </div>
 
-      {/* Token Usage by User */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold">Token Usage by User</h3>
-            <p className="text-sm text-muted-foreground">Compare token consumption across different users</p>
+      {/* Token Usage Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Token Usage by User */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold">Token Usage by User</h3>
+              <p className="text-sm text-muted-foreground">Compare token consumption across different users</p>
+            </div>
           </div>
-        </div>
-        <ChartContainer config={chartConfig} className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={tokenUsageByUser} margin={{ top: 10, right: 30, left: 10, bottom: 60 }}>
-              <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-              <XAxis 
-                dataKey="name" 
-                tick={{ fontSize: 12 }}
-                angle={-45}
-                textAnchor="end"
-                height={60}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }} 
-                axisLine={false} 
-                tickLine={false}
-                tickFormatter={(value) => `${value.toLocaleString()}`}
-              />
-              <ChartTooltip 
-                content={<ChartTooltipContent />}
-                formatter={(value) => [`${value.toLocaleString()} tokens`, 'Usage']}
-              />
-              <Bar 
-                dataKey="tokens" 
-                fill="hsl(var(--primary))" 
-                radius={[4, 4, 0, 0]}
-                className="hover:opacity-80"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </Card>
+          <ChartContainer config={chartConfig} className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={tokenUsageByUser} margin={{ top: 10, right: 30, left: 10, bottom: 60 }}>
+                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis 
+                  tick={{ fontSize: 12 }} 
+                  axisLine={false} 
+                  tickLine={false}
+                  tickFormatter={(value) => `${value.toLocaleString()}`}
+                />
+                <ChartTooltip 
+                  content={<ChartTooltipContent />}
+                  formatter={(value) => [`${value.toLocaleString()} tokens`, 'Usage']}
+                />
+                <Bar 
+                  dataKey="tokens" 
+                  fill="hsl(var(--primary))" 
+                  radius={[4, 4, 0, 0]}
+                  className="hover:opacity-80"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </Card>
 
-      {/* Token Usage by Team */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold">Token Usage by Team</h3>
-            <p className="text-sm text-muted-foreground">Distribution of token usage across teams</p>
+        {/* Token Usage by Team */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold">Token Usage by Team</h3>
+              <p className="text-sm text-muted-foreground">Distribution of token usage across teams</p>
+            </div>
           </div>
-        </div>
-        <ChartContainer config={chartConfig} className="h-[350px] flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={tokenUsageByOrg}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                outerRadius={100}
-                innerRadius={0}
-                fill="#8884d8"
-                dataKey="tokens"
-              >
-                {tokenUsageByOrg.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={`hsl(${220 + index * 40}, 65%, 55%)`} />
-                ))}
-              </Pie>
-              <ChartTooltip 
-                content={<ChartTooltipContent />}
-                formatter={(value, name) => [`${value.toLocaleString()} tokens`, name]}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </Card>
+          <ChartContainer config={chartConfig} className="h-[300px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={tokenUsageByOrg}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={100}
+                  innerRadius={0}
+                  fill="#8884d8"
+                  dataKey="tokens"
+                >
+                  {tokenUsageByOrg.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={`hsl(${220 + index * 40}, 65%, 55%)`} />
+                  ))}
+                </Pie>
+                <ChartTooltip 
+                  content={<ChartTooltipContent />}
+                  formatter={(value, name) => [`${value.toLocaleString()} tokens`, name]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </Card>
+      </div>
 
       {/* Daily Logins */}
       <Card className="p-6">

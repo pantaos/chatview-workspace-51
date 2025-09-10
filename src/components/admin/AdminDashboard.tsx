@@ -212,20 +212,33 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold">Token Usage by Team</h3>
-            <p className="text-sm text-muted-foreground">Team usage with growth trends</p>
+            <p className="text-sm text-muted-foreground">Distribution of token usage across teams</p>
           </div>
         </div>
-        <div className="space-y-4">
-          {tokenUsageByOrg.map((org, index) => (
-            <div key={org.name} className="flex items-center gap-4 p-4 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors">
-              <div className={`w-4 h-4 rounded-full`} style={{ backgroundColor: `hsl(${220 + index * 40}, 65%, 55%)` }} />
-              <div>
-                <div className="font-medium">{org.name}</div>
-                <div className="text-sm text-muted-foreground">{org.tokens.toLocaleString()} tokens used</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ChartContainer config={chartConfig} className="h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={tokenUsageByOrg}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                outerRadius={120}
+                fill="#8884d8"
+                dataKey="tokens"
+              >
+                {tokenUsageByOrg.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={`hsl(${220 + index * 40}, 65%, 55%)`} />
+                ))}
+              </Pie>
+              <ChartTooltip 
+                content={<ChartTooltipContent />}
+                formatter={(value, name) => [`${value.toLocaleString()} tokens`, name]}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartContainer>
       </Card>
 
       {/* Daily Logins */}

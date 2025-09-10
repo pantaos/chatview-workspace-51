@@ -177,22 +177,24 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
           </div>
           <ChartContainer config={chartConfig} className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={tokenUsageByUser} margin={{ top: 10, right: 30, left: 10, bottom: 60 }}>
+              <BarChart data={tokenUsageByUser} margin={{ top: 10, right: 10, left: 0, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
                 <XAxis 
                   dataKey="name" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   angle={-45}
                   textAnchor="end"
-                  height={60}
+                  height={80}
                   axisLine={false}
                   tickLine={false}
+                  interval={0}
                 />
                 <YAxis 
-                  tick={{ fontSize: 12 }} 
+                  tick={{ fontSize: 10 }} 
                   axisLine={false} 
                   tickLine={false}
-                  tickFormatter={(value) => `${value.toLocaleString()}`}
+                  tickFormatter={(value) => `${(value/1000).toFixed(0)}K`}
+                  width={40}
                 />
                 <ChartTooltip 
                   content={<ChartTooltipContent />}
@@ -257,7 +259,7 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
           </div>
           <ChartContainer config={chartConfig} className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={dailyLogins} margin={{ top: 10, right: 30, left: 10, bottom: 5 }}>
+              <AreaChart data={dailyLogins} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                 <defs>
                   <linearGradient id="loginGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
@@ -267,16 +269,18 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
                 <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   axisLine={false}
                   tickLine={false}
+                  interval="preserveStartEnd"
                 />
                 <YAxis 
-                  tick={{ fontSize: 12 }} 
+                  tick={{ fontSize: 10 }} 
                   axisLine={false} 
                   tickLine={false}
                   tickFormatter={(value) => `${value}`}
+                  width={30}
                 />
                 <ChartTooltip 
                   content={<ChartTooltipContent />}

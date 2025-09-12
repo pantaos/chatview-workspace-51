@@ -127,7 +127,7 @@ const AdminSettings = () => {
   const currentTab = tabs.find(tab => tab.id === activeTab);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
+    <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
       <LiquidGlassHeader
         title="Admin Panel"
         subtitle="Manage users, teams, workflows, and system settings"
@@ -141,7 +141,7 @@ const AdminSettings = () => {
       {/* Main content */}
       <main className="container mx-auto px-4 pb-8 -mt-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <Card className={`border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'}`}>
+          <Card className={`border border-slate-200/50 dark:border-slate-700/50 shadow-lg bg-white dark:bg-slate-800 ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'} rounded-2xl`}>
             <div className="flex h-full">
               {/* Mobile Sidebar Overlay */}
               {isMobile && sidebarOpen && (

@@ -429,7 +429,7 @@ const AdminSettings = () => {
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
-  }, [activeTab, handleNavigateToUsers]);
+  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen]);
 
   const currentTab = tabs.find(tab => tab.id === activeTab);
 

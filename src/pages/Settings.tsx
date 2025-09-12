@@ -16,7 +16,7 @@ const Settings = () => {
   const { theme } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState("languages");
+  const [activeTab, setActiveTab] = useState("account");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Mock user data
@@ -53,12 +53,6 @@ const Settings = () => {
 
   const tabs = useMemo(() => [
     { 
-      id: "languages", 
-      label: "Languages", 
-      icon: Globe,
-      description: "Language Preferences"
-    },
-    { 
       id: "account", 
       label: "Account", 
       icon: User,
@@ -69,6 +63,12 @@ const Settings = () => {
       label: "Integrations", 
       icon: Puzzle,
       description: "Connected Services"
+    },
+    { 
+      id: "languages", 
+      label: "Languages", 
+      icon: Globe,
+      description: "Language Preferences"
     }
   ], []);
   

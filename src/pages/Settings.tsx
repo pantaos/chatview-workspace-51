@@ -1,6 +1,4 @@
-import React, { useState, useCallback } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
+import React, { useState, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -10,12 +8,16 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Camera, Trash2, Key, Mail } from "lucide-react";
+import { Camera, Trash2, Key, Mail, Globe, User, Puzzle } from "lucide-react";
 
 const Settings = () => {
   const { theme } = useTheme();
   const { language, changeLanguage } = useLanguage();
+  const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState("languages");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Mock user data
   const currentUser = {
@@ -48,6 +50,27 @@ const Settings = () => {
     updateNotifications: false,
     assistantVisibility: 'private' as 'public' | 'private'
   });
+
+  const tabs = useMemo(() => [
+    { 
+      id: "languages", 
+      label: "Languages", 
+      icon: Globe,
+      description: "Language Preferences"
+    },
+    { 
+      id: "account", 
+      label: "Account", 
+      icon: User,
+      description: "Profile & Security"
+    },
+    { 
+      id: "integrations", 
+      label: "Integrations", 
+      icon: Puzzle,
+      description: "Connected Services"
+    }
+  ], []);
   
   const handleLanguageChange = useCallback((languageCode: LanguageType) => {
     changeLanguage(languageCode);
@@ -82,6 +105,196 @@ const Settings = () => {
   const handleSaveSettings = useCallback(() => {
     toast.success("Settings saved successfully!");
   }, []);
+
+  const handleTabChange = useCallback((tabId: string) => {
+    setActiveTab(tabId);
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
+
+  const renderContent = useCallback(() => {
+    switch (activeTab) {
+      case "languages":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Language Preferences</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {availableLanguages.map((lang) => (
+                  <Button
+                    key={lang.code}
+                    variant={language === lang.code ? "default" : "outline"}
+                    onClick={() => handleLanguageChange(lang.code)}
+                    className="w-full hover:bg-black hover:text-white"
+                  >
+                    {lang.name}
+                  </Button>
+                ))}
+              </div>
+            </Card>
+          </div>
+        );
+      case "account":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Profile Information</h2>
+              
+              {/* Profile Picture Section */}
+              <div className="flex items-center space-x-4 mb-6">
+                <Avatar className="w-20 h-20">
+                  <AvatarImage src={userProfile.profilePicture} />
+                  <AvatarFallback className="text-lg">
+                    {userProfile.firstName[0]}{userProfile.lastName[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <Button
+                    variant="outline"
+                    onClick={handleProfilePictureChange}
+                    className="hover:bg-black hover:text-white"
+                  >
+                    <Camera className="w-4 h-4 mr-2" />
+                    Change Picture
+                  </Button>
+                </div>
+              </div>
+
+              <Separator className="mb-6" />
+              
+              {/* Name and Email Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <Label htmlFor="firstName" className="text-base font-medium">First Name</Label>
+                  <Input
+                    id="firstName"
+                    value={userProfile.firstName}
+                    onChange={(e) => handleProfileChange('firstName', e.target.value)}
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName" className="text-base font-medium">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    value={userProfile.lastName}
+                    onChange={(e) => handleProfileChange('lastName', e.target.value)}
+                    className="mt-2"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={userProfile.email}
+                  onChange={(e) => handleProfileChange('email', e.target.value)}
+                  className="mt-2"
+                />
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Assistant Visibility</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-base font-medium mb-2">Admin Visibility</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Control whether administrators can view your assistant activities and conversations.
+                  </p>
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant={settings.assistantVisibility === 'private' ? "default" : "outline"}
+                      onClick={() => handleSettingChange('assistantVisibility', 'private')}
+                      className="hover:bg-black hover:text-white"
+                    >
+                      Private
+                    </Button>
+                    <Button
+                      variant={settings.assistantVisibility === 'public' ? "default" : "outline"}
+                      onClick={() => handleSettingChange('assistantVisibility', 'public')}
+                      className="hover:bg-black hover:text-white"
+                    >
+                      Public
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {settings.assistantVisibility === 'private' 
+                      ? 'Your assistant activities are only visible to you.' 
+                      : 'Administrators can view your assistant activities for support and improvement purposes.'}
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-base font-medium mb-2">Conversation History</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    We securely store your conversations to provide personalized experiences. 
+                    You can clear your data at any time.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleClearHistory}
+                    className="hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Clear All History
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Account Security</h2>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleChangePassword}
+                    className="hover:bg-black hover:text-white"
+                  >
+                    <Key className="w-4 h-4 mr-2" />
+                    Change Password
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleChangeEmail}
+                    className="hover:bg-black hover:text-white"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Change Email Address
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+      case "integrations":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Connected Services</h2>
+              <p className="text-muted-foreground mb-6">
+                Manage your connected services and integrations.
+              </p>
+              <div className="text-center py-12">
+                <Puzzle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No integrations available yet.</p>
+              </div>
+            </Card>
+          </div>
+        );
+      default:
+        return null;
+    }
+  }, [activeTab, availableLanguages, language, userProfile, settings, handleLanguageChange, handleProfileChange, handleProfilePictureChange, handleClearHistory, handleChangePassword, handleChangeEmail, handleSettingChange]);
   
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
@@ -89,188 +302,89 @@ const Settings = () => {
         title="Settings"
         subtitle="Customize your experience and preferences"
         currentUser={currentUser}
+        showBackButton={!isMobile}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        showSidebarToggle={true}
       />
 
       {/* Main content */}
       <main className="container mx-auto px-4 py-8 -mt-8 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
-            <Tabs defaultValue="general" className="w-full">
-              <div className="border-b border-border p-6">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="general">General</TabsTrigger>
-                  <TabsTrigger value="account">Account</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <div className="p-6">
-                <TabsContent value="general" className="space-y-6 mt-0">
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Language Preferences</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {availableLanguages.map((lang) => (
-                        <Button
-                          key={lang.code}
-                          variant={language === lang.code ? "default" : "outline"}
-                          onClick={() => handleLanguageChange(lang.code)}
-                          className="w-full hover:bg-black hover:text-white"
-                        >
-                          {lang.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </Card>
-                </TabsContent>
-                
-                <TabsContent value="account" className="space-y-6 mt-0">
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-6">Profile Information</h2>
-                    
-                    {/* Profile Picture Section */}
-                    <div className="flex items-center space-x-4 mb-6">
-                      <Avatar className="w-20 h-20">
-                        <AvatarImage src={userProfile.profilePicture} />
-                        <AvatarFallback className="text-lg">
-                          {userProfile.firstName[0]}{userProfile.lastName[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <Button
-                          variant="outline"
-                          onClick={handleProfilePictureChange}
-                          className="hover:bg-black hover:text-white"
-                        >
-                          <Camera className="w-4 h-4 mr-2" />
-                          Change Picture
-                        </Button>
-                      </div>
-                    </div>
+        <div className="max-w-7xl mx-auto">
+          <Card className={`border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'}`}>
+            <div className="flex h-full">
+              {/* Mobile Sidebar Overlay */}
+              {isMobile && sidebarOpen && (
+                <div 
+                  className="fixed inset-0 bg-black/50 z-40"
+                  onClick={() => setSidebarOpen(false)}
+                />
+              )}
 
-                    <Separator className="mb-6" />
-                    
-                    {/* Name and Email Fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                      <div>
-                        <Label htmlFor="firstName" className="text-base font-medium">First Name</Label>
-                        <Input
-                          id="firstName"
-                          value={userProfile.firstName}
-                          onChange={(e) => handleProfileChange('firstName', e.target.value)}
-                          className="mt-2"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="lastName" className="text-base font-medium">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          value={userProfile.lastName}
-                          onChange={(e) => handleProfileChange('lastName', e.target.value)}
-                          className="mt-2"
-                        />
-                      </div>
-                    </div>
-
+              {/* Sidebar */}
+              <div className={`${
+                isMobile 
+                  ? `fixed left-0 top-0 h-full w-80 bg-white dark:bg-slate-900 z-50 transform transition-transform duration-300 ${
+                      sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`
+                  : 'w-72 border-r border-slate-200 dark:border-slate-800'
+              } ${isMobile ? 'pt-16' : ''}`}>
+                <div className="p-6">
+                  {!isMobile && (
                     <div className="mb-6">
-                      <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={userProfile.email}
-                        onChange={(e) => handleProfileChange('email', e.target.value)}
-                        className="mt-2"
-                      />
+                      <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-slate-100">Settings</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Customize your experience</p>
                     </div>
-                  </Card>
-
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Assistant Visibility</h2>
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="text-base font-medium mb-2">Admin Visibility</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Control whether administrators can view your assistant activities and conversations.
-                        </p>
-                        <div className="flex items-center space-x-4">
-                          <Button
-                            variant={settings.assistantVisibility === 'private' ? "default" : "outline"}
-                            onClick={() => handleSettingChange('assistantVisibility', 'private')}
-                            className="hover:bg-black hover:text-white"
-                          >
-                            Private
-                          </Button>
-                          <Button
-                            variant={settings.assistantVisibility === 'public' ? "default" : "outline"}
-                            onClick={() => handleSettingChange('assistantVisibility', 'public')}
-                            className="hover:bg-black hover:text-white"
-                          >
-                            Public
-                          </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {settings.assistantVisibility === 'private' 
-                            ? 'Your assistant activities are only visible to you.' 
-                            : 'Administrators can view your assistant activities for support and improvement purposes.'}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="text-base font-medium mb-2">Conversation History</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          We securely store your conversations to provide personalized experiences. 
-                          You can clear your data at any time.
-                        </p>
-                        <Button 
-                          variant="outline" 
-                          onClick={handleClearHistory}
-                          className="hover:bg-destructive hover:text-destructive-foreground"
+                  )}
+                  
+                  <nav className="space-y-2">
+                    {tabs.map((tab) => {
+                      const Icon = tab.icon;
+                      const isActive = activeTab === tab.id;
+                      
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => handleTabChange(tab.id)}
+                          className={`w-full flex items-start gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
+                            isActive
+                              ? "bg-primary text-primary-foreground shadow-md"
+                              : "hover:bg-black hover:text-white text-slate-700 dark:text-slate-300"
+                          }`}
                         >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Clear All History
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Account Security</h2>
-                    <div className="space-y-4">
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <Button 
-                          variant="outline" 
-                          onClick={handleChangePassword}
-                          className="hover:bg-black hover:text-white"
-                        >
-                          <Key className="w-4 h-4 mr-2" />
-                          Change Password
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          onClick={handleChangeEmail}
-                          className="hover:bg-black hover:text-white"
-                        >
-                          <Mail className="w-4 h-4 mr-2" />
-                          Change Email Address
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                </TabsContent>
+                          <Icon className={`w-5 h-5 mt-0.5 ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`} />
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-medium ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`}>
+                              {tab.label}
+                            </div>
+                            <div className={`text-xs ${isActive ? "text-primary-foreground/80" : "text-slate-500 dark:text-slate-400 group-hover:text-white/80 dark:group-hover:text-white/80"}`}>
+                              {tab.description}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
               </div>
-              
-              <div className="border-t border-border p-6 flex justify-end">
-                <Button 
-                  onClick={handleSaveSettings}
-                  className="bg-primary hover:bg-black hover:text-white"
-                >
-                  Save All Settings
-                </Button>
+
+              {/* Main content area */}
+              <div className="flex-1 p-6 overflow-auto">
+                <div className="max-w-4xl">
+                  {renderContent()}
+                </div>
               </div>
-            </Tabs>
+            </div>
+
+            {/* Save button */}
+            <div className="border-t border-border p-6 flex justify-end">
+              <Button 
+                onClick={handleSaveSettings}
+                className="bg-primary hover:bg-black hover:text-white"
+              >
+                Save All Settings
+              </Button>
+            </div>
           </Card>
         </div>
       </main>

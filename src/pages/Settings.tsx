@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -325,16 +325,22 @@ const Settings = () => {
                     </p>
                   </div>
                 </div>
-
-                <Button 
-                  className="w-full mt-6 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                  onClick={() => {
-                    setOutlookDialogOpen(false);
-                    toast.success("Redirecting to Microsoft Outlook...");
-                  }}
-                >
-                  Continue to Microsoft Outlook
-                </Button>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setOutlookDialogOpen(false);
+                      toast.success("Redirecting to Microsoft Outlook...");
+                    }}
+                  >
+                    Continue to Microsoft Outlook
+                  </Button>
+                </div>
               </DialogContent>
             </Dialog>
           </div>

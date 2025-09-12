@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
@@ -159,16 +159,22 @@ const AdminSettings = () => {
                     </p>
                   </div>
                 </div>
-
-                <Button 
-                  className="w-full mt-6 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                  onClick={() => {
-                    setOutlookDialogOpen(false);
-                    toast.success("Redirecting to Microsoft Outlook...");
-                  }}
-                >
-                  Continue to Microsoft Outlook
-                </Button>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setOutlookDialogOpen(false);
+                      toast.success("Redirecting to Microsoft Outlook...");
+                    }}
+                  >
+                    Continue to Microsoft Outlook
+                  </Button>
+                </div>
               </DialogContent>
             </Dialog>
 

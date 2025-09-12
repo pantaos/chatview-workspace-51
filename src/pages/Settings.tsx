@@ -294,7 +294,7 @@ const Settings = () => {
     <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
       <LiquidGlassHeader
         title="Settings"
-        subtitle="Customize your experience and preferences"
+        subtitle="Configure your preferences and personalize your workspace."
         currentUser={currentUser}
         showBackButton={!isMobile}
         sidebarOpen={sidebarOpen}

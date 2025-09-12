@@ -5,12 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Camera, Trash2, Key, Mail, Globe, User, Puzzle } from "lucide-react";
+import { Camera, Trash2, Key, Mail, Globe, User, Puzzle, Shield, ArrowRight, X } from "lucide-react";
 
 const Settings = () => {
   const { theme } = useTheme();
@@ -18,6 +19,7 @@ const Settings = () => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("account");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [outlookDialogOpen, setOutlookDialogOpen] = useState(false);
   
   // Mock user data
   const currentUser = {
@@ -274,7 +276,10 @@ const Settings = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group">
+              <Card 
+                className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => setOutlookDialogOpen(true)}
+              >
                 <div className="flex flex-col items-center text-center space-y-3">
                   <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
                     <Mail className="w-6 h-6 text-white" />
@@ -283,6 +288,82 @@ const Settings = () => {
                 </div>
               </Card>
             </div>
+
+            {/* Outlook Connection Dialog */}
+            <Dialog open={outlookDialogOpen} onOpenChange={setOutlookDialogOpen}>
+              <DialogContent className="max-w-md mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <div className="flex justify-center items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <DialogTitle className="text-xl font-semibold">Connect Microsoft Outlook</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Developed by Panta Flows
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
+                    <div className="flex items-start space-x-3">
+                      <ArrowRight className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-medium mb-1">This page will redirect to Microsoft</h4>
+                        <p className="text-sm text-muted-foreground">
+                          You'll sign in and confirm permissions on Microsoft's page.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
+                    <div className="flex items-start space-x-3">
+                      <Shield className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-medium mb-1">Private and secure</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Data accessed from Microsoft Outlook may be used to reply to prompts. We do not train 
+                          generalized models on this data or derivations of it, unless you choose to submit 
+                          it as feedback. <span className="text-primary cursor-pointer hover:underline">Learn more</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
+                    <div className="flex items-start space-x-3">
+                      <User className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-medium mb-1">You're in control of your data</h4>
+                        <p className="text-sm text-muted-foreground">
+                          You can delete your conversations, which will also delete any Microsoft Outlook data used in 
+                          those conversations. <span className="text-primary cursor-pointer hover:underline">Learn more</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full mt-6 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                  onClick={() => {
+                    setOutlookDialogOpen(false);
+                    toast.success("Redirecting to Microsoft Outlook...");
+                  }}
+                >
+                  Continue to Microsoft Outlook
+                </Button>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       default:

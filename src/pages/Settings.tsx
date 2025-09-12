@@ -118,7 +118,7 @@ const Settings = () => {
       case "languages":
         return (
           <div className="space-y-6">
-            <Card className="p-6">
+            <div className="p-6">
               <h2 className="text-xl font-semibold mb-4">Language Preferences</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {availableLanguages.map((lang) => (
@@ -132,7 +132,7 @@ const Settings = () => {
                   </Button>
                 ))}
               </div>
-            </Card>
+            </div>
           </div>
         );
       case "account":

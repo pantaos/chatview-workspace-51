@@ -424,15 +424,17 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Save button */}
-            <div className="border-t border-border p-6 flex justify-end">
-              <Button 
-                onClick={handleSaveSettings}
-                className="bg-primary hover:bg-black hover:text-white"
-              >
-                Save All Settings
-              </Button>
-            </div>
+            {/* Save button - hidden for integrations tab */}
+            {activeTab !== "integrations" && (
+              <div className="border-t border-border p-6 flex justify-end">
+                <Button 
+                  onClick={handleSaveSettings}
+                  className="bg-primary hover:bg-black hover:text-white"
+                >
+                  Save All Settings
+                </Button>
+              </div>
+            )}
           </Card>
         </div>
       </main>

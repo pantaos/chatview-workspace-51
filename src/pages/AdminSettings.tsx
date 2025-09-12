@@ -121,6 +121,18 @@ const AdminSettings = () => {
                   <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
                 </div>
               </Card>
+
+              <Card 
+                className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => toast.success("Notion integration coming soon!")}
+              >
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">N</span>
+                  </div>
+                  <h3 className="font-medium text-base group-hover:text-primary">Notion</h3>
+                </div>
+              </Card>
             </div>
 
             {/* Outlook Connection Dialog */}

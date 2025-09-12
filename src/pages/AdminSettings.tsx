@@ -335,7 +335,14 @@ const AdminSettings = () => {
                       <h4 className="font-medium">Microsoft Outlook Access</h4>
                       <p className="text-sm text-muted-foreground">Manage who can connect and use Outlook integration</p>
                     </div>
-                    <Button variant="outline" className="hover:bg-black hover:text-white" onClick={() => setManageAccessDialogOpen(true)}>
+                    <Button 
+                      variant="outline" 
+                      className="hover:bg-black hover:text-white" 
+                      onClick={() => {
+                        console.log("Manage Access clicked - Microsoft Outlook");
+                        setManageAccessDialogOpen(true);
+                      }}
+                    >
                       Manage Access
                     </Button>
                   </div>
@@ -349,7 +356,14 @@ const AdminSettings = () => {
                       <h4 className="font-medium">Notion Access</h4>
                       <p className="text-sm text-muted-foreground">Manage who can connect and use Notion integration</p>
                     </div>
-                    <Button variant="outline" className="hover:bg-black hover:text-white" onClick={() => setManageAccessDialogOpen(true)}>
+                    <Button 
+                      variant="outline" 
+                      className="hover:bg-black hover:text-white" 
+                      onClick={() => {
+                        console.log("Manage Access clicked - Notion");
+                        setManageAccessDialogOpen(true);
+                      }}
+                    >
                       Manage Access
                     </Button>
                   </div>

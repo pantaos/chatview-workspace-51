@@ -118,25 +118,23 @@ const Settings = () => {
       case "languages":
         return (
           <div className="space-y-6">
-            <div className="p-6">
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Language Preferences</h2>
-                <p className="text-muted-foreground">
-                  Select your preferred language for Panta Flows
-                </p>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {availableLanguages.map((lang) => (
-                  <Button
-                    key={lang.code}
-                    variant={language === lang.code ? "default" : "outline"}
-                    onClick={() => handleLanguageChange(lang.code)}
-                    className="w-full hover:bg-black hover:text-white"
-                  >
-                    {lang.name}
-                  </Button>
-                ))}
-              </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Language Preferences</h2>
+              <p className="text-muted-foreground">
+                Select your preferred language for Panta Flows
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {availableLanguages.map((lang) => (
+                <Button
+                  key={lang.code}
+                  variant={language === lang.code ? "default" : "outline"}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className="w-full hover:bg-black hover:text-white"
+                >
+                  {lang.name}
+                </Button>
+              ))}
             </div>
           </div>
         );

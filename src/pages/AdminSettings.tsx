@@ -26,6 +26,7 @@ const AdminSettings = () => {
   const [manageAccessDialogOpen, setManageAccessDialogOpen] = useState(false);
   const [assistantsDialogOpen, setAssistantsDialogOpen] = useState(false);
   const [usersDialogOpen, setUsersDialogOpen] = useState(false);
+  const [userGroupsDialogOpen, setUserGroupsDialogOpen] = useState(false);
   
   const currentUser = useMemo(() => ({
     firstName: "Moin",
@@ -204,7 +205,7 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 <div className="space-y-4 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card 
                       className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
                       onClick={() => {
@@ -234,6 +235,22 @@ const AdminSettings = () => {
                         </div>
                         <h3 className="font-medium text-base group-hover:text-primary">Users</h3>
                         <p className="text-sm text-muted-foreground">Manage user access permissions</p>
+                      </div>
+                    </Card>
+
+                    <Card 
+                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                      onClick={() => {
+                        setManageAccessDialogOpen(false);
+                        setUserGroupsDialogOpen(true);
+                      }}
+                    >
+                      <div className="flex flex-col items-center text-center space-y-3">
+                        <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
+                          <Users className="w-6 h-6 text-accent-foreground" />
+                        </div>
+                        <h3 className="font-medium text-base group-hover:text-primary">User Groups</h3>
+                        <p className="text-sm text-muted-foreground">Manage group access permissions</p>
                       </div>
                     </Card>
                   </div>
@@ -371,6 +388,71 @@ const AdminSettings = () => {
               </DialogContent>
             </Dialog>
 
+            {/* User Groups Access Dialog */}
+            <Dialog open={userGroupsDialogOpen} onOpenChange={setUserGroupsDialogOpen}>
+              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <DialogTitle className="text-2xl font-semibold">Manage User Group Access</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Control which user groups have access to integrated services
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      User Groups (12)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        { name: "Sales Team", members: 15, status: "Connected", integrations: 4 },
+                        { name: "Marketing Department", members: 22, status: "Connected", integrations: 3 },
+                        { name: "Customer Support", members: 18, status: "Pending", integrations: 0 },
+                        { name: "HR Team", members: 8, status: "Connected", integrations: 2 },
+                        { name: "Engineering", members: 35, status: "Connected", integrations: 5 },
+                        { name: "Finance Department", members: 12, status: "Connected", integrations: 3 },
+                        { name: "Operations Team", members: 14, status: "Pending", integrations: 0 },
+                        { name: "Executive Team", members: 6, status: "Connected", integrations: 4 },
+                        { name: "Product Management", members: 10, status: "Connected", integrations: 3 },
+                        { name: "Quality Assurance", members: 16, status: "Connected", integrations: 2 },
+                        { name: "Business Development", members: 9, status: "Pending", integrations: 0 },
+                        { name: "Research & Development", members: 20, status: "Connected", integrations: 4 }
+                      ].map((group, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-medium">{group.name}</h4>
+                              <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                group.status === 'Connected'
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                              }`}>
+                                {group.status}
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{group.members} members</p>
+                            <p className="text-xs text-muted-foreground">{group.integrations} integrations</p>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <Button className="bg-black hover:bg-black/90 text-white">
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             {/* Access Management Section */}
             <div className="space-y-4 mt-8">
               <div className="mb-4">
@@ -429,7 +511,7 @@ const AdminSettings = () => {
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
-  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen]);
+  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen]);
 
   const currentTab = tabs.find(tab => tab.id === activeTab);
 

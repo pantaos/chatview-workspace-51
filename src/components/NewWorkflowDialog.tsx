@@ -36,6 +36,16 @@ interface NewWorkflowDialogProps {
   onCreateTag?: (tag: { name: string; color: string }) => void;
 }
 
+const iconOptions = [
+  { name: "Chat", icon: MessageSquare },
+  { name: "Code", icon: Code },
+  { name: "Image", icon: Image },
+  { name: "Document", icon: FileText },
+  { name: "Video", icon: Video },
+  { name: "Music", icon: Music },
+  { name: "Bot", icon: Bot },
+];
+
 const iconColors = [
   { name: "Blue", color: "bg-blue-500", textColor: "text-white" },
   { name: "Green", color: "bg-green-500", textColor: "text-white" },
@@ -65,6 +75,7 @@ const NewWorkflowDialog = ({
   const [description, setDescription] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
   const [selectedIconColor, setSelectedIconColor] = useState("Blue");
+  const [selectedIcon, setSelectedIcon] = useState("Chat");
   const [selectedTags, setSelectedTags] = useState<WorkflowTag[]>([]);
   const [starters, setStarters] = useState([""]);
   const [newStarter, setNewStarter] = useState("");
@@ -85,6 +96,7 @@ const NewWorkflowDialog = ({
       title: title.trim(),
       description: description.trim(),
       selectedIconColor,
+      selectedIcon,
       tags: selectedTags,
       systemPrompt: systemPrompt.trim(),
       starters: starters.filter(s => s.trim()),
@@ -100,6 +112,7 @@ const NewWorkflowDialog = ({
     setDescription("");
     setSystemPrompt("");
     setSelectedIconColor("Blue");
+    setSelectedIcon("Chat");
     setSelectedTags([]);
     setStarters([""]);
     setNewStarter("");
@@ -179,6 +192,29 @@ const NewWorkflowDialog = ({
                     <MessageSquare className={`w-6 h-6 ${color.textColor}`} />
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <Label>Icon</Label>
+              <div className="grid grid-cols-7 gap-3 mt-2">
+                {iconOptions.map((option) => {
+                  const IconComponent = option.icon;
+                  return (
+                    <button
+                      key={option.name}
+                      type="button"
+                      className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
+                        selectedIcon === option.name 
+                          ? 'border-primary bg-primary/10 text-primary' 
+                          : 'border-muted bg-background text-muted-foreground hover:border-primary/50'
+                      }`}
+                      onClick={() => setSelectedIcon(option.name)}
+                    >
+                      <IconComponent className="w-5 h-5" />
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

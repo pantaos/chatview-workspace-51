@@ -337,9 +337,6 @@ const Settings = () => {
                 </Button>
               </DialogContent>
             </Dialog>
-            
-            {/* Bottom divider */}
-            <Separator className="mt-8" />
           </div>
         );
       default:
@@ -427,6 +424,11 @@ const Settings = () => {
               </div>
             </div>
 
+            {/* Bottom divider for integrations tab */}
+            {activeTab === "integrations" && (
+              <div className="border-t border-border"></div>
+            )}
+
             {/* Save button - hidden for integrations tab */}
             {activeTab !== "integrations" && (
               <div className="border-t border-border p-6 flex justify-end">
@@ -438,11 +440,8 @@ const Settings = () => {
                 </Button>
               </div>
             )}
-              </Card>
-            </div>
-
-            {/* Bottom divider */}
-            <Separator className="mt-8" />
+          </Card>
+        </div>
       </main>
     </div>
   );

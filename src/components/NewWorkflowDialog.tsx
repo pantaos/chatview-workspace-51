@@ -182,15 +182,6 @@ const NewWorkflowDialog = ({
               </div>
             </div>
 
-            {onCreateTag && (
-              <TagManager
-                availableTags={availableTags}
-                selectedTags={selectedTags}
-                onTagsChange={setSelectedTags}
-                onCreateTag={onCreateTag}
-              />
-            )}
-
             <div>
               <Label htmlFor="systemPrompt">System Prompt</Label>
               <Textarea

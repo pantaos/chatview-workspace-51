@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X } from "lucide-react";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -58,6 +58,12 @@ const AdminSettings = () => {
       description: "AI Workflows & Assistants"
     },
     { 
+      id: "integrations", 
+      label: "Integrations", 
+      icon: Puzzle,
+      description: "Connected Services"
+    },
+    { 
       id: "credits", 
       label: "Credits", 
       icon: CreditCard,
@@ -89,6 +95,28 @@ const AdminSettings = () => {
         return <AdminTeams />;
       case "workflows":
         return <AdminWorkflows />;
+      case "integrations":
+        return (
+          <div className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Tool Integrations</h2>
+              <p className="text-muted-foreground">
+                Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Card className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group">
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
+                </div>
+              </Card>
+            </div>
+          </div>
+        );
       case "credits":
         return <AdminCreditUsage />;
       default:

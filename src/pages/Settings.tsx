@@ -282,8 +282,7 @@ const Settings = () => {
             <div className="mb-6">
               <h2 className="text-2xl font-semibold mb-2">Tool Integrations</h2>
               <p className="text-muted-foreground">
-                Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.{" "}
-                <span className="text-primary hover:underline cursor-pointer">Learn more</span>
+                Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.
               </p>
             </div>
 

@@ -280,7 +280,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-2">Connectors</h2>
+              <h2 className="text-2xl font-semibold mb-2">Tool Integrations</h2>
               <p className="text-muted-foreground">
                 Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.{" "}
                 <span className="text-primary hover:underline cursor-pointer">Learn more</span>
@@ -297,15 +297,6 @@ const Settings = () => {
                 </div>
               </Card>
             </div>
-
-            <Card className="p-4 mt-8">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Advanced settings</span>
-                <Button variant="ghost" size="sm">
-                  <span className="text-xl">›</span>
-                </Button>
-              </div>
-            </Card>
           </div>
         );
       default:

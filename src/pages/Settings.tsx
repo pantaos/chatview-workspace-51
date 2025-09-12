@@ -279,14 +279,31 @@ const Settings = () => {
       case "integrations":
         return (
           <div className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Connected Services</h2>
-              <p className="text-muted-foreground mb-6">
-                Manage your connected services and integrations.
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Connectors</h2>
+              <p className="text-muted-foreground">
+                Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.{" "}
+                <span className="text-primary hover:underline cursor-pointer">Learn more</span>
               </p>
-              <div className="text-center py-12">
-                <Puzzle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No integrations available yet.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Card className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group">
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
+                </div>
+              </Card>
+            </div>
+
+            <Card className="p-4 mt-8">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">Advanced settings</span>
+                <Button variant="ghost" size="sm">
+                  <span className="text-xl">›</span>
+                </Button>
               </div>
             </Card>
           </div>

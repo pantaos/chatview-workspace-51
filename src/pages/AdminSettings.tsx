@@ -214,8 +214,8 @@ const AdminSettings = () => {
                       }}
                     >
                       <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-                          <Shield className="w-6 h-6 text-primary-foreground" />
+                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
+                          <Shield className="w-6 h-6 text-secondary-foreground" />
                         </div>
                         <h3 className="font-medium text-base group-hover:text-primary">Assistants</h3>
                         <p className="text-sm text-muted-foreground">Manage assistant access permissions</p>
@@ -246,8 +246,8 @@ const AdminSettings = () => {
                       }}
                     >
                       <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
-                          <Users className="w-6 h-6 text-accent-foreground" />
+                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
+                          <Users className="w-6 h-6 text-secondary-foreground" />
                         </div>
                         <h3 className="font-medium text-base group-hover:text-primary">User Groups</h3>
                         <p className="text-sm text-muted-foreground">Manage group access permissions</p>

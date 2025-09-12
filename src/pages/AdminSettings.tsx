@@ -52,16 +52,16 @@ const AdminSettings = () => {
       description: "Team Organization"
     },
     { 
-      id: "workflows", 
-      label: "Workflows", 
-      icon: Workflow,
-      description: "AI Workflows & Assistants"
-    },
-    { 
       id: "integrations", 
       label: "Integrations", 
       icon: Puzzle,
       description: "Connected Services"
+    },
+    { 
+      id: "workflows", 
+      label: "Workflows", 
+      icon: Workflow,
+      description: "AI Workflows & Assistants"
     },
     { 
       id: "credits", 

@@ -53,6 +53,7 @@ const iconColors = [
   { name: "Orange", color: "bg-orange-500", textColor: "text-white" },
   { name: "Pink", color: "bg-pink-500", textColor: "text-white" },
   { name: "Indigo", color: "bg-indigo-500", textColor: "text-white" },
+  { name: "Yellow", color: "bg-yellow-500", textColor: "text-white" },
 ];
 
 const integrations = [
@@ -179,13 +180,13 @@ const NewWorkflowDialog = ({
 
             <div>
               <Label>Icon Color</Label>
-              <div className="grid grid-cols-6 gap-3 mt-2">
+              <div className="grid grid-cols-7 gap-3 mt-2">
                 {iconColors.map((color) => (
                   <button
                     key={color.name}
                     type="button"
                     className={`w-12 h-12 rounded-full ${color.color} flex items-center justify-center transition-all ${
-                      selectedIconColor === color.name ? 'ring-2 ring-primary ring-offset-2' : ''
+                      selectedIconColor === color.name ? 'ring-2 ring-primary' : ''
                     }`}
                     onClick={() => setSelectedIconColor(color.name)}
                   >

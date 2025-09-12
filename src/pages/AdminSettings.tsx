@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -112,6 +113,47 @@ const AdminSettings = () => {
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
+                </div>
+              </Card>
+            </div>
+
+            {/* Access Management Section */}
+            <div className="space-y-4 mt-8">
+              <div className="mb-4">
+                <h3 className="text-xl font-semibold mb-2">Access Management</h3>
+                <p className="text-muted-foreground text-sm">
+                  Control which users and teams have access to integrated services and their data.
+                </p>
+              </div>
+
+              <Card className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Microsoft Outlook Access</h4>
+                      <p className="text-sm text-muted-foreground">Manage who can connect and use Outlook integration</p>
+                    </div>
+                    <Button variant="outline" className="hover:bg-black hover:text-white">
+                      Manage Access
+                    </Button>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="font-semibold text-lg text-green-600">12</div>
+                      <div className="text-muted-foreground">Users Connected</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-semibold text-lg text-blue-600">4</div>
+                      <div className="text-muted-foreground">Teams with Access</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-semibold text-lg text-orange-600">2</div>
+                      <div className="text-muted-foreground">Pending Requests</div>
+                    </div>
+                  </div>
                 </div>
               </Card>
             </div>

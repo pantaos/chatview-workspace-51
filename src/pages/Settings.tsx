@@ -141,28 +141,6 @@ const Settings = () => {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Profile Information</h2>
               
-              {/* Profile Picture Section */}
-              <div className="flex items-center space-x-4 mb-6">
-                <Avatar className="w-20 h-20">
-                  <AvatarImage src={userProfile.profilePicture} />
-                  <AvatarFallback className="text-lg">
-                    {userProfile.firstName[0]}{userProfile.lastName[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <Button
-                    variant="outline"
-                    onClick={handleProfilePictureChange}
-                    className="hover:bg-black hover:text-white"
-                  >
-                    <Camera className="w-4 h-4 mr-2" />
-                    Change Picture
-                  </Button>
-                </div>
-              </div>
-
-              <Separator className="mb-6" />
-              
               {/* Name and Email Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>

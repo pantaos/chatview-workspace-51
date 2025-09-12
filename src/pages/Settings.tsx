@@ -119,7 +119,12 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Language Preferences</h2>
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">Language Preferences</h2>
+                <p className="text-muted-foreground">
+                  Select your preferred language for Panta Flows
+                </p>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {availableLanguages.map((lang) => (
                   <Button

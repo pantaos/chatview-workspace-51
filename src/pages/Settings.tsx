@@ -141,6 +141,12 @@ const Settings = () => {
       case "account":
         return (
           <div className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Account</h2>
+              <p className="text-muted-foreground">
+                Control your profile, password, and preferences here.
+              </p>
+            </div>
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Profile Information</h2>
               

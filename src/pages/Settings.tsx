@@ -337,6 +337,9 @@ const Settings = () => {
                 </Button>
               </DialogContent>
             </Dialog>
+            
+            {/* Bottom divider */}
+            <Separator className="mt-8" />
           </div>
         );
       default:
@@ -435,8 +438,11 @@ const Settings = () => {
                 </Button>
               </div>
             )}
-          </Card>
-        </div>
+              </Card>
+            </div>
+
+            {/* Bottom divider */}
+            <Separator className="mt-8" />
       </main>
     </div>
   );

@@ -202,18 +202,20 @@ const NewWorkflowDialog = ({
                 {iconOptions.map((option) => {
                   const IconComponent = option.icon;
                   return (
-                    <button
-                      key={option.name}
-                      type="button"
-                      className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
-                        selectedIcon === option.name 
-                          ? 'border-primary bg-primary/10 text-primary' 
-                          : 'border-muted bg-background text-muted-foreground hover:border-primary/50'
-                      }`}
-                      onClick={() => setSelectedIcon(option.name)}
-                    >
-                      <IconComponent className="w-5 h-5" />
-                    </button>
+                    <div key={option.name} className="flex flex-col items-center gap-2">
+                      <button
+                        type="button"
+                        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
+                          selectedIcon === option.name 
+                            ? 'border-primary bg-primary/10 text-primary' 
+                            : 'border-muted bg-background text-muted-foreground hover:border-primary/50'
+                        }`}
+                        onClick={() => setSelectedIcon(option.name)}
+                      >
+                        <IconComponent className="w-5 h-5" />
+                      </button>
+                      <span className="text-xs text-muted-foreground">{option.name}</span>
+                    </div>
                   );
                 })}
               </div>

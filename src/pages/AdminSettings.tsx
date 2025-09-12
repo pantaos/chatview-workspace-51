@@ -147,43 +147,16 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
-                    <div className="flex items-start space-x-3">
-                      <ArrowRight className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-medium mb-1">This page will redirect to Microsoft</h4>
-                        <p className="text-sm text-muted-foreground">
-                          You'll sign in and confirm permissions on Microsoft's page.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
-                    <div className="flex items-start space-x-3">
-                      <Shield className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-medium mb-1">Private and secure</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Data accessed from Microsoft Outlook may be used to reply to prompts. We do not train 
-                          generalized models on this data or derivations of it, unless you choose to submit 
-                          it as feedback. <span className="text-primary cursor-pointer hover:underline">Learn more</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4">
-                    <div className="flex items-start space-x-3">
-                      <User className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-medium mb-1">You're in control of your data</h4>
-                        <p className="text-sm text-muted-foreground">
-                          You can delete your conversations, which will also delete any Microsoft Outlook data used in 
-                          those conversations. <span className="text-primary cursor-pointer hover:underline">Learn more</span>
-                        </p>
-                      </div>
-                    </div>
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      This page will redirect to Microsoft for sign-in and permissions.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your Microsoft Calendar data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      You're in control: deleting a conversation also deletes any linked Microsoft data.
+                    </p>
                   </div>
                 </div>
 

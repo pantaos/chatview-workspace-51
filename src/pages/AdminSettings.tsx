@@ -24,6 +24,8 @@ const AdminSettings = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [outlookDialogOpen, setOutlookDialogOpen] = useState(false);
   const [manageAccessDialogOpen, setManageAccessDialogOpen] = useState(false);
+  const [assistantsDialogOpen, setAssistantsDialogOpen] = useState(false);
+  const [usersDialogOpen, setUsersDialogOpen] = useState(false);
   
   const currentUser = useMemo(() => ({
     firstName: "Moin",
@@ -193,16 +195,71 @@ const AdminSettings = () => {
 
             {/* Manage Access Dialog */}
             <Dialog open={manageAccessDialogOpen} onOpenChange={setManageAccessDialogOpen}>
-              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
+              <DialogContent className="max-w-2xl mx-auto rounded-2xl">
                 <DialogHeader className="text-center space-y-4">
                   <DialogTitle className="text-2xl font-semibold">Manage Integration Access</DialogTitle>
                   <DialogDescription className="text-muted-foreground">
-                    Control which assistants, workflows, and users have access to integrated services
+                    Select what you'd like to manage for integrated services
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card 
+                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                      onClick={() => {
+                        setManageAccessDialogOpen(false);
+                        setAssistantsDialogOpen(true);
+                      }}
+                    >
+                      <div className="flex flex-col items-center text-center space-y-3">
+                        <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                          <Shield className="w-6 h-6 text-primary-foreground" />
+                        </div>
+                        <h3 className="font-medium text-base group-hover:text-primary">Assistants</h3>
+                        <p className="text-sm text-muted-foreground">Manage assistant access permissions</p>
+                      </div>
+                    </Card>
+
+                    <Card 
+                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                      onClick={() => {
+                        setManageAccessDialogOpen(false);
+                        setUsersDialogOpen(true);
+                      }}
+                    >
+                      <div className="flex flex-col items-center text-center space-y-3">
+                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
+                          <User className="w-6 h-6 text-secondary-foreground" />
+                        </div>
+                        <h3 className="font-medium text-base group-hover:text-primary">Users</h3>
+                        <p className="text-sm text-muted-foreground">Manage user access permissions</p>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Assistants Access Dialog */}
+            <Dialog open={assistantsDialogOpen} onOpenChange={setAssistantsDialogOpen}>
+              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <DialogTitle className="text-2xl font-semibold">Manage Assistant Access</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Control which assistants have access to integrated services
                   </DialogDescription>
                 </DialogHeader>
                 
                 <div className="space-y-6 mt-6">
-                  {/* Assistants Section */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold flex items-center gap-2">
                       <Shield className="w-5 h-5" />
@@ -213,7 +270,11 @@ const AdminSettings = () => {
                         { name: "Customer Support Bot", status: "Connected", users: 12 },
                         { name: "Sales Assistant", status: "Connected", users: 8 },
                         { name: "HR Helper", status: "Pending", users: 0 },
-                        { name: "Marketing AI", status: "Connected", users: 5 }
+                        { name: "Marketing AI", status: "Connected", users: 5 },
+                        { name: "Data Analyst", status: "Connected", users: 15 },
+                        { name: "Content Creator", status: "Pending", users: 0 },
+                        { name: "Project Manager", status: "Connected", users: 7 },
+                        { name: "Financial Advisor", status: "Connected", users: 3 }
                       ].map((assistant, index) => (
                         <Card key={index} className="p-4">
                           <div className="flex items-center justify-between">
@@ -233,44 +294,32 @@ const AdminSettings = () => {
                       ))}
                     </div>
                   </div>
+                </div>
 
-                  <Separator />
+                <div className="mt-6 flex justify-end gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <Button className="bg-black hover:bg-black/90 text-white">
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
 
-                  {/* Workflows Section */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <Workflow className="w-5 h-5" />
-                      Workflows (15)
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        { name: "Email Campaign Automation", status: "Connected", users: 25 },
-                        { name: "Lead Generation Flow", status: "Connected", users: 18 },
-                        { name: "Onboarding Process", status: "Connected", users: 32 },
-                        { name: "Report Generation", status: "Pending", users: 0 }
-                      ].map((workflow, index) => (
-                        <Card key={index} className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium">{workflow.name}</h4>
-                              <p className="text-sm text-muted-foreground">{workflow.users} users</p>
-                            </div>
-                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              workflow.status === 'Connected'
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                            }`}>
-                              {workflow.status}
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Users Section */}
+            {/* Users Access Dialog */}
+            <Dialog open={usersDialogOpen} onOpenChange={setUsersDialogOpen}>
+              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <DialogTitle className="text-2xl font-semibold">Manage User Access</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Control which users have access to integrated services
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold flex items-center gap-2">
                       <User className="w-5 h-5" />
@@ -283,7 +332,10 @@ const AdminSettings = () => {
                         { name: "Emma Wilson", email: "emma@company.com", status: "Pending", integrations: 0 },
                         { name: "David Lee", email: "david@company.com", status: "Connected", integrations: 1 },
                         { name: "Lisa Brown", email: "lisa@company.com", status: "Connected", integrations: 4 },
-                        { name: "Tom Davis", email: "tom@company.com", status: "Connected", integrations: 2 }
+                        { name: "Tom Davis", email: "tom@company.com", status: "Connected", integrations: 2 },
+                        { name: "Anna Rodriguez", email: "anna@company.com", status: "Connected", integrations: 3 },
+                        { name: "James Wilson", email: "james@company.com", status: "Pending", integrations: 0 },
+                        { name: "Sophie Turner", email: "sophie@company.com", status: "Connected", integrations: 1 }
                       ].map((user, index) => (
                         <Card key={index} className="p-4">
                           <div className="space-y-2">

@@ -23,6 +23,7 @@ const AdminSettings = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [outlookDialogOpen, setOutlookDialogOpen] = useState(false);
+  const [manageAccessDialogOpen, setManageAccessDialogOpen] = useState(false);
   
   const currentUser = useMemo(() => ({
     firstName: "Moin",
@@ -190,6 +191,134 @@ const AdminSettings = () => {
               </DialogContent>
             </Dialog>
 
+            {/* Manage Access Dialog */}
+            <Dialog open={manageAccessDialogOpen} onOpenChange={setManageAccessDialogOpen}>
+              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <DialogTitle className="text-2xl font-semibold">Manage Integration Access</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Control which assistants, workflows, and users have access to integrated services
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  {/* Assistants Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Shield className="w-5 h-5" />
+                      Assistants (8)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        { name: "Customer Support Bot", status: "Connected", users: 12 },
+                        { name: "Sales Assistant", status: "Connected", users: 8 },
+                        { name: "HR Helper", status: "Pending", users: 0 },
+                        { name: "Marketing AI", status: "Connected", users: 5 }
+                      ].map((assistant, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">{assistant.name}</h4>
+                              <p className="text-sm text-muted-foreground">{assistant.users} users</p>
+                            </div>
+                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              assistant.status === 'Connected' 
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            }`}>
+                              {assistant.status}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Workflows Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Workflow className="w-5 h-5" />
+                      Workflows (15)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        { name: "Email Campaign Automation", status: "Connected", users: 25 },
+                        { name: "Lead Generation Flow", status: "Connected", users: 18 },
+                        { name: "Onboarding Process", status: "Connected", users: 32 },
+                        { name: "Report Generation", status: "Pending", users: 0 }
+                      ].map((workflow, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">{workflow.name}</h4>
+                              <p className="text-sm text-muted-foreground">{workflow.users} users</p>
+                            </div>
+                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              workflow.status === 'Connected'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            }`}>
+                              {workflow.status}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Users Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <User className="w-5 h-5" />
+                      Users (47)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {[
+                        { name: "Sarah Chen", email: "sarah@company.com", status: "Connected", integrations: 3 },
+                        { name: "Mike Johnson", email: "mike@company.com", status: "Connected", integrations: 2 },
+                        { name: "Emma Wilson", email: "emma@company.com", status: "Pending", integrations: 0 },
+                        { name: "David Lee", email: "david@company.com", status: "Connected", integrations: 1 },
+                        { name: "Lisa Brown", email: "lisa@company.com", status: "Connected", integrations: 4 },
+                        { name: "Tom Davis", email: "tom@company.com", status: "Connected", integrations: 2 }
+                      ].map((user, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-medium">{user.name}</h4>
+                              <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                user.status === 'Connected'
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                              }`}>
+                                {user.status}
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                            <p className="text-xs text-muted-foreground">{user.integrations} integrations</p>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <Button className="bg-black hover:bg-black/90 text-white">
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             {/* Access Management Section */}
             <div className="space-y-4 mt-8">
               <div className="mb-4">
@@ -206,7 +335,7 @@ const AdminSettings = () => {
                       <h4 className="font-medium">Microsoft Outlook Access</h4>
                       <p className="text-sm text-muted-foreground">Manage who can connect and use Outlook integration</p>
                     </div>
-                    <Button variant="outline" className="hover:bg-black hover:text-white">
+                    <Button variant="outline" className="hover:bg-black hover:text-white" onClick={() => setManageAccessDialogOpen(true)}>
                       Manage Access
                     </Button>
                   </div>
@@ -220,7 +349,7 @@ const AdminSettings = () => {
                       <h4 className="font-medium">Notion Access</h4>
                       <p className="text-sm text-muted-foreground">Manage who can connect and use Notion integration</p>
                     </div>
-                    <Button variant="outline" className="hover:bg-black hover:text-white">
+                    <Button variant="outline" className="hover:bg-black hover:text-white" onClick={() => setManageAccessDialogOpen(true)}>
                       Manage Access
                     </Button>
                   </div>

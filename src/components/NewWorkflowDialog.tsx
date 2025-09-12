@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +20,10 @@ import {
   FileText, 
   Video, 
   Music, 
-  Bot 
+  Bot,
+  Upload,
+  X,
+  Plus
 } from "lucide-react";
 import TagManager from "./TagManager";
 import { WorkflowTag } from "@/types/workflow";
@@ -31,14 +36,22 @@ interface NewWorkflowDialogProps {
   onCreateTag?: (tag: { name: string; color: string }) => void;
 }
 
-const iconOptions = [
-  { name: "Chat", icon: MessageSquare },
-  { name: "Code", icon: Code },
-  { name: "Image", icon: Image },
-  { name: "Document", icon: FileText },
-  { name: "Video", icon: Video },
-  { name: "Music", icon: Music },
-  { name: "Bot", icon: Bot },
+const iconColors = [
+  { name: "Blue", color: "bg-blue-500", textColor: "text-white" },
+  { name: "Green", color: "bg-green-500", textColor: "text-white" },
+  { name: "Purple", color: "bg-purple-500", textColor: "text-white" },
+  { name: "Orange", color: "bg-orange-500", textColor: "text-white" },
+  { name: "Pink", color: "bg-pink-500", textColor: "text-white" },
+  { name: "Indigo", color: "bg-indigo-500", textColor: "text-white" },
+];
+
+const integrations = [
+  { name: "Microsoft Office", enabled: false },
+  { name: "Notion", enabled: false },
+  { name: "Gmail", enabled: false },
+  { name: "GitHub", enabled: false },
+  { name: "AWS", enabled: false },
+  { name: "Slack", enabled: false },
 ];
 
 const NewWorkflowDialog = ({ 
@@ -51,9 +64,17 @@ const NewWorkflowDialog = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState("Chat");
+  const [selectedIconColor, setSelectedIconColor] = useState("Blue");
   const [selectedTags, setSelectedTags] = useState<WorkflowTag[]>([]);
-  const [starters, setStarters] = useState([{ displayText: "", fullPrompt: "" }]);
+  const [starters, setStarters] = useState([""]);
+  const [newStarter, setNewStarter] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
+  const [enabledIntegrations, setEnabledIntegrations] = useState(
+    integrations.reduce((acc, integration) => {
+      acc[integration.name] = integration.enabled;
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,10 +84,12 @@ const NewWorkflowDialog = ({
     const workflow = {
       title: title.trim(),
       description: description.trim(),
-      selectedIcon,
+      selectedIconColor,
       tags: selectedTags,
       systemPrompt: systemPrompt.trim(),
-      starters: starters.filter(s => s.displayText.trim()),
+      starters: starters.filter(s => s.trim()),
+      isPublic,
+      integrations: enabledIntegrations,
       type: 'assistant'
     };
 
@@ -76,23 +99,35 @@ const NewWorkflowDialog = ({
     setTitle("");
     setDescription("");
     setSystemPrompt("");
-    setSelectedIcon("Chat");
+    setSelectedIconColor("Blue");
     setSelectedTags([]);
-    setStarters([{ displayText: "", fullPrompt: "" }]);
+    setStarters([""]);
+    setNewStarter("");
+    setIsPublic(false);
+    setEnabledIntegrations(
+      integrations.reduce((acc, integration) => {
+        acc[integration.name] = integration.enabled;
+        return acc;
+      }, {} as Record<string, boolean>)
+    );
   };
 
   const addStarter = () => {
-    setStarters([...starters, { displayText: "", fullPrompt: "" }]);
+    if (newStarter.trim()) {
+      setStarters([...starters, newStarter.trim()]);
+      setNewStarter("");
+    }
   };
 
   const removeStarter = (index: number) => {
     setStarters(starters.filter((_, i) => i !== index));
   };
 
-  const updateStarter = (index: number, field: 'displayText' | 'fullPrompt', value: string) => {
-    const updated = [...starters];
-    updated[index][field] = value;
-    setStarters(updated);
+  const toggleIntegration = (name: string) => {
+    setEnabledIntegrations(prev => ({
+      ...prev,
+      [name]: !prev[name]
+    }));
   };
 
   return (
@@ -106,7 +141,7 @@ const NewWorkflowDialog = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
@@ -130,23 +165,20 @@ const NewWorkflowDialog = ({
             </div>
 
             <div>
-              <Label>Icon</Label>
-              <div className="grid grid-cols-4 gap-2 mt-2">
-                {iconOptions.map((option) => {
-                  const IconComponent = option.icon;
-                  return (
-                    <Button
-                      key={option.name}
-                      type="button"
-                      variant={selectedIcon === option.name ? "default" : "outline"}
-                      className="h-16 flex flex-col items-center gap-1"
-                      onClick={() => setSelectedIcon(option.name)}
-                    >
-                      <IconComponent size={20} />
-                      <span className="text-xs">{option.name}</span>
-                    </Button>
-                  );
-                })}
+              <Label>Icon Color</Label>
+              <div className="grid grid-cols-6 gap-3 mt-2">
+                {iconColors.map((color) => (
+                  <button
+                    key={color.name}
+                    type="button"
+                    className={`w-12 h-12 rounded-full ${color.color} flex items-center justify-center transition-all ${
+                      selectedIconColor === color.name ? 'ring-2 ring-primary ring-offset-2' : ''
+                    }`}
+                    onClick={() => setSelectedIconColor(color.name)}
+                  >
+                    <MessageSquare className={`w-6 h-6 ${color.textColor}`} />
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -174,40 +206,92 @@ const NewWorkflowDialog = ({
               <Label>Conversation Starters</Label>
               <div className="space-y-3 mt-2">
                 {starters.map((starter, index) => (
-                  <div key={index} className="border rounded-lg p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Starter {index + 1}</span>
-                      {starters.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeStarter(index)}
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
+                  <div key={index} className="flex items-center gap-2">
                     <Input
-                      placeholder="Display text (e.g., 'Help me write an email')"
-                      value={starter.displayText}
-                      onChange={(e) => updateStarter(index, 'displayText', e.target.value)}
+                      value={starter}
+                      onChange={(e) => {
+                        const updated = [...starters];
+                        updated[index] = e.target.value;
+                        setStarters(updated);
+                      }}
+                      placeholder="Enter conversation starter..."
+                      className="flex-1"
                     />
-                    <Textarea
-                      placeholder="Full prompt (optional - will use display text if empty)"
-                      value={starter.fullPrompt}
-                      onChange={(e) => updateStarter(index, 'fullPrompt', e.target.value)}
-                      rows={2}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeStarter(index)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={newStarter}
+                    onChange={(e) => setNewStarter(e.target.value)}
+                    placeholder="Add new starter..."
+                    className="flex-1"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addStarter();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addStarter}
+                    disabled={!newStarter.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label>Privacy Settings</Label>
+              <div className="flex items-center space-x-2 mt-2">
+                <Checkbox
+                  id="public"
+                  checked={isPublic}
+                  onCheckedChange={(checked) => setIsPublic(checked === true)}
+                />
+                <Label htmlFor="public" className="text-sm">
+                  Make this assistant public
+                </Label>
+              </div>
+            </div>
+
+            <div>
+              <Label>Integrations</Label>
+              <div className="grid grid-cols-2 gap-3 mt-2">
+                {integrations.map((integration) => (
+                  <div key={integration.name} className="flex items-center justify-between p-3 border rounded-lg">
+                    <span className="text-sm font-medium">{integration.name}</span>
+                    <Switch
+                      checked={enabledIntegrations[integration.name]}
+                      onCheckedChange={() => toggleIntegration(integration.name)}
                     />
                   </div>
                 ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addStarter}
-                  className="w-full"
-                >
-                  Add Another Starter
+              </div>
+            </div>
+
+            <div>
+              <Label>Knowledge Base</Label>
+              <div className="mt-2 border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+                <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mb-2">
+                  Drag & drop files here, or click to browse
+                </p>
+                <Button type="button" variant="outline" size="sm">
+                  Choose Files
                 </Button>
               </div>
             </div>

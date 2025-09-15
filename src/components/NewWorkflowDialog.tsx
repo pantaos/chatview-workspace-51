@@ -23,7 +23,9 @@ import {
   Bot,
   Upload,
   X,
-  Plus
+  Plus,
+  Sparkles,
+  RotateCcw
 } from "lucide-react";
 import TagManager from "./TagManager";
 import { WorkflowTag } from "@/types/workflow";
@@ -188,13 +190,7 @@ const NewWorkflowDialog = ({
                     size="sm"
                     className="h-8 w-8 p-0"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M15 4V2a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v2"/>
-                      <path d="M3 7h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
-                      <path d="M8 21h8"/>
-                      <path d="M12 17v4"/>
-                      <path d="m9 7 3 8 3-8"/>
-                    </svg>
+                    <Sparkles className="w-4 h-4" />
                   </Button>
                   <Button
                     type="button"
@@ -202,12 +198,7 @@ const NewWorkflowDialog = ({
                     size="sm"
                     className="h-8 w-8 p-0"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                      <path d="M21 3v5h-5"/>
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                      <path d="M8 16H3v5"/>
-                    </svg>
+                    <RotateCcw className="w-4 h-4" />
                   </Button>
                 </div>
               </div>

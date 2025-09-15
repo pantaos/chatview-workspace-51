@@ -179,7 +179,38 @@ const NewWorkflowDialog = ({
             </div>
 
             <div>
-              <Label htmlFor="systemPrompt">System Prompt</Label>
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="systemPrompt">System Prompt</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M15 4V2a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v2"/>
+                      <path d="M3 7h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                      <path d="M8 21h8"/>
+                      <path d="M12 17v4"/>
+                      <path d="m9 7 3 8 3-8"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                      <path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                      <path d="M8 16H3v5"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
               <Textarea
                 id="systemPrompt"
                 value={systemPrompt}
@@ -188,6 +219,58 @@ const NewWorkflowDialog = ({
                 rows={6}
                 className="border-2 border-primary/20 focus:border-primary rounded-lg"
               />
+            </div>
+
+            <div>
+              <Label>Conversation Starters</Label>
+              <div className="space-y-3 mt-2">
+                {starters.map((starter, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      value={starter}
+                      onChange={(e) => {
+                        const updated = [...starters];
+                        updated[index] = e.target.value;
+                        setStarters(updated);
+                      }}
+                      placeholder="Enter conversation starter..."
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeStarter(index)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={newStarter}
+                    onChange={(e) => setNewStarter(e.target.value)}
+                    placeholder="Add a conversation starter"
+                    className="flex-1"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addStarter();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    onClick={addStarter}
+                    disabled={!newStarter.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -231,58 +314,6 @@ const NewWorkflowDialog = ({
                     </button>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div>
-              <Label>Conversation Starters</Label>
-              <div className="space-y-3 mt-2">
-                {starters.map((starter, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input
-                      value={starter}
-                      onChange={(e) => {
-                        const updated = [...starters];
-                        updated[index] = e.target.value;
-                        setStarters(updated);
-                      }}
-                      placeholder="Enter conversation starter..."
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeStarter(index)}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={newStarter}
-                    onChange={(e) => setNewStarter(e.target.value)}
-                    placeholder="Add new starter..."
-                    className="flex-1"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addStarter();
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addStarter}
-                    disabled={!newStarter.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
               </div>
             </div>
 

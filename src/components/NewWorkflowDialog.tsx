@@ -171,17 +171,15 @@ const NewWorkflowDialog = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Label htmlFor="title">Assistant Name</Label>
-                {!manualNameEntry && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setManualNameEntry(true)}
-                    className="text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    Manual entry
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setManualNameEntry(!manualNameEntry)}
+                  className="text-xs text-muted-foreground hover:text-white hover:bg-black"
+                >
+                  {manualNameEntry ? "Auto generate" : "Manual entry"}
+                </Button>
               </div>
               <TooltipProvider>
                 <Tooltip>
@@ -210,17 +208,15 @@ const NewWorkflowDialog = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Label htmlFor="description">Description</Label>
-                {!manualDescriptionEntry && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setManualDescriptionEntry(true)}
-                    className="text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    Manual entry
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setManualDescriptionEntry(!manualDescriptionEntry)}
+                  className="text-xs text-muted-foreground hover:text-white hover:bg-black"
+                >
+                  {manualDescriptionEntry ? "Auto generate" : "Manual entry"}
+                </Button>
               </div>
               <TooltipProvider>
                 <Tooltip>

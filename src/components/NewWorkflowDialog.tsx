@@ -200,7 +200,7 @@ const NewWorkflowDialog = ({
                   </TooltipTrigger>
                   {!manualNameEntry && (
                     <TooltipContent>
-                      <p>Fill out the system prompt to auto generate assistant name</p>
+                      <p>Complete the system prompt to generate a name automatically.</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -239,7 +239,7 @@ const NewWorkflowDialog = ({
                   </TooltipTrigger>
                   {!manualDescriptionEntry && (
                     <TooltipContent>
-                      <p>Fill out the system prompt to auto generate the description</p>
+                      <p>Complete the system prompt to generate a description automatically.</p>
                     </TooltipContent>
                   )}
                 </Tooltip>

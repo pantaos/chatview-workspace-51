@@ -13,6 +13,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { 
   MessageSquare, 
   Code, 
@@ -83,6 +89,8 @@ const NewWorkflowDialog = ({
   const [starters, setStarters] = useState([""]);
   const [newStarter, setNewStarter] = useState("");
   const [isPublic, setIsPublic] = useState(false);
+  const [manualNameEntry, setManualNameEntry] = useState(false);
+  const [manualDescriptionEntry, setManualDescriptionEntry] = useState(false);
   const [enabledIntegrations, setEnabledIntegrations] = useState(
     integrations.reduce((acc, integration) => {
       acc[integration.name] = integration.enabled;
@@ -120,6 +128,8 @@ const NewWorkflowDialog = ({
     setStarters([""]);
     setNewStarter("");
     setIsPublic(false);
+    setManualNameEntry(false);
+    setManualDescriptionEntry(false);
     setEnabledIntegrations(
       integrations.reduce((acc, integration) => {
         acc[integration.name] = integration.enabled;
@@ -159,25 +169,81 @@ const NewWorkflowDialog = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-6">
             <div>
-              <Label htmlFor="title">Assistant Name</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Customer Support Assistant"
-                required
-              />
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="title">Assistant Name</Label>
+                {!manualNameEntry && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setManualNameEntry(true)}
+                    className="text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    Manual entry
+                  </Button>
+                )}
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <Input
+                        id="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="e.g., Customer Support Assistant"
+                        disabled={!manualNameEntry}
+                        required
+                        className={!manualNameEntry ? "opacity-50" : ""}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  {!manualNameEntry && (
+                    <TooltipContent>
+                      <p>Fill out the system prompt to auto generate assistant name</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Briefly describe what this assistant does"
-                rows={3}
-              />
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="description">Description</Label>
+                {!manualDescriptionEntry && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setManualDescriptionEntry(true)}
+                    className="text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    Manual entry
+                  </Button>
+                )}
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <Textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Briefly describe what this assistant does"
+                        rows={3}
+                        disabled={!manualDescriptionEntry}
+                        className={!manualDescriptionEntry ? "opacity-50" : ""}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  {!manualDescriptionEntry && (
+                    <TooltipContent>
+                      <p>Fill out the system prompt to auto generate the description</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div>

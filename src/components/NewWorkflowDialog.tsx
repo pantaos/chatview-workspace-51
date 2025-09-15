@@ -91,6 +91,7 @@ const NewWorkflowDialog = ({
   const [isPublic, setIsPublic] = useState(false);
   const [manualNameEntry, setManualNameEntry] = useState(false);
   const [manualDescriptionEntry, setManualDescriptionEntry] = useState(false);
+  const [manualStartersEntry, setManualStartersEntry] = useState(false);
   const [enabledIntegrations, setEnabledIntegrations] = useState(
     integrations.reduce((acc, integration) => {
       acc[integration.name] = integration.enabled;
@@ -130,6 +131,7 @@ const NewWorkflowDialog = ({
     setIsPublic(false);
     setManualNameEntry(false);
     setManualDescriptionEntry(false);
+    setManualStartersEntry(false);
     setEnabledIntegrations(
       integrations.reduce((acc, integration) => {
         acc[integration.name] = integration.enabled;
@@ -275,55 +277,80 @@ const NewWorkflowDialog = ({
             </div>
 
             <div>
-              <Label>Conversation Starters</Label>
-              <div className="space-y-3 mt-2">
-                {starters.map((starter, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input
-                      value={starter}
-                      onChange={(e) => {
-                        const updated = [...starters];
-                        updated[index] = e.target.value;
-                        setStarters(updated);
-                      }}
-                      placeholder="Enter conversation starter..."
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeStarter(index)}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={newStarter}
-                    onChange={(e) => setNewStarter(e.target.value)}
-                    placeholder="Add a conversation starter"
-                    className="flex-1"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addStarter();
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="default"
-                    size="sm"
-                    onClick={addStarter}
-                    disabled={!newStarter.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
+              <div className="flex items-center justify-between mb-2">
+                <Label>Conversation Starters</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setManualStartersEntry(!manualStartersEntry)}
+                  className="text-xs text-muted-foreground hover:text-white hover:bg-black"
+                >
+                  {manualStartersEntry ? "Auto Create" : "Manual Input"}
+                </Button>
               </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="space-y-3">
+                      {starters.map((starter, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input
+                            value={starter}
+                            onChange={(e) => {
+                              const updated = [...starters];
+                              updated[index] = e.target.value;
+                              setStarters(updated);
+                            }}
+                            placeholder="Enter conversation starter..."
+                            className={`flex-1 ${!manualStartersEntry ? "opacity-50" : ""}`}
+                            disabled={!manualStartersEntry}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeStarter(index)}
+                            className="text-muted-foreground hover:text-foreground"
+                            disabled={!manualStartersEntry}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <div className="flex items-center gap-2">
+                        <Input
+                          value={newStarter}
+                          onChange={(e) => setNewStarter(e.target.value)}
+                          placeholder="Add a conversation starter"
+                          className={`flex-1 ${!manualStartersEntry ? "opacity-50" : ""}`}
+                          disabled={!manualStartersEntry}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              addStarter();
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="default"
+                          size="sm"
+                          onClick={addStarter}
+                          disabled={!newStarter.trim() || !manualStartersEntry}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  {!manualStartersEntry && (
+                    <TooltipContent>
+                      <p>Complete the system prompt to generate starters automatically.</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div>

@@ -178,7 +178,7 @@ const NewWorkflowDialog = ({
                   onClick={() => setManualNameEntry(!manualNameEntry)}
                   className="text-xs text-muted-foreground hover:text-white hover:bg-black"
                 >
-                  {manualNameEntry ? "Auto generate" : "Manual entry"}
+                  {manualNameEntry ? "Autofill" : "Manual Input"}
                 </Button>
               </div>
               <TooltipProvider>
@@ -215,7 +215,7 @@ const NewWorkflowDialog = ({
                   onClick={() => setManualDescriptionEntry(!manualDescriptionEntry)}
                   className="text-xs text-muted-foreground hover:text-white hover:bg-black"
                 >
-                  {manualDescriptionEntry ? "Auto generate" : "Manual entry"}
+                  {manualDescriptionEntry ? "Autofill" : "Manual Input"}
                 </Button>
               </div>
               <TooltipProvider>

@@ -157,12 +157,12 @@ const NewWorkflowDialog = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-6">
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Assistant Name</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter assistant title"
+                placeholder="e.g., Customer Support Assistant"
                 required
               />
             </div>
@@ -173,48 +173,40 @@ const NewWorkflowDialog = ({
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe what this assistant does"
+                placeholder="Briefly describe what this assistant does"
                 rows={3}
               />
             </div>
 
             <div>
-              <Label>Icon Color</Label>
-              <div className="grid grid-cols-7 gap-3 mt-2">
-                {iconColors.map((color) => (
-                  <div key={color.name} className="flex flex-col items-center gap-2">
-                    <button
-                      type="button"
-                      className={`w-12 h-12 rounded-full ${color.color} flex items-center justify-center transition-all ${
-                        selectedIconColor === color.name ? 'ring-2 ring-primary' : ''
-                      }`}
-                      onClick={() => setSelectedIconColor(color.name)}
-                    >
-                      <MessageSquare className={`w-6 h-6 ${color.textColor}`} />
-                    </button>
-                    <span className="text-xs text-muted-foreground">{color.name}</span>
-                  </div>
-                ))}
-              </div>
+              <Label htmlFor="systemPrompt">System Prompt</Label>
+              <Textarea
+                id="systemPrompt"
+                value={systemPrompt}
+                onChange={(e) => setSystemPrompt(e.target.value)}
+                placeholder="You are a helpful assistant..."
+                rows={6}
+                className="border-2 border-primary/20 focus:border-primary rounded-lg"
+              />
             </div>
 
             <div>
               <Label>Icon</Label>
-              <div className="grid grid-cols-7 gap-3 mt-2">
+              <div className="flex gap-4 mt-2 flex-wrap">
                 {iconOptions.map((option) => {
                   const IconComponent = option.icon;
                   return (
                     <div key={option.name} className="flex flex-col items-center gap-2">
                       <button
                         type="button"
-                        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
+                        className={`w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all ${
                           selectedIcon === option.name 
                             ? 'border-primary bg-primary/10 text-primary' 
                             : 'border-muted bg-background text-muted-foreground hover:border-primary/50'
                         }`}
                         onClick={() => setSelectedIcon(option.name)}
                       >
-                        <IconComponent className="w-5 h-5" />
+                        <IconComponent className="w-6 h-6" />
                       </button>
                       <span className="text-xs text-muted-foreground">{option.name}</span>
                     </div>
@@ -224,14 +216,22 @@ const NewWorkflowDialog = ({
             </div>
 
             <div>
-              <Label htmlFor="systemPrompt">System Prompt</Label>
-              <Textarea
-                id="systemPrompt"
-                value={systemPrompt}
-                onChange={(e) => setSystemPrompt(e.target.value)}
-                placeholder="Define how the assistant should behave..."
-                rows={4}
-              />
+              <Label>Icon Color</Label>
+              <div className="flex gap-4 mt-2 flex-wrap">
+                {iconColors.map((color) => (
+                  <div key={color.name} className="flex flex-col items-center gap-2">
+                    <button
+                      type="button"
+                      className={`w-12 h-12 rounded-lg ${color.color} flex items-center justify-center transition-all ${
+                        selectedIconColor === color.name ? 'ring-2 ring-primary ring-offset-2' : ''
+                      }`}
+                      onClick={() => setSelectedIconColor(color.name)}
+                    >
+                      <MessageSquare className={`w-5 h-5 ${color.textColor}`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>

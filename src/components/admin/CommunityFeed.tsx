@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plus, Calendar, Eye, Edit } from "lucide-react";
+import { Plus, Calendar, Eye, Edit, Edit2, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreatePostDialog } from "./CreatePostDialog";
 
@@ -60,6 +60,16 @@ const CommunityFeed = () => {
     }
   ];
 
+  const handleEditPost = (postId: string) => {
+    console.log('Edit post:', postId);
+    // TODO: Implement edit functionality
+  };
+
+  const handleDeletePost = (postId: string) => {
+    console.log('Delete post:', postId);
+    // TODO: Implement delete functionality
+  };
+
   const renderPosts = (posts: typeof publishedPosts) => (
     <div className="grid gap-6">
       {posts.map((post) => (
@@ -90,6 +100,24 @@ const CommunityFeed = () => {
                 <p className="text-muted-foreground leading-relaxed">
                   {post.excerpt}
                 </p>
+              </div>
+              <div className="flex items-center gap-2 ml-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => handleEditPost(post.id)}
+                  className="h-8 w-8 p-0 hover:bg-muted"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => handleDeletePost(post.id)}
+                  className="h-8 w-8 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
             </div>
 

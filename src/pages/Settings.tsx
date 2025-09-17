@@ -264,9 +264,9 @@ const Settings = () => {
                 <Separator />
                 <div>
                   <Button 
-                    variant="destructive" 
+                    variant="outline" 
                     onClick={() => toast.info("Account deletion process initiated")}
-                    className="hover:bg-destructive/90"
+                    className="hover:bg-black hover:text-white"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete Account

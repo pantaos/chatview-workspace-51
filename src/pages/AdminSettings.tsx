@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User } from "lucide-react";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -14,6 +14,7 @@ import AdminUsers from "@/components/admin/AdminUsers";
 import AdminWorkflows from "@/components/admin/AdminWorkflows";
 import AdminTeams from "@/components/admin/AdminTeams";
 import AdminCreditUsage from "@/components/admin/AdminCreditUsage";
+import CommunityFeed from "@/components/admin/CommunityFeed";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
 
 const AdminSettings = () => {
@@ -76,6 +77,12 @@ const AdminSettings = () => {
       label: "Credits", 
       icon: CreditCard,
       description: "Usage & Billing"
+    },
+    { 
+      id: "community", 
+      label: "Community Feed", 
+      icon: MessageSquare,
+      description: "Community Posts & Updates"
     }
   ], []);
 
@@ -508,6 +515,8 @@ const AdminSettings = () => {
         );
       case "credits":
         return <AdminCreditUsage />;
+      case "community":
+        return <CommunityFeed />;
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }

@@ -261,6 +261,17 @@ const Settings = () => {
                     Change Email Address
                   </Button>
                 </div>
+                <Separator />
+                <div>
+                  <Button 
+                    variant="destructive" 
+                    onClick={() => toast.info("Account deletion process initiated")}
+                    className="hover:bg-destructive/90"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Account
+                  </Button>
+                </div>
               </div>
             </Card>
           </div>

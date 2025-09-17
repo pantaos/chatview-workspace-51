@@ -261,7 +261,6 @@ const Settings = () => {
                     Change Email Address
                   </Button>
                 </div>
-                <Separator />
                 <div>
                   <Button 
                     variant="outline" 

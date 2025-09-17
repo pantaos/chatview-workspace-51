@@ -61,6 +61,12 @@ const AdminSettings = () => {
       description: "Team Organization"
     },
     { 
+      id: "community", 
+      label: "Community Feed", 
+      icon: MessageSquare,
+      description: "Community Posts & Updates"
+    },
+    { 
       id: "integrations", 
       label: "Integrations", 
       icon: Puzzle,
@@ -77,12 +83,6 @@ const AdminSettings = () => {
       label: "Credits", 
       icon: CreditCard,
       description: "Usage & Billing"
-    },
-    { 
-      id: "community", 
-      label: "Community Feed", 
-      icon: MessageSquare,
-      description: "Community Posts & Updates"
     }
   ], []);
 
@@ -108,6 +108,8 @@ const AdminSettings = () => {
         return <AdminUsers />;
       case "teams":
         return <AdminTeams />;
+      case "community":
+        return <CommunityFeed />;
       case "workflows":
         return <AdminWorkflows />;
       case "integrations":
@@ -515,8 +517,6 @@ const AdminSettings = () => {
         );
       case "credits":
         return <AdminCreditUsage />;
-      case "community":
-        return <CommunityFeed />;
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }

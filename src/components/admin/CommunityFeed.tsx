@@ -126,11 +126,9 @@ const CommunityFeed = () => {
       <Tabs defaultValue="published" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger value="published" className="flex items-center gap-2">
-            <Eye className="w-4 h-4" />
             Published ({publishedPosts.length})
           </TabsTrigger>
           <TabsTrigger value="drafts" className="flex items-center gap-2">
-            <Edit className="w-4 h-4" />
             Drafts ({draftPosts.length})
           </TabsTrigger>
         </TabsList>

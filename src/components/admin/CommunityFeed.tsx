@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plus, MessageSquare, Calendar, Tag } from "lucide-react";
+import { Plus, Calendar } from "lucide-react";
 import { CreatePostDialog } from "./CreatePostDialog";
 
 const CommunityFeed = () => {
@@ -15,9 +15,7 @@ const CommunityFeed = () => {
       type: "Product Update",
       author: "Admin Team",
       date: "2024-01-15",
-      tags: ["product", "ai", "update"],
       excerpt: "We're excited to announce the release of our enhanced customer service assistant with improved natural language processing...",
-      comments: 12,
     },
     {
       id: "2", 
@@ -25,9 +23,7 @@ const CommunityFeed = () => {
       type: "Tutorial",
       author: "Sarah Chen",
       date: "2024-01-12",
-      tags: ["workflow", "automation", "tutorial"],
       excerpt: "Learn how to optimize your workflow automation with these proven strategies and tips from our expert team...",
-      comments: 8,
     },
     {
       id: "3",
@@ -35,9 +31,7 @@ const CommunityFeed = () => {
       type: "Community",
       author: "Mike Johnson", 
       date: "2024-01-10",
-      tags: ["community", "showcase", "inspiration"],
       excerpt: "This week we're highlighting some of the most creative and innovative ways our community members are using AI assistants...",
-      comments: 15,
     }
   ];
 
@@ -52,10 +46,10 @@ const CommunityFeed = () => {
         </div>
         <Button 
           onClick={() => setCreatePostOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2 rounded-xl transition-colors"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4 mr-2" />
-          Add New Post
+          Add Post
         </Button>
       </div>
 
@@ -80,28 +74,10 @@ const CommunityFeed = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {post.date}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MessageSquare className="w-4 h-4" />
-                    {post.comments} comments
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  {post.tags.map((tag) => (
-                    <span 
-                      key={tag}
-                      className="flex items-center gap-1 px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
-                    >
-                      <Tag className="w-3 h-3" />
-                      {tag}
-                    </span>
-                  ))}
+              <div className="flex items-center pt-4 border-t">
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4" />
+                  {post.date}
                 </div>
               </div>
             </div>

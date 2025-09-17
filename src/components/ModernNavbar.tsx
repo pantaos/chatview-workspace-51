@@ -4,7 +4,6 @@ import { History, LayoutDashboard, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import ProfileDropdown from "@/components/ProfileDropdown";
-import { UserCommunityFeed } from "@/components/UserCommunityFeed";
 import { cn } from "@/lib/utils";
 
 interface ModernNavbarProps {
@@ -13,7 +12,6 @@ interface ModernNavbarProps {
 
 const ModernNavbar = ({ className }: ModernNavbarProps) => {
   const navigate = useNavigate();
-  const [communityFeedOpen, setCommunityFeedOpen] = useState(false);
 
   return (
     <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950">
@@ -41,7 +39,7 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
 
               <button
                 className="rounded-full p-2 hover:bg-black hover:text-white transition-colors text-white"
-                onClick={() => setCommunityFeedOpen(true)}
+                onClick={() => navigate("/community-feed")}
                 title="Community Feed"
               >
                 <Users className="h-5 w-5" />
@@ -55,11 +53,6 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
           </div>
         </div>
       </header>
-
-      <UserCommunityFeed 
-        open={communityFeedOpen}
-        onOpenChange={setCommunityFeedOpen}
-      />
     </div>
   );
 };

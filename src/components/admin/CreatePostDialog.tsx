@@ -17,37 +17,22 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
-  const [selectedAssistants, setSelectedAssistants] = useState<string[]>([]);
-  const [selectedWorkflows, setSelectedWorkflows] = useState<string[]>([]);
+  const [selectedUserGroups, setSelectedUserGroups] = useState<string[]>([]);
 
-  const assistants = [
-    "Customer Service Assistant",
-    "Data Analysis Assistant", 
-    "Content Writer Assistant",
-    "Code Review Assistant"
+  const userGroups = [
+    "All Users",
+    "Sales Team",
+    "Marketing Team", 
+    "Customer Support",
+    "Engineering Team",
+    "Management"
   ];
 
-  const workflows = [
-    "Lead Generation Workflow",
-    "Content Approval Process",
-    "Customer Onboarding",
-    "Bug Triage Workflow"
-  ];
-
-  const handleAssistantChange = (assistant: string) => {
-    setSelectedAssistants(prev => 
-      prev.includes(assistant) 
-        ? prev.filter(a => a !== assistant)
-        : [...prev, assistant]
-    );
-  };
-
-  const handleWorkflowChange = (workflow: string) => {
-    setSelectedWorkflows(prev => 
-      prev.includes(workflow) 
-        ? prev.filter(w => w !== workflow)
-        : [...prev, workflow]
+  const handleUserGroupChange = (userGroup: string) => {
+    setSelectedUserGroups(prev => 
+      prev.includes(userGroup) 
+        ? prev.filter(g => g !== userGroup)
+        : [...prev, userGroup]
     );
   };
 
@@ -64,9 +49,7 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
     setTitle("");
     setType("");
     setContent("");
-    setTags("");
-    setSelectedAssistants([]);
-    setSelectedWorkflows([]);
+    setSelectedUserGroups([]);
   };
 
   return (
@@ -81,9 +64,9 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
           </DialogClose>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Title */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="title" className="text-sm font-medium">
               Title
             </Label>
@@ -97,7 +80,7 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
           </div>
 
           {/* Type */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="type" className="text-sm font-medium">
               Type
             </Label>
@@ -106,17 +89,14 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
                 <SelectValue placeholder="Select post type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="announcement">Announcement</SelectItem>
-                <SelectItem value="tutorial">Tutorial</SelectItem>
-                <SelectItem value="product-update">Product Update</SelectItem>
-                <SelectItem value="community">Community</SelectItem>
-                <SelectItem value="feedback">Feedback</SelectItem>
+                <SelectItem value="platform-update">Platform Update</SelectItem>
+                <SelectItem value="company-update">Company Update</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Content */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label htmlFor="content" className="text-sm font-medium">
               Content
             </Label>
@@ -184,69 +164,31 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
             />
           </div>
 
-          {/* Tags */}
-          <div className="space-y-2">
-            <Label htmlFor="tags" className="text-sm font-medium">
-              Tags (comma separated)
-            </Label>
-            <Input
-              id="tags"
-              placeholder="platform, features, update..."
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="rounded-xl"
-            />
-          </div>
-
-          {/* Related Content */}
-          <div className="space-y-4">
+          {/* Audience */}
+          <div className="space-y-3">
             <Label className="text-sm font-medium text-muted-foreground">
-              Related Content (Optional)
+              Audience
             </Label>
 
-            {/* Related Assistants */}
-            <div className="space-y-3">
+            {/* User Groups */}
+            <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-sm bg-muted flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-foreground" />
                 </div>
-                <span className="font-medium">Related Assistants</span>
+                <span className="font-medium">User Groups</span>
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                {assistants.map((assistant) => (
-                  <label key={assistant} className="flex items-center space-x-2 cursor-pointer">
+              <div className="grid grid-cols-2 gap-2">
+                {userGroups.map((userGroup) => (
+                  <label key={userGroup} className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={selectedAssistants.includes(assistant)}
-                      onChange={() => handleAssistantChange(assistant)}
+                      checked={selectedUserGroups.includes(userGroup)}
+                      onChange={() => handleUserGroupChange(userGroup)}
                       className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
                     />
-                    <span className="text-sm">{assistant}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Related Workflows */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-sm bg-muted flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-foreground" />
-                </div>
-                <span className="font-medium">Related Workflows</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                {workflows.map((workflow) => (
-                  <label key={workflow} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedWorkflows.includes(workflow)}
-                      onChange={() => handleWorkflowChange(workflow)}
-                      className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
-                    />
-                    <span className="text-sm">{workflow}</span>
+                    <span className="text-sm">{userGroup}</span>
                   </label>
                 ))}
               </div>

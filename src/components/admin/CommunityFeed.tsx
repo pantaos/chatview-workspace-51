@@ -13,7 +13,7 @@ const CommunityFeed = () => {
     {
       id: "1",
       title: "New AI Assistant Release: Customer Service Bot 2.0",
-      type: "Product Update",
+      type: "Platform Update",
       author: "Admin Team",
       date: "2024-01-15",
       excerpt: "We're excited to announce the release of our enhanced customer service assistant with improved natural language processing...",
@@ -22,7 +22,7 @@ const CommunityFeed = () => {
     {
       id: "2", 
       title: "Best Practices for Workflow Automation",
-      type: "Tutorial",
+      type: "Company Update",
       author: "Sarah Chen",
       date: "2024-01-12",
       excerpt: "Learn how to optimize your workflow automation with these proven strategies and tips from our expert team...",
@@ -31,7 +31,7 @@ const CommunityFeed = () => {
     {
       id: "3",
       title: "Community Spotlight: Creative Use Cases",
-      type: "Community",
+      type: "Platform Update",
       author: "Mike Johnson", 
       date: "2024-01-10",
       excerpt: "This week we're highlighting some of the most creative and innovative ways our community members are using AI assistants...",
@@ -43,7 +43,7 @@ const CommunityFeed = () => {
     {
       id: "4",
       title: "Upcoming Features Preview: Q2 2024 Roadmap",
-      type: "Product Update",
+      type: "Platform Update",
       author: "Admin Team",
       date: "2024-01-20",
       excerpt: "Get an exclusive preview of the exciting new features we're planning to release in Q2 2024...",
@@ -52,7 +52,7 @@ const CommunityFeed = () => {
     {
       id: "5",
       title: "Advanced Prompt Engineering Techniques",
-      type: "Tutorial", 
+      type: "Company Update", 
       author: "Emma Wilson",
       date: "2024-01-18",
       excerpt: "Master the art of prompt engineering with these advanced techniques and real-world examples...",
@@ -68,7 +68,7 @@ const CommunityFeed = () => {
             <div className="flex items-start justify-between">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
+                  <span className="px-2 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs rounded-full font-medium">
                     {post.type}
                   </span>
                   <span className="text-muted-foreground text-sm">by {post.author}</span>

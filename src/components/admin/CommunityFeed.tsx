@@ -109,7 +109,7 @@ const CommunityFeed = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold mb-2">Community Feed</h2>
+          <h2 className="text-2xl font-semibold mb-2">Your Posts</h2>
           <p className="text-muted-foreground">
             Share updates, announcements, and engage with your community
           </p>

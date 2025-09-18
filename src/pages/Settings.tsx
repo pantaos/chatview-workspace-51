@@ -3,15 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Camera, Trash2, Key, Mail, Globe, User, Puzzle, Shield, ArrowRight, X } from "lucide-react";
+import { Mail, Globe, User, Puzzle } from "lucide-react";
 
 const Settings = () => {
   const { theme } = useTheme();
@@ -29,7 +27,7 @@ const Settings = () => {
     userType: "Admin"
   };
 
-  const [userProfile, setUserProfile] = useState({
+  const [userProfile] = useState({
     firstName: currentUser.firstName,
     lastName: currentUser.lastName,
     email: currentUser.email,
@@ -43,15 +41,6 @@ const Settings = () => {
     { code: "fr" as LanguageType, name: "Français" },
     { code: "es" as LanguageType, name: "Español" },
   ];
-  
-  const [settings, setSettings] = useState({
-    notifications: true,
-    autoSave: true,
-    chatNotifications: true,
-    workflowNotifications: true,
-    updateNotifications: false,
-    assistantVisibility: 'private' as 'public' | 'private'
-  });
 
   const tabs = useMemo(() => [
     { 
@@ -78,35 +67,6 @@ const Settings = () => {
     changeLanguage(languageCode);
     toast.success(`Language changed to ${languageCode.toUpperCase()}`);
   }, [changeLanguage]);
-  
-  const handleProfileChange = useCallback((field: string, value: string) => {
-    setUserProfile(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleProfilePictureChange = useCallback(() => {
-    // Mock file input trigger
-    toast.success("Profile picture updated!");
-  }, []);
-
-  const handleClearHistory = useCallback(() => {
-    toast.success("Conversation history cleared!");
-  }, []);
-
-  const handleChangePassword = useCallback(() => {
-    toast.info("Redirecting to password change...");
-  }, []);
-
-  const handleChangeEmail = useCallback(() => {
-    toast.info("Email verification sent!");
-  }, []);
-  
-  const handleSettingChange = useCallback((key: string, value: boolean | string) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-  }, []);
-  
-  const handleSaveSettings = useCallback(() => {
-    toast.success("Settings saved successfully!");
-  }, []);
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTab(tabId);
@@ -159,8 +119,8 @@ const Settings = () => {
                   <Input
                     id="firstName"
                     value={userProfile.firstName}
-                    onChange={(e) => handleProfileChange('firstName', e.target.value)}
-                    className="mt-2"
+                    readOnly
+                    className="mt-2 bg-muted"
                   />
                 </div>
                 <div>
@@ -168,8 +128,8 @@ const Settings = () => {
                   <Input
                     id="lastName"
                     value={userProfile.lastName}
-                    onChange={(e) => handleProfileChange('lastName', e.target.value)}
-                    className="mt-2"
+                    readOnly
+                    className="mt-2 bg-muted"
                   />
                 </div>
               </div>
@@ -180,97 +140,9 @@ const Settings = () => {
                   id="email"
                   type="email"
                   value={userProfile.email}
-                  onChange={(e) => handleProfileChange('email', e.target.value)}
-                  className="mt-2"
+                  readOnly
+                  className="mt-2 bg-muted"
                 />
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Assistant Visibility</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-base font-medium mb-2">Admin Visibility</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Control whether administrators can view your assistant activities and conversations.
-                  </p>
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      variant={settings.assistantVisibility === 'private' ? "default" : "outline"}
-                      onClick={() => handleSettingChange('assistantVisibility', 'private')}
-                      className="hover:bg-black hover:text-white"
-                    >
-                      Private
-                    </Button>
-                    <Button
-                      variant={settings.assistantVisibility === 'public' ? "default" : "outline"}
-                      onClick={() => handleSettingChange('assistantVisibility', 'public')}
-                      className="hover:bg-black hover:text-white"
-                    >
-                      Public
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {settings.assistantVisibility === 'private' 
-                      ? 'Your assistant activities are only visible to you.' 
-                      : 'Administrators can view your assistant activities for support and improvement purposes.'}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-base font-medium mb-2">Conversation History</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    We securely store your conversations to provide personalized experiences. 
-                    You can clear your data at any time.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleClearHistory}
-                    className="hover:bg-destructive hover:text-destructive-foreground"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Clear All History
-                  </Button>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Account Security</h2>
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleChangePassword}
-                    className="hover:bg-black hover:text-white"
-                  >
-                    <Key className="w-4 h-4 mr-2" />
-                    Change Password
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleChangeEmail}
-                    className="hover:bg-black hover:text-white"
-                  >
-                    <Mail className="w-4 h-4 mr-2" />
-                    Change Email Address
-                  </Button>
-                </div>
-                <div>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => toast.info("Account deletion process initiated")}
-                    className="hover:bg-black hover:text-white"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Account
-                  </Button>
-                </div>
               </div>
             </Card>
           </div>
@@ -358,7 +230,7 @@ const Settings = () => {
       default:
         return null;
     }
-  }, [activeTab, availableLanguages, language, userProfile, settings, handleLanguageChange, handleProfileChange, handleProfilePictureChange, handleClearHistory, handleChangePassword, handleChangeEmail, handleSettingChange]);
+  }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange]);
   
   return (
     <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
@@ -440,22 +312,6 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Bottom divider for integrations tab */}
-            {activeTab === "integrations" && (
-              <div className="border-t border-border"></div>
-            )}
-
-            {/* Save button - hidden for integrations tab */}
-            {activeTab !== "integrations" && (
-              <div className="border-t border-border p-6 flex justify-end">
-                <Button 
-                  onClick={handleSaveSettings}
-                  className="bg-primary hover:bg-black hover:text-white"
-                >
-                  Save All Settings
-                </Button>
-              </div>
-            )}
           </Card>
         </div>
       </main>

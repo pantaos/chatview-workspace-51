@@ -38,8 +38,6 @@ const Settings = () => {
   const availableLanguages = [
     { code: "en" as LanguageType, name: "English" },
     { code: "de" as LanguageType, name: "Deutsch" },
-    { code: "fr" as LanguageType, name: "Français" },
-    { code: "es" as LanguageType, name: "Español" },
   ];
 
   const tabs = useMemo(() => [

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 interface LogoProps {
   className?: string;
-  variant?: "default" | "white" | "gradient";
+  variant?: "default" | "white";
   onClick?: () => void;
   small?: boolean;
 }
@@ -28,15 +28,11 @@ const Logo = ({ className, variant = "default", onClick, small = false }: LogoPr
           <>
             <span className={cn(
               "mr-1 tracking-wider", 
-              variant === "white" ? "text-white" : 
-              variant === "gradient" ? "bg-gradient-to-r from-pink-400 via-purple-500 to-blue-600 bg-clip-text text-transparent" : 
-              "text-black"
+              variant === "white" ? "text-white" : "text-black"
             )}>PANTA</span>
             <span className={cn(
               "font-light tracking-wider", 
-              variant === "white" ? "text-white" : 
-              variant === "gradient" ? "bg-gradient-to-r from-pink-400 via-purple-500 to-blue-600 bg-clip-text text-transparent" : 
-              "text-black"
+              variant === "white" ? "text-white" : "text-black"
             )}>Flows</span>
           </>
         )}

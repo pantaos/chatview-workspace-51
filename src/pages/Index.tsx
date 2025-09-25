@@ -337,27 +337,26 @@ const Index = () => {
         <>
           <ModernNavbar />
           
-          <div className={`${isMobile ? 'py-12' : 'py-20'} bg-gradient-to-br from-pink-400 via-purple-500 to-blue-600 dark:from-pink-600 dark:via-purple-700 dark:to-blue-800 relative overflow-hidden`}>
-            <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'} relative z-10 max-w-4xl`}>
-              <section className={`${isMobile ? 'mb-12' : 'mb-16'} text-center`}>
-                <h1 className={`${isMobile ? 'text-2xl mb-6' : 'text-4xl mb-8'} font-light text-white`}>
-                  How can I help you today?
-                </h1>
-                <div className="max-w-2xl mx-auto">
-                  <SearchChat 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onSubmit={handleSearchSubmit}
-                    disableNavigation={true}
-                    title=""
-                    placeholder="Start a conversation"
-                  />
-                </div>
+          <div className={`${isMobile ? 'py-8' : 'py-16'} bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950 relative overflow-hidden`}>
+            <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'} relative z-10`}>
+              <section className={`${isMobile ? 'mb-10' : 'mb-20'} transform transition-all duration-500 hover:scale-[1.02]`}>
+                <SearchChat 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onSubmit={handleSearchSubmit}
+                  disableNavigation={true}
+                  title="How can I help you?"
+                  placeholder="Start a conversation"
+                />
               </section>
               
               <section className={`${isMobile ? 'mb-8' : 'mb-12'}`}>
+                <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-white ${isMobile ? 'mb-6' : 'mb-10'} animate-fade-in`}>
+                  Workflows & Assistants
+                </h2>
+                
                 {!isMobile && (
-                  <div className="mb-8 animate-fade-in delay-100">
+                  <div className="mb-10 animate-fade-in delay-100">
                     <TagFilter
                       tags={defaultTags}
                       selectedTags={selectedTags}
@@ -371,29 +370,29 @@ const Index = () => {
                 
                 <div className={`${isMobile ? 'mb-8' : 'mb-12'} flex flex-col animate-fade-in delay-200`}>
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <div className={`${isMobile ? 'flex flex-col space-y-4' : 'flex justify-between items-center'}`}>
-                      <TabsList className={`bg-white/20 backdrop-blur-xl border border-white/30 ${isMobile ? 'w-full' : ''} transition-all duration-300`}>
-                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-gray-800 text-white/90 flex-1 transition-all duration-200">
+                    <div className={`${isMobile ? 'flex flex-col space-y-4' : 'filters-with-button'}`}>
+                      <TabsList className={`bg-white/10 backdrop-blur-xl border border-white/20 ${isMobile ? 'w-full' : ''} transition-all duration-300 hover:bg-white/20`}>
+                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
                           All
                         </TabsTrigger>
-                        <TabsTrigger value="assistants" className="data-[state=active]:bg-white data-[state=active]:text-gray-800 text-white/90 flex-1 transition-all duration-200">
+                        <TabsTrigger value="assistants" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
                           {isMobile ? 'AI' : 'Assistants'}
                         </TabsTrigger>
-                        <TabsTrigger value="workflows" className="data-[state=active]:bg-white data-[state=active]:text-gray-800 text-white/90 flex-1 transition-all duration-200">
+                        <TabsTrigger value="workflows" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
                           Workflows
                         </TabsTrigger>
-                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-gray-800 text-white/90 flex-1 transition-all duration-200">
+                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
                           {isMobile ? 'Favs' : 'Favorites'}
                         </TabsTrigger>
                       </TabsList>
                       
                       <Button 
                         variant="outline" 
-                        className={`gap-2 bg-white/20 backdrop-blur-xl text-white border-white/30 hover:bg-white hover:text-gray-800 transition-all duration-300 ${isMobile ? 'w-full' : ''}`}
+                        className={`gap-2 bg-white/10 backdrop-blur-xl text-white border-white/20 hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 ${isMobile ? 'w-full' : 'ml-6'}`}
                         onClick={() => setShowNewWorkflowDialog(true)}
                       >
                         <Plus className="h-4 w-4" />
-                        + New Assistant
+                        {isMobile ? 'Create' : 'Create New'}
                       </Button>
                     </div>
 
@@ -410,13 +409,13 @@ const Index = () => {
                       </div>
                     )}
                     
-                    <TabsContent value="all" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-8'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'}`}>
+                    <TabsContent value="all" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
                         {filteredAllItems.map((item, index) => (
                           <div 
                             key={item.id} 
-                            className="animate-fade-in"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
+                            style={{ animationDelay: `${index * 100}ms` }}
                           >
                             <WorkflowCard
                               title={item.title}
@@ -427,20 +426,20 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(item)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
                               isFavorite={item.isFavorite}
-                              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
+                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
                         ))}
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="assistants" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-8'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'}`}>
+                    <TabsContent value="assistants" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
                         {filteredAssistants.map((assistant, index) => (
                           <div 
                             key={assistant.id} 
-                            className="animate-fade-in"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
+                            style={{ animationDelay: `${index * 100}ms` }}
                           >
                             <WorkflowCard
                               title={assistant.title}
@@ -451,20 +450,20 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(assistant)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(assistant.id, assistant.type)}
                               isFavorite={assistant.isFavorite}
-                              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
+                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
                         ))}
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="workflows" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-8'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'}`}>
+                    <TabsContent value="workflows" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
                         {filteredWorkflows.map((workflow, index) => (
                           <div 
                             key={workflow.id} 
-                            className="animate-fade-in"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
+                            style={{ animationDelay: `${index * 100}ms` }}
                           >
                             <WorkflowCard
                               title={workflow.title}
@@ -475,20 +474,20 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(workflow)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(workflow.id, workflow.type)}
                               isFavorite={workflow.isFavorite}
-                              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
+                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
                         ))}
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="favorites" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-8'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'}`}>
+                    <TabsContent value="favorites" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
                         {filteredFavorites.map((item, index) => (
                           <div 
                             key={item.id} 
-                            className="animate-fade-in"
-                            style={{ animationDelay: `${index * 50}ms` }}
+                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
+                            style={{ animationDelay: `${index * 100}ms` }}
                           >
                             <WorkflowCard
                               title={item.title}
@@ -499,7 +498,7 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(item)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
                               isFavorite={item.isFavorite}
-                              className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
+                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
                         ))}

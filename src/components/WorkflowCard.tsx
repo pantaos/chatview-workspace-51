@@ -84,22 +84,6 @@ const WorkflowCard = ({
     onFavoriteToggle?.();
   };
 
-  const getIconColor = (iconName: string) => {
-    const colorMap: Record<string, string> = {
-      'MessageSquare': 'text-blue-500',
-      'Code': 'text-green-500',
-      'Image': 'text-purple-500',
-      'FileText': 'text-orange-500',
-      'Video': 'text-red-500',
-      'Music': 'text-pink-500',
-      'Bot': 'text-indigo-500',
-      'Rss': 'text-yellow-500',
-      'Crop': 'text-teal-500',
-      'GraduationCap': 'text-emerald-500'
-    };
-    return colorMap[iconName] || 'text-blue-500';
-  };
-
   const displayTitle = translationKey ? translate(`workflow.${translationKey}`) : title;
   const displayDescription = translationKey ? translate(`workflow.${translationKey}Desc`) : description;
   
@@ -108,8 +92,8 @@ const WorkflowCard = ({
   return (
     <div 
       className={cn(
-        "workflow-card group transition-all duration-200 relative rounded-xl bg-white shadow-sm hover:shadow-lg cursor-pointer border-0 flex flex-col",
-        isMobile ? "p-4 h-44" : "p-5 h-52",
+        "workflow-card group transition-all duration-200 relative rounded-lg bg-white shadow-sm border border-gray-100 hover:border-gray-300 cursor-pointer",
+        isMobile ? "p-3" : "p-4",
         className
       )}
       onClick={onClick}
@@ -165,27 +149,27 @@ const WorkflowCard = ({
       )}
       
       <div className={cn(
-        "workflow-icon rounded-xl flex items-center justify-center mx-auto mb-4",
-        isMobile ? "w-12 h-12" : "w-14 h-14"
+        "workflow-icon bg-gray-200 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-200 flex items-center justify-center",
+        isMobile ? "p-2 mb-2 w-8 h-8" : "p-4 mb-3"
       )}>
         <IconComponent className={cn(
-          getIconColor(icon),
-          isMobile ? "h-6 w-6" : "h-7 w-7"
+          "text-gray-600 group-hover:text-white",
+          isMobile ? "h-4 w-4" : "h-6 w-6"
         )} />
       </div>
       
       <h3 className={cn(
-        "font-semibold text-center text-gray-900 mb-2 line-clamp-1",
-        isMobile ? "text-sm" : "text-base"
+        "font-medium text-center group-hover:text-black mb-1",
+        isMobile ? "text-xs leading-tight" : "text-sm"
       )}>
         {displayTitle}
       </h3>
       
       <p className={cn(
-        "text-gray-600 text-center line-clamp-3 text-xs leading-relaxed flex-1",
-        isMobile ? "px-1" : "px-2"
+        "text-gray-500 text-center mt-1 line-clamp-2 group-hover:text-gray-700",
+        isMobile ? "text-xs mb-2" : "text-xs mb-3"
       )}>
-        {displayDescription}
+        {isMobile ? displayTitle : displayDescription}
       </p>
       
       {tags.length > 0 && !isMobile && (

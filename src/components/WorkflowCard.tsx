@@ -182,7 +182,7 @@ const WorkflowCard = ({
               className="max-w-[250px] text-left p-2 bg-gray-900 text-white border-0"
               sideOffset={10}
             >
-              <p className="text-sm text-left">{displayDescription}</p>
+              <p className="text-xs text-left">{displayDescription}</p>
             </TooltipContent>
           </Tooltip>
         ) : (

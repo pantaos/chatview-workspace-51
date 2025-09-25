@@ -167,7 +167,7 @@ const WorkflowCard = ({
           {displayTitle}
         </h3>
         
-        {!isMobile && displayDescription.length > 50 ? (
+        {!isMobile && displayDescription.length > 40 ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <p className={cn(

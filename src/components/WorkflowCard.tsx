@@ -92,8 +92,8 @@ const WorkflowCard = ({
   return (
     <div 
       className={cn(
-        "workflow-card group transition-all duration-200 relative rounded-lg bg-white shadow-sm border border-gray-100 hover:border-gray-300 cursor-pointer",
-        isMobile ? "p-3" : "p-4",
+        "workflow-card group transition-all duration-200 relative rounded-xl bg-white shadow-sm hover:shadow-md cursor-pointer border-0",
+        isMobile ? "p-4" : "p-6",
         className
       )}
       onClick={onClick}
@@ -149,27 +149,27 @@ const WorkflowCard = ({
       )}
       
       <div className={cn(
-        "workflow-icon bg-gray-200 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-200 flex items-center justify-center",
-        isMobile ? "p-2 mb-2 w-8 h-8" : "p-4 mb-3"
+        "workflow-icon rounded-full flex items-center justify-center mx-auto mb-4",
+        isMobile ? "w-10 h-10" : "w-12 h-12"
       )}>
         <IconComponent className={cn(
-          "text-gray-600 group-hover:text-white",
-          isMobile ? "h-4 w-4" : "h-6 w-6"
+          "text-blue-600",
+          isMobile ? "h-5 w-5" : "h-6 w-6"
         )} />
       </div>
       
       <h3 className={cn(
-        "font-medium text-center group-hover:text-black mb-1",
-        isMobile ? "text-xs leading-tight" : "text-sm"
+        "font-semibold text-center text-gray-900 mb-2",
+        isMobile ? "text-sm leading-tight" : "text-base"
       )}>
         {displayTitle}
       </h3>
       
       <p className={cn(
-        "text-gray-500 text-center mt-1 line-clamp-2 group-hover:text-gray-700",
-        isMobile ? "text-xs mb-2" : "text-xs mb-3"
+        "text-gray-600 text-center line-clamp-3 leading-relaxed",
+        isMobile ? "text-xs mb-2" : "text-sm mb-3"
       )}>
-        {isMobile ? displayTitle : displayDescription}
+        {displayDescription}
       </p>
       
       {tags.length > 0 && !isMobile && (

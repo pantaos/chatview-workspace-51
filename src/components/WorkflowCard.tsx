@@ -179,7 +179,7 @@ const WorkflowCard = ({
             </TooltipTrigger>
             <TooltipContent 
               side="bottom" 
-              className="max-w-xs text-left p-2 bg-gray-900 text-white border-0"
+              className="max-w-[250px] text-left p-2 bg-gray-900 text-white border-0"
               sideOffset={10}
             >
               <p className="text-sm text-left">{displayDescription}</p>

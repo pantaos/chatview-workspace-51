@@ -335,9 +335,7 @@ const Index = () => {
         />
       ) : (
         <>
-          <div className="bg-white border-b border-gray-100">
-            <ModernNavbar />
-          </div>
+          <ModernNavbar />
           
           <div className={`${isMobile ? 'py-12' : 'py-20'} bg-gradient-to-br from-pink-400 via-purple-500 to-blue-600 dark:from-pink-600 dark:via-purple-700 dark:to-blue-800 relative overflow-hidden`}>
             <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'} relative z-10 max-w-4xl`}>

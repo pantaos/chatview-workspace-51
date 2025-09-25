@@ -179,10 +179,10 @@ const WorkflowCard = ({
             </TooltipTrigger>
             <TooltipContent 
               side="bottom" 
-              className="max-w-xs text-center p-3 bg-gray-900 text-white border-0"
+              className="max-w-xs text-left p-2 bg-gray-900 text-white border-0"
               sideOffset={10}
             >
-              <p className="text-sm">{displayDescription}</p>
+              <p className="text-sm text-left">{displayDescription}</p>
             </TooltipContent>
           </Tooltip>
         ) : (

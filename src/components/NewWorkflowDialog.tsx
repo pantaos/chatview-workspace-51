@@ -31,10 +31,12 @@ import {
   X,
   Plus,
   Sparkles,
-  RotateCcw
+  RotateCcw,
+  Library
 } from "lucide-react";
 import TagManager from "./TagManager";
 import { WorkflowTag } from "@/types/workflow";
+import PromptLibrary from "./PromptLibrary";
 
 interface NewWorkflowDialogProps {
   open: boolean;
@@ -98,6 +100,7 @@ const NewWorkflowDialog = ({
       return acc;
     }, {} as Record<string, boolean>)
   );
+  const [promptLibraryOpen, setPromptLibraryOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -248,6 +251,24 @@ const NewWorkflowDialog = ({
               <div className="flex items-center justify-between mb-2">
                 <Label htmlFor="systemPrompt">System Prompt</Label>
                 <div className="flex gap-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => setPromptLibraryOpen(true)}
+                        >
+                          <Library className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Browse prompt library</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <Button
                     type="button"
                     variant="ghost"
@@ -450,6 +471,12 @@ const NewWorkflowDialog = ({
           </div>
         </form>
       </DialogContent>
+
+      <PromptLibrary
+        open={promptLibraryOpen}
+        onClose={() => setPromptLibraryOpen(false)}
+        onSelectPrompt={(prompt) => setSystemPrompt(prompt)}
+      />
     </Dialog>
   );
 };

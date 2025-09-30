@@ -151,7 +151,6 @@ const PromptLibrary = ({ open, onClose, onSelectPrompt }: PromptLibraryProps) =>
           {!selectedCategory ? (
             <div className="grid grid-cols-1 gap-3">
               {promptCategories.map((category) => {
-                const IconComponent = category.icon;
                 return (
                   <Button
                     key={category.id}
@@ -159,9 +158,8 @@ const PromptLibrary = ({ open, onClose, onSelectPrompt }: PromptLibraryProps) =>
                     className="h-auto py-4 justify-start gap-3 hover:bg-primary/5 hover:border-primary/50"
                     onClick={() => setSelectedCategory(category.id)}
                   >
-                    <IconComponent className="w-5 h-5 text-primary" />
                     <div className="text-left">
-                      <div className="font-semibold">{category.name}</div>
+                      <div className="font-semibold text-base">{category.name}</div>
                       <div className="text-xs text-muted-foreground">
                         {category.prompts.length} prompts available
                       </div>

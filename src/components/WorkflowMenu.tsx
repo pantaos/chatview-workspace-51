@@ -39,6 +39,7 @@ const WorkflowMenu = ({
   selectedTags = [], 
   onTagToggle 
 }: WorkflowMenuProps) => {
+  console.log('WorkflowMenu render:', { availableTags, selectedTags, hasOnTagToggle: !!onTagToggle });
   return (
     <div className="flex">
       <ContextMenu>

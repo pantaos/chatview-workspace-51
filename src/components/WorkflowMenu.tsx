@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Edit, MoreHorizontal, Settings, SlidersHorizontal, Tag } from "lucide-react";
 import { WorkflowTag } from "@/types/workflow";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface WorkflowMenuProps {
   onEdit: () => void;
@@ -39,7 +38,6 @@ const WorkflowMenu = ({
   selectedTags = [], 
   onTagToggle 
 }: WorkflowMenuProps) => {
-  console.log('WorkflowMenu render:', { availableTags, selectedTags, hasOnTagToggle: !!onTagToggle });
   return (
     <div className="flex">
       <ContextMenu>
@@ -72,27 +70,33 @@ const WorkflowMenu = ({
                         <Tag className="mr-2 h-4 w-4" />
                         <span>Tags</span>
                       </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="w-48 bg-background z-50">
-                        {availableTags.map((tag) => (
-                          <DropdownMenuItem
-                            key={tag.id}
-                            className="cursor-pointer hover:bg-accent"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              onTagToggle(tag.id);
-                            }}
-                          >
-                            <Checkbox
-                              checked={selectedTags.includes(tag.id)}
-                              className="mr-2"
-                            />
-                            <div
-                              className="w-2 h-2 rounded-full mr-2"
-                              style={{ backgroundColor: tag.color }}
-                            />
-                            <span>{tag.name}</span>
-                          </DropdownMenuItem>
-                        ))}
+                      <DropdownMenuSubContent className="w-56 bg-background z-50 p-2">
+                        <div className="flex flex-wrap gap-1.5">
+                          {availableTags.map((tag) => {
+                            const isSelected = selectedTags.includes(tag.id);
+                            return (
+                              <button
+                                key={tag.id}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  onTagToggle(tag.id);
+                                }}
+                                className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-black text-xs transition-colors ${
+                                  isSelected 
+                                    ? 'bg-black text-white' 
+                                    : 'bg-background hover:bg-accent'
+                                }`}
+                              >
+                                <div
+                                  className="w-1.5 h-1.5 rounded-full"
+                                  style={{ backgroundColor: tag.color }}
+                                />
+                                <span>{tag.name}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                   </>

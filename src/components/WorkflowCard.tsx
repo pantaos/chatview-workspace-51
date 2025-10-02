@@ -45,6 +45,8 @@ interface WorkflowCardProps {
   translationKey?: string;
   isFavorite?: boolean;
   onFavoriteToggle?: () => void;
+  availableTags?: WorkflowTag[];
+  onTagToggle?: (tagId: string) => void;
 }
 
 const WorkflowCard = ({ 
@@ -56,7 +58,9 @@ const WorkflowCard = ({
   onClick,
   translationKey,
   isFavorite = false,
-  onFavoriteToggle
+  onFavoriteToggle,
+  availableTags = [],
+  onTagToggle
 }: WorkflowCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const { translate } = useLanguage();
@@ -129,6 +133,9 @@ const WorkflowCard = ({
               onEdit={handleEdit}
               onSettings={handleSettings}
               onDelete={handleDelete}
+              availableTags={availableTags}
+              selectedTags={tags.map(t => t.id)}
+              onTagToggle={onTagToggle}
             />
           </div>
         )}

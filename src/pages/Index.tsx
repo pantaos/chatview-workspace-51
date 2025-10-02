@@ -295,6 +295,32 @@ const Index = () => {
     }
   };
 
+  const handleWorkflowTagToggle = (workflowId: string, type: 'assistant' | 'workflow' | 'conversational', tagId: string) => {
+    const updateTags = (item: WorkflowItem) => {
+      if (item.id !== workflowId) return item;
+      
+      const hasTag = item.tags.some(tag => tag.id === tagId);
+      const selectedTag = defaultTags.find(tag => tag.id === tagId);
+      
+      if (!selectedTag) return item;
+      
+      return {
+        ...item,
+        tags: hasTag 
+          ? item.tags.filter(tag => tag.id !== tagId)
+          : [...item.tags, selectedTag]
+      };
+    };
+
+    if (type === 'assistant') {
+      setAvailableAssistants(prev => prev.map(updateTags) as Assistant[]);
+    } else if (type === 'workflow') {
+      setAvailableWorkflows(prev => prev.map(updateTags) as Workflow[]);
+    } else if (type === 'conversational') {
+      setAvailableConversationalWorkflows(prev => prev.map(updateTags) as ConversationalWorkflow[]);
+    }
+  };
+
   const handleTagSelect = (tagId: string) => {
     setSelectedTags(prev => [...prev, tagId]);
   };
@@ -426,6 +452,8 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(item)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
                               isFavorite={item.isFavorite}
+                              availableTags={defaultTags}
+                              onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
                               className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
@@ -450,6 +478,8 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(assistant)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(assistant.id, assistant.type)}
                               isFavorite={assistant.isFavorite}
+                              availableTags={defaultTags}
+                              onTagToggle={(tagId) => handleWorkflowTagToggle(assistant.id, assistant.type, tagId)}
                               className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
@@ -474,6 +504,8 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(workflow)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(workflow.id, workflow.type)}
                               isFavorite={workflow.isFavorite}
+                              availableTags={defaultTags}
+                              onTagToggle={(tagId) => handleWorkflowTagToggle(workflow.id, workflow.type, tagId)}
                               className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>
@@ -498,6 +530,8 @@ const Index = () => {
                               onClick={() => handleWorkflowClick(item)}
                               onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
                               isFavorite={item.isFavorite}
+                              availableTags={defaultTags}
+                              onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
                               className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
                             />
                           </div>

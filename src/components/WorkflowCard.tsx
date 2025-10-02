@@ -195,16 +195,23 @@ const WorkflowCard = ({
         )}
         
         {tags.length > 0 && !isMobile && (
-          <div className="flex flex-wrap gap-1 justify-center">
+          <div className="flex gap-1.5 justify-center items-center">
             {tags.map((tag) => (
-              <Badge 
-                key={tag.id} 
-                variant="secondary" 
-                className="text-xs px-2 py-0.5"
-                style={{ backgroundColor: tag.color + '20', color: tag.color }}
-              >
-                {tag.name}
-              </Badge>
+              <Tooltip key={tag.id}>
+                <TooltipTrigger asChild>
+                  <div
+                    className="w-2 h-2 rounded-full cursor-help"
+                    style={{ backgroundColor: tag.color }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="bottom" 
+                  className="bg-gray-900 text-white border-0"
+                  sideOffset={5}
+                >
+                  <p className="text-xs">{tag.name}</p>
+                </TooltipContent>
+              </Tooltip>
             ))}
           </div>
         )}

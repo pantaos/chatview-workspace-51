@@ -66,7 +66,7 @@ const WorkflowMenu = ({
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="cursor-pointer">
+                      <DropdownMenuSubTrigger className="cursor-pointer hover:bg-black hover:text-white">
                         <Tag className="mr-2 h-4 w-4" />
                         <span>Tags</span>
                       </DropdownMenuSubTrigger>

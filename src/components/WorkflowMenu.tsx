@@ -85,7 +85,7 @@ const WorkflowMenu = ({
                                 className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-black text-xs transition-colors ${
                                   isSelected 
                                     ? 'bg-black text-white' 
-                                    : 'bg-background hover:bg-accent'
+                                    : 'bg-background hover:bg-black hover:text-white'
                                 }`}
                               >
                                 <div

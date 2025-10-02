@@ -226,16 +226,27 @@ const NewWorkflowDialog = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div>
+                    <div className="relative">
                       <Textarea
                         id="description"
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value.length <= 100) {
+                            setDescription(value);
+                          }
+                        }}
                         placeholder="Briefly describe what this assistant does"
                         rows={3}
                         disabled={!manualDescriptionEntry}
                         className={!manualDescriptionEntry ? "opacity-50" : ""}
+                        maxLength={100}
                       />
+                      {manualDescriptionEntry && (
+                        <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                          {description.length}/100
+                        </div>
+                      )}
                     </div>
                   </TooltipTrigger>
                   {!manualDescriptionEntry && (

@@ -61,16 +61,16 @@ const Settings = () => {
       description: "Connected Services"
     },
     { 
-      id: "languages", 
-      label: "Languages", 
-      icon: Globe,
-      description: "Language Preferences"
-    },
-    { 
       id: "chat-config", 
       label: "Chat Configurations", 
       icon: MessageSquare,
       description: "Chat Settings & Integrations"
+    },
+    { 
+      id: "languages", 
+      label: "Languages", 
+      icon: Globe,
+      description: "Language Preferences"
     }
   ], []);
   

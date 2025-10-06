@@ -9,8 +9,9 @@ import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle, MessageSquare } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, BookOpen } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 const Settings = () => {
   const { theme } = useTheme();
@@ -25,6 +26,7 @@ const Settings = () => {
     zapier: false,
     slack: false,
   });
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
   // Mock user data
   const currentUser = {
@@ -67,6 +69,12 @@ const Settings = () => {
       description: "Chat Settings & Integrations"
     },
     { 
+      id: "prompt-library", 
+      label: "Prompt Library", 
+      icon: BookOpen,
+      description: "Pre-built Prompt Templates"
+    },
+    { 
       id: "languages", 
       label: "Languages", 
       icon: Globe,
@@ -99,8 +107,65 @@ const Settings = () => {
     toast.success(`Chat system prompts language changed to ${languageCode.toUpperCase()}`);
   }, []);
 
+  const promptCategories = [
+    { id: "marketing", name: "Marketing", color: "#3B82F6" },
+    { id: "social-media", name: "Social Media", color: "#10B981" },
+    { id: "hr", name: "HR", color: "#F59E0B" },
+    { id: "productivity", name: "Productivity", color: "#8B5CF6" },
+    { id: "finance", name: "Finance", color: "#EF4444" },
+    { id: "operations", name: "Operations", color: "#06B6D4" },
+    { id: "research", name: "Research", color: "#84CC16" },
+    { id: "personal", name: "Personal", color: "#EC4899" },
+  ];
+
   const renderContent = useCallback(() => {
     switch (activeTab) {
+      case "prompt-library":
+        return (
+          <div className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Prompt Library</h2>
+              <p className="text-muted-foreground">
+                Browse pre-built prompt templates by category
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {promptCategories.map((category) => {
+                const isSelected = selectedCategory === category.id;
+                return (
+                  <Badge
+                    key={category.id}
+                    variant={isSelected ? "default" : "outline"}
+                    className={`cursor-pointer transition-all ${
+                      isSelected 
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                        : "hover:bg-muted"
+                    }`}
+                    onClick={() => setSelectedCategory(isSelected ? null : category.id)}
+                  >
+                    <div 
+                      className="w-2 h-2 rounded-full mr-2"
+                      style={{ backgroundColor: category.color }}
+                    />
+                    {category.name}
+                  </Badge>
+                );
+              })}
+            </div>
+
+            {selectedCategory && (
+              <Card className="p-6 mt-4">
+                <h3 className="text-xl font-semibold mb-4 capitalize">
+                  {promptCategories.find(c => c.id === selectedCategory)?.name} Prompts
+                </h3>
+                <p className="text-muted-foreground">
+                  Prompt templates for {promptCategories.find(c => c.id === selectedCategory)?.name.toLowerCase()} will appear here.
+                </p>
+              </Card>
+            )}
+          </div>
+        );
       case "chat-config":
         return (
           <div className="space-y-6">

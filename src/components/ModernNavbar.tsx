@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { History, LayoutDashboard, Users } from "lucide-react";
+import { LayoutDashboard, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -29,14 +29,6 @@ const ModernNavbar = ({ className }: ModernNavbarProps) => {
                 <LayoutDashboard className="h-5 w-5" />
               </button>
               
-              <button
-                className="rounded-full p-2 hover:bg-black hover:text-white transition-colors text-white"
-                onClick={() => navigate("/history")}
-                title="History"
-              >
-                <History className="h-5 w-5" />
-              </button>
-
               <button
                 className="rounded-full p-2 hover:bg-black hover:text-white transition-colors text-white"
                 onClick={() => navigate("/community-feed")}

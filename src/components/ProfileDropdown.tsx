@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, User, LayoutDashboard, Shield } from "lucide-react";
+import { Settings, LogOut, User, LayoutDashboard, Shield, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ProfileDropdownProps {
@@ -58,6 +58,13 @@ const ProfileDropdown = ({ name, email, avatarUrl }: ProfileDropdownProps) => {
         >
           <LayoutDashboard className="mr-2 h-4 w-4" />
           <span>Dashboard</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          className="cursor-pointer hover:bg-black hover:text-white transition-colors"
+          onClick={() => navigate('/history')}
+        >
+          <History className="mr-2 h-4 w-4" />
+          <span>History</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
           className="cursor-pointer hover:bg-black hover:text-white transition-colors"

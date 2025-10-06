@@ -44,6 +44,7 @@ interface NewWorkflowDialogProps {
   onCreateWorkflow: (workflow: any) => void;
   availableTags?: WorkflowTag[];
   onCreateTag?: (tag: { name: string; color: string }) => void;
+  prefilledPrompt?: string;
 }
 
 const iconOptions = [
@@ -80,11 +81,12 @@ const NewWorkflowDialog = ({
   onClose, 
   onCreateWorkflow,
   availableTags = [],
-  onCreateTag
+  onCreateTag,
+  prefilledPrompt = ""
 }: NewWorkflowDialogProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [systemPrompt, setSystemPrompt] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState(prefilledPrompt);
   const [selectedIconColor, setSelectedIconColor] = useState("Blue");
   const [selectedIcon, setSelectedIcon] = useState("Chat");
   const [selectedTags, setSelectedTags] = useState<WorkflowTag[]>([]);
@@ -101,6 +103,13 @@ const NewWorkflowDialog = ({
     }, {} as Record<string, boolean>)
   );
   const [promptLibraryOpen, setPromptLibraryOpen] = useState(false);
+
+  // Update system prompt when prefilledPrompt changes
+  React.useEffect(() => {
+    if (prefilledPrompt) {
+      setSystemPrompt(prefilledPrompt);
+    }
+  }, [prefilledPrompt]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

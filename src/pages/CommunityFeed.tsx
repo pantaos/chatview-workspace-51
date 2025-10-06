@@ -5,10 +5,17 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, ChevronDown, ThumbsUp, Pin } from "lucide-react";
 import ModernNavbar from "@/components/ModernNavbar";
+import PromptDetailDialog from "@/components/PromptDetailDialog";
+import NewWorkflowDialog from "@/components/NewWorkflowDialog";
+import { WorkflowTag } from "@/types/workflow";
 
 const CommunityFeed = () => {
   const [expandedPosts, setExpandedPosts] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<any>(null);
+  const [promptDetailOpen, setPromptDetailOpen] = useState(false);
+  const [newWorkflowDialogOpen, setNewWorkflowDialogOpen] = useState(false);
+  const [prefilledPrompt, setPrefilledPrompt] = useState("");
 
   const togglePostExpansion = (postId: string) => {
     setExpandedPosts(prev => 
@@ -98,6 +105,167 @@ const CommunityFeed = () => {
     { id: "research", name: "Research", color: "#84CC16" },
     { id: "personal", name: "Personal", color: "#EC4899" },
   ];
+
+  const promptsByCategory: Record<string, any[]> = {
+    "marketing": [
+      {
+        id: "m1",
+        title: "Social Media Campaign Creator",
+        description: "Generate engaging social media posts for multiple platforms",
+        fullText: "You are an expert social media marketing assistant. Your role is to create engaging, platform-specific content that drives engagement and conversions. Generate posts optimized for each platform's unique audience and format requirements. Include relevant hashtags, call-to-actions, and trending topics when appropriate.",
+        category: "marketing"
+      },
+      {
+        id: "m2",
+        title: "Email Marketing Optimizer",
+        description: "Create compelling email campaigns with high conversion rates",
+        fullText: "You are an email marketing specialist focused on creating high-converting email campaigns. Help craft subject lines, body content, and CTAs that resonate with target audiences. Optimize for mobile viewing, personalization, and A/B testing opportunities.",
+        category: "marketing"
+      },
+      {
+        id: "m3",
+        title: "Brand Voice Developer",
+        description: "Establish consistent brand messaging across all channels",
+        fullText: "You are a brand strategist who helps develop and maintain consistent brand voice across all marketing channels. Analyze brand values, target audience, and competitive positioning to create authentic messaging that resonates with customers.",
+        category: "marketing"
+      },
+      {
+        id: "m4",
+        title: "Content Calendar Planner",
+        description: "Organize and schedule marketing content effectively",
+        fullText: "You are a content planning expert who helps create comprehensive content calendars. Balance promotional content with educational and entertaining material. Consider seasonal trends, industry events, and audience preferences when planning.",
+        category: "marketing"
+      }
+    ],
+    "social-media": [
+      {
+        id: "s1",
+        title: "LinkedIn Thought Leadership",
+        description: "Craft professional posts that establish industry authority",
+        fullText: "You are a LinkedIn content strategist specializing in thought leadership. Help professionals share insights, industry trends, and expertise in a way that builds authority and generates meaningful engagement. Focus on value-driven content that sparks professional conversations.",
+        category: "social-media"
+      },
+      {
+        id: "s2",
+        title: "Instagram Story Creator",
+        description: "Design engaging Instagram stories with interactive elements",
+        fullText: "You are an Instagram marketing specialist focused on creating compelling stories. Suggest interactive elements like polls, quizzes, and questions. Optimize for vertical viewing and quick consumption. Include trending music and stickers when relevant.",
+        category: "social-media"
+      }
+    ],
+    "hr": [
+      {
+        id: "h1",
+        title: "Job Description Writer",
+        description: "Create compelling and inclusive job postings",
+        fullText: "You are an HR specialist focused on writing inclusive, compelling job descriptions. Help create postings that attract diverse talent while clearly communicating role requirements, company culture, and growth opportunities. Use inclusive language and focus on skills over credentials.",
+        category: "hr"
+      },
+      {
+        id: "h2",
+        title: "Employee Onboarding Advisor",
+        description: "Design effective onboarding experiences for new hires",
+        fullText: "You are an employee experience specialist focused on creating exceptional onboarding programs. Help design comprehensive onboarding plans that welcome new hires, set clear expectations, and accelerate time-to-productivity. Focus on cultural integration and relationship building.",
+        category: "hr"
+      }
+    ],
+    "productivity": [
+      {
+        id: "p1",
+        title: "Meeting Agenda Generator",
+        description: "Create structured agendas for productive meetings",
+        fullText: "You are a productivity expert specializing in effective meetings. Help create clear agendas with time allocations, objectives, and action items. Focus on outcomes and ensure every meeting has a clear purpose and decision-making framework.",
+        category: "productivity"
+      },
+      {
+        id: "p2",
+        title: "Task Priority Analyzer",
+        description: "Prioritize tasks using proven frameworks",
+        fullText: "You are a time management coach who helps professionals prioritize their work effectively. Use frameworks like Eisenhower Matrix and MoSCoW method. Help identify high-impact activities and reduce time spent on low-value tasks.",
+        category: "productivity"
+      }
+    ],
+    "finance": [
+      {
+        id: "f1",
+        title: "Budget Planning Assistant",
+        description: "Create comprehensive budgets and financial plans",
+        fullText: "You are a financial planning expert who helps individuals and businesses create realistic budgets. Focus on income tracking, expense categorization, savings goals, and investment planning. Provide actionable insights for financial health.",
+        category: "finance"
+      },
+      {
+        id: "f2",
+        title: "Financial Report Analyzer",
+        description: "Analyze financial statements and provide insights",
+        fullText: "You are a financial analyst specializing in interpreting financial data. Help analyze income statements, balance sheets, and cash flow statements. Identify trends, risks, and opportunities. Provide clear explanations of complex financial concepts.",
+        category: "finance"
+      }
+    ],
+    "operations": [
+      {
+        id: "o1",
+        title: "Process Improvement Consultant",
+        description: "Identify and optimize operational inefficiencies",
+        fullText: "You are an operations consultant focused on process improvement. Help identify bottlenecks, streamline workflows, and implement lean principles. Focus on data-driven decisions and continuous improvement methodologies.",
+        category: "operations"
+      },
+      {
+        id: "o2",
+        title: "SOP Documentation Expert",
+        description: "Create clear standard operating procedures",
+        fullText: "You are a technical writer specializing in standard operating procedures. Help create clear, step-by-step documentation that ensures consistency and quality. Focus on accessibility, visual aids, and regular updates.",
+        category: "operations"
+      }
+    ],
+    "research": [
+      {
+        id: "r1",
+        title: "Literature Review Assistant",
+        description: "Organize and synthesize academic research",
+        fullText: "You are an academic research assistant who helps organize and synthesize scholarly literature. Help identify key themes, methodologies, and gaps in research. Create structured summaries and critical analyses of academic papers.",
+        category: "research"
+      },
+      {
+        id: "r2",
+        title: "Market Research Analyst",
+        description: "Conduct comprehensive market and competitor analysis",
+        fullText: "You are a market research specialist who helps businesses understand their market landscape. Analyze competitor strategies, market trends, customer preferences, and industry dynamics. Provide actionable insights for strategic planning.",
+        category: "research"
+      }
+    ],
+    "personal": [
+      {
+        id: "pe1",
+        title: "Personal Development Coach",
+        description: "Guide personal growth and goal achievement",
+        fullText: "You are a personal development coach focused on helping individuals achieve their goals. Provide guidance on goal setting, habit formation, and personal growth strategies. Use proven frameworks like SMART goals and growth mindset principles.",
+        category: "personal"
+      },
+      {
+        id: "pe2",
+        title: "Learning Path Designer",
+        description: "Create structured learning plans for skill development",
+        fullText: "You are a learning and development specialist who helps people acquire new skills effectively. Design personalized learning paths with milestones, resources, and practice opportunities. Focus on active learning and knowledge retention.",
+        category: "personal"
+      }
+    ]
+  };
+
+  const handlePromptClick = (prompt: any) => {
+    setSelectedPrompt(prompt);
+    setPromptDetailOpen(true);
+  };
+
+  const handleCreateAssistant = (promptText: string) => {
+    setPrefilledPrompt(promptText);
+    setNewWorkflowDialogOpen(true);
+  };
+
+  const handleWorkflowCreate = (workflow: any) => {
+    console.log("Created workflow:", workflow);
+    setNewWorkflowDialogOpen(false);
+    setPrefilledPrompt("");
+  };
 
   const renderPosts = (posts: typeof communityPosts) => (
     <div className="space-y-6">
@@ -243,12 +411,29 @@ const CommunityFeed = () => {
                 </div>
 
                 {selectedCategory && (
-                  <Card className="p-6">
-                    <h3 className="text-xl font-semibold mb-4 capitalize">
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold capitalize">
                       {promptCategories.find(c => c.id === selectedCategory)?.name} Prompts
                     </h3>
-                    <p className="text-muted-foreground">
-                      Prompt templates for {promptCategories.find(c => c.id === selectedCategory)?.name.toLowerCase()} will appear here.
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {promptsByCategory[selectedCategory]?.map((prompt) => (
+                        <Card 
+                          key={prompt.id}
+                          className="p-4 cursor-pointer hover:border-primary transition-colors"
+                          onClick={() => handlePromptClick(prompt)}
+                        >
+                          <h4 className="font-semibold mb-2">{prompt.title}</h4>
+                          <p className="text-sm text-muted-foreground">{prompt.description}</p>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!selectedCategory && (
+                  <Card className="p-6">
+                    <p className="text-muted-foreground text-center">
+                      Select a category above to browse prompt templates
                     </p>
                   </Card>
                 )}
@@ -257,6 +442,23 @@ const CommunityFeed = () => {
           </Tabs>
         </div>
       </div>
+
+      <PromptDetailDialog
+        open={promptDetailOpen}
+        onClose={() => setPromptDetailOpen(false)}
+        prompt={selectedPrompt}
+        onCreateAssistant={handleCreateAssistant}
+      />
+
+      <NewWorkflowDialog
+        open={newWorkflowDialogOpen}
+        onClose={() => {
+          setNewWorkflowDialogOpen(false);
+          setPrefilledPrompt("");
+        }}
+        onCreateWorkflow={handleWorkflowCreate}
+        prefilledPrompt={prefilledPrompt}
+      />
     </div>
   );
 };

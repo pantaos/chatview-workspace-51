@@ -9,7 +9,8 @@ import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
   const { theme } = useTheme();
@@ -18,6 +19,12 @@ const Settings = () => {
   const [activeTab, setActiveTab] = useState("account");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [outlookDialogOpen, setOutlookDialogOpen] = useState(false);
+  const [chatLanguage, setChatLanguage] = useState<LanguageType>("en");
+  const [integrationToggles, setIntegrationToggles] = useState({
+    outlook: true,
+    zapier: false,
+    slack: false,
+  });
   
   // Mock user data
   const currentUser = {
@@ -58,6 +65,12 @@ const Settings = () => {
       label: "Languages", 
       icon: Globe,
       description: "Language Preferences"
+    },
+    { 
+      id: "chat-config", 
+      label: "Chat Configurations", 
+      icon: MessageSquare,
+      description: "Chat Settings & Integrations"
     }
   ], []);
   
@@ -73,8 +86,109 @@ const Settings = () => {
     }
   }, [isMobile]);
 
+  const handleToggleIntegration = useCallback((integration: string) => {
+    setIntegrationToggles(prev => ({
+      ...prev,
+      [integration]: !prev[integration as keyof typeof prev]
+    }));
+    toast.success(`${integration.charAt(0).toUpperCase() + integration.slice(1)} integration ${!integrationToggles[integration as keyof typeof integrationToggles] ? 'enabled' : 'disabled'}`);
+  }, [integrationToggles]);
+
+  const handleChatLanguageChange = useCallback((languageCode: LanguageType) => {
+    setChatLanguage(languageCode);
+    toast.success(`Chat system prompts language changed to ${languageCode.toUpperCase()}`);
+  }, []);
+
   const renderContent = useCallback(() => {
     switch (activeTab) {
+      case "chat-config":
+        return (
+          <div className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Chat Configurations</h2>
+              <p className="text-muted-foreground">
+                Configure your chat integrations and language settings
+              </p>
+            </div>
+            
+            <Card className="p-6">
+              <h3 className="text-xl font-semibold mb-4">Chat Integrations</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                Enable or disable integrations for your main chat interface
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Microsoft Outlook</p>
+                      <p className="text-sm text-muted-foreground">Access email and calendar data</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={integrationToggles.outlook}
+                    onCheckedChange={() => handleToggleIntegration('outlook')}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <Puzzle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Zapier</p>
+                      <p className="text-sm text-muted-foreground">Automate workflows</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={integrationToggles.zapier}
+                    onCheckedChange={() => handleToggleIntegration('zapier')}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Slack</p>
+                      <p className="text-sm text-muted-foreground">Team communication</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={integrationToggles.slack}
+                    onCheckedChange={() => handleToggleIntegration('slack')}
+                  />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-xl font-semibold mb-4">Chat Language Settings</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                Select the language for chat system prompts and responses
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {availableLanguages.map((lang) => (
+                  <Button
+                    key={lang.code}
+                    variant={chatLanguage === lang.code ? "default" : "outline"}
+                    onClick={() => handleChatLanguageChange(lang.code)}
+                    className="w-full hover:bg-black hover:text-white"
+                  >
+                    {lang.name}
+                  </Button>
+                ))}
+              </div>
+            </Card>
+          </div>
+        );
       case "languages":
         return (
           <div className="space-y-6">
@@ -228,7 +342,7 @@ const Settings = () => {
       default:
         return null;
     }
-  }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange]);
+  }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange, chatLanguage, integrationToggles, handleToggleIntegration, handleChatLanguageChange]);
   
   return (
     <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>

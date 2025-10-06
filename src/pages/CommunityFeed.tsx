@@ -236,10 +236,6 @@ const CommunityFeed = () => {
                         }`}
                         onClick={() => setSelectedCategory(isSelected ? null : category.id)}
                       >
-                        <div 
-                          className="w-2 h-2 rounded-full mr-2"
-                          style={{ backgroundColor: category.color }}
-                        />
                         {category.name}
                       </Badge>
                     );

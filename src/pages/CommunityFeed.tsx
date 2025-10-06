@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, ChevronDown, ThumbsUp, Pin } from "lucide-react";
 import ModernNavbar from "@/components/ModernNavbar";
 
 const CommunityFeed = () => {
   const [expandedPosts, setExpandedPosts] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const togglePostExpansion = (postId: string) => {
     setExpandedPosts(prev => 
@@ -85,6 +87,17 @@ const CommunityFeed = () => {
     }
     return communityPosts;
   };
+
+  const promptCategories = [
+    { id: "marketing", name: "Marketing", color: "#3B82F6" },
+    { id: "social-media", name: "Social Media", color: "#10B981" },
+    { id: "hr", name: "HR", color: "#F59E0B" },
+    { id: "productivity", name: "Productivity", color: "#8B5CF6" },
+    { id: "finance", name: "Finance", color: "#EF4444" },
+    { id: "operations", name: "Operations", color: "#06B6D4" },
+    { id: "research", name: "Research", color: "#84CC16" },
+    { id: "personal", name: "Personal", color: "#EC4899" },
+  ];
 
   const renderPosts = (posts: typeof communityPosts) => (
     <div className="space-y-6">
@@ -183,11 +196,12 @@ const CommunityFeed = () => {
           </div>
 
           <Tabs defaultValue="latest" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 max-w-lg mb-8">
+            <TabsList className="grid w-full grid-cols-5 max-w-2xl mb-8">
               <TabsTrigger value="latest">Latest</TabsTrigger>
               <TabsTrigger value="pinned">Pinned</TabsTrigger>
               <TabsTrigger value="company">Company</TabsTrigger>
               <TabsTrigger value="platform">Platform</TabsTrigger>
+              <TabsTrigger value="prompt-library">Prompt Library</TabsTrigger>
             </TabsList>
             
             <TabsContent value="latest" className="mt-0">
@@ -204,6 +218,45 @@ const CommunityFeed = () => {
             
             <TabsContent value="platform" className="mt-0">
               {renderPosts(filterPostsByCategory("platform"))}
+            </TabsContent>
+            
+            <TabsContent value="prompt-library" className="mt-0">
+              <div className="space-y-6">
+                <div className="flex flex-wrap gap-2">
+                  {promptCategories.map((category) => {
+                    const isSelected = selectedCategory === category.id;
+                    return (
+                      <Badge
+                        key={category.id}
+                        variant={isSelected ? "default" : "outline"}
+                        className={`cursor-pointer transition-all ${
+                          isSelected 
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                            : "hover:bg-muted"
+                        }`}
+                        onClick={() => setSelectedCategory(isSelected ? null : category.id)}
+                      >
+                        <div 
+                          className="w-2 h-2 rounded-full mr-2"
+                          style={{ backgroundColor: category.color }}
+                        />
+                        {category.name}
+                      </Badge>
+                    );
+                  })}
+                </div>
+
+                {selectedCategory && (
+                  <Card className="p-6">
+                    <h3 className="text-xl font-semibold mb-4 capitalize">
+                      {promptCategories.find(c => c.id === selectedCategory)?.name} Prompts
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Prompt templates for {promptCategories.find(c => c.id === selectedCategory)?.name.toLowerCase()} will appear here.
+                    </p>
+                  </Card>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         </div>

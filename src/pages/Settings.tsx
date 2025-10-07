@@ -62,7 +62,7 @@ const Settings = () => {
     },
     { 
       id: "chat-config", 
-      label: "Chat Configurations", 
+      label: "General Chat", 
       icon: MessageSquare,
       description: "Chat Settings & Integrations"
     },
@@ -105,7 +105,7 @@ const Settings = () => {
         return (
           <div className="space-y-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-2">Chat Configurations</h2>
+              <h2 className="text-2xl font-semibold mb-2">General Chat</h2>
               <p className="text-muted-foreground">
                 Configure your chat integrations and language settings
               </p>

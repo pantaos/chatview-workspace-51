@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import ProfileDropdown from "./ProfileDropdown";
 import SearchChat from "./SearchChat";
+import ChatMessage from "./ChatMessage";
 
 interface Message {
   id: string;
   sender: "user" | "bot";
   content: string;
   timestamp: Date;
+  files?: File[] | string[];
 }
 
 interface ConversationStarter {
@@ -92,6 +94,7 @@ const ChatInterface = ({
       sender: "user",
       content: text,
       timestamp: new Date(),
+      files: files.length > 0 ? files : undefined
     };
     
     setMessages(prev => [...prev, newMessage]);
@@ -175,30 +178,9 @@ const ChatInterface = ({
       <div className="flex flex-col h-[calc(100vh-5rem)] bg-white relative">
         <div className="flex-1 flex flex-col relative">
           <ScrollArea className="flex-1 px-4 md:px-16 lg:px-32 xl:px-64 pt-6">
-            <div className="space-y-8 mb-8">
+            <div className="space-y-2 mb-8">
               {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    message.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] ${
-                      message.sender === "user" ? "ml-auto" : "mr-auto"
-                    }`}
-                  >
-                    <div
-                      className={`rounded-2xl p-4 ${
-                        message.sender === "user"
-                          ? "bg-gray-100 text-gray-800"
-                          : "bg-white text-gray-800"
-                      }`}
-                    >
-                      <p className="text-base leading-relaxed">{message.content}</p>
-                    </div>
-                  </div>
-                </div>
+                <ChatMessage key={message.id} message={message} />
               ))}
             </div>
           </ScrollArea>

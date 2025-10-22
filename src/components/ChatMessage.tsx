@@ -9,6 +9,7 @@ interface ChatMessageProps {
     content: string;
     timestamp: Date;
     type?: "system" | "completion" | "download" | "form";
+    files?: File[] | string[];
   };
   children?: React.ReactNode;
 }
@@ -36,6 +37,23 @@ const ChatMessage = ({ message, children }: ChatMessageProps) => {
               : "bg-gray-50 text-gray-800 border"
           }`}>
             <p className="text-base leading-relaxed mb-2">{message.content}</p>
+            
+            {message.files && message.files.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {message.files.map((file, index) => {
+                  const fileName = typeof file === 'string' ? file : file.name;
+                  return (
+                    <div 
+                      key={index} 
+                      className="bg-white text-sm py-2 px-4 rounded-md text-gray-900 flex items-center border-2 border-black"
+                    >
+                      {fileName}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            
             {children}
           </div>
           

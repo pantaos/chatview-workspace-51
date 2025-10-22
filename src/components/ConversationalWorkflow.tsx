@@ -21,6 +21,7 @@ interface Message {
   content: string;
   timestamp: Date;
   type?: "system" | "completion" | "download" | "form";
+  files?: File[] | string[];
 }
 
 type ChatState = "normal" | "form-inline" | "form-panel" | "form-overlay" | "minimized";
@@ -181,7 +182,8 @@ const ConversationalWorkflow = ({
       id: `user-${Date.now()}`,
       sender: "user",
       content: text,
-      timestamp: new Date()
+      timestamp: new Date(),
+      files: files.length > 0 ? files : undefined
     };
     
     setMessages(prev => [...prev, userMessage]);

@@ -45,7 +45,7 @@ const ChatMessage = ({ message, children }: ChatMessageProps) => {
                   return (
                     <div 
                       key={index} 
-                      className="bg-white text-sm py-2 px-4 rounded-md text-gray-900 flex items-center border-2 border-black"
+                      className="bg-gray-100 text-gray-800 text-sm py-2 px-4 rounded-full flex items-center"
                     >
                       {fileName}
                     </div>

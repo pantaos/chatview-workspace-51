@@ -83,14 +83,14 @@ const SearchChat = ({
         {files.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
             {files.map((file, index) => (
-              <div key={index} className="bg-white text-sm py-2 px-4 rounded-md text-gray-900 flex items-center border-2 border-black">
+              <div key={index} className="bg-gray-100 text-gray-800 text-sm py-2 px-4 rounded-full flex items-center gap-2">
                 {file.name}
                 <button
                   type="button"
-                  className="ml-2 text-gray-700 hover:text-black font-bold"
+                  className="text-gray-500 hover:text-gray-700 text-lg leading-none"
                   onClick={() => setFiles(files.filter((_, i) => i !== index))}
                 >
-                  &times;
+                  ×
                 </button>
               </div>
             ))}

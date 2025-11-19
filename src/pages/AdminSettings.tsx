@@ -728,20 +728,17 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-4 mb-6">
-                  <Label htmlFor="defaultLimit" className="text-base font-semibold mb-2 block">
+                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                  <Label htmlFor="defaultLimit" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    This limit will be applied to all assistants that don't have a custom limit set
-                  </p>
                   <Input
                     id="defaultLimit"
                     type="number"
                     min="0"
                     value={defaultImageLimit}
                     onChange={(e) => setDefaultImageLimit(parseInt(e.target.value) || 0)}
-                    className="max-w-xs"
+                    className="max-w-[150px] h-9"
                   />
                 </div>
 
@@ -766,7 +763,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { name: "Customer Support Bot", users: 12 },
                       { name: "Sales Assistant", users: 8 },
@@ -777,11 +774,11 @@ const AdminSettings = () => {
                       { name: "Project Manager", users: 7 },
                       { name: "Financial Advisor", users: 3 }
                     ].map((assistant, index) => (
-                      <Card key={index} className="p-4">
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                          <div className="flex-1">
-                            <h4 className="font-medium">{assistant.name}</h4>
-                            <p className="text-sm text-muted-foreground">{assistant.users} users</p>
+                      <Card key={index} className="p-3">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm truncate">{assistant.name}</h4>
+                            <p className="text-xs text-muted-foreground">{assistant.users} users</p>
                           </div>
                           <Checkbox
                             checked={selectedAssistants.includes(index)}
@@ -794,9 +791,9 @@ const AdminSettings = () => {
                             }}
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label htmlFor={`assistant-limit-${index}`} className="text-xs">
-                            Daily Limit (default: {defaultImageLimit})
+                            Limit
                           </Label>
                           <Input
                             id={`assistant-limit-${index}`}
@@ -808,7 +805,7 @@ const AdminSettings = () => {
                               const value = parseInt(e.target.value) || 0;
                               setAssistantImageLimits({ ...assistantImageLimits, [index]: value });
                             }}
-                            className="h-9"
+                            className="h-8 text-sm"
                           />
                         </div>
                       </Card>
@@ -846,20 +843,17 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-4 mb-6">
-                  <Label htmlFor="defaultLimitGroups" className="text-base font-semibold mb-2 block">
+                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                  <Label htmlFor="defaultLimitGroups" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    This limit will be applied to all groups that don't have a custom limit set
-                  </p>
                   <Input
                     id="defaultLimitGroups"
                     type="number"
                     min="0"
                     value={defaultImageLimit}
                     onChange={(e) => setDefaultImageLimit(parseInt(e.target.value) || 0)}
-                    className="max-w-xs"
+                    className="max-w-[150px] h-9"
                   />
                 </div>
 
@@ -884,7 +878,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { name: "Sales Team", members: 15 },
                       { name: "Marketing Department", members: 22 },
@@ -899,11 +893,11 @@ const AdminSettings = () => {
                       { name: "Business Development", members: 9 },
                       { name: "Research & Development", members: 20 }
                     ].map((group, index) => (
-                      <Card key={index} className="p-4">
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                          <div className="flex-1">
-                            <h4 className="font-medium">{group.name}</h4>
-                            <p className="text-sm text-muted-foreground">{group.members} members</p>
+                      <Card key={index} className="p-3">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm truncate">{group.name}</h4>
+                            <p className="text-xs text-muted-foreground">{group.members} members</p>
                           </div>
                           <Checkbox
                             checked={selectedUserGroups.includes(index)}
@@ -916,9 +910,9 @@ const AdminSettings = () => {
                             }}
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label htmlFor={`group-limit-${index}`} className="text-xs">
-                            Daily Limit (default: {defaultImageLimit})
+                            Limit
                           </Label>
                           <Input
                             id={`group-limit-${index}`}
@@ -930,7 +924,7 @@ const AdminSettings = () => {
                               const value = parseInt(e.target.value) || 0;
                               setGroupImageLimits({ ...groupImageLimits, [index]: value });
                             }}
-                            className="h-9"
+                            className="h-8 text-sm"
                           />
                         </div>
                       </Card>
@@ -968,20 +962,17 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-4 mb-6">
-                  <Label htmlFor="defaultLimitUsers" className="text-base font-semibold mb-2 block">
+                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                  <Label htmlFor="defaultLimitUsers" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    This limit will be applied to all users that don't have a custom limit set
-                  </p>
                   <Input
                     id="defaultLimitUsers"
                     type="number"
                     min="0"
                     value={defaultImageLimit}
                     onChange={(e) => setDefaultImageLimit(parseInt(e.target.value) || 0)}
-                    className="max-w-xs"
+                    className="max-w-[150px] h-9"
                   />
                 </div>
 
@@ -1006,7 +997,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { name: "Sarah Chen", email: "sarah@company.com" },
                       { name: "Mike Johnson", email: "mike@company.com" },
@@ -1018,10 +1009,10 @@ const AdminSettings = () => {
                       { name: "James Wilson", email: "james@company.com" },
                       { name: "Sophie Turner", email: "sophie@company.com" }
                     ].map((user, index) => (
-                      <Card key={index} className="p-4">
-                        <div className="flex items-start justify-between gap-3 mb-3">
-                          <div className="flex-1">
-                            <h4 className="font-medium text-sm">{user.name}</h4>
+                      <Card key={index} className="p-3">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm truncate">{user.name}</h4>
                             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                           </div>
                           <Checkbox
@@ -1035,9 +1026,9 @@ const AdminSettings = () => {
                             }}
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label htmlFor={`user-limit-${index}`} className="text-xs">
-                            Daily Limit (default: {defaultImageLimit})
+                            Limit
                           </Label>
                           <Input
                             id={`user-limit-${index}`}
@@ -1049,7 +1040,7 @@ const AdminSettings = () => {
                               const value = parseInt(e.target.value) || 0;
                               setUserImageLimits({ ...userImageLimits, [index]: value });
                             }}
-                            className="h-9"
+                            className="h-8 text-sm"
                           />
                         </div>
                       </Card>

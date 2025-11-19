@@ -343,13 +343,14 @@ const AdminSettings = () => {
                         Select what you'd like to manage for integrated services
                       </DialogDescription>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-start space-x-2 max-w-[140px]">
                       <Checkbox
                         id="org-access"
                         checked={grantOrgAccess}
                         onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                        className="mt-0.5"
                       />
-                      <Label htmlFor="org-access" className="text-sm font-normal cursor-pointer">
+                      <Label htmlFor="org-access" className="text-xs font-normal cursor-pointer leading-tight">
                         Grant entire organization access
                       </Label>
                     </div>
@@ -657,13 +658,14 @@ const AdminSettings = () => {
                         Select what you'd like to manage for image generation access and limits
                       </DialogDescription>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-start space-x-2 max-w-[140px]">
                       <Checkbox
                         id="org-access-images"
                         checked={grantOrgAccess}
                         onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                        className="mt-0.5"
                       />
-                      <Label htmlFor="org-access-images" className="text-sm font-normal cursor-pointer">
+                      <Label htmlFor="org-access-images" className="text-xs font-normal cursor-pointer leading-tight">
                         Grant entire organization access
                       </Label>
                     </div>

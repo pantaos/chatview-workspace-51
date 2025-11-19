@@ -9,7 +9,7 @@ import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle, MessageSquare } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
@@ -269,9 +269,9 @@ const Settings = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card 
-                className="aspect-square p-4 hover:bg-muted/50 transition-colors cursor-pointer group flex items-center justify-center"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
                 onClick={() => setOutlookDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -279,6 +279,54 @@ const Settings = () => {
                     <Mail className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => toast.success("Microsoft Calendar integration coming soon!")}
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => toast.success("SharePoint integration coming soon!")}
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => toast.success("Gmail integration coming soon!")}
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() => toast.success("Notion integration coming soon!")}
+              >
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-base">N</span>
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
                 </div>
               </Card>
             </div>

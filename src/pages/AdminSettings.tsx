@@ -37,6 +37,11 @@ const AdminSettings = () => {
   const [imagesUsersDialogOpen, setImagesUsersDialogOpen] = useState(false);
   const [imagesUserGroupsDialogOpen, setImagesUserGroupsDialogOpen] = useState(false);
   const [gmailActionsDialogOpen, setGmailActionsDialogOpen] = useState(false);
+  const [calendarConnectDialogOpen, setCalendarConnectDialogOpen] = useState(false);
+  const [sharepointConnectDialogOpen, setSharepointConnectDialogOpen] = useState(false);
+  const [notionConnectDialogOpen, setNotionConnectDialogOpen] = useState(false);
+  const [slackConnectDialogOpen, setSlackConnectDialogOpen] = useState(false);
+  const [gmailConnectDialogOpen, setGmailConnectDialogOpen] = useState(false);
   
   // State for managing access selections
   const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
@@ -171,7 +176,7 @@ const AdminSettings = () => {
                 <div className="flex flex-col items-center text-center space-y-3 h-full">
                   <div 
                     className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer"
-                    onClick={() => toast.success("Microsoft Calendar integration coming soon!")}
+                    onClick={() => setCalendarConnectDialogOpen(true)}
                   >
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
@@ -180,9 +185,9 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setManageAccessDialogOpen(true)}
+                    onClick={() => setCalendarConnectDialogOpen(true)}
                   >
-                    Manage Access
+                    Connect
                   </Button>
                 </div>
               </Card>
@@ -193,7 +198,7 @@ const AdminSettings = () => {
                 <div className="flex flex-col items-center text-center space-y-3 h-full">
                   <div 
                     className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center cursor-pointer"
-                    onClick={() => toast.success("SharePoint integration coming soon!")}
+                    onClick={() => setSharepointConnectDialogOpen(true)}
                   >
                     <FileText className="w-5 h-5 text-white" />
                   </div>
@@ -202,9 +207,9 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setManageAccessDialogOpen(true)}
+                    onClick={() => setSharepointConnectDialogOpen(true)}
                   >
-                    Manage Access
+                    Connect
                   </Button>
                 </div>
               </Card>
@@ -215,7 +220,7 @@ const AdminSettings = () => {
                 <div className="flex flex-col items-center text-center space-y-3 h-full">
                   <div 
                     className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center cursor-pointer"
-                    onClick={() => setGmailActionsDialogOpen(true)}
+                    onClick={() => setGmailConnectDialogOpen(true)}
                   >
                     <Mail className="w-5 h-5 text-white" />
                   </div>
@@ -224,9 +229,9 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setGmailActionsDialogOpen(true)}
+                    onClick={() => setGmailConnectDialogOpen(true)}
                   >
-                    View Actions
+                    Connect
                   </Button>
                 </div>
               </Card>
@@ -237,7 +242,7 @@ const AdminSettings = () => {
                 <div className="flex flex-col items-center text-center space-y-3 h-full">
                   <div 
                     className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center cursor-pointer"
-                    onClick={() => toast.success("Notion integration coming soon!")}
+                    onClick={() => setNotionConnectDialogOpen(true)}
                   >
                     <span className="text-white font-bold text-base">N</span>
                   </div>
@@ -246,9 +251,9 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setManageAccessDialogOpen(true)}
+                    onClick={() => setNotionConnectDialogOpen(true)}
                   >
-                    Manage Access
+                    Connect
                   </Button>
                 </div>
               </Card>
@@ -326,6 +331,226 @@ const AdminSettings = () => {
                     }}
                   >
                     Continue to Microsoft Outlook
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Calendar Connection Dialog */}
+            <Dialog open={calendarConnectDialogOpen} onOpenChange={setCalendarConnectDialogOpen}>
+              <DialogContent className="max-w-md mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <div className="flex justify-center items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <DialogTitle className="text-xl font-semibold">Connect Microsoft Calendar</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Developed by Panta Flows
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      This page will redirect to Microsoft for sign-in and permissions.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your Microsoft Calendar data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      You're in control: deleting a conversation also deletes any linked Microsoft data.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setCalendarConnectDialogOpen(false);
+                      toast.success("Redirecting to Microsoft Calendar...");
+                    }}
+                  >
+                    Continue to Microsoft Calendar
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* SharePoint Connection Dialog */}
+            <Dialog open={sharepointConnectDialogOpen} onOpenChange={setSharepointConnectDialogOpen}>
+              <DialogContent className="max-w-md mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <div className="flex justify-center items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-700 rounded-xl flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <DialogTitle className="text-xl font-semibold">Connect SharePoint</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Developed by Panta Flows
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      This page will redirect to Microsoft for sign-in and permissions.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your SharePoint data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      You're in control: deleting a conversation also deletes any linked SharePoint data.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setSharepointConnectDialogOpen(false);
+                      toast.success("Redirecting to SharePoint...");
+                    }}
+                  >
+                    Continue to SharePoint
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Gmail Connection Dialog */}
+            <Dialog open={gmailConnectDialogOpen} onOpenChange={setGmailConnectDialogOpen}>
+              <DialogContent className="max-w-md mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <div className="flex justify-center items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                    </div>
+                    <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <DialogTitle className="text-xl font-semibold">Connect Gmail</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Developed by Panta Flows
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      This page will redirect to Google for sign-in and permissions.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your Gmail data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      You're in control: deleting a conversation also deletes any linked Gmail data.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setGmailConnectDialogOpen(false);
+                      toast.success("Redirecting to Gmail...");
+                    }}
+                  >
+                    Continue to Gmail
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Notion Connection Dialog */}
+            <Dialog open={notionConnectDialogOpen} onOpenChange={setNotionConnectDialogOpen}>
+              <DialogContent className="max-w-md mx-auto rounded-2xl">
+                <DialogHeader className="text-center space-y-4">
+                  <div className="flex justify-center items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                    </div>
+                    <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center">
+                      <span className="text-white font-bold text-xl">N</span>
+                    </div>
+                  </div>
+                  <DialogTitle className="text-xl font-semibold">Connect Notion</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Developed by Panta Flows
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      This page will redirect to Notion for sign-in and permissions.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your Notion data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      You're in control: deleting a conversation also deletes any linked Notion data.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    onClick={() => {
+                      setNotionConnectDialogOpen(false);
+                      toast.success("Redirecting to Notion...");
+                    }}
+                  >
+                    Continue to Notion
                   </Button>
                 </div>
               </DialogContent>
@@ -1397,7 +1622,7 @@ const AdminSettings = () => {
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
-  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen, imagesAccessDialogOpen, imagesAssistantsDialogOpen, imagesUsersDialogOpen, imagesUserGroupsDialogOpen, gmailActionsDialogOpen, selectedAssistants, selectedUsers, selectedUserGroups, defaultImageLimit, assistantImageLimits, userImageLimits, groupImageLimits]);
+  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen, imagesAccessDialogOpen, imagesAssistantsDialogOpen, imagesUsersDialogOpen, imagesUserGroupsDialogOpen, gmailActionsDialogOpen, calendarConnectDialogOpen, sharepointConnectDialogOpen, notionConnectDialogOpen, slackConnectDialogOpen, gmailConnectDialogOpen, selectedAssistants, selectedUsers, selectedUserGroups, defaultImageLimit, assistantImageLimits, userImageLimits, groupImageLimits]);
 
   const currentTab = tabs.find(tab => tab.id === activeTab);
 

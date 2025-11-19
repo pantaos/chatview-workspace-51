@@ -116,34 +116,34 @@ const AdminSettings = () => {
         return (
           <div className="space-y-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-2">Tool Integrations</h2>
+              <h2 className="text-2xl font-semibold mb-2">Tenant Integrations</h2>
               <p className="text-muted-foreground">
                 Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <Card 
-                className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="aspect-square p-4 hover:bg-muted/50 transition-colors cursor-pointer group flex items-center justify-center"
                 onClick={() => setOutlookDialogOpen(true)}
               >
-                <div className="flex flex-col items-center text-center space-y-3">
-                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-white" />
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
                 </div>
               </Card>
 
               <Card 
-                className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="aspect-square p-4 hover:bg-muted/50 transition-colors cursor-pointer group flex items-center justify-center"
                 onClick={() => toast.success("Notion integration coming soon!")}
               >
-                <div className="flex flex-col items-center text-center space-y-3">
-                  <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">N</span>
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-base">N</span>
                   </div>
-                  <h3 className="font-medium text-base group-hover:text-primary">Notion</h3>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
                 </div>
               </Card>
             </div>

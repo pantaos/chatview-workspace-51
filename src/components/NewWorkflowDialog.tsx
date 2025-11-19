@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +33,9 @@ import {
   Plus,
   Sparkles,
   RotateCcw,
-  Library
+  Library,
+  Mail,
+  Calendar
 } from "lucide-react";
 import TagManager from "./TagManager";
 import { WorkflowTag } from "@/types/workflow";
@@ -74,6 +77,11 @@ const integrations = [
   { name: "GitHub", enabled: false },
   { name: "AWS", enabled: false },
   { name: "Slack", enabled: false },
+  { name: "Calendar", enabled: false },
+  { name: "SharePoint", enabled: false },
+  { name: "Trello", enabled: false },
+  { name: "Asana", enabled: false },
+  { name: "Jira", enabled: false },
 ];
 
 const NewWorkflowDialog = ({ 
@@ -454,16 +462,148 @@ const NewWorkflowDialog = ({
 
             <div>
               <Label>Integrations</Label>
-              <div className="grid grid-cols-2 gap-3 mt-2">
-                {integrations.map((integration) => (
-                  <div key={integration.name} className="flex items-center justify-between p-3 border rounded-lg">
-                    <span className="text-sm font-medium">{integration.name}</span>
-                    <Switch
-                      checked={enabledIntegrations[integration.name]}
-                      onCheckedChange={() => toggleIntegration(integration.name)}
-                    />
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mt-4">
+                {/* Microsoft Office */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-8 h-8 text-white" />
                   </div>
-                ))}
+                  <span className="text-sm font-medium text-center">Microsoft Office</span>
+                  <Switch 
+                    checked={enabledIntegrations["Microsoft Office"]}
+                    onCheckedChange={() => toggleIntegration("Microsoft Office")}
+                  />
+                </Card>
+
+                {/* Notion */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-2xl">N</span>
+                  </div>
+                  <span className="text-sm font-medium text-center">Notion</span>
+                  <Switch 
+                    checked={enabledIntegrations["Notion"]}
+                    onCheckedChange={() => toggleIntegration("Notion")}
+                  />
+                </Card>
+
+                {/* Gmail */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-red-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-8 h-8 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-center">Gmail</span>
+                  <Switch 
+                    checked={enabledIntegrations["Gmail"]}
+                    onCheckedChange={() => toggleIntegration("Gmail")}
+                  />
+                </Card>
+
+                {/* GitHub */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-slate-900 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-center">GitHub</span>
+                  <Switch 
+                    checked={enabledIntegrations["GitHub"]}
+                    onCheckedChange={() => toggleIntegration("GitHub")}
+                  />
+                </Card>
+
+                {/* AWS */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.144.24l-.479.319c-.064.048-.128.063-.183.063-.08 0-.16-.04-.239-.112-.112-.12-.207-.248-.279-.383-.08-.135-.16-.287-.256-.455-.639.76-1.44 1.135-2.399 1.135-.687 0-1.232-.2-1.64-.6-.407-.399-.615-.936-.615-1.599 0-.711.255-1.287.775-1.727.52-.44 1.215-.664 2.096-.664.287 0 .583.024.895.064.312.04.632.104.967.16v-.528c0-.543-.112-.92-.32-1.135-.216-.215-.583-.32-1.111-.32-.24 0-.487.032-.743.08-.255.047-.504.112-.743.199-.112.048-.199.08-.248.096-.048.016-.08.024-.104.024-.096 0-.144-.072-.144-.208v-.32c0-.111.016-.191.056-.24.04-.048.112-.096.239-.144.24-.127.527-.232.863-.32.336-.08.695-.12 1.08-.12.824 0 1.424.191 1.816.576.391.384.583.968.583 1.75v2.303zm-3.295 1.231c.279 0 .567-.048.879-.144.312-.096.591-.28.831-.535.144-.16.248-.336.296-.535.048-.2.08-.44.08-.72v-.335c-.24-.048-.495-.088-.767-.12-.271-.031-.535-.047-.791-.047-.559 0-.967.111-1.231.343-.263.232-.391.56-.391.984 0 .408.104.712.319.927.215.216.527.32.967.32zm6.606.896c-.112 0-.192-.024-.248-.064-.056-.048-.104-.144-.152-.263l-1.687-5.543c-.048-.16-.072-.263-.072-.319 0-.128.064-.2.192-.2h.783c.12 0 .2.024.247.064.048.048.096.144.144.263l1.207 4.752 1.119-4.752c.032-.16.08-.215.127-.263.048-.048.136-.064.256-.064h.639c.12 0 .207.024.255.064.048.048.104.144.128.263l1.135 4.8 1.239-4.8c.048-.16.104-.215.151-.263.048-.048.128-.064.248-.064h.743c.127 0 .2.064.2.2 0 .04-.008.08-.016.127-.008.048-.024.112-.056.192L18.442 13.86c-.048.16-.104.215-.151.263-.048.048-.128.064-.248.064h-.687c-.12 0-.207-.024-.255-.064-.048-.048-.104-.144-.128-.263L15.847 9.16l-1.111 4.727c-.032.16-.08.215-.127.263-.048.048-.136.064-.256.064h-.688zm10.695.271c-.431 0-.863-.048-1.279-.144-.416-.096-.735-.208-.951-.335-.128-.08-.215-.167-.247-.231-.032-.064-.048-.136-.048-.2v-.335c0-.136.056-.2.151-.2.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.56.215.863.279.304.064.608.096.911.096.511 0 .911-.088 1.191-.264.287-.176.424-.448.424-.8 0-.24-.08-.44-.239-.6-.16-.159-.48-.311-.96-.455l-1.375-.431c-.695-.216-1.207-.536-1.527-.96-.32-.416-.479-.872-.479-1.367 0-.4.087-.751.263-1.055.176-.304.415-.567.719-.791.304-.224.655-.391 1.063-.495.408-.104.847-.159 1.319-.159.184 0 .375.008.567.032.192.024.375.056.56.088.175.04.343.08.502.127.16.048.295.096.415.144.112.064.2.127.247.192.048.064.072.152.072.263v.311c0 .136-.056.208-.151.208-.064 0-.168-.032-.295-.096-.495-.224-1.031-.336-1.615-.336-.464 0-.831.072-1.095.224-.264.151-.391.392-.391.727 0 .24.087.447.263.623.176.176.511.36 1.015.536l1.351.431c.687.22 1.191.527 1.495.927.304.4.455.88.455 1.439 0 .416-.087.791-.255 1.127-.176.336-.415.631-.727.879-.312.248-.687.44-1.127.583-.448.135-.936.207-1.463.207z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-center">AWS</span>
+                  <Switch 
+                    checked={enabledIntegrations["AWS"]}
+                    onCheckedChange={() => toggleIntegration("AWS")}
+                  />
+                </Card>
+
+                {/* Slack */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <MessageSquare className="w-8 h-8 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-center">Slack</span>
+                  <Switch 
+                    checked={enabledIntegrations["Slack"]}
+                    onCheckedChange={() => toggleIntegration("Slack")}
+                  />
+                </Card>
+
+                {/* Calendar */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-center">Calendar</span>
+                  <Switch 
+                    checked={enabledIntegrations["Calendar"]}
+                    onCheckedChange={() => toggleIntegration("Calendar")}
+                  />
+                </Card>
+
+                {/* SharePoint */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-blue-700 rounded-lg flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-center">SharePoint</span>
+                  <Switch 
+                    checked={enabledIntegrations["SharePoint"]}
+                    onCheckedChange={() => toggleIntegration("SharePoint")}
+                  />
+                </Card>
+
+                {/* Trello */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M21 0H3C1.343 0 0 1.343 0 3v18c0 1.656 1.343 3 3 3h18c1.656 0 3-1.344 3-3V3c0-1.657-1.344-3-3-3zM10.44 18.18c0 .795-.645 1.44-1.44 1.44H4.56c-.795 0-1.44-.646-1.44-1.44V4.56c0-.795.645-1.44 1.44-1.44H9c.795 0 1.44.645 1.44 1.44v13.62zm10.44-6c0 .794-.645 1.44-1.44 1.44H15c-.795 0-1.44-.646-1.44-1.44V4.56c0-.795.646-1.44 1.44-1.44h4.44c.795 0 1.44.645 1.44 1.44v7.62z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-center">Trello</span>
+                  <Switch 
+                    checked={enabledIntegrations["Trello"]}
+                    onCheckedChange={() => toggleIntegration("Trello")}
+                  />
+                </Card>
+
+                {/* Asana */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-pink-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.78 12.653c-2.882 0-5.22 2.336-5.22 5.22s2.338 5.22 5.22 5.22 5.22-2.338 5.22-5.22-2.338-5.22-5.22-5.22zm-13.56 0c-2.882 0-5.22 2.336-5.22 5.22s2.338 5.22 5.22 5.22 5.22-2.338 5.22-5.22-2.338-5.22-5.22-5.22zM12 .907C9.118.907 6.78 3.243 6.78 6.127s2.338 5.22 5.22 5.22 5.22-2.338 5.22-5.22S14.882.907 12 .907z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-center">Asana</span>
+                  <Switch 
+                    checked={enabledIntegrations["Asana"]}
+                    onCheckedChange={() => toggleIntegration("Asana")}
+                  />
+                </Card>
+
+                {/* Jira */}
+                <Card className="p-6 flex flex-col items-center justify-center space-y-3 aspect-square">
+                  <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.005-1.005zm5.723-5.756H5.736a5.215 5.215 0 0 0 5.215 5.214h2.129v2.058a5.218 5.218 0 0 0 5.215 5.214V6.757a1 1 0 0 0-1.001-1zm5.7-5.756H11.436a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057a5.215 5.215 0 0 0 5.215 5.215V1a1 1 0 0 0-1.001-1z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-center">Jira</span>
+                  <Switch 
+                    checked={enabledIntegrations["Jira"]}
+                    onCheckedChange={() => toggleIntegration("Jira")}
+                  />
+                </Card>
               </div>
             </div>
 

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image, Calendar, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
@@ -28,6 +29,11 @@ const AdminSettings = () => {
   const [assistantsDialogOpen, setAssistantsDialogOpen] = useState(false);
   const [usersDialogOpen, setUsersDialogOpen] = useState(false);
   const [userGroupsDialogOpen, setUserGroupsDialogOpen] = useState(false);
+  
+  // State for managing access selections
+  const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [selectedUserGroups, setSelectedUserGroups] = useState<number[]>([]);
   
   const currentUser = useMemo(() => ({
     firstName: "Moin",
@@ -395,10 +401,26 @@ const AdminSettings = () => {
                 
                 <div className="space-y-6 mt-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <Shield className="w-5 h-5" />
-                      Assistants (8)
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <Shield className="w-5 h-5" />
+                        Assistants (8)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const assistantCount = 8;
+                          if (selectedAssistants.length === assistantCount) {
+                            setSelectedAssistants([]);
+                          } else {
+                            setSelectedAssistants(Array.from({ length: assistantCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {[
                         { name: "Customer Support Bot", status: "Connected", users: 12 },
@@ -411,18 +433,21 @@ const AdminSettings = () => {
                         { name: "Financial Advisor", status: "Connected", users: 3 }
                       ].map((assistant, index) => (
                         <Card key={index} className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex-1">
                               <h4 className="font-medium">{assistant.name}</h4>
                               <p className="text-sm text-muted-foreground">{assistant.users} users</p>
                             </div>
-                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              assistant.status === 'Connected' 
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                            }`}>
-                              {assistant.status}
-                            </div>
+                            <Checkbox
+                              checked={selectedAssistants.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedAssistants([...selectedAssistants, index]);
+                                } else {
+                                  setSelectedAssistants(selectedAssistants.filter(i => i !== index));
+                                }
+                              }}
+                            />
                           </div>
                         </Card>
                       ))}
@@ -455,10 +480,26 @@ const AdminSettings = () => {
                 
                 <div className="space-y-6 mt-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <User className="w-5 h-5" />
-                      Users (47)
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <User className="w-5 h-5" />
+                        Users (47)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const userCount = 9;
+                          if (selectedUsers.length === userCount) {
+                            setSelectedUsers([]);
+                          } else {
+                            setSelectedUsers(Array.from({ length: userCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {[
                         { name: "Sarah Chen", email: "sarah@company.com", status: "Connected", integrations: 3 },
@@ -472,19 +513,22 @@ const AdminSettings = () => {
                         { name: "Sophie Turner", email: "sophie@company.com", status: "Connected", integrations: 1 }
                       ].map((user, index) => (
                         <Card key={index} className="p-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex-1">
                               <h4 className="font-medium">{user.name}</h4>
-                              <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                user.status === 'Connected'
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                              }`}>
-                                {user.status}
-                              </div>
+                              <p className="text-sm text-muted-foreground">{user.email}</p>
+                              <p className="text-xs text-muted-foreground">{user.integrations} integrations</p>
                             </div>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
-                            <p className="text-xs text-muted-foreground">{user.integrations} integrations</p>
+                            <Checkbox
+                              checked={selectedUsers.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedUsers([...selectedUsers, index]);
+                                } else {
+                                  setSelectedUsers(selectedUsers.filter(i => i !== index));
+                                }
+                              }}
+                            />
                           </div>
                         </Card>
                       ))}
@@ -517,10 +561,26 @@ const AdminSettings = () => {
                 
                 <div className="space-y-6 mt-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <Users className="w-5 h-5" />
-                      User Groups (12)
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <Users className="w-5 h-5" />
+                        User Groups (12)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const groupCount = 12;
+                          if (selectedUserGroups.length === groupCount) {
+                            setSelectedUserGroups([]);
+                          } else {
+                            setSelectedUserGroups(Array.from({ length: groupCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {[
                         { name: "Sales Team", members: 15, status: "Connected", integrations: 4 },
@@ -537,19 +597,22 @@ const AdminSettings = () => {
                         { name: "Research & Development", members: 20, status: "Connected", integrations: 4 }
                       ].map((group, index) => (
                         <Card key={index} className="p-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex-1">
                               <h4 className="font-medium">{group.name}</h4>
-                              <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                group.status === 'Connected'
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                  : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                              }`}>
-                                {group.status}
-                              </div>
+                              <p className="text-sm text-muted-foreground">{group.members} members</p>
+                              <p className="text-xs text-muted-foreground">{group.integrations} integrations</p>
                             </div>
-                            <p className="text-sm text-muted-foreground">{group.members} members</p>
-                            <p className="text-xs text-muted-foreground">{group.integrations} integrations</p>
+                            <Checkbox
+                              checked={selectedUserGroups.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedUserGroups([...selectedUserGroups, index]);
+                                } else {
+                                  setSelectedUserGroups(selectedUserGroups.filter(i => i !== index));
+                                }
+                              }}
+                            />
                           </div>
                         </Card>
                       ))}

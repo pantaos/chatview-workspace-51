@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image } from "lucide-react";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image, Calendar, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -134,6 +134,72 @@ const AdminSettings = () => {
                     <Mail className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="font-medium text-sm">Microsoft Outlook</h3>
+                  <Button 
+                    size="sm"
+                    variant="outline" 
+                    className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
+                    onClick={() => setManageAccessDialogOpen(true)}
+                  >
+                    Manage Access
+                  </Button>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors group"
+              >
+                <div className="flex flex-col items-center text-center space-y-3 h-full">
+                  <div 
+                    className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer"
+                    onClick={() => toast.success("Microsoft Calendar integration coming soon!")}
+                  >
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm">Microsoft Calendar</h3>
+                  <Button 
+                    size="sm"
+                    variant="outline" 
+                    className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
+                    onClick={() => setManageAccessDialogOpen(true)}
+                  >
+                    Manage Access
+                  </Button>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors group"
+              >
+                <div className="flex flex-col items-center text-center space-y-3 h-full">
+                  <div 
+                    className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center cursor-pointer"
+                    onClick={() => toast.success("SharePoint integration coming soon!")}
+                  >
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm">SharePoint</h3>
+                  <Button 
+                    size="sm"
+                    variant="outline" 
+                    className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
+                    onClick={() => setManageAccessDialogOpen(true)}
+                  >
+                    Manage Access
+                  </Button>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors group"
+              >
+                <div className="flex flex-col items-center text-center space-y-3 h-full">
+                  <div 
+                    className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center cursor-pointer"
+                    onClick={() => toast.success("Gmail integration coming soon!")}
+                  >
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm">Gmail</h3>
                   <Button 
                     size="sm"
                     variant="outline" 

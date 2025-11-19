@@ -7,6 +7,8 @@ import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Ma
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
@@ -29,11 +31,18 @@ const AdminSettings = () => {
   const [assistantsDialogOpen, setAssistantsDialogOpen] = useState(false);
   const [usersDialogOpen, setUsersDialogOpen] = useState(false);
   const [userGroupsDialogOpen, setUserGroupsDialogOpen] = useState(false);
+  const [imagesAccessDialogOpen, setImagesAccessDialogOpen] = useState(false);
   
   // State for managing access selections
   const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [selectedUserGroups, setSelectedUserGroups] = useState<number[]>([]);
+  
+  // State for image generation limits
+  const [defaultImageLimit, setDefaultImageLimit] = useState(10);
+  const [assistantImageLimits, setAssistantImageLimits] = useState<{ [key: number]: number }>({});
+  const [userImageLimits, setUserImageLimits] = useState<{ [key: number]: number }>({});
+  const [groupImageLimits, setGroupImageLimits] = useState<{ [key: number]: number }>({});
   
   const currentUser = useMemo(() => ({
     firstName: "Moin",
@@ -254,7 +263,7 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setManageAccessDialogOpen(true)}
+                    onClick={() => setImagesAccessDialogOpen(true)}
                   >
                     Manage Access
                   </Button>
@@ -632,6 +641,276 @@ const AdminSettings = () => {
                 </div>
               </DialogContent>
             </Dialog>
+
+            {/* Images Access Dialog with Generation Limits */}
+            <Dialog open={imagesAccessDialogOpen} onOpenChange={setImagesAccessDialogOpen}>
+              <DialogContent className="max-w-6xl mx-auto rounded-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader className="text-center space-y-4">
+                  <DialogTitle className="text-2xl font-semibold">Manage Images Access & Limits</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Set daily image generation limits for assistants, users, and groups
+                  </DialogDescription>
+                </DialogHeader>
+                
+                {/* Default Limit Setting */}
+                <div className="bg-muted/50 rounded-lg p-4 mb-6">
+                  <Label htmlFor="defaultLimit" className="text-base font-semibold mb-2 block">
+                    Default Daily Image Generation Limit
+                  </Label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    This limit will be applied to all assistants, users, and groups that don't have a custom limit set
+                  </p>
+                  <Input
+                    id="defaultLimit"
+                    type="number"
+                    min="0"
+                    value={defaultImageLimit}
+                    onChange={(e) => setDefaultImageLimit(parseInt(e.target.value) || 0)}
+                    className="max-w-xs"
+                  />
+                </div>
+
+                <div className="space-y-8">
+                  {/* Assistants Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <Shield className="w-5 h-5" />
+                        Assistants (8)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const assistantCount = 8;
+                          if (selectedAssistants.length === assistantCount) {
+                            setSelectedAssistants([]);
+                          } else {
+                            setSelectedAssistants(Array.from({ length: assistantCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        { name: "Customer Support Bot", users: 12 },
+                        { name: "Sales Assistant", users: 8 },
+                        { name: "HR Helper", users: 0 },
+                        { name: "Marketing AI", users: 5 },
+                        { name: "Data Analyst", users: 15 },
+                        { name: "Content Creator", users: 0 },
+                        { name: "Project Manager", users: 7 },
+                        { name: "Financial Advisor", users: 3 }
+                      ].map((assistant, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-start justify-between gap-3 mb-3">
+                            <div className="flex-1">
+                              <h4 className="font-medium">{assistant.name}</h4>
+                              <p className="text-sm text-muted-foreground">{assistant.users} users</p>
+                            </div>
+                            <Checkbox
+                              checked={selectedAssistants.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedAssistants([...selectedAssistants, index]);
+                                } else {
+                                  setSelectedAssistants(selectedAssistants.filter(i => i !== index));
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`assistant-limit-${index}`} className="text-xs">
+                              Daily Limit (default: {defaultImageLimit})
+                            </Label>
+                            <Input
+                              id={`assistant-limit-${index}`}
+                              type="number"
+                              min="0"
+                              placeholder={defaultImageLimit.toString()}
+                              value={assistantImageLimits[index] || ''}
+                              onChange={(e) => {
+                                const value = parseInt(e.target.value) || 0;
+                                setAssistantImageLimits({ ...assistantImageLimits, [index]: value });
+                              }}
+                              className="h-9"
+                            />
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* User Groups Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <Users className="w-5 h-5" />
+                        User Groups (12)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const groupCount = 12;
+                          if (selectedUserGroups.length === groupCount) {
+                            setSelectedUserGroups([]);
+                          } else {
+                            setSelectedUserGroups(Array.from({ length: groupCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        { name: "Sales Team", members: 15 },
+                        { name: "Marketing Department", members: 22 },
+                        { name: "Customer Support", members: 18 },
+                        { name: "HR Team", members: 8 },
+                        { name: "Engineering", members: 35 },
+                        { name: "Finance Department", members: 12 },
+                        { name: "Operations Team", members: 14 },
+                        { name: "Executive Team", members: 6 },
+                        { name: "Product Management", members: 10 },
+                        { name: "Quality Assurance", members: 16 },
+                        { name: "Business Development", members: 9 },
+                        { name: "Research & Development", members: 20 }
+                      ].map((group, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-start justify-between gap-3 mb-3">
+                            <div className="flex-1">
+                              <h4 className="font-medium">{group.name}</h4>
+                              <p className="text-sm text-muted-foreground">{group.members} members</p>
+                            </div>
+                            <Checkbox
+                              checked={selectedUserGroups.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedUserGroups([...selectedUserGroups, index]);
+                                } else {
+                                  setSelectedUserGroups(selectedUserGroups.filter(i => i !== index));
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`group-limit-${index}`} className="text-xs">
+                              Daily Limit (default: {defaultImageLimit})
+                            </Label>
+                            <Input
+                              id={`group-limit-${index}`}
+                              type="number"
+                              min="0"
+                              placeholder={defaultImageLimit.toString()}
+                              value={groupImageLimits[index] || ''}
+                              onChange={(e) => {
+                                const value = parseInt(e.target.value) || 0;
+                                setGroupImageLimits({ ...groupImageLimits, [index]: value });
+                              }}
+                              className="h-9"
+                            />
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Users Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <User className="w-5 h-5" />
+                        Users (47)
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const userCount = 9;
+                          if (selectedUsers.length === userCount) {
+                            setSelectedUsers([]);
+                          } else {
+                            setSelectedUsers(Array.from({ length: userCount }, (_, i) => i));
+                          }
+                        }}
+                      >
+                        Select All
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        { name: "Sarah Chen", email: "sarah@company.com" },
+                        { name: "Mike Johnson", email: "mike@company.com" },
+                        { name: "Emma Wilson", email: "emma@company.com" },
+                        { name: "David Lee", email: "david@company.com" },
+                        { name: "Lisa Brown", email: "lisa@company.com" },
+                        { name: "Tom Davis", email: "tom@company.com" },
+                        { name: "Anna Rodriguez", email: "anna@company.com" },
+                        { name: "James Wilson", email: "james@company.com" },
+                        { name: "Sophie Turner", email: "sophie@company.com" }
+                      ].map((user, index) => (
+                        <Card key={index} className="p-4">
+                          <div className="flex items-start justify-between gap-3 mb-3">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm">{user.name}</h4>
+                              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                            </div>
+                            <Checkbox
+                              checked={selectedUsers.includes(index)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedUsers([...selectedUsers, index]);
+                                } else {
+                                  setSelectedUsers(selectedUsers.filter(i => i !== index));
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`user-limit-${index}`} className="text-xs">
+                              Daily Limit (default: {defaultImageLimit})
+                            </Label>
+                            <Input
+                              id={`user-limit-${index}`}
+                              type="number"
+                              min="0"
+                              placeholder={defaultImageLimit.toString()}
+                              value={userImageLimits[index] || ''}
+                              onChange={(e) => {
+                                const value = parseInt(e.target.value) || 0;
+                                setUserImageLimits({ ...userImageLimits, [index]: value });
+                              }}
+                              className="h-9"
+                            />
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <DialogClose asChild>
+                    <Button variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <Button 
+                    className="bg-black hover:bg-black/90 text-white"
+                    onClick={() => {
+                      toast.success("Image generation limits updated successfully");
+                      setImagesAccessDialogOpen(false);
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       case "credits":
@@ -639,7 +918,7 @@ const AdminSettings = () => {
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
-  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen]);
+  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen, imagesAccessDialogOpen, selectedAssistants, selectedUsers, selectedUserGroups, defaultImageLimit, assistantImageLimits, userImageLimits, groupImageLimits]);
 
   const currentTab = tabs.find(tab => tab.id === activeTab);
 

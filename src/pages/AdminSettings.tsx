@@ -37,6 +37,7 @@ const AdminSettings = () => {
   const [imagesUsersDialogOpen, setImagesUsersDialogOpen] = useState(false);
   const [imagesUserGroupsDialogOpen, setImagesUserGroupsDialogOpen] = useState(false);
   const [gmailActionsDialogOpen, setGmailActionsDialogOpen] = useState(false);
+  const [grantOrgAccess, setGrantOrgAccess] = useState(false);
   
   // State for managing access selections
   const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
@@ -334,31 +335,29 @@ const AdminSettings = () => {
             {/* Manage Access Dialog */}
             <Dialog open={manageAccessDialogOpen} onOpenChange={setManageAccessDialogOpen}>
               <DialogContent className="max-w-2xl mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <DialogTitle className="text-2xl font-semibold">Manage Integration Access</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Select what you'd like to manage for integrated services
-                  </DialogDescription>
+                <DialogHeader className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <DialogTitle className="text-2xl font-semibold">Manage Integration Access</DialogTitle>
+                      <DialogDescription className="text-muted-foreground mt-2">
+                        Select what you'd like to manage for integrated services
+                      </DialogDescription>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="org-access"
+                        checked={grantOrgAccess}
+                        onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                      />
+                      <Label htmlFor="org-access" className="text-sm font-normal cursor-pointer">
+                        Grant entire organization access
+                      </Label>
+                    </div>
+                  </div>
                 </DialogHeader>
                 
                 <div className="space-y-4 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setManageAccessDialogOpen(false);
-                        setAssistantsDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <Shield className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">Assistants</h3>
-                        <p className="text-sm text-muted-foreground">Manage assistant access permissions</p>
-                      </div>
-                    </Card>
-
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card 
                       className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
                       onClick={() => {
@@ -650,31 +649,29 @@ const AdminSettings = () => {
             {/* Images Access Selection Dialog */}
             <Dialog open={imagesAccessDialogOpen} onOpenChange={setImagesAccessDialogOpen}>
               <DialogContent className="max-w-2xl mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <DialogTitle className="text-2xl font-semibold">Manage Images Access & Limits</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Select what you'd like to manage for image generation access and limits
-                  </DialogDescription>
+                <DialogHeader className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <DialogTitle className="text-2xl font-semibold">Manage Images Access & Limits</DialogTitle>
+                      <DialogDescription className="text-muted-foreground mt-2">
+                        Select what you'd like to manage for image generation access and limits
+                      </DialogDescription>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="org-access-images"
+                        checked={grantOrgAccess}
+                        onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                      />
+                      <Label htmlFor="org-access-images" className="text-sm font-normal cursor-pointer">
+                        Grant entire organization access
+                      </Label>
+                    </div>
+                  </div>
                 </DialogHeader>
                 
                 <div className="space-y-4 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setImagesAccessDialogOpen(false);
-                        setImagesAssistantsDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <Shield className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">Assistants</h3>
-                        <p className="text-sm text-muted-foreground">Manage assistant image generation limits</p>
-                      </div>
-                    </Card>
-
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card 
                       className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
                       onClick={() => {

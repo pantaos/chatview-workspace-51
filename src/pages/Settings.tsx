@@ -696,9 +696,9 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="mt-6">
+                <div className="mt-2">
                   <h3 className="text-lg font-semibold mb-4">Actions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -791,9 +791,9 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="mt-6">
+                <div className="mt-2">
                   <h3 className="text-lg font-semibold mb-4">Actions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -886,9 +886,9 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="mt-6">
+                <div className="mt-2">
                   <h3 className="text-lg font-semibold mb-4">Actions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -981,9 +981,9 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="mt-6">
+                <div className="mt-2">
                   <h3 className="text-lg font-semibold mb-4">Actions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -1098,9 +1098,9 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="mt-6">
+                <div className="mt-2">
                   <h3 className="text-lg font-semibold mb-4">Actions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card className="p-4 hover:bg-muted/50 transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">

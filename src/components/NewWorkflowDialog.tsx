@@ -462,20 +462,18 @@ const NewWorkflowDialog = ({
             </div>
 
             <div>
-              <Label>Integrations</Label>
-              {!integrationsExpanded ? (
-                <button
-                  onClick={() => setIntegrationsExpanded(true)}
-                  className="mt-4 w-full border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 hover:border-primary/50 hover:bg-accent/5 transition-all group"
-                >
-                  <div className="flex flex-col items-center justify-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Plus className="w-6 h-6 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Add Integrations</span>
-                  </div>
-                </button>
-              ) : (
+              <div className="flex items-center gap-2">
+                <Label>Integrations</Label>
+                {!integrationsExpanded && (
+                  <button
+                    onClick={() => setIntegrationsExpanded(true)}
+                    className="w-6 h-6 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
+                  >
+                    <Plus className="w-4 h-4 text-primary" />
+                  </button>
+                )}
+              </div>
+              {integrationsExpanded && (
                 <div className="space-y-3 mt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">Select integrations to connect</span>

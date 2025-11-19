@@ -763,7 +763,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                     {[
                       { name: "Customer Support Bot", users: 12 },
                       { name: "Sales Assistant", users: 8 },
@@ -878,7 +878,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                     {[
                       { name: "Sales Team", members: 15 },
                       { name: "Marketing Department", members: 22 },
@@ -997,7 +997,7 @@ const AdminSettings = () => {
                       Select All
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                     {[
                       { name: "Sarah Chen", email: "sarah@company.com" },
                       { name: "Mike Johnson", email: "mike@company.com" },

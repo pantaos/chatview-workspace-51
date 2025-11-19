@@ -9,7 +9,7 @@ import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image, Info, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
@@ -24,6 +24,13 @@ const Settings = () => {
   const [sharepointConnectDialogOpen, setSharepointConnectDialogOpen] = useState(false);
   const [gmailConnectDialogOpen, setGmailConnectDialogOpen] = useState(false);
   const [notionConnectDialogOpen, setNotionConnectDialogOpen] = useState(false);
+  
+  // Actions dialog states
+  const [outlookActionsDialogOpen, setOutlookActionsDialogOpen] = useState(false);
+  const [calendarActionsDialogOpen, setCalendarActionsDialogOpen] = useState(false);
+  const [sharepointActionsDialogOpen, setSharepointActionsDialogOpen] = useState(false);
+  const [gmailActionsDialogOpen, setGmailActionsDialogOpen] = useState(false);
+  const [notionActionsDialogOpen, setNotionActionsDialogOpen] = useState(false);
   const [integrationToggles, setIntegrationToggles] = useState({
     outlook: true,
     zapier: false,
@@ -288,7 +295,7 @@ const Settings = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
                 onClick={() => setOutlookDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -297,10 +304,19 @@ const Settings = () => {
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOutlookActionsDialogOpen(true);
+                  }}
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                >
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </button>
               </Card>
 
               <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
                 onClick={() => setCalendarConnectDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -309,10 +325,19 @@ const Settings = () => {
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCalendarActionsDialogOpen(true);
+                  }}
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                >
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </button>
               </Card>
 
               <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
                 onClick={() => setSharepointConnectDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -321,10 +346,19 @@ const Settings = () => {
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSharepointActionsDialogOpen(true);
+                  }}
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                >
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </button>
               </Card>
 
               <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
                 onClick={() => setGmailConnectDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -333,10 +367,19 @@ const Settings = () => {
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGmailActionsDialogOpen(true);
+                  }}
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                >
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </button>
               </Card>
 
               <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
                 onClick={() => setNotionConnectDialogOpen(true)}
               >
                 <div className="flex flex-col items-center text-center space-y-2">
@@ -345,6 +388,15 @@ const Settings = () => {
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNotionActionsDialogOpen(true);
+                  }}
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                >
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </button>
               </Card>
             </div>
 
@@ -619,6 +671,503 @@ const Settings = () => {
                   >
                     Continue to Notion
                   </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            {/* Outlook Actions Dialog */}
+            <Dialog open={outlookActionsDialogOpen} onOpenChange={setOutlookActionsDialogOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <button
+                  onClick={() => setOutlookActionsDialogOpen(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <DialogHeader className="border-b pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Microsoft Outlook</DialogTitle>
+                      <DialogDescription>Microsoft's email service for sending, receiving, and managing emails</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">List folders</h4>
+                          <p className="text-sm text-muted-foreground">Lists all mail folders in the user's mailbox</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Send email</h4>
+                          <p className="text-sm text-muted-foreground">Creates and sends an email from your Outlook account</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Search emails</h4>
+                          <p className="text-sm text-muted-foreground">Searches through your Outlook inbox and returns matching emails</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create draft</h4>
+                          <p className="text-sm text-muted-foreground">Creates a draft email without sending it</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Reply to email</h4>
+                          <p className="text-sm text-muted-foreground">Reply to an existing email thread</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Get email with attachments</h4>
+                          <p className="text-sm text-muted-foreground">Retrieves a single email with full content and attachments</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Calendar Actions Dialog */}
+            <Dialog open={calendarActionsDialogOpen} onOpenChange={setCalendarActionsDialogOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <button
+                  onClick={() => setCalendarActionsDialogOpen(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <DialogHeader className="border-b pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Microsoft Calendar</DialogTitle>
+                      <DialogDescription>Microsoft's calendar service for scheduling and managing events</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">List calendars</h4>
+                          <p className="text-sm text-muted-foreground">Lists all calendars in the user's account</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create event</h4>
+                          <p className="text-sm text-muted-foreground">Creates a new calendar event</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Update event</h4>
+                          <p className="text-sm text-muted-foreground">Modifies an existing calendar event</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Delete event</h4>
+                          <p className="text-sm text-muted-foreground">Removes an event from the calendar</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Find available times</h4>
+                          <p className="text-sm text-muted-foreground">Finds free time slots for scheduling meetings</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">List upcoming events</h4>
+                          <p className="text-sm text-muted-foreground">Retrieves upcoming events from the calendar</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* SharePoint Actions Dialog */}
+            <Dialog open={sharepointActionsDialogOpen} onOpenChange={setSharepointActionsDialogOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <button
+                  onClick={() => setSharepointActionsDialogOpen(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <DialogHeader className="border-b pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">SharePoint</DialogTitle>
+                      <DialogDescription>Microsoft's document management and collaboration platform</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">List documents</h4>
+                          <p className="text-sm text-muted-foreground">Lists all documents in a SharePoint library</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Upload document</h4>
+                          <p className="text-sm text-muted-foreground">Uploads a new document to SharePoint</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Download document</h4>
+                          <p className="text-sm text-muted-foreground">Downloads a document from SharePoint</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Search documents</h4>
+                          <p className="text-sm text-muted-foreground">Searches for documents across SharePoint sites</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create folder</h4>
+                          <p className="text-sm text-muted-foreground">Creates a new folder in a document library</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Share document</h4>
+                          <p className="text-sm text-muted-foreground">Shares a document with specified users</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Gmail Actions Dialog */}
+            <Dialog open={gmailActionsDialogOpen} onOpenChange={setGmailActionsDialogOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <button
+                  onClick={() => setGmailActionsDialogOpen(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <DialogHeader className="border-b pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Gmail</DialogTitle>
+                      <DialogDescription>Google's email service for sending, receiving, and managing emails</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">List labels</h4>
+                          <p className="text-sm text-muted-foreground">Lists all labels in the user's mailbox. Agents can call this to find the appropriate label for categorizing emails</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Update label</h4>
+                          <p className="text-sm text-muted-foreground">Add/remove labels on a message or a thread. First call 'Get email with attachments' to find the message ID</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Send email</h4>
+                          <p className="text-sm text-muted-foreground">Creates and immediately sends an email from your Gmail account</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Search emails</h4>
+                          <p className="text-sm text-muted-foreground">Searches through your Gmail inbox and returns emails matching the search criteria</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create email draft</h4>
+                          <p className="text-sm text-muted-foreground">Creates a draft email in your Gmail account without sending it</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Reply to email</h4>
+                          <p className="text-sm text-muted-foreground">Creates and immediately sends an email from your Gmail account</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Get email with attachments</h4>
+                          <p className="text-sm text-muted-foreground">Retrieves a single email thread or message with full content including attachments</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create draft reply</h4>
+                          <p className="text-sm text-muted-foreground">Creates a draft reply for an email</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Notion Actions Dialog */}
+            <Dialog open={notionActionsDialogOpen} onOpenChange={setNotionActionsDialogOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <button
+                  onClick={() => setNotionActionsDialogOpen(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <DialogHeader className="border-b pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-xl">N</span>
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Notion</DialogTitle>
+                      <DialogDescription>All-in-one workspace for notes, docs, and collaboration</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Search pages</h4>
+                          <p className="text-sm text-muted-foreground">Searches for pages across your Notion workspace</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create page</h4>
+                          <p className="text-sm text-muted-foreground">Creates a new page in your Notion workspace</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Update page</h4>
+                          <p className="text-sm text-muted-foreground">Updates content of an existing Notion page</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Query database</h4>
+                          <p className="text-sm text-muted-foreground">Queries a Notion database with filters and sorting</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Create database entry</h4>
+                          <p className="text-sm text-muted-foreground">Adds a new entry to a Notion database</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-bold text-base">N</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-1">Get page content</h4>
+                          <p className="text-sm text-muted-foreground">Retrieves the full content of a Notion page</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>

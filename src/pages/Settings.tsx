@@ -84,7 +84,7 @@ const Settings = () => {
   const [integrationStatus, setIntegrationStatus] = useState({
     outlook: true,
     calendar: true,
-    sharepoint: true,
+    sharepoint: false,
     gmail: true,
     notion: false
   });
@@ -364,7 +364,7 @@ const Settings = () => {
                 
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.outlook && setOutlookPermissionsDialogOpen(true)}
+                  onClick={() => integrationStatus.outlook ? setOutlookPermissionsDialogOpen(true) : setOutlookDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                     <Mail className="w-5 h-5 text-white" />
@@ -392,7 +392,7 @@ const Settings = () => {
                 
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.calendar && setCalendarPermissionsDialogOpen(true)}
+                  onClick={() => integrationStatus.calendar ? setCalendarPermissionsDialogOpen(true) : setCalendarConnectDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-white" />
@@ -420,7 +420,7 @@ const Settings = () => {
                 
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.sharepoint && setSharepointPermissionsDialogOpen(true)}
+                  onClick={() => integrationStatus.sharepoint ? setSharepointPermissionsDialogOpen(true) : setSharepointConnectDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
                     <FileText className="w-5 h-5 text-white" />
@@ -448,7 +448,7 @@ const Settings = () => {
                 
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.gmail && setGmailPermissionsDialogOpen(true)}
+                  onClick={() => integrationStatus.gmail ? setGmailPermissionsDialogOpen(true) : setGmailConnectDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
                     <Mail className="w-5 h-5 text-white" />
@@ -476,7 +476,7 @@ const Settings = () => {
                 
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.notion && setNotionPermissionsDialogOpen(true)}
+                  onClick={() => integrationStatus.notion ? setNotionPermissionsDialogOpen(true) : setNotionConnectDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-base">N</span>

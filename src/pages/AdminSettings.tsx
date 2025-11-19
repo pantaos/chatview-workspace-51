@@ -730,7 +730,7 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                <div className="mb-4">
                   <Label htmlFor="defaultLimit" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>
@@ -845,7 +845,7 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                <div className="mb-4">
                   <Label htmlFor="defaultLimitGroups" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>
@@ -964,7 +964,7 @@ const AdminSettings = () => {
                 </DialogHeader>
                 
                 {/* Default Limit Setting */}
-                <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                <div className="mb-4">
                   <Label htmlFor="defaultLimitUsers" className="text-sm font-semibold mb-1 block">
                     Default Daily Image Generation Limit
                   </Label>

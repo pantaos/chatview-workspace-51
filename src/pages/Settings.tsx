@@ -269,16 +269,16 @@ const Settings = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <Card 
-                className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
+                className="aspect-square p-4 hover:bg-muted/50 transition-colors cursor-pointer group flex items-center justify-center"
                 onClick={() => setOutlookDialogOpen(true)}
               >
-                <div className="flex flex-col items-center text-center space-y-3">
-                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-white" />
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-medium text-base group-hover:text-primary">Microsoft Outlook</h3>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
                 </div>
               </Card>
             </div>

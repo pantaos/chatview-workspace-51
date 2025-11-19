@@ -3,7 +3,8 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image, Calendar, FileText } from "lucide-react";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image, Calendar, FileText, Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,6 +36,7 @@ const AdminSettings = () => {
   const [imagesAssistantsDialogOpen, setImagesAssistantsDialogOpen] = useState(false);
   const [imagesUsersDialogOpen, setImagesUsersDialogOpen] = useState(false);
   const [imagesUserGroupsDialogOpen, setImagesUserGroupsDialogOpen] = useState(false);
+  const [gmailActionsDialogOpen, setGmailActionsDialogOpen] = useState(false);
   
   // State for managing access selections
   const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
@@ -213,7 +215,7 @@ const AdminSettings = () => {
                 <div className="flex flex-col items-center text-center space-y-3 h-full">
                   <div 
                     className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center cursor-pointer"
-                    onClick={() => toast.success("Gmail integration coming soon!")}
+                    onClick={() => setGmailActionsDialogOpen(true)}
                   >
                     <Mail className="w-5 h-5 text-white" />
                   </div>
@@ -222,9 +224,9 @@ const AdminSettings = () => {
                     size="sm"
                     variant="outline" 
                     className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
-                    onClick={() => setManageAccessDialogOpen(true)}
+                    onClick={() => setGmailActionsDialogOpen(true)}
                   >
-                    Manage Access
+                    View Actions
                   </Button>
                 </div>
               </Card>
@@ -1066,6 +1068,328 @@ const AdminSettings = () => {
                 </div>
               </DialogContent>
             </Dialog>
+
+            {/* Gmail Actions Dialog */}
+            <Dialog open={gmailActionsDialogOpen} onOpenChange={setGmailActionsDialogOpen}>
+              <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Gmail</DialogTitle>
+                      <DialogDescription>
+                        Google's email service for sending, receiving, and managing emails
+                      </DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* List labels */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">List labels</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Lists all labels in the user's mailbox. Agents can call this to find the right label for organizing emails.
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Retrieve all user labels</li>
+                                    <li>• Filter by label type</li>
+                                    <li>• Get label metadata</li>
+                                    <li>• Search labels by name</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Update label */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Update label</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Add/remove labels on a message or a thread. First call 'Get email' to find the message ID.
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Add labels to emails</li>
+                                    <li>• Remove labels from emails</li>
+                                    <li>• Bulk label operations</li>
+                                    <li>• Label thread management</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Send email */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Send email</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Creates and immediately sends an email from your Gmail account
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Send to multiple recipients</li>
+                                    <li>• Add CC and BCC</li>
+                                    <li>• Attach files</li>
+                                    <li>• HTML formatting support</li>
+                                    <li>• Schedule send time</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Search emails */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Search emails</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Searches through your Gmail inbox and returns emails matching your query
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Advanced search queries</li>
+                                    <li>• Filter by sender/recipient</li>
+                                    <li>• Date range filtering</li>
+                                    <li>• Search attachments</li>
+                                    <li>• Label-based search</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Create email draft */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Create email draft</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Creates a draft email in your Gmail account without sending it
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Save email drafts</li>
+                                    <li>• Edit draft content</li>
+                                    <li>• Add attachments to drafts</li>
+                                    <li>• Store multiple drafts</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Reply to email */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Reply to email</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Creates and immediately sends an email from your Gmail account
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Reply to sender</li>
+                                    <li>• Reply all to thread</li>
+                                    <li>• Include original message</li>
+                                    <li>• Forward emails</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Get email with attachments */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Get email with attachments</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Retrieves a single email thread or message with full content including attachments
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Download attachments</li>
+                                    <li>• View attachment metadata</li>
+                                    <li>• Extract inline images</li>
+                                    <li>• Get full email headers</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Create draft reply */}
+                    <Card className="p-4 hover:bg-muted/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-base mb-1">Create draft reply</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                Creates a draft reply for an email.
+                              </p>
+                            </div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold text-sm">Associated Features</h4>
+                                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                                    <li>• Save reply drafts</li>
+                                    <li>• Include original message</li>
+                                    <li>• Edit before sending</li>
+                                    <li>• Add attachments to reply</li>
+                                  </ul>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       case "credits":
@@ -1073,7 +1397,7 @@ const AdminSettings = () => {
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
-  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen, imagesAccessDialogOpen, imagesAssistantsDialogOpen, imagesUsersDialogOpen, imagesUserGroupsDialogOpen, selectedAssistants, selectedUsers, selectedUserGroups, defaultImageLimit, assistantImageLimits, userImageLimits, groupImageLimits]);
+  }, [activeTab, handleNavigateToUsers, outlookDialogOpen, manageAccessDialogOpen, assistantsDialogOpen, usersDialogOpen, userGroupsDialogOpen, imagesAccessDialogOpen, imagesAssistantsDialogOpen, imagesUsersDialogOpen, imagesUserGroupsDialogOpen, gmailActionsDialogOpen, selectedAssistants, selectedUsers, selectedUserGroups, defaultImageLimit, assistantImageLimits, userImageLimits, groupImageLimits]);
 
   const currentTab = tabs.find(tab => tab.id === activeTab);
 

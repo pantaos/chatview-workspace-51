@@ -24,6 +24,7 @@ const Settings = () => {
     outlook: true,
     zapier: false,
     slack: false,
+    images: false,
   });
   
   // Mock user data
@@ -117,54 +118,66 @@ const Settings = () => {
                 Enable or disable integrations for your main chat interface
               </p>
               
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-white" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="p-4 border-2 transition-colors hover:bg-muted/50">
+                  <div className="flex flex-col items-center text-center space-y-3 h-full">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="font-medium">Microsoft Outlook</p>
-                      <p className="text-sm text-muted-foreground">Access email and calendar data</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">Microsoft Outlook</p>
                     </div>
+                    <Switch
+                      checked={integrationToggles.outlook}
+                      onCheckedChange={() => handleToggleIntegration('outlook')}
+                    />
                   </div>
-                  <Switch
-                    checked={integrationToggles.outlook}
-                    onCheckedChange={() => handleToggleIntegration('outlook')}
-                  />
-                </div>
+                </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                      <Puzzle className="w-5 h-5 text-white" />
+                <Card className="p-4 border-2 transition-colors hover:bg-muted/50">
+                  <div className="flex flex-col items-center text-center space-y-3 h-full">
+                    <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <Puzzle className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="font-medium">Zapier</p>
-                      <p className="text-sm text-muted-foreground">Automate workflows</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">Zapier</p>
                     </div>
+                    <Switch
+                      checked={integrationToggles.zapier}
+                      onCheckedChange={() => handleToggleIntegration('zapier')}
+                    />
                   </div>
-                  <Switch
-                    checked={integrationToggles.zapier}
-                    onCheckedChange={() => handleToggleIntegration('zapier')}
-                  />
-                </div>
+                </Card>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                      <MessageSquare className="w-5 h-5 text-white" />
+                <Card className="p-4 border-2 transition-colors hover:bg-muted/50">
+                  <div className="flex flex-col items-center text-center space-y-3 h-full">
+                    <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <MessageSquare className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="font-medium">Slack</p>
-                      <p className="text-sm text-muted-foreground">Team communication</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">Slack</p>
                     </div>
+                    <Switch
+                      checked={integrationToggles.slack}
+                      onCheckedChange={() => handleToggleIntegration('slack')}
+                    />
                   </div>
-                  <Switch
-                    checked={integrationToggles.slack}
-                    onCheckedChange={() => handleToggleIntegration('slack')}
-                  />
-                </div>
+                </Card>
+
+                <Card className="p-4 border-2 transition-colors hover:bg-muted/50">
+                  <div className="flex flex-col items-center text-center space-y-3 h-full">
+                    <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center">
+                      <Image className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">Images</p>
+                    </div>
+                    <Switch
+                      checked={integrationToggles.images || false}
+                      onCheckedChange={() => handleToggleIntegration('images')}
+                    />
+                  </div>
+                </Card>
               </div>
             </Card>
 

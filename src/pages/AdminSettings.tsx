@@ -68,7 +68,7 @@ const AdminSettings = () => {
     },
     { 
       id: "integrations", 
-      label: "Integrations", 
+      label: "Tenant Integrations", 
       icon: Puzzle,
       description: "Connected Services"
     },
@@ -116,9 +116,9 @@ const AdminSettings = () => {
         return (
           <div className="space-y-6">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-2">Tenant Integrations</h2>
+              <h2 className="text-2xl font-semibold mb-2">Manage Access</h2>
               <p className="text-muted-foreground">
-                Connect your favorite apps and control which users and teams have access to integrated services.
+                Control which teams, users, and assistants have access to each integration and their data.
               </p>
             </div>
 

@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare } from "lucide-react";
+import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Menu, X, Puzzle, Mail, Shield, ArrowRight, User, MessageSquare, Image } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -156,6 +156,28 @@ const AdminSettings = () => {
                     <span className="text-white font-bold text-base">N</span>
                   </div>
                   <h3 className="font-medium text-sm">Notion</h3>
+                  <Button 
+                    size="sm"
+                    variant="outline" 
+                    className="w-full text-xs hover:bg-black hover:text-white mt-auto" 
+                    onClick={() => setManageAccessDialogOpen(true)}
+                  >
+                    Manage Access
+                  </Button>
+                </div>
+              </Card>
+
+              <Card 
+                className="p-4 hover:bg-muted/50 transition-colors group"
+              >
+                <div className="flex flex-col items-center text-center space-y-3 h-full">
+                  <div 
+                    className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center cursor-pointer"
+                    onClick={() => toast.success("Images integration coming soon!")}
+                  >
+                    <Image className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm">Images</h3>
                   <Button 
                     size="sm"
                     variant="outline" 

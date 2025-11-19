@@ -79,6 +79,15 @@ const Settings = () => {
     queryDatabase: true,
     createEntries: false
   });
+  
+  // Connection status for each integration
+  const [integrationStatus, setIntegrationStatus] = useState({
+    outlook: true,
+    calendar: true,
+    sharepoint: true,
+    gmail: true,
+    notion: false
+  });
   const [integrationToggles, setIntegrationToggles] = useState({
     outlook: true,
     zapier: false,
@@ -342,187 +351,145 @@ const Settings = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
-                onClick={() => setOutlookDialogOpen(true)}
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
-                </div>
+              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setOutlookActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
+                
+                <div 
+                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
+                  onClick={() => integrationStatus.outlook && setOutlookPermissionsDialogOpen(true)}
+                >
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
+                  <p className={`text-xs font-medium ${integrationStatus.outlook ? 'text-foreground' : 'text-red-500'}`}>
+                    {integrationStatus.outlook ? 'Connected' : 'Not Connected'}
+                  </p>
+                  {integrationStatus.outlook && (
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  )}
+                </div>
               </Card>
 
-              <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
-                onClick={() => setCalendarConnectDialogOpen(true)}
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
-                </div>
+              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setCalendarActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
+                
+                <div 
+                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
+                  onClick={() => integrationStatus.calendar && setCalendarPermissionsDialogOpen(true)}
+                >
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
+                  <p className={`text-xs font-medium ${integrationStatus.calendar ? 'text-foreground' : 'text-red-500'}`}>
+                    {integrationStatus.calendar ? 'Connected' : 'Not Connected'}
+                  </p>
+                  {integrationStatus.calendar && (
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  )}
+                </div>
               </Card>
 
-              <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
-                onClick={() => setSharepointConnectDialogOpen(true)}
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
-                </div>
+              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setSharepointActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
+                
+                <div 
+                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
+                  onClick={() => integrationStatus.sharepoint && setSharepointPermissionsDialogOpen(true)}
+                >
+                  <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
+                  <p className={`text-xs font-medium ${integrationStatus.sharepoint ? 'text-foreground' : 'text-red-500'}`}>
+                    {integrationStatus.sharepoint ? 'Connected' : 'Not Connected'}
+                  </p>
+                  {integrationStatus.sharepoint && (
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  )}
+                </div>
               </Card>
 
-              <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
-                onClick={() => setGmailConnectDialogOpen(true)}
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
-                </div>
+              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setGmailActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
+                
+                <div 
+                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
+                  onClick={() => integrationStatus.gmail && setGmailPermissionsDialogOpen(true)}
+                >
+                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
+                  <p className={`text-xs font-medium ${integrationStatus.gmail ? 'text-foreground' : 'text-red-500'}`}>
+                    {integrationStatus.gmail ? 'Connected' : 'Not Connected'}
+                  </p>
+                  {integrationStatus.gmail && (
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  )}
+                </div>
               </Card>
 
-              <Card 
-                className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative"
-                onClick={() => setNotionConnectDialogOpen(true)}
-              >
-                <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-base">N</span>
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
-                </div>
+              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setNotionActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
+                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
+                
+                <div 
+                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
+                  onClick={() => integrationStatus.notion && setNotionPermissionsDialogOpen(true)}
+                >
+                  <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-base">N</span>
+                  </div>
+                  <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
+                  <p className={`text-xs font-medium ${integrationStatus.notion ? 'text-foreground' : 'text-red-500'}`}>
+                    {integrationStatus.notion ? 'Connected' : 'Not Connected'}
+                  </p>
+                  {integrationStatus.notion && (
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  )}
+                </div>
               </Card>
-            </div>
-
-            {/* Connected Integrations Permissions */}
-            <div className="mt-10">
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Connected Integrations Permissions</h2>
-                <p className="text-muted-foreground">
-                  Manage permissions for your connected integrations
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card 
-                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                  onClick={() => setOutlookPermissionsDialogOpen(true)}
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  </div>
-                </Card>
-
-                <Card 
-                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                  onClick={() => setCalendarPermissionsDialogOpen(true)}
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <Calendar className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  </div>
-                </Card>
-
-                <Card 
-                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                  onClick={() => setSharepointPermissionsDialogOpen(true)}
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  </div>
-                </Card>
-
-                <Card 
-                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                  onClick={() => setGmailPermissionsDialogOpen(true)}
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  </div>
-                </Card>
-
-                <Card 
-                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
-                  onClick={() => setNotionPermissionsDialogOpen(true)}
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-base">N</span>
-                    </div>
-                    <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  </div>
-                </Card>
-              </div>
             </div>
 
             {/* Outlook Permissions Dialog */}

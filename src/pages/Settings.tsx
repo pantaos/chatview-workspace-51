@@ -31,6 +31,54 @@ const Settings = () => {
   const [sharepointActionsDialogOpen, setSharepointActionsDialogOpen] = useState(false);
   const [gmailActionsDialogOpen, setGmailActionsDialogOpen] = useState(false);
   const [notionActionsDialogOpen, setNotionActionsDialogOpen] = useState(false);
+  
+  // Permissions dialog states
+  const [outlookPermissionsDialogOpen, setOutlookPermissionsDialogOpen] = useState(false);
+  const [calendarPermissionsDialogOpen, setCalendarPermissionsDialogOpen] = useState(false);
+  const [sharepointPermissionsDialogOpen, setSharepointPermissionsDialogOpen] = useState(false);
+  const [gmailPermissionsDialogOpen, setGmailPermissionsDialogOpen] = useState(false);
+  const [notionPermissionsDialogOpen, setNotionPermissionsDialogOpen] = useState(false);
+  
+  // Permission states (example - can be expanded)
+  const [outlookPermissions, setOutlookPermissions] = useState({
+    readEmails: true,
+    draftEmails: true,
+    sendEmails: true,
+    searchEmails: true,
+    manageLabels: false
+  });
+  
+  const [calendarPermissions, setCalendarPermissions] = useState({
+    readEvents: true,
+    createEvents: true,
+    updateEvents: true,
+    deleteEvents: false,
+    findAvailability: true
+  });
+  
+  const [sharepointPermissions, setSharepointPermissions] = useState({
+    listDocuments: true,
+    uploadDocuments: true,
+    downloadDocuments: true,
+    searchDocuments: true,
+    shareDocuments: false
+  });
+  
+  const [gmailPermissions, setGmailPermissions] = useState({
+    readEmails: true,
+    draftEmails: true,
+    sendEmails: true,
+    searchEmails: true,
+    manageLabels: true
+  });
+  
+  const [notionPermissions, setNotionPermissions] = useState({
+    searchPages: true,
+    createPages: true,
+    updatePages: true,
+    queryDatabase: true,
+    createEntries: false
+  });
   const [integrationToggles, setIntegrationToggles] = useState({
     outlook: true,
     zapier: false,
@@ -405,80 +453,507 @@ const Settings = () => {
               <div className="mb-6">
                 <h2 className="text-2xl font-semibold mb-2">Connected Integrations Permissions</h2>
                 <p className="text-muted-foreground">
-                  Review what your connected integrations can access
+                  Manage permissions for your connected integrations
                 </p>
               </div>
 
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Read emails</p>
-                        <p className="text-sm text-muted-foreground">Access and view your email messages</p>
-                      </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card 
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => setOutlookPermissionsDialogOpen(true)}
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-white" />
                     </div>
-                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                    <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  </div>
+                </Card>
+
+                <Card 
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => setCalendarPermissionsDialogOpen(true)}
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  </div>
+                </Card>
+
+                <Card 
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => setSharepointPermissionsDialogOpen(true)}
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  </div>
+                </Card>
+
+                <Card 
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => setGmailPermissionsDialogOpen(true)}
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  </div>
+                </Card>
+
+                <Card 
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => setNotionPermissionsDialogOpen(true)}
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-base">N</span>
+                    </div>
+                    <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
+                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* Outlook Permissions Dialog */}
+            <Dialog open={outlookPermissionsDialogOpen} onOpenChange={setOutlookPermissionsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Microsoft Outlook Permissions</DialogTitle>
+                      <DialogDescription>Manage what Outlook can access</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Read emails</p>
+                      <p className="text-sm text-muted-foreground">Access and view your email messages</p>
+                    </div>
+                    <Switch 
+                      checked={outlookPermissions.readEmails}
+                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, readEmails: checked})}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Draft emails</p>
-                        <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
-                      </div>
+                    <div>
+                      <p className="font-medium">Draft emails</p>
+                      <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
                     </div>
-                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                    <Switch 
+                      checked={outlookPermissions.draftEmails}
+                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, draftEmails: checked})}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Send emails</p>
-                        <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
-                      </div>
+                    <div>
+                      <p className="font-medium">Send emails</p>
+                      <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
                     </div>
-                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                    <Switch 
+                      checked={outlookPermissions.sendEmails}
+                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, sendEmails: checked})}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Read calendar events</p>
-                        <p className="text-sm text-muted-foreground">View your calendar and events</p>
-                      </div>
+                    <div>
+                      <p className="font-medium">Search emails</p>
+                      <p className="text-sm text-muted-foreground">Search through your mailbox</p>
                     </div>
-                    <div className="text-sm text-muted-foreground">Microsoft Calendar</div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Create events</p>
-                        <p className="text-sm text-muted-foreground">Add new events to your calendar</p>
-                      </div>
-                    </div>
-                    <div className="text-sm text-muted-foreground">Microsoft Calendar</div>
+                    <Switch 
+                      checked={outlookPermissions.searchEmails}
+                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, searchEmails: checked})}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      <div>
-                        <p className="font-medium">Manage files</p>
-                        <p className="text-sm text-muted-foreground">Access and manage your documents and files</p>
-                      </div>
+                    <div>
+                      <p className="font-medium">Manage labels</p>
+                      <p className="text-sm text-muted-foreground">Add or remove email labels</p>
                     </div>
-                    <div className="text-sm text-muted-foreground">SharePoint, Notion</div>
+                    <Switch 
+                      checked={outlookPermissions.manageLabels}
+                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, manageLabels: checked})}
+                    />
                   </div>
                 </div>
-              </Card>
-            </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setOutlookPermissionsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setOutlookPermissionsDialogOpen(false);
+                    toast.success("Outlook permissions updated");
+                  }}>
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Calendar Permissions Dialog */}
+            <Dialog open={calendarPermissionsDialogOpen} onOpenChange={setCalendarPermissionsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Microsoft Calendar Permissions</DialogTitle>
+                      <DialogDescription>Manage what Calendar can access</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Read events</p>
+                      <p className="text-sm text-muted-foreground">View your calendar and events</p>
+                    </div>
+                    <Switch 
+                      checked={calendarPermissions.readEvents}
+                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, readEvents: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Create events</p>
+                      <p className="text-sm text-muted-foreground">Add new events to your calendar</p>
+                    </div>
+                    <Switch 
+                      checked={calendarPermissions.createEvents}
+                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, createEvents: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Update events</p>
+                      <p className="text-sm text-muted-foreground">Modify existing calendar events</p>
+                    </div>
+                    <Switch 
+                      checked={calendarPermissions.updateEvents}
+                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, updateEvents: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Delete events</p>
+                      <p className="text-sm text-muted-foreground">Remove events from calendar</p>
+                    </div>
+                    <Switch 
+                      checked={calendarPermissions.deleteEvents}
+                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, deleteEvents: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium">Find availability</p>
+                      <p className="text-sm text-muted-foreground">Check free time slots</p>
+                    </div>
+                    <Switch 
+                      checked={calendarPermissions.findAvailability}
+                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, findAvailability: checked})}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setCalendarPermissionsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setCalendarPermissionsDialogOpen(false);
+                    toast.success("Calendar permissions updated");
+                  }}>
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* SharePoint Permissions Dialog */}
+            <Dialog open={sharepointPermissionsDialogOpen} onOpenChange={setSharepointPermissionsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">SharePoint Permissions</DialogTitle>
+                      <DialogDescription>Manage what SharePoint can access</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">List documents</p>
+                      <p className="text-sm text-muted-foreground">View all documents in libraries</p>
+                    </div>
+                    <Switch 
+                      checked={sharepointPermissions.listDocuments}
+                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, listDocuments: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Upload documents</p>
+                      <p className="text-sm text-muted-foreground">Add new files to SharePoint</p>
+                    </div>
+                    <Switch 
+                      checked={sharepointPermissions.uploadDocuments}
+                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, uploadDocuments: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Download documents</p>
+                      <p className="text-sm text-muted-foreground">Download files from SharePoint</p>
+                    </div>
+                    <Switch 
+                      checked={sharepointPermissions.downloadDocuments}
+                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, downloadDocuments: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Search documents</p>
+                      <p className="text-sm text-muted-foreground">Search across SharePoint sites</p>
+                    </div>
+                    <Switch 
+                      checked={sharepointPermissions.searchDocuments}
+                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, searchDocuments: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium">Share documents</p>
+                      <p className="text-sm text-muted-foreground">Share files with others</p>
+                    </div>
+                    <Switch 
+                      checked={sharepointPermissions.shareDocuments}
+                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, shareDocuments: checked})}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setSharepointPermissionsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setSharepointPermissionsDialogOpen(false);
+                    toast.success("SharePoint permissions updated");
+                  }}>
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Gmail Permissions Dialog */}
+            <Dialog open={gmailPermissionsDialogOpen} onOpenChange={setGmailPermissionsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Gmail Permissions</DialogTitle>
+                      <DialogDescription>Manage what Gmail can access</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Read emails</p>
+                      <p className="text-sm text-muted-foreground">Access and view your email messages</p>
+                    </div>
+                    <Switch 
+                      checked={gmailPermissions.readEmails}
+                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, readEmails: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Draft emails</p>
+                      <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
+                    </div>
+                    <Switch 
+                      checked={gmailPermissions.draftEmails}
+                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, draftEmails: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Send emails</p>
+                      <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
+                    </div>
+                    <Switch 
+                      checked={gmailPermissions.sendEmails}
+                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, sendEmails: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Search emails</p>
+                      <p className="text-sm text-muted-foreground">Search through your mailbox</p>
+                    </div>
+                    <Switch 
+                      checked={gmailPermissions.searchEmails}
+                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, searchEmails: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium">Manage labels</p>
+                      <p className="text-sm text-muted-foreground">Add or remove email labels</p>
+                    </div>
+                    <Switch 
+                      checked={gmailPermissions.manageLabels}
+                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, manageLabels: checked})}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setGmailPermissionsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setGmailPermissionsDialogOpen(false);
+                    toast.success("Gmail permissions updated");
+                  }}>
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Notion Permissions Dialog */}
+            <Dialog open={notionPermissionsDialogOpen} onOpenChange={setNotionPermissionsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-xl">N</span>
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Notion Permissions</DialogTitle>
+                      <DialogDescription>Manage what Notion can access</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Search pages</p>
+                      <p className="text-sm text-muted-foreground">Search across your workspace</p>
+                    </div>
+                    <Switch 
+                      checked={notionPermissions.searchPages}
+                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, searchPages: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Create pages</p>
+                      <p className="text-sm text-muted-foreground">Add new pages to workspace</p>
+                    </div>
+                    <Switch 
+                      checked={notionPermissions.createPages}
+                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createPages: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Update pages</p>
+                      <p className="text-sm text-muted-foreground">Modify existing pages</p>
+                    </div>
+                    <Switch 
+                      checked={notionPermissions.updatePages}
+                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, updatePages: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div>
+                      <p className="font-medium">Query database</p>
+                      <p className="text-sm text-muted-foreground">Access database content</p>
+                    </div>
+                    <Switch 
+                      checked={notionPermissions.queryDatabase}
+                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, queryDatabase: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium">Create entries</p>
+                      <p className="text-sm text-muted-foreground">Add entries to databases</p>
+                    </div>
+                    <Switch 
+                      checked={notionPermissions.createEntries}
+                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createEntries: checked})}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setNotionPermissionsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setNotionPermissionsDialogOpen(false);
+                    toast.success("Notion permissions updated");
+                  }}>
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Outlook Connection Dialog */}
             <Dialog open={outlookDialogOpen} onOpenChange={setOutlookDialogOpen}>

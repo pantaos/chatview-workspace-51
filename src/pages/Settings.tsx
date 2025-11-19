@@ -309,7 +309,7 @@ const Settings = () => {
                     e.stopPropagation();
                     setOutlookActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
@@ -330,7 +330,7 @@ const Settings = () => {
                     e.stopPropagation();
                     setCalendarActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
@@ -351,7 +351,7 @@ const Settings = () => {
                     e.stopPropagation();
                     setSharepointActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
@@ -372,7 +372,7 @@ const Settings = () => {
                     e.stopPropagation();
                     setGmailActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>
@@ -393,7 +393,7 @@ const Settings = () => {
                     e.stopPropagation();
                     setNotionActionsDialogOpen(true);
                   }}
-                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center transition-colors"
+                  className="absolute bottom-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors"
                 >
                   <Info className="w-3 h-3 text-muted-foreground" />
                 </button>

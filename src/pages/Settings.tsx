@@ -400,6 +400,86 @@ const Settings = () => {
               </Card>
             </div>
 
+            {/* Connected Integrations Permissions */}
+            <div className="mt-10">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">Connected Integrations Permissions</h2>
+                <p className="text-muted-foreground">
+                  Review what your connected integrations can access
+                </p>
+              </div>
+
+              <Card className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Read emails</p>
+                        <p className="text-sm text-muted-foreground">Access and view your email messages</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Draft emails</p>
+                        <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Send emails</p>
+                        <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Outlook, Gmail</div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Read calendar events</p>
+                        <p className="text-sm text-muted-foreground">View your calendar and events</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Microsoft Calendar</div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Create events</p>
+                        <p className="text-sm text-muted-foreground">Add new events to your calendar</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Microsoft Calendar</div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div>
+                        <p className="font-medium">Manage files</p>
+                        <p className="text-sm text-muted-foreground">Access and manage your documents and files</p>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">SharePoint, Notion</div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
             {/* Outlook Connection Dialog */}
             <Dialog open={outlookDialogOpen} onOpenChange={setOutlookDialogOpen}>
               <DialogContent className="max-w-md mx-auto rounded-2xl">

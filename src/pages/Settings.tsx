@@ -515,10 +515,15 @@ const Settings = () => {
                       <p className="font-medium">Read emails</p>
                       <p className="text-sm text-muted-foreground">Access and view your email messages</p>
                     </div>
-                    <Switch 
-                      checked={outlookPermissions.readEmails}
-                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, readEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({outlookPermissions.readEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={outlookPermissions.readEmails}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, readEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -526,10 +531,15 @@ const Settings = () => {
                       <p className="font-medium">Draft emails</p>
                       <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
                     </div>
-                    <Switch 
-                      checked={outlookPermissions.draftEmails}
-                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, draftEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({outlookPermissions.draftEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={outlookPermissions.draftEmails}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, draftEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -537,10 +547,15 @@ const Settings = () => {
                       <p className="font-medium">Send emails</p>
                       <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
                     </div>
-                    <Switch 
-                      checked={outlookPermissions.sendEmails}
-                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, sendEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({outlookPermissions.sendEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={outlookPermissions.sendEmails}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, sendEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -548,10 +563,15 @@ const Settings = () => {
                       <p className="font-medium">Search emails</p>
                       <p className="text-sm text-muted-foreground">Search through your mailbox</p>
                     </div>
-                    <Switch 
-                      checked={outlookPermissions.searchEmails}
-                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, searchEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({outlookPermissions.searchEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={outlookPermissions.searchEmails}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, searchEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3">
@@ -559,10 +579,15 @@ const Settings = () => {
                       <p className="font-medium">Manage labels</p>
                       <p className="text-sm text-muted-foreground">Add or remove email labels</p>
                     </div>
-                    <Switch 
-                      checked={outlookPermissions.manageLabels}
-                      onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, manageLabels: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({outlookPermissions.manageLabels ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={outlookPermissions.manageLabels}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, manageLabels: checked})}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -601,10 +626,15 @@ const Settings = () => {
                       <p className="font-medium">Read events</p>
                       <p className="text-sm text-muted-foreground">View your calendar and events</p>
                     </div>
-                    <Switch 
-                      checked={calendarPermissions.readEvents}
-                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, readEvents: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({calendarPermissions.readEvents ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={calendarPermissions.readEvents}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, readEvents: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -612,10 +642,15 @@ const Settings = () => {
                       <p className="font-medium">Create events</p>
                       <p className="text-sm text-muted-foreground">Add new events to your calendar</p>
                     </div>
-                    <Switch 
-                      checked={calendarPermissions.createEvents}
-                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, createEvents: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({calendarPermissions.createEvents ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={calendarPermissions.createEvents}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, createEvents: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -623,10 +658,15 @@ const Settings = () => {
                       <p className="font-medium">Update events</p>
                       <p className="text-sm text-muted-foreground">Modify existing calendar events</p>
                     </div>
-                    <Switch 
-                      checked={calendarPermissions.updateEvents}
-                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, updateEvents: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({calendarPermissions.updateEvents ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={calendarPermissions.updateEvents}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, updateEvents: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -634,10 +674,15 @@ const Settings = () => {
                       <p className="font-medium">Delete events</p>
                       <p className="text-sm text-muted-foreground">Remove events from calendar</p>
                     </div>
-                    <Switch 
-                      checked={calendarPermissions.deleteEvents}
-                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, deleteEvents: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({calendarPermissions.deleteEvents ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={calendarPermissions.deleteEvents}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, deleteEvents: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3">
@@ -645,10 +690,15 @@ const Settings = () => {
                       <p className="font-medium">Find availability</p>
                       <p className="text-sm text-muted-foreground">Check free time slots</p>
                     </div>
-                    <Switch 
-                      checked={calendarPermissions.findAvailability}
-                      onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, findAvailability: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({calendarPermissions.findAvailability ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={calendarPermissions.findAvailability}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, findAvailability: checked})}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -687,10 +737,15 @@ const Settings = () => {
                       <p className="font-medium">List documents</p>
                       <p className="text-sm text-muted-foreground">View all documents in libraries</p>
                     </div>
-                    <Switch 
-                      checked={sharepointPermissions.listDocuments}
-                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, listDocuments: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({sharepointPermissions.listDocuments ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={sharepointPermissions.listDocuments}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, listDocuments: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -698,10 +753,15 @@ const Settings = () => {
                       <p className="font-medium">Upload documents</p>
                       <p className="text-sm text-muted-foreground">Add new files to SharePoint</p>
                     </div>
-                    <Switch 
-                      checked={sharepointPermissions.uploadDocuments}
-                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, uploadDocuments: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({sharepointPermissions.uploadDocuments ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={sharepointPermissions.uploadDocuments}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, uploadDocuments: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -709,10 +769,15 @@ const Settings = () => {
                       <p className="font-medium">Download documents</p>
                       <p className="text-sm text-muted-foreground">Download files from SharePoint</p>
                     </div>
-                    <Switch 
-                      checked={sharepointPermissions.downloadDocuments}
-                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, downloadDocuments: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({sharepointPermissions.downloadDocuments ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={sharepointPermissions.downloadDocuments}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, downloadDocuments: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -720,10 +785,15 @@ const Settings = () => {
                       <p className="font-medium">Search documents</p>
                       <p className="text-sm text-muted-foreground">Search across SharePoint sites</p>
                     </div>
-                    <Switch 
-                      checked={sharepointPermissions.searchDocuments}
-                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, searchDocuments: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({sharepointPermissions.searchDocuments ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={sharepointPermissions.searchDocuments}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, searchDocuments: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3">
@@ -731,10 +801,15 @@ const Settings = () => {
                       <p className="font-medium">Share documents</p>
                       <p className="text-sm text-muted-foreground">Share files with others</p>
                     </div>
-                    <Switch 
-                      checked={sharepointPermissions.shareDocuments}
-                      onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, shareDocuments: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({sharepointPermissions.shareDocuments ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={sharepointPermissions.shareDocuments}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, shareDocuments: checked})}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -773,10 +848,15 @@ const Settings = () => {
                       <p className="font-medium">Read emails</p>
                       <p className="text-sm text-muted-foreground">Access and view your email messages</p>
                     </div>
-                    <Switch 
-                      checked={gmailPermissions.readEmails}
-                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, readEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({gmailPermissions.readEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={gmailPermissions.readEmails}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, readEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -784,10 +864,15 @@ const Settings = () => {
                       <p className="font-medium">Draft emails</p>
                       <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
                     </div>
-                    <Switch 
-                      checked={gmailPermissions.draftEmails}
-                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, draftEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({gmailPermissions.draftEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={gmailPermissions.draftEmails}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, draftEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -795,10 +880,15 @@ const Settings = () => {
                       <p className="font-medium">Send emails</p>
                       <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
                     </div>
-                    <Switch 
-                      checked={gmailPermissions.sendEmails}
-                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, sendEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({gmailPermissions.sendEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={gmailPermissions.sendEmails}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, sendEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -806,10 +896,15 @@ const Settings = () => {
                       <p className="font-medium">Search emails</p>
                       <p className="text-sm text-muted-foreground">Search through your mailbox</p>
                     </div>
-                    <Switch 
-                      checked={gmailPermissions.searchEmails}
-                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, searchEmails: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({gmailPermissions.searchEmails ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={gmailPermissions.searchEmails}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, searchEmails: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3">
@@ -817,10 +912,15 @@ const Settings = () => {
                       <p className="font-medium">Manage labels</p>
                       <p className="text-sm text-muted-foreground">Add or remove email labels</p>
                     </div>
-                    <Switch 
-                      checked={gmailPermissions.manageLabels}
-                      onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, manageLabels: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({gmailPermissions.manageLabels ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={gmailPermissions.manageLabels}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, manageLabels: checked})}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -859,10 +959,15 @@ const Settings = () => {
                       <p className="font-medium">Search pages</p>
                       <p className="text-sm text-muted-foreground">Search across your workspace</p>
                     </div>
-                    <Switch 
-                      checked={notionPermissions.searchPages}
-                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, searchPages: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({notionPermissions.searchPages ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={notionPermissions.searchPages}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, searchPages: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -870,10 +975,15 @@ const Settings = () => {
                       <p className="font-medium">Create pages</p>
                       <p className="text-sm text-muted-foreground">Add new pages to workspace</p>
                     </div>
-                    <Switch 
-                      checked={notionPermissions.createPages}
-                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createPages: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({notionPermissions.createPages ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={notionPermissions.createPages}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createPages: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -881,10 +991,15 @@ const Settings = () => {
                       <p className="font-medium">Update pages</p>
                       <p className="text-sm text-muted-foreground">Modify existing pages</p>
                     </div>
-                    <Switch 
-                      checked={notionPermissions.updatePages}
-                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, updatePages: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({notionPermissions.updatePages ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={notionPermissions.updatePages}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, updatePages: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3 border-b border-border">
@@ -892,10 +1007,15 @@ const Settings = () => {
                       <p className="font-medium">Query database</p>
                       <p className="text-sm text-muted-foreground">Access database content</p>
                     </div>
-                    <Switch 
-                      checked={notionPermissions.queryDatabase}
-                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, queryDatabase: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({notionPermissions.queryDatabase ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={notionPermissions.queryDatabase}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, queryDatabase: checked})}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between py-3">
@@ -903,10 +1023,15 @@ const Settings = () => {
                       <p className="font-medium">Create entries</p>
                       <p className="text-sm text-muted-foreground">Add entries to databases</p>
                     </div>
-                    <Switch 
-                      checked={notionPermissions.createEntries}
-                      onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createEntries: checked})}
-                    />
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        AI Full Control ({notionPermissions.createEntries ? 'On' : 'Off'})
+                      </span>
+                      <Switch 
+                        checked={notionPermissions.createEntries}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createEntries: checked})}
+                      />
+                    </div>
                   </div>
                 </div>
 

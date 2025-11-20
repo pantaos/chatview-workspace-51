@@ -1077,9 +1077,9 @@ const AdminSettings = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Gmail</DialogTitle>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
                       <DialogDescription>
-                        Google's email service for sending, receiving, and managing emails
+                        Choose which tasks the AI can handle on its own and which ones you want to review first.
                       </DialogDescription>
                     </div>
                   </div>

@@ -503,8 +503,8 @@ const Settings = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Microsoft Outlook Permissions</DialogTitle>
-                      <DialogDescription>Manage what Outlook can access</DialogDescription>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
                 </DialogHeader>
@@ -589,8 +589,8 @@ const Settings = () => {
                       <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Microsoft Calendar Permissions</DialogTitle>
-                      <DialogDescription>Manage what Calendar can access</DialogDescription>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
                 </DialogHeader>
@@ -675,8 +675,8 @@ const Settings = () => {
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">SharePoint Permissions</DialogTitle>
-                      <DialogDescription>Manage what SharePoint can access</DialogDescription>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
                 </DialogHeader>
@@ -761,8 +761,8 @@ const Settings = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Gmail Permissions</DialogTitle>
-                      <DialogDescription>Manage what Gmail can access</DialogDescription>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
                 </DialogHeader>
@@ -847,8 +847,8 @@ const Settings = () => {
                       <span className="text-white font-bold text-xl">N</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Notion Permissions</DialogTitle>
-                      <DialogDescription>Manage what Notion can access</DialogDescription>
+                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
                 </DialogHeader>

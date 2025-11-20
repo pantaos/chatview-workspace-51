@@ -503,7 +503,7 @@ const Settings = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogTitle className="text-2xl">Outlook AI Workflow Controls</DialogTitle>
                       <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
@@ -517,7 +517,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({outlookPermissions.readEmails ? 'On' : 'Off'})
+                        Full Control: {outlookPermissions.readEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={outlookPermissions.readEmails}
@@ -533,7 +533,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({outlookPermissions.draftEmails ? 'On' : 'Off'})
+                        Full Control: {outlookPermissions.draftEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={outlookPermissions.draftEmails}
@@ -549,7 +549,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({outlookPermissions.sendEmails ? 'On' : 'Off'})
+                        Full Control: {outlookPermissions.sendEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={outlookPermissions.sendEmails}
@@ -565,7 +565,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({outlookPermissions.searchEmails ? 'On' : 'Off'})
+                        Full Control: {outlookPermissions.searchEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={outlookPermissions.searchEmails}
@@ -581,7 +581,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({outlookPermissions.manageLabels ? 'On' : 'Off'})
+                        Full Control: {outlookPermissions.manageLabels ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={outlookPermissions.manageLabels}
@@ -614,7 +614,7 @@ const Settings = () => {
                       <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogTitle className="text-2xl">Calendar AI Workflow Controls</DialogTitle>
                       <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
@@ -628,7 +628,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({calendarPermissions.readEvents ? 'On' : 'Off'})
+                        Full Control: {calendarPermissions.readEvents ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={calendarPermissions.readEvents}
@@ -644,7 +644,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({calendarPermissions.createEvents ? 'On' : 'Off'})
+                        Full Control: {calendarPermissions.createEvents ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={calendarPermissions.createEvents}
@@ -660,7 +660,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({calendarPermissions.updateEvents ? 'On' : 'Off'})
+                        Full Control: {calendarPermissions.updateEvents ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={calendarPermissions.updateEvents}
@@ -676,7 +676,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({calendarPermissions.deleteEvents ? 'On' : 'Off'})
+                        Full Control: {calendarPermissions.deleteEvents ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={calendarPermissions.deleteEvents}
@@ -692,7 +692,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({calendarPermissions.findAvailability ? 'On' : 'Off'})
+                        Full Control: {calendarPermissions.findAvailability ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={calendarPermissions.findAvailability}
@@ -725,7 +725,7 @@ const Settings = () => {
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogTitle className="text-2xl">SharePoint AI Workflow Controls</DialogTitle>
                       <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
@@ -739,7 +739,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({sharepointPermissions.listDocuments ? 'On' : 'Off'})
+                        Full Control: {sharepointPermissions.listDocuments ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={sharepointPermissions.listDocuments}
@@ -755,7 +755,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({sharepointPermissions.uploadDocuments ? 'On' : 'Off'})
+                        Full Control: {sharepointPermissions.uploadDocuments ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={sharepointPermissions.uploadDocuments}
@@ -771,7 +771,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({sharepointPermissions.downloadDocuments ? 'On' : 'Off'})
+                        Full Control: {sharepointPermissions.downloadDocuments ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={sharepointPermissions.downloadDocuments}
@@ -787,7 +787,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({sharepointPermissions.searchDocuments ? 'On' : 'Off'})
+                        Full Control: {sharepointPermissions.searchDocuments ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={sharepointPermissions.searchDocuments}
@@ -803,7 +803,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({sharepointPermissions.shareDocuments ? 'On' : 'Off'})
+                        Full Control: {sharepointPermissions.shareDocuments ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={sharepointPermissions.shareDocuments}
@@ -836,7 +836,7 @@ const Settings = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogTitle className="text-2xl">Gmail AI Workflow Controls</DialogTitle>
                       <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
@@ -850,7 +850,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({gmailPermissions.readEmails ? 'On' : 'Off'})
+                        Full Control: {gmailPermissions.readEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={gmailPermissions.readEmails}
@@ -866,7 +866,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({gmailPermissions.draftEmails ? 'On' : 'Off'})
+                        Full Control: {gmailPermissions.draftEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={gmailPermissions.draftEmails}
@@ -882,7 +882,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({gmailPermissions.sendEmails ? 'On' : 'Off'})
+                        Full Control: {gmailPermissions.sendEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={gmailPermissions.sendEmails}
@@ -898,7 +898,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({gmailPermissions.searchEmails ? 'On' : 'Off'})
+                        Full Control: {gmailPermissions.searchEmails ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={gmailPermissions.searchEmails}
@@ -914,7 +914,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({gmailPermissions.manageLabels ? 'On' : 'Off'})
+                        Full Control: {gmailPermissions.manageLabels ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={gmailPermissions.manageLabels}
@@ -947,7 +947,7 @@ const Settings = () => {
                       <span className="text-white font-bold text-xl">N</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">AI Workflow Controls</DialogTitle>
+                      <DialogTitle className="text-2xl">Notion AI Workflow Controls</DialogTitle>
                       <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
                     </div>
                   </div>
@@ -961,7 +961,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({notionPermissions.searchPages ? 'On' : 'Off'})
+                        Full Control: {notionPermissions.searchPages ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={notionPermissions.searchPages}
@@ -977,7 +977,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({notionPermissions.createPages ? 'On' : 'Off'})
+                        Full Control: {notionPermissions.createPages ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={notionPermissions.createPages}
@@ -993,7 +993,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({notionPermissions.updatePages ? 'On' : 'Off'})
+                        Full Control: {notionPermissions.updatePages ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={notionPermissions.updatePages}
@@ -1009,7 +1009,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({notionPermissions.queryDatabase ? 'On' : 'Off'})
+                        Full Control: {notionPermissions.queryDatabase ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={notionPermissions.queryDatabase}
@@ -1025,7 +1025,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <span className="text-xs font-medium text-muted-foreground">
-                        AI Full Control ({notionPermissions.createEntries ? 'On' : 'Off'})
+                        Full Control: {notionPermissions.createEntries ? 'On' : 'Off'}
                       </span>
                       <Switch 
                         checked={notionPermissions.createEntries}

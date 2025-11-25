@@ -18,12 +18,12 @@ const Settings = () => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("account");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [outlookDialogOpen, setOutlookDialogOpen] = useState(false);
   const [chatLanguage, setChatLanguage] = useState<LanguageType>("en");
-  const [calendarConnectDialogOpen, setCalendarConnectDialogOpen] = useState(false);
-  const [sharepointConnectDialogOpen, setSharepointConnectDialogOpen] = useState(false);
-  const [gmailConnectDialogOpen, setGmailConnectDialogOpen] = useState(false);
-  const [notionConnectDialogOpen, setNotionConnectDialogOpen] = useState(false);
+  
+  // Platform app selection dialogs
+  const [microsoftAppsDialogOpen, setMicrosoftAppsDialogOpen] = useState(false);
+  const [googleAppsDialogOpen, setGoogleAppsDialogOpen] = useState(false);
+  const [notionAppsDialogOpen, setNotionAppsDialogOpen] = useState(false);
   
   // Actions dialog states
   const [outlookActionsDialogOpen, setOutlookActionsDialogOpen] = useState(false);
@@ -80,12 +80,25 @@ const Settings = () => {
     createEntries: false
   });
   
-  // Connection status for each integration
-  const [integrationStatus, setIntegrationStatus] = useState({
+  // Platform connection status
+  const [platformStatus, setPlatformStatus] = useState({
+    microsoft: true,
+    google: true,
+    notion: false
+  });
+
+  // App enablement within each platform
+  const [microsoftApps, setMicrosoftApps] = useState({
     outlook: true,
     calendar: true,
-    sharepoint: false,
-    gmail: true,
+    sharepoint: false
+  });
+
+  const [googleApps, setGoogleApps] = useState({
+    gmail: true
+  });
+
+  const [notionApps, setNotionApps] = useState({
     notion: false
   });
   
@@ -352,146 +365,325 @@ const Settings = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOutlookActionsDialogOpen(true);
-                  }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
-                >
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </button>
-                
+              {/* Microsoft Platform Card */}
+              <Card className="p-4 hover:bg-muted/50 transition-colors group">
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.outlook ? setOutlookPermissionsDialogOpen(true) : setOutlookDialogOpen(true)}
+                  onClick={() => platformStatus.microsoft ? setMicrosoftAppsDialogOpen(true) : setMicrosoftAppsDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
+                    <span className="text-white font-bold text-lg">M</span>
                   </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Outlook</h3>
-                  <p className={`text-xs font-medium ${integrationStatus.outlook ? 'text-foreground' : 'text-red-500'}`}>
-                    {integrationStatus.outlook ? 'Connected' : 'Not Connected'}
+                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft</h3>
+                  <p className={`text-xs font-medium ${platformStatus.microsoft ? 'text-foreground' : 'text-red-500'}`}>
+                    {platformStatus.microsoft ? 'Connected' : 'Not Connected'}
                   </p>
-                  {integrationStatus.outlook && (
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  {platformStatus.microsoft && (
+                    <p className="text-xs text-muted-foreground">
+                      {Object.values(microsoftApps).filter(Boolean).length} apps enabled
+                    </p>
                   )}
                 </div>
               </Card>
 
-              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCalendarActionsDialogOpen(true);
-                  }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
-                >
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </button>
-                
+              {/* Google Platform Card */}
+              <Card className="p-4 hover:bg-muted/50 transition-colors group">
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.calendar ? setCalendarPermissionsDialogOpen(true) : setCalendarConnectDialogOpen(true)}
-                >
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft Calendar</h3>
-                  <p className={`text-xs font-medium ${integrationStatus.calendar ? 'text-foreground' : 'text-red-500'}`}>
-                    {integrationStatus.calendar ? 'Connected' : 'Not Connected'}
-                  </p>
-                  {integrationStatus.calendar && (
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  )}
-                </div>
-              </Card>
-
-              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSharepointActionsDialogOpen(true);
-                  }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
-                >
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </button>
-                
-                <div 
-                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.sharepoint ? setSharepointPermissionsDialogOpen(true) : setSharepointConnectDialogOpen(true)}
-                >
-                  <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">SharePoint</h3>
-                  <p className={`text-xs font-medium ${integrationStatus.sharepoint ? 'text-foreground' : 'text-red-500'}`}>
-                    {integrationStatus.sharepoint ? 'Connected' : 'Not Connected'}
-                  </p>
-                  {integrationStatus.sharepoint && (
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
-                  )}
-                </div>
-              </Card>
-
-              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setGmailActionsDialogOpen(true);
-                  }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
-                >
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </button>
-                
-                <div 
-                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.gmail ? setGmailPermissionsDialogOpen(true) : setGmailConnectDialogOpen(true)}
+                  onClick={() => platformStatus.google ? setGoogleAppsDialogOpen(true) : setGoogleAppsDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
+                    <span className="text-white font-bold text-lg">G</span>
                   </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Gmail</h3>
-                  <p className={`text-xs font-medium ${integrationStatus.gmail ? 'text-foreground' : 'text-red-500'}`}>
-                    {integrationStatus.gmail ? 'Connected' : 'Not Connected'}
+                  <h3 className="font-medium text-sm group-hover:text-primary">Google</h3>
+                  <p className={`text-xs font-medium ${platformStatus.google ? 'text-foreground' : 'text-red-500'}`}>
+                    {platformStatus.google ? 'Connected' : 'Not Connected'}
                   </p>
-                  {integrationStatus.gmail && (
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  {platformStatus.google && (
+                    <p className="text-xs text-muted-foreground">
+                      {Object.values(googleApps).filter(Boolean).length} apps enabled
+                    </p>
                   )}
                 </div>
               </Card>
 
-              <Card className="p-4 hover:bg-muted/50 transition-colors group relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setNotionActionsDialogOpen(true);
-                  }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full hover:bg-muted/20 flex items-center justify-center transition-colors z-10"
-                >
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </button>
-                
+              {/* Notion Platform Card */}
+              <Card className="p-4 hover:bg-muted/50 transition-colors group">
                 <div 
                   className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => integrationStatus.notion ? setNotionPermissionsDialogOpen(true) : setNotionConnectDialogOpen(true)}
+                  onClick={() => platformStatus.notion ? setNotionAppsDialogOpen(true) : setNotionAppsDialogOpen(true)}
                 >
                   <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-base">N</span>
                   </div>
                   <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
-                  <p className={`text-xs font-medium ${integrationStatus.notion ? 'text-foreground' : 'text-red-500'}`}>
-                    {integrationStatus.notion ? 'Connected' : 'Not Connected'}
+                  <p className={`text-xs font-medium ${platformStatus.notion ? 'text-foreground' : 'text-red-500'}`}>
+                    {platformStatus.notion ? 'Connected' : 'Not Connected'}
                   </p>
-                  {integrationStatus.notion && (
-                    <p className="text-xs text-muted-foreground">5 permissions</p>
+                  {platformStatus.notion && (
+                    <p className="text-xs text-muted-foreground">
+                      {Object.values(notionApps).filter(Boolean).length} apps enabled
+                    </p>
                   )}
                 </div>
               </Card>
             </div>
+
+            {/* Microsoft Apps Selection Dialog */}
+            <Dialog open={microsoftAppsDialogOpen} onOpenChange={setMicrosoftAppsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">M</span>
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Microsoft Apps</DialogTitle>
+                      <DialogDescription>Select which Microsoft apps you want to enable</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
+                        <Mail className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Outlook</p>
+                        <p className="text-sm text-muted-foreground">Email management</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={microsoftApps.outlook}
+                        onCheckedChange={(checked) => {
+                          setMicrosoftApps({...microsoftApps, outlook: checked});
+                          if (checked) {
+                            setTimeout(() => setOutlookPermissionsDialogOpen(true), 300);
+                          }
+                        }}
+                      />
+                      {microsoftApps.outlook && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setOutlookPermissionsDialogOpen(true)}
+                        >
+                          Configure
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                        <Calendar className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Calendar</p>
+                        <p className="text-sm text-muted-foreground">Calendar and events management</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={microsoftApps.calendar}
+                        onCheckedChange={(checked) => {
+                          setMicrosoftApps({...microsoftApps, calendar: checked});
+                          if (checked) {
+                            setTimeout(() => setCalendarPermissionsDialogOpen(true), 300);
+                          }
+                        }}
+                      />
+                      {microsoftApps.calendar && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setCalendarPermissionsDialogOpen(true)}
+                        >
+                          Configure
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-700 rounded flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium">SharePoint</p>
+                        <p className="text-sm text-muted-foreground">Document management</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={microsoftApps.sharepoint}
+                        onCheckedChange={(checked) => {
+                          setMicrosoftApps({...microsoftApps, sharepoint: checked});
+                          if (checked) {
+                            setTimeout(() => setSharepointPermissionsDialogOpen(true), 300);
+                          }
+                        }}
+                      />
+                      {microsoftApps.sharepoint && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setSharepointPermissionsDialogOpen(true)}
+                        >
+                          Configure
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setMicrosoftAppsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setMicrosoftAppsDialogOpen(false);
+                    setPlatformStatus({...platformStatus, microsoft: true});
+                    toast.success("Microsoft apps configured");
+                  }}>
+                    Save
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Google Apps Selection Dialog */}
+            <Dialog open={googleAppsDialogOpen} onOpenChange={setGoogleAppsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">G</span>
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Google Apps</DialogTitle>
+                      <DialogDescription>Select which Google apps you want to enable</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+                        <Mail className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Gmail</p>
+                        <p className="text-sm text-muted-foreground">Email management</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={googleApps.gmail}
+                        onCheckedChange={(checked) => {
+                          setGoogleApps({...googleApps, gmail: checked});
+                          if (checked) {
+                            setTimeout(() => setGmailPermissionsDialogOpen(true), 300);
+                          }
+                        }}
+                      />
+                      {googleApps.gmail && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setGmailPermissionsDialogOpen(true)}
+                        >
+                          Configure
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setGoogleAppsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setGoogleAppsDialogOpen(false);
+                    setPlatformStatus({...platformStatus, google: true});
+                    toast.success("Google apps configured");
+                  }}>
+                    Save
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Notion Apps Selection Dialog */}
+            <Dialog open={notionAppsDialogOpen} onOpenChange={setNotionAppsDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-base">N</span>
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl">Notion</DialogTitle>
+                      <DialogDescription>Enable Notion integration</DialogDescription>
+                    </div>
+                  </div>
+                </DialogHeader>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-slate-800 rounded flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">N</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">Notion</p>
+                        <p className="text-sm text-muted-foreground">Pages and database management</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={notionApps.notion}
+                        onCheckedChange={(checked) => {
+                          setNotionApps({...notionApps, notion: checked});
+                          if (checked) {
+                            setTimeout(() => setNotionPermissionsDialogOpen(true), 300);
+                          }
+                        }}
+                      />
+                      {notionApps.notion && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setNotionPermissionsDialogOpen(true)}
+                        >
+                          Configure
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setNotionAppsDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button onClick={() => {
+                    setNotionAppsDialogOpen(false);
+                    setPlatformStatus({...platformStatus, notion: true});
+                    toast.success("Notion configured");
+                  }}>
+                    Save
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
 
 
             {/* Outlook Permissions Dialog */}
@@ -1049,281 +1241,7 @@ const Settings = () => {
               </DialogContent>
             </Dialog>
 
-            {/* Outlook Connection Dialog */}
-            <Dialog open={outlookDialogOpen} onOpenChange={setOutlookDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
-                    </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <DialogTitle className="text-xl font-semibold">Connect Microsoft Outlook</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Microsoft for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your Microsoft Calendar data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked Microsoft data.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                    onClick={() => {
-                      setOutlookDialogOpen(false);
-                      toast.success("Redirecting to Microsoft Outlook...");
-                    }}
-                  >
-                    Continue to Microsoft Outlook
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
 
-            {/* Calendar Connection Dialog */}
-            <Dialog open={calendarConnectDialogOpen} onOpenChange={setCalendarConnectDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
-                    </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                      <Calendar className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <DialogTitle className="text-xl font-semibold">Connect Microsoft Calendar</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Microsoft for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your Microsoft Calendar data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked Microsoft data.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                    onClick={() => {
-                      setCalendarConnectDialogOpen(false);
-                      toast.success("Redirecting to Microsoft Calendar...");
-                    }}
-                  >
-                    Continue to Microsoft Calendar
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* SharePoint Connection Dialog */}
-            <Dialog open={sharepointConnectDialogOpen} onOpenChange={setSharepointConnectDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
-                    </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-700 rounded-xl flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <DialogTitle className="text-xl font-semibold">Connect SharePoint</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Microsoft for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your SharePoint data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked SharePoint data.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                    onClick={() => {
-                      setSharepointConnectDialogOpen(false);
-                      toast.success("Redirecting to SharePoint...");
-                    }}
-                  >
-                    Continue to SharePoint
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* Gmail Connection Dialog */}
-            <Dialog open={gmailConnectDialogOpen} onOpenChange={setGmailConnectDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
-                    </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <DialogTitle className="text-xl font-semibold">Connect Gmail</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Google for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your Gmail data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked Gmail data.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                    onClick={() => {
-                      setGmailConnectDialogOpen(false);
-                      toast.success("Redirecting to Gmail...");
-                    }}
-                  >
-                    Continue to Gmail
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* Notion Connection Dialog */}
-            <Dialog open={notionConnectDialogOpen} onOpenChange={setNotionConnectDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
-                    </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center">
-                      <span className="text-white font-bold text-xl">N</span>
-                    </div>
-                  </div>
-                  <DialogTitle className="text-xl font-semibold">Connect Notion</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Notion for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your Notion data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked Notion data.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
-                    onClick={() => {
-                      setNotionConnectDialogOpen(false);
-                      toast.success("Redirecting to Notion...");
-                    }}
-                  >
-                    Continue to Notion
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-            
             {/* Outlook Actions Dialog */}
             <Dialog open={outlookActionsDialogOpen} onOpenChange={setOutlookActionsDialogOpen}>
               <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -1825,7 +1743,7 @@ const Settings = () => {
       default:
         return null;
     }
-  }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange, chatLanguage, integrationToggles, handleToggleIntegration, handleChatLanguageChange, calendarConnectDialogOpen, sharepointConnectDialogOpen, gmailConnectDialogOpen, notionConnectDialogOpen]);
+  }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange, chatLanguage, integrationToggles, handleToggleIntegration, handleChatLanguageChange]);
   
   return (
     <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>

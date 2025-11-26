@@ -456,6 +456,7 @@ const Settings = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
+                      <Label className="text-xs text-muted-foreground">Enable</Label>
                       <Switch 
                         checked={microsoftApps.outlook}
                         onCheckedChange={(checked) => {
@@ -487,6 +488,7 @@ const Settings = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
+                      <Label className="text-xs text-muted-foreground">Enable</Label>
                       <Switch 
                         checked={microsoftApps.calendar}
                         onCheckedChange={(checked) => {
@@ -518,6 +520,7 @@ const Settings = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
+                      <Label className="text-xs text-muted-foreground">Enable</Label>
                       <Switch 
                         checked={microsoftApps.sharepoint}
                         onCheckedChange={(checked) => {
@@ -581,6 +584,7 @@ const Settings = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
+                      <Label className="text-xs text-muted-foreground">Enable</Label>
                       <Switch 
                         checked={googleApps.gmail}
                         onCheckedChange={(checked) => {
@@ -644,6 +648,7 @@ const Settings = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
+                      <Label className="text-xs text-muted-foreground">Enable</Label>
                       <Switch 
                         checked={notionApps.notion}
                         onCheckedChange={(checked) => {

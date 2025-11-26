@@ -9,7 +9,7 @@ import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image, Info, X } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image, Info, X, ArrowLeft } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
@@ -783,16 +783,29 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setOutlookPermissionsDialogOpen(false)}>
-                    Close
+                <div className="mt-6 flex justify-between gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setOutlookPermissionsDialogOpen(false);
+                      setMicrosoftAppsDialogOpen(true);
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
-                  <Button onClick={() => {
-                    setOutlookPermissionsDialogOpen(false);
-                    toast.success("Outlook permissions updated");
-                  }}>
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" onClick={() => setOutlookPermissionsDialogOpen(false)}>
+                      Close
+                    </Button>
+                    <Button onClick={() => {
+                      setOutlookPermissionsDialogOpen(false);
+                      toast.success("Outlook permissions updated");
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -894,16 +907,29 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setCalendarPermissionsDialogOpen(false)}>
-                    Close
+                <div className="mt-6 flex justify-between gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setCalendarPermissionsDialogOpen(false);
+                      setMicrosoftAppsDialogOpen(true);
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
-                  <Button onClick={() => {
-                    setCalendarPermissionsDialogOpen(false);
-                    toast.success("Calendar permissions updated");
-                  }}>
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" onClick={() => setCalendarPermissionsDialogOpen(false)}>
+                      Close
+                    </Button>
+                    <Button onClick={() => {
+                      setCalendarPermissionsDialogOpen(false);
+                      toast.success("Calendar permissions updated");
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -1005,16 +1031,29 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setSharepointPermissionsDialogOpen(false)}>
-                    Close
+                <div className="mt-6 flex justify-between gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setSharepointPermissionsDialogOpen(false);
+                      setMicrosoftAppsDialogOpen(true);
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
-                  <Button onClick={() => {
-                    setSharepointPermissionsDialogOpen(false);
-                    toast.success("SharePoint permissions updated");
-                  }}>
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" onClick={() => setSharepointPermissionsDialogOpen(false)}>
+                      Close
+                    </Button>
+                    <Button onClick={() => {
+                      setSharepointPermissionsDialogOpen(false);
+                      toast.success("SharePoint permissions updated");
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -1116,16 +1155,29 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setGmailPermissionsDialogOpen(false)}>
-                    Close
+                <div className="mt-6 flex justify-between gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setGmailPermissionsDialogOpen(false);
+                      setGoogleAppsDialogOpen(true);
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
-                  <Button onClick={() => {
-                    setGmailPermissionsDialogOpen(false);
-                    toast.success("Gmail permissions updated");
-                  }}>
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" onClick={() => setGmailPermissionsDialogOpen(false)}>
+                      Close
+                    </Button>
+                    <Button onClick={() => {
+                      setGmailPermissionsDialogOpen(false);
+                      toast.success("Gmail permissions updated");
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -1227,16 +1279,29 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setNotionPermissionsDialogOpen(false)}>
-                    Close
+                <div className="mt-6 flex justify-between gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setNotionPermissionsDialogOpen(false);
+                      setNotionAppsDialogOpen(true);
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
-                  <Button onClick={() => {
-                    setNotionPermissionsDialogOpen(false);
-                    toast.success("Notion permissions updated");
-                  }}>
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" onClick={() => setNotionPermissionsDialogOpen(false)}>
+                      Close
+                    </Button>
+                    <Button onClick={() => {
+                      setNotionPermissionsDialogOpen(false);
+                      toast.success("Notion permissions updated");
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>

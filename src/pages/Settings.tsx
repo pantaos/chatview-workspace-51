@@ -455,7 +455,7 @@ const Settings = () => {
                         <p className="text-sm text-muted-foreground">Email management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end gap-2">
                       <Switch 
                         checked={microsoftApps.outlook}
                         onCheckedChange={(checked) => {
@@ -465,15 +465,14 @@ const Settings = () => {
                           }
                         }}
                       />
-                      {microsoftApps.outlook && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setOutlookPermissionsDialogOpen(true)}
-                        >
-                          Configure
-                        </Button>
-                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        disabled={!microsoftApps.outlook}
+                        onClick={() => setOutlookPermissionsDialogOpen(true)}
+                      >
+                        Configure
+                      </Button>
                     </div>
                   </div>
 
@@ -487,7 +486,7 @@ const Settings = () => {
                         <p className="text-sm text-muted-foreground">Calendar and events management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end gap-2">
                       <Switch 
                         checked={microsoftApps.calendar}
                         onCheckedChange={(checked) => {
@@ -497,15 +496,14 @@ const Settings = () => {
                           }
                         }}
                       />
-                      {microsoftApps.calendar && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setCalendarPermissionsDialogOpen(true)}
-                        >
-                          Configure
-                        </Button>
-                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        disabled={!microsoftApps.calendar}
+                        onClick={() => setCalendarPermissionsDialogOpen(true)}
+                      >
+                        Configure
+                      </Button>
                     </div>
                   </div>
 
@@ -519,7 +517,7 @@ const Settings = () => {
                         <p className="text-sm text-muted-foreground">Document management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end gap-2">
                       <Switch 
                         checked={microsoftApps.sharepoint}
                         onCheckedChange={(checked) => {
@@ -529,15 +527,14 @@ const Settings = () => {
                           }
                         }}
                       />
-                      {microsoftApps.sharepoint && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setSharepointPermissionsDialogOpen(true)}
-                        >
-                          Configure
-                        </Button>
-                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        disabled={!microsoftApps.sharepoint}
+                        onClick={() => setSharepointPermissionsDialogOpen(true)}
+                      >
+                        Configure
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -583,7 +580,7 @@ const Settings = () => {
                         <p className="text-sm text-muted-foreground">Email management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end gap-2">
                       <Switch 
                         checked={googleApps.gmail}
                         onCheckedChange={(checked) => {
@@ -593,15 +590,14 @@ const Settings = () => {
                           }
                         }}
                       />
-                      {googleApps.gmail && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setGmailPermissionsDialogOpen(true)}
-                        >
-                          Configure
-                        </Button>
-                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        disabled={!googleApps.gmail}
+                        onClick={() => setGmailPermissionsDialogOpen(true)}
+                      >
+                        Configure
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -647,7 +643,7 @@ const Settings = () => {
                         <p className="text-sm text-muted-foreground">Pages and database management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end gap-2">
                       <Switch 
                         checked={notionApps.notion}
                         onCheckedChange={(checked) => {
@@ -657,15 +653,14 @@ const Settings = () => {
                           }
                         }}
                       />
-                      {notionApps.notion && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setNotionPermissionsDialogOpen(true)}
-                        >
-                          Configure
-                        </Button>
-                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        disabled={!notionApps.notion}
+                        onClick={() => setNotionPermissionsDialogOpen(true)}
+                      >
+                        Configure
+                      </Button>
                     </div>
                   </div>
                 </div>

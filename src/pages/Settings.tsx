@@ -466,14 +466,13 @@ const Settings = () => {
                           }
                         }}
                       />
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+                      <button
                         disabled={!microsoftApps.outlook}
                         onClick={() => setOutlookPermissionsDialogOpen(true)}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Configure
-                      </Button>
+                      </button>
                     </div>
                   </div>
 
@@ -498,14 +497,13 @@ const Settings = () => {
                           }
                         }}
                       />
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+                      <button
                         disabled={!microsoftApps.calendar}
                         onClick={() => setCalendarPermissionsDialogOpen(true)}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Configure
-                      </Button>
+                      </button>
                     </div>
                   </div>
 
@@ -530,14 +528,13 @@ const Settings = () => {
                           }
                         }}
                       />
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+                      <button
                         disabled={!microsoftApps.sharepoint}
                         onClick={() => setSharepointPermissionsDialogOpen(true)}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Configure
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -594,14 +591,13 @@ const Settings = () => {
                           }
                         }}
                       />
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+                      <button
                         disabled={!googleApps.gmail}
                         onClick={() => setGmailPermissionsDialogOpen(true)}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Configure
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -658,14 +654,13 @@ const Settings = () => {
                           }
                         }}
                       />
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+                      <button
                         disabled={!notionApps.notion}
                         onClick={() => setNotionPermissionsDialogOpen(true)}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Configure
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </div>

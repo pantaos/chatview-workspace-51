@@ -444,8 +444,10 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">App Integrations</h3>
+                  <div className="space-y-4 pl-4">
+                    <div className="flex items-center justify-between py-3 border-b border-border">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
                         <Mail className="w-4 h-4 text-white" />
@@ -538,6 +540,7 @@ const Settings = () => {
                     </div>
                   </div>
                 </div>
+                </div>
 
                 <div className="mt-6 flex justify-end gap-3">
                   <Button variant="outline" onClick={() => setMicrosoftAppsDialogOpen(false)}>
@@ -569,8 +572,10 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3">
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">App Integrations</h3>
+                  <div className="space-y-4 pl-4">
+                    <div className="flex items-center justify-between py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
                         <Mail className="w-4 h-4 text-white" />
@@ -600,6 +605,7 @@ const Settings = () => {
                       </Button>
                     </div>
                   </div>
+                </div>
                 </div>
 
                 <div className="mt-6 flex justify-end gap-3">
@@ -632,8 +638,10 @@ const Settings = () => {
                   </div>
                 </DialogHeader>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3">
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">App Integrations</h3>
+                  <div className="space-y-4 pl-4">
+                    <div className="flex items-center justify-between py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-slate-800 rounded flex items-center justify-center">
                         <span className="text-white font-bold text-sm">N</span>
@@ -663,6 +671,7 @@ const Settings = () => {
                       </Button>
                     </div>
                   </div>
+                </div>
                 </div>
 
                 <div className="mt-6 flex justify-end gap-3">

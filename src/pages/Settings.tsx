@@ -8,12 +8,13 @@ import { toast } from "sonner";
 import { useLanguage, type LanguageType } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-import LiquidGlassHeader from "@/components/LiquidGlassHeader";
-import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image, Info, X, ArrowLeft } from "lucide-react";
+import MainLayout from "@/components/MainLayout";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Mail, Globe, User, Puzzle, MessageSquare, Calendar, FileText, Image, Info, X, ArrowLeft, Sun, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
-  const { theme } = useTheme();
+  const { theme, toggleDarkMode } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("account");
@@ -1806,89 +1807,90 @@ const Settings = () => {
   }, [activeTab, availableLanguages, language, userProfile, handleLanguageChange, chatLanguage, integrationToggles, handleToggleIntegration, handleChatLanguageChange]);
   
   return (
-    <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      <LiquidGlassHeader
-        title="Settings"
-        subtitle="Configure your preferences and personalize your workspace."
-        currentUser={currentUser}
-        showBackButton={!isMobile}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        showSidebarToggle={true}
-      />
+    <MainLayout>
+      <div className="p-8 max-w-4xl">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground mt-1">Manage your preferences and integrations.</p>
+        </div>
 
-      {/* Main content */}
-      <main className="container mx-auto px-4 py-8 -mt-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <Card className={`border border-slate-200/50 dark:border-slate-700/50 shadow-lg bg-white dark:bg-slate-800 ${isMobile ? 'min-h-[calc(100vh-140px)]' : 'min-h-[700px]'} rounded-2xl`}>
-            <div className="flex h-full">
-              {/* Mobile Sidebar Overlay */}
-              {isMobile && sidebarOpen && (
-                <div 
-                  className="fixed inset-0 bg-black/50 z-40"
-                  onClick={() => setSidebarOpen(false)}
-                />
-              )}
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-8 bg-transparent border-b border-border rounded-none p-0 h-auto">
+            <TabsTrigger 
+              value="account" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
+            >
+              General
+            </TabsTrigger>
+            <TabsTrigger 
+              value="integrations" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
+            >
+              Integrations
+            </TabsTrigger>
+          </TabsList>
 
-              {/* Sidebar */}
-              <div className={`${
-                isMobile 
-                  ? `fixed left-0 top-0 h-full w-80 bg-white dark:bg-slate-900 z-50 transform transition-transform duration-300 ${
-                      sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                    }`
-                  : 'w-72 border-r border-slate-200 dark:border-slate-800'
-              } ${isMobile ? 'pt-16' : ''}`}>
-                <div className="p-6">
-                  {!isMobile && (
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-slate-100">Settings</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">Customize your experience</p>
-                    </div>
-                  )}
-                  
-                  <nav className="space-y-2">
-                    {tabs.map((tab) => {
-                      const Icon = tab.icon;
-                      const isActive = activeTab === tab.id;
-                      
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => handleTabChange(tab.id)}
-                          className={`w-full flex items-start gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
-                            isActive
-                              ? "bg-primary text-primary-foreground shadow-md"
-                              : "hover:bg-black hover:text-white text-slate-700 dark:text-slate-300"
-                          }`}
-                        >
-                          <Icon className={`w-5 h-5 mt-0.5 ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`} />
-                          <div className="flex-1 min-w-0">
-                            <div className={`font-medium ${isActive ? "text-primary-foreground" : "group-hover:text-white dark:group-hover:text-white"}`}>
-                              {tab.label}
-                            </div>
-                            <div className={`text-xs ${isActive ? "text-primary-foreground/80" : "text-slate-500 dark:text-slate-400 group-hover:text-white/80 dark:group-hover:text-white/80"}`}>
-                              {tab.description}
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </nav>
+          <TabsContent value="account" className="mt-0">
+            <div className="space-y-8">
+              {/* Theme Mode */}
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Theme Mode</h3>
+                <p className="text-sm text-muted-foreground mb-4">Choose between light and dark mode for the interface</p>
+                <div className="flex gap-3">
+                  <Button
+                    variant={!theme.isDarkMode ? "default" : "outline"}
+                    className="gap-2"
+                    onClick={() => theme.isDarkMode && toggleDarkMode?.()}
+                  >
+                    <Sun className="h-4 w-4" />
+                    Light
+                  </Button>
+                  <Button
+                    variant={theme.isDarkMode ? "default" : "outline"}
+                    className="gap-2"
+                    onClick={() => !theme.isDarkMode && toggleDarkMode?.()}
+                  >
+                    <Moon className="h-4 w-4" />
+                    Dark
+                  </Button>
                 </div>
               </div>
 
-              {/* Main content area */}
-              <div className="flex-1 p-6 overflow-auto">
-                <div className="max-w-4xl">
-                  {renderContent()}
+              {/* Language Preferences */}
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Language Preferences</h3>
+                <p className="text-sm text-muted-foreground mb-4">Choose your language</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-3">
+                    {availableLanguages.map((lang) => (
+                      <Button
+                        key={lang.code}
+                        variant={language === lang.code ? "default" : "outline"}
+                        onClick={() => handleLanguageChange(lang.code)}
+                      >
+                        {lang.name}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button 
+                    className="ml-auto"
+                    onClick={() => toast.success("Language saved!")}
+                  >
+                    Save Language
+                  </Button>
                 </div>
               </div>
             </div>
+          </TabsContent>
 
-          </Card>
-        </div>
-      </main>
-    </div>
+          <TabsContent value="integrations" className="mt-0">
+            {renderContent()}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </MainLayout>
   );
 };
 

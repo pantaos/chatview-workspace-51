@@ -26,7 +26,7 @@ import TagFilter from "@/components/TagFilter";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import ModernNavbar from "@/components/ModernNavbar";
+import MainLayout from "@/components/MainLayout";
 import { WorkflowItem, Assistant, Workflow, WorkflowTag, ConversationalWorkflow } from "@/types/workflow";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -361,23 +361,26 @@ const Index = () => {
         />
       ) : (
         <>
-          <ModernNavbar />
-          
-          <div className={`${isMobile ? 'py-8' : 'py-16'} bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950 relative overflow-hidden`}>
-            <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'} relative z-10`}>
-              <section className={`${isMobile ? 'mb-10' : 'mb-20'} transform transition-all duration-500 hover:scale-[1.02]`}>
+          <MainLayout>
+            <div className="p-8">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+                <p className="text-muted-foreground">How can I help you today?</p>
+              </div>
+              
+              <section className="mb-8">
                 <SearchChat 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onSubmit={handleSearchSubmit}
                   disableNavigation={true}
-                  title="How can I help you?"
+                  title=""
                   placeholder="Start a conversation"
                 />
               </section>
               
-              <section className={`${isMobile ? 'mb-8' : 'mb-12'}`}>
-                <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-white ${isMobile ? 'mb-6' : 'mb-10'} animate-fade-in`}>
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-foreground mb-6">
                   Workflows & Assistants
                 </h2>
                 
@@ -570,122 +573,16 @@ const Index = () => {
                   </div>
                 )}
               </section>
-            </div>
-          </div>
-          
-          <div className={`${isMobile ? 'py-6' : 'py-12'} bg-background transition-colors duration-300 flex-1`}>
-            <div className={`container mx-auto ${isMobile ? 'px-4' : 'px-6'}`}>
-              <section>
-                <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-foreground ${isMobile ? 'mb-6' : 'mb-8'} animate-fade-in`}>
-                  {translate('dashboard.recentHistory')}
-                </h2>
-                
-                <Tabs defaultValue="all">
-                  <div className={`${isMobile ? 'flex flex-col space-y-4' : 'filters-with-button'}`}>
-                    <TabsList className={`${isMobile ? 'w-full' : 'mb-8'} bg-card`}>
-                      <TabsTrigger value="all" className="flex-1 transition-all duration-200">
-                        {translate('dashboard.all')}
-                      </TabsTrigger>
-                      <TabsTrigger value="favorites" className="flex-1 transition-all duration-200">
-                        {isMobile ? 'Favs' : translate('dashboard.favorites')}
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className={`hover:bg-accent text-foreground transition-all duration-200 transform hover:scale-105 ${isMobile ? 'w-full' : ''}`}
-                      onClick={() => navigate("/history")}
-                    >
-                      {translate('app.viewAll')}
-                    </Button>
-                  </div>
-                  
-                  <TabsContent value="all" className={`${isMobile ? 'mt-0' : 'mt-6'}`}>
-                    <div className="bg-card rounded-2xl shadow-xl border border-border transition-all duration-300 hover:shadow-2xl">
-                      {historyData.slice(0, isMobile ? 3 : historyData.length).map((item, index) => (
-                        <div 
-                          key={item.id}
-                          className="animate-fade-in"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                          <HistoryItem
-                            title={item.title}
-                            workflowType={item.workflowType}
-                            timestamp={item.timestamp}
-                            icon={item.icon}
-                            isFavorite={item.isFavorite}
-                            onClick={() => {
-                              console.log(`History item clicked: ${item.id}`);
-                              const workflowItem: Assistant = {
-                                id: item.id,
-                                title: item.workflowType,
-                                description: item.title,
-                                icon: "MessageSquare",
-                                type: "assistant" as const,
-                                tags: [],
-                                systemPrompt: "You are a helpful assistant.",
-                                starters: []
-                              };
-                              setCurrentWorkflow(workflowItem);
-                              setShowChat(true);
-                            }}
-                            onFavoriteToggle={() => toggleFavorite(item.id)}
-                            onRename={(newName) => renameHistoryItem(item.id, newName)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="favorites" className={`${isMobile ? 'mt-0' : 'mt-6'}`}>
-                    <div className="bg-card rounded-2xl shadow-xl border border-border transition-all duration-300 hover:shadow-2xl">
-                      {historyData.filter(item => item.isFavorite).slice(0, isMobile ? 3 : historyData.length).map((item, index) => (
-                        <div 
-                          key={item.id}
-                          className="animate-fade-in"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                          <HistoryItem
-                            title={item.title}
-                            workflowType={item.workflowType}
-                            timestamp={item.timestamp}
-                            icon={item.icon}
-                            isFavorite={item.isFavorite}
-                            onClick={() => {
-                              console.log(`History item clicked: ${item.id}`);
-                              const workflowItem: Assistant = {
-                                id: item.id,
-                                title: item.workflowType,
-                                description: item.title,
-                                icon: "MessageSquare",
-                                type: "assistant" as const,
-                                tags: [],
-                                systemPrompt: "You are a helpful assistant.",
-                                starters: []
-                              };
-                              setCurrentWorkflow(workflowItem);
-                              setShowChat(true);
-                            }}
-                            onFavoriteToggle={() => toggleFavorite(item.id)}
-                            onRename={(newName) => renameHistoryItem(item.id, newName)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </section>
-            </div>
-          </div>
 
-          <WorkflowCreationDialog
-            open={showNewWorkflowDialog}
-            onClose={() => setShowNewWorkflowDialog(false)}
-            onCreateWorkflow={handleCreateWorkflow}
-            availableTags={defaultTags}
-            onCreateTag={handleCreateTag}
-          />
+              <WorkflowCreationDialog
+                open={showNewWorkflowDialog}
+                onClose={() => setShowNewWorkflowDialog(false)}
+                onCreateWorkflow={handleCreateWorkflow}
+                availableTags={defaultTags}
+                onCreateTag={handleCreateTag}
+              />
+            </div>
+          </MainLayout>
         </>
       )}
     </div>

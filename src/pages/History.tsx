@@ -1,18 +1,14 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { 
   FileText, 
   Image, 
   Code, 
   MessageSquare,
-  ArrowLeft,
   LucideIcon
 } from "lucide-react";
 import HistoryItem from "@/components/HistoryItem";
-import ProfileDropdown from "@/components/ProfileDropdown";
-import Logo from "@/components/Logo";
+import MainLayout from "@/components/MainLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -128,47 +124,34 @@ const History = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-black hover:text-white"
-              onClick={() => navigate(-1)}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Logo />
-          </div>
-          <ProfileDropdown 
-            name="Moin Arian" 
-            email="moin@example.com"
-            avatarUrl="/placeholder.svg"
-          />
-        </div>
-      </header>
-      
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold">Chat History</h1>
+    <MainLayout>
+      <div className="p-8 max-w-4xl">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Chat History</h1>
+          <p className="text-muted-foreground mt-1">View and manage your conversation history</p>
         </div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="mb-6">
-            <TabsTrigger value="all">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8">
+            <TabsTrigger 
+              value="all" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
+            >
               {translate('dashboard.all') || 'All'}
             </TabsTrigger>
-            <TabsTrigger value="favorites">
+            <TabsTrigger 
+              value="favorites"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
+            >
               {translate('dashboard.favorites') || 'Favorites'}
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="all" className="animate-fade-in">
-            <div className="bg-white rounded-lg shadow-sm border">
+          <TabsContent value="all" className="mt-0">
+            <div className="bg-card rounded-lg border">
               {filteredHistory.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   <p>No history items found</p>
                 </div>
               ) : (
@@ -193,10 +176,10 @@ const History = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="favorites" className="animate-fade-in">
-            <div className="bg-white rounded-lg shadow-sm border">
+          <TabsContent value="favorites" className="mt-0">
+            <div className="bg-card rounded-lg border">
               {filteredHistory.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   <p>No favorite items found</p>
                 </div>
               ) : (
@@ -221,8 +204,8 @@ const History = () => {
             </div>
           </TabsContent>
         </Tabs>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 };
 

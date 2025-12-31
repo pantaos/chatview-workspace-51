@@ -121,22 +121,16 @@ const AdminDashboard = ({ onNavigateToUsers }: AdminDashboardProps) => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground mt-1">Usage insights from your workspace</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <select className="px-3 py-2 text-sm border rounded-lg bg-background">
-            <option>Last 30 days</option>
-            <option>Last 7 days</option>
-            <option>Last 90 days</option>
-          </select>
-          <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg bg-background">
-            <Calendar className="w-4 h-4" />
-            <span>Dec 10 - Jan 08</span>
-          </div>
+      {/* Date Filters */}
+      <div className="flex items-center justify-end gap-4">
+        <select className="px-3 py-2 text-sm border rounded-lg bg-background">
+          <option>Last 30 days</option>
+          <option>Last 7 days</option>
+          <option>Last 90 days</option>
+        </select>
+        <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg bg-background">
+          <Calendar className="w-4 h-4" />
+          <span>Dec 10 - Jan 08</span>
         </div>
       </div>
 

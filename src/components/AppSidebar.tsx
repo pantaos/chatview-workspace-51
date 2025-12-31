@@ -110,11 +110,11 @@ const AppSidebar = () => {
   };
 
   return (
-    <aside className="w-64 h-screen bg-muted/30 border-r border-border flex flex-col flex-shrink-0">
+    <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-border">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-          <MessageSquare className="h-4 w-4 text-primary-foreground" />
+      <div className="flex items-center gap-3 px-4 py-5">
+        <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+          <MessageSquare className="h-4 w-4 text-white" />
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-base font-bold text-foreground truncate">PANTA</h1>

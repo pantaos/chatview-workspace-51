@@ -358,13 +358,6 @@ const Settings = () => {
       case "integrations":
         return (
           <div className="space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-2">Tool Integrations</h2>
-              <p className="text-muted-foreground">
-                Connect your favorite apps so your assistant can access their information, based on what you're authorized to view.
-              </p>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Microsoft Platform Card */}
               <Card className="p-4 hover:bg-muted/50 transition-colors group">

@@ -360,230 +360,148 @@ const Index = () => {
           userName="Moin Arian"
         />
       ) : (
-        <>
-          <MainLayout>
-            <div className="p-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-                <p className="text-muted-foreground">How can I help you today?</p>
-              </div>
-              
-              <section className="mb-8">
-                <SearchChat 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onSubmit={handleSearchSubmit}
-                  disableNavigation={true}
-                  title=""
-                  placeholder="Start a conversation"
-                />
-              </section>
-              
-              <section className="mb-8">
-                <h2 className="text-xl font-bold text-foreground mb-6">
+        <MainLayout>
+          <div className="p-8 max-w-6xl">
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+              <p className="text-muted-foreground mt-1">How can I help you today?</p>
+            </div>
+            
+            {/* Search */}
+            <section className="mb-10">
+              <SearchChat 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onSubmit={handleSearchSubmit}
+                disableNavigation={true}
+                title=""
+                placeholder="Start a conversation..."
+              />
+            </section>
+            
+            {/* Workflows & Assistants */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-foreground">
                   Workflows & Assistants
                 </h2>
+                <button 
+                  onClick={() => setShowNewWorkflowDialog(true)}
+                  className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create New
+                </button>
+              </div>
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-6">
+                  <TabsTrigger value="all" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
+                    All
+                  </TabsTrigger>
+                  <TabsTrigger value="assistants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
+                    Assistants
+                  </TabsTrigger>
+                  <TabsTrigger value="workflows" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
+                    Workflows
+                  </TabsTrigger>
+                  <TabsTrigger value="favorites" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
+                    Favorites
+                  </TabsTrigger>
+                </TabsList>
                 
-                {!isMobile && (
-                  <div className="mb-10 animate-fade-in delay-100">
-                    <TagFilter
-                      tags={defaultTags}
-                      selectedTags={selectedTags}
-                      onTagSelect={handleTagSelect}
-                      onTagRemove={handleTagRemove}
-                      onClearAll={handleClearAllTags}
-                      onCreateTag={handleCreateTag}
-                    />
-                  </div>
-                )}
-                
-                <div className={`${isMobile ? 'mb-8' : 'mb-12'} flex flex-col animate-fade-in delay-200`}>
-                  <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <div className={`${isMobile ? 'flex flex-col space-y-4' : 'filters-with-button'}`}>
-                      <TabsList className={`bg-white/10 backdrop-blur-xl border border-white/20 ${isMobile ? 'w-full' : ''} transition-all duration-300 hover:bg-white/20`}>
-                        <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
-                          All
-                        </TabsTrigger>
-                        <TabsTrigger value="assistants" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
-                          {isMobile ? 'AI' : 'Assistants'}
-                        </TabsTrigger>
-                        <TabsTrigger value="workflows" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
-                          Workflows
-                        </TabsTrigger>
-                        <TabsTrigger value="favorites" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 text-white flex-1 transition-all duration-200">
-                          {isMobile ? 'Favs' : 'Favorites'}
-                        </TabsTrigger>
-                      </TabsList>
-                      
-                      <Button 
-                        variant="outline" 
-                        className={`gap-2 bg-white/10 backdrop-blur-xl text-white border-white/20 hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105 ${isMobile ? 'w-full' : 'ml-6'}`}
-                        onClick={() => setShowNewWorkflowDialog(true)}
-                      >
-                        <Plus className="h-4 w-4" />
-                        {isMobile ? 'Create' : 'Create New'}
-                      </Button>
-                    </div>
-
-                    {isMobile && (
-                      <div className="mt-6 animate-fade-in delay-300">
-                        <TagFilter
-                          tags={defaultTags}
-                          selectedTags={selectedTags}
-                          onTagSelect={handleTagSelect}
-                          onTagRemove={handleTagRemove}
-                          onClearAll={handleClearAllTags}
-                          onCreateTag={handleCreateTag}
-                        />
-                      </div>
-                    )}
-                    
-                    <TabsContent value="all" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
-                        {filteredAllItems.map((item, index) => (
-                          <div 
-                            key={item.id} 
-                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
-                            <WorkflowCard
-                              title={item.title}
-                              description={item.description}
-                              icon={item.icon}
-                              tags={item.tags}
-                              translationKey={item.translationKey}
-                              onClick={() => handleWorkflowClick(item)}
-                              onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
-                              isFavorite={item.isFavorite}
-                              availableTags={defaultTags}
-                              onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
-                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="assistants" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
-                        {filteredAssistants.map((assistant, index) => (
-                          <div 
-                            key={assistant.id} 
-                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
-                            <WorkflowCard
-                              title={assistant.title}
-                              description={assistant.description}
-                              icon={assistant.icon}
-                              tags={assistant.tags}
-                              translationKey={assistant.translationKey}
-                              onClick={() => handleWorkflowClick(assistant)}
-                              onFavoriteToggle={() => toggleWorkflowFavorite(assistant.id, assistant.type)}
-                              isFavorite={assistant.isFavorite}
-                              availableTags={defaultTags}
-                              onTagToggle={(tagId) => handleWorkflowTagToggle(assistant.id, assistant.type, tagId)}
-                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="workflows" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
-                        {filteredWorkflows.map((workflow, index) => (
-                          <div 
-                            key={workflow.id} 
-                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
-                            <WorkflowCard
-                              title={workflow.title}
-                              description={workflow.description}
-                              icon={workflow.icon}
-                              tags={workflow.tags}
-                              translationKey={workflow.translationKey}
-                              onClick={() => handleWorkflowClick(workflow)}
-                              onFavoriteToggle={() => toggleWorkflowFavorite(workflow.id, workflow.type)}
-                              isFavorite={workflow.isFavorite}
-                              availableTags={defaultTags}
-                              onTagToggle={(tagId) => handleWorkflowTagToggle(workflow.id, workflow.type, tagId)}
-                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="favorites" className={`animate-fade-in ${isMobile ? 'mt-6' : 'mt-10'}`}>
-                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8'}`}>
-                        {filteredFavorites.map((item, index) => (
-                          <div 
-                            key={item.id} 
-                            className="animate-fade-in transform transition-all duration-300 hover:scale-105"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
-                            <WorkflowCard
-                              title={item.title}
-                              description={item.description}
-                              icon={item.icon}
-                              tags={item.tags}
-                              translationKey={item.translationKey}
-                              onClick={() => handleWorkflowClick(item)}
-                              onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
-                              isFavorite={item.isFavorite}
-                              availableTags={defaultTags}
-                              onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
-                              className={`${isMobile ? 'text-xs' : ''} backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300`}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      {filteredFavorites.length === 0 && (
-                        <div className="text-center text-white/70 py-12">
-                          <p className="text-lg">No favorite items yet. Click the heart icon on any workflow or assistant to add it to favorites!</p>
-                        </div>
-                      )}
-                    </TabsContent>
-                  </Tabs>
-                </div>
-                
-                {!isMobile && (
-                  <div className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl border border-white/20 text-white shadow-2xl animate-fade-in delay-500 transform transition-all duration-300 hover:scale-[1.02]">
-                    <div className="flex items-center gap-3 mb-3">
-                      <SlidersHorizontal size={24} className="text-white" />
-                      <h3 className="font-semibold text-lg">{translate('dashboard.workflowSettings')}</h3>
-                    </div>
-                    <p className="text-white/80 mb-6">{translate('dashboard.creativityLevel')}</p>
-                    <div className="flex items-center gap-6">
-                      <span className="text-sm font-medium">{translate('dashboard.conservative')}</span>
-                      <Slider 
-                        className="flex-1"
-                        value={sliderValue}
-                        onValueChange={setSliderValue}
-                        max={100}
-                        step={1}
+                <TabsContent value="all" className="mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredAllItems.map((item) => (
+                      <WorkflowCard
+                        key={item.id}
+                        title={item.title}
+                        description={item.description}
+                        icon={item.icon}
+                        tags={item.tags}
+                        translationKey={item.translationKey}
+                        onClick={() => handleWorkflowClick(item)}
+                        onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                        isFavorite={item.isFavorite}
+                        availableTags={defaultTags}
+                        onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
                       />
-                      <span className="text-sm font-medium">{translate('dashboard.creative')}</span>
-                    </div>
-                    <div className="text-center mt-2">
-                      <span className="text-sm text-white/80 font-medium">{sliderValue[0]}%</span>
-                    </div>
+                    ))}
                   </div>
-                )}
-              </section>
+                </TabsContent>
+                
+                <TabsContent value="assistants" className="mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredAssistants.map((item) => (
+                      <WorkflowCard
+                        key={item.id}
+                        title={item.title}
+                        description={item.description}
+                        icon={item.icon}
+                        tags={item.tags}
+                        translationKey={item.translationKey}
+                        onClick={() => handleWorkflowClick(item)}
+                        onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                        isFavorite={item.isFavorite}
+                        availableTags={defaultTags}
+                        onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
+                      />
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="workflows" className="mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredWorkflows.map((item) => (
+                      <WorkflowCard
+                        key={item.id}
+                        title={item.title}
+                        description={item.description}
+                        icon={item.icon}
+                        tags={item.tags}
+                        translationKey={item.translationKey}
+                        onClick={() => handleWorkflowClick(item)}
+                        onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                        isFavorite={item.isFavorite}
+                        availableTags={defaultTags}
+                        onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
+                      />
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="favorites" className="mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredFavorites.map((item) => (
+                      <WorkflowCard
+                        key={item.id}
+                        title={item.title}
+                        description={item.description}
+                        icon={item.icon}
+                        tags={item.tags}
+                        translationKey={item.translationKey}
+                        onClick={() => handleWorkflowClick(item)}
+                        onFavoriteToggle={() => toggleWorkflowFavorite(item.id, item.type)}
+                        isFavorite={item.isFavorite}
+                        availableTags={defaultTags}
+                        onTagToggle={(tagId) => handleWorkflowTagToggle(item.id, item.type, tagId)}
+                      />
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </section>
 
-              <WorkflowCreationDialog
-                open={showNewWorkflowDialog}
-                onClose={() => setShowNewWorkflowDialog(false)}
-                onCreateWorkflow={handleCreateWorkflow}
-                availableTags={defaultTags}
-                onCreateTag={handleCreateTag}
-              />
-            </div>
-          </MainLayout>
-        </>
+            <WorkflowCreationDialog
+              open={showNewWorkflowDialog}
+              onClose={() => setShowNewWorkflowDialog(false)}
+              onCreateWorkflow={handleCreateWorkflow}
+              availableTags={defaultTags}
+              onCreateTag={handleCreateTag}
+            />
+          </div>
+        </MainLayout>
       )}
     </div>
   );

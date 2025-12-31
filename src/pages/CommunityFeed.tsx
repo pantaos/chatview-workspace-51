@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, ChevronDown, ThumbsUp, Pin } from "lucide-react";
-import ModernNavbar from "@/components/ModernNavbar";
+import MainLayout from "@/components/MainLayout";
 import PromptDetailDialog from "@/components/PromptDetailDialog";
 import NewWorkflowDialog from "@/components/NewWorkflowDialog";
 import { WorkflowTag } from "@/types/workflow";
@@ -350,27 +350,28 @@ const CommunityFeed = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <ModernNavbar />
-      
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
+    <MainLayout>
+      <div className="p-8 max-w-4xl">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Community Feed</h1>
+          <p className="text-muted-foreground mt-1">Stay updated with the latest platform updates and company news</p>
+        </div>
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Community Feed</h1>
             <p className="text-muted-foreground text-lg">
               Stay updated with the latest announcements, features, and community discussions
             </p>
-          </div>
+        </div>
 
-          <Tabs defaultValue="latest" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 max-w-2xl mb-8">
-              <TabsTrigger value="latest">Latest</TabsTrigger>
-              <TabsTrigger value="pinned">Pinned</TabsTrigger>
-              <TabsTrigger value="company">Company</TabsTrigger>
-              <TabsTrigger value="platform">Platform</TabsTrigger>
-              <TabsTrigger value="prompt-library">Prompt Library</TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="latest" className="w-full">
+          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8">
+            <TabsTrigger value="latest" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Latest</TabsTrigger>
+            <TabsTrigger value="pinned" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Pinned</TabsTrigger>
+            <TabsTrigger value="company" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Company</TabsTrigger>
+            <TabsTrigger value="platform" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Platform</TabsTrigger>
+          </TabsList>
             
             <TabsContent value="latest" className="mt-0">
               {renderPosts(filterPostsByCategory("latest"))}
@@ -440,26 +441,25 @@ const CommunityFeed = () => {
               </div>
             </TabsContent>
           </Tabs>
-        </div>
+
+        <PromptDetailDialog
+          open={promptDetailOpen}
+          onClose={() => setPromptDetailOpen(false)}
+          prompt={selectedPrompt}
+          onCreateAssistant={handleCreateAssistant}
+        />
+
+        <NewWorkflowDialog
+          open={newWorkflowDialogOpen}
+          onClose={() => {
+            setNewWorkflowDialogOpen(false);
+            setPrefilledPrompt("");
+          }}
+          onCreateWorkflow={handleWorkflowCreate}
+          prefilledPrompt={prefilledPrompt}
+        />
       </div>
-
-      <PromptDetailDialog
-        open={promptDetailOpen}
-        onClose={() => setPromptDetailOpen(false)}
-        prompt={selectedPrompt}
-        onCreateAssistant={handleCreateAssistant}
-      />
-
-      <NewWorkflowDialog
-        open={newWorkflowDialogOpen}
-        onClose={() => {
-          setNewWorkflowDialogOpen(false);
-          setPrefilledPrompt("");
-        }}
-        onCreateWorkflow={handleWorkflowCreate}
-        prefilledPrompt={prefilledPrompt}
-      />
-    </div>
+    </MainLayout>
   );
 };
 

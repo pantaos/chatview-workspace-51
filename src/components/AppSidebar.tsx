@@ -148,6 +148,7 @@ const AppSidebar = ({
   const mainNavItems: NavItem[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { id: "community", label: "Community Feed", icon: Users, href: "/community-feed" },
+    { id: "inbox", label: "Inbox", icon: Inbox, onClick: () => setShowInbox(!showInbox) },
     { id: "history", label: "History", icon: History, href: "/history" },
   ];
 
@@ -395,7 +396,30 @@ const AppSidebar = ({
     <>
       <nav className="space-y-1">
         {mainNavItems.map((item) => (
-          <NavButton key={item.id} item={item} />
+          item.id === "inbox" ? (
+            <button
+              key={item.id}
+              onClick={() => setShowInbox(!showInbox)}
+              className={cn(
+                "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                showInbox
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground/70 hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <Inbox className="h-5 w-5 flex-shrink-0" />
+                <span>Inbox</span>
+              </div>
+              {unreadCount > 0 && (
+                <span className="w-5 h-5 bg-red-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+          ) : (
+            <NavButton key={item.id} item={item} />
+          )
         ))}
       </nav>
 
@@ -548,23 +572,6 @@ const AppSidebar = ({
         </div>
         
         <div className="flex items-center gap-1">
-          {/* Inbox/Notifications button */}
-          <button
-            onClick={() => setShowInbox(!showInbox)}
-            className={cn(
-              "p-2 rounded-md transition-colors relative",
-              showInbox ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
-            )}
-            title="Inbox"
-          >
-            <Inbox className="h-4 w-4" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-medium rounded-full flex items-center justify-center">
-                {unreadCount}
-              </span>
-            )}
-          </button>
-          
           {sidebarMode === "chat" && (
             <button
               onClick={() => navigate("/chat")}

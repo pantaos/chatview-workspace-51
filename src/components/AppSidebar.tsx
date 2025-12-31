@@ -17,6 +17,9 @@ import {
   PanelLeftClose,
   PanelLeft,
   MoreHorizontal,
+  Inbox,
+  X,
+  Filter,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +29,46 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Sample notifications data
+const notifications = [
+  {
+    id: "1",
+    user: { name: "Jörg Salamon", avatar: "", initials: "JS" },
+    action: "commented in",
+    project: "HDI",
+    preview: "Präsentation Content Generation am 16.01.2026",
+    time: "7h",
+    unread: true,
+  },
+  {
+    id: "2",
+    user: { name: "Jörg Salamon", avatar: "", initials: "JS" },
+    action: "commented in",
+    project: "panta Ingenieure",
+    preview: "Workflows für Wiki und Tender bestätigt. Interne Abstimmung...",
+    time: "7h",
+    unread: true,
+  },
+  {
+    id: "3",
+    user: { name: "Maria Chen", avatar: "", initials: "MC" },
+    action: "mentioned you in",
+    project: "Design Review",
+    preview: "Can you take a look at the new mockups?",
+    time: "1d",
+    unread: false,
+  },
+  {
+    id: "4",
+    user: { name: "Alex Kim", avatar: "", initials: "AK" },
+    action: "assigned you to",
+    project: "Sprint Planning",
+    preview: "New task: Update dashboard components",
+    time: "2d",
+    unread: false,
+  },
+];
 
 type SidebarMode = "nav" | "chat" | "workflow";
 
@@ -82,6 +125,9 @@ const AppSidebar = ({
   const [workflowsOpen, setWorkflowsOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [sidebarMode, setSidebarMode] = useState<SidebarMode>("nav");
+  const [showInbox, setShowInbox] = useState(false);
+  
+  const unreadCount = notifications.filter(n => n.unread).length;
 
   // Check if we're on a route that supports secondary modes
   const isChatRoute = chatRoutes.some((route) => location.pathname.startsWith(route));
@@ -393,8 +439,63 @@ const AppSidebar = ({
     </>
   );
 
+  // Render Inbox Panel (Notion-style)
+  const renderInboxPanel = () => (
+    <div className="absolute left-full top-0 ml-1 w-80 h-[500px] bg-background border border-border rounded-lg shadow-lg z-50 flex flex-col overflow-hidden">
+      {/* Inbox Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <h3 className="font-semibold text-foreground">Inbox</h3>
+        <div className="flex items-center gap-1">
+          <button className="p-1.5 text-muted-foreground hover:bg-muted rounded-md transition-colors">
+            <Filter className="h-4 w-4" />
+          </button>
+          <button 
+            onClick={() => setShowInbox(false)}
+            className="p-1.5 text-muted-foreground hover:bg-muted rounded-md transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Inbox Content */}
+      <ScrollArea className="flex-1">
+        <div className="p-2">
+          <p className="text-xs text-muted-foreground px-2 py-1 mb-1">Today</p>
+          {notifications.map((notif) => (
+            <button
+              key={notif.id}
+              className="w-full flex items-start gap-3 px-3 py-3 rounded-md hover:bg-muted transition-colors text-left"
+            >
+              <Avatar className="h-8 w-8 flex-shrink-0 mt-0.5">
+                <AvatarImage src={notif.user.avatar} />
+                <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                  {notif.user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span className="font-medium text-sm text-foreground">{notif.user.name}</span>
+                  <span className="text-sm text-muted-foreground">{notif.action}</span>
+                  <span className="text-sm font-medium text-foreground">{notif.project}</span>
+                </div>
+                <p className="text-sm text-muted-foreground truncate mt-0.5">{notif.preview}</p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className="text-xs text-muted-foreground">{notif.time}</span>
+                {notif.unread && (
+                  <div className="w-2 h-2 bg-primary rounded-full" />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+
   return (
-    <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0">
+    <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0 relative">
       {/* Header with mode toggle */}
       <div className="h-14 px-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-1">
@@ -447,6 +548,23 @@ const AppSidebar = ({
         </div>
         
         <div className="flex items-center gap-1">
+          {/* Inbox/Notifications button */}
+          <button
+            onClick={() => setShowInbox(!showInbox)}
+            className={cn(
+              "p-2 rounded-md transition-colors relative",
+              showInbox ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
+            )}
+            title="Inbox"
+          >
+            <Inbox className="h-4 w-4" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-medium rounded-full flex items-center justify-center">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+          
           {sidebarMode === "chat" && (
             <button
               onClick={() => navigate("/chat")}
@@ -473,6 +591,9 @@ const AppSidebar = ({
           </button>
         </div>
       </div>
+
+      {/* Inbox Panel */}
+      {showInbox && renderInboxPanel()}
 
       {/* Content based on mode */}
       <ScrollArea className="flex-1 px-3 py-4">

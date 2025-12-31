@@ -357,13 +357,6 @@ const CommunityFeed = () => {
           <h1 className="text-3xl font-bold text-foreground">Community Feed</h1>
           <p className="text-muted-foreground mt-1">Stay updated with the latest platform updates and company news</p>
         </div>
-          {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Community Feed</h1>
-            <p className="text-muted-foreground text-lg">
-              Stay updated with the latest announcements, features, and community discussions
-            </p>
-        </div>
 
         <Tabs defaultValue="latest" className="w-full">
           <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8">

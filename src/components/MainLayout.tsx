@@ -1,8 +1,7 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import AppSidebar from "./AppSidebar";
-import ChatSidebar from "./sidebars/ChatSidebar";
-import WorkflowSidebar from "./sidebars/WorkflowSidebar";
+import UnifiedSidebar from "./sidebars/UnifiedSidebar";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -18,10 +17,10 @@ interface MainLayoutProps {
   currentWorkflowStep?: number;
 }
 
-// Routes that show chat sidebar
+// Routes that default to chat mode
 const chatRoutes = ["/chat", "/dashboard"];
 
-// Routes that show workflow sidebar
+// Routes that default to workflow mode
 const workflowRoutes = ["/trendcast", "/reportcard", "/image-cropper"];
 
 const MainLayout = ({
@@ -32,37 +31,39 @@ const MainLayout = ({
   currentWorkflowStep = 0,
 }: MainLayoutProps) => {
   const location = useLocation();
-  const [isSecondarySidebarCollapsed, setIsSecondarySidebarCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [sidebarMode, setSidebarMode] = useState<"chat" | "workflow">("chat");
 
-  const isChatRoute = chatRoutes.some((route) => location.pathname.startsWith(route));
-  const isWorkflowRoute = workflowRoutes.some((route) => location.pathname.startsWith(route));
+  // Auto-switch mode based on route
+  useEffect(() => {
+    const isChatRoute = chatRoutes.some((route) => location.pathname.startsWith(route));
+    const isWorkflowRoute = workflowRoutes.some((route) => location.pathname.startsWith(route));
+    
+    if (isChatRoute) {
+      setSidebarMode("chat");
+    } else if (isWorkflowRoute) {
+      setSidebarMode("workflow");
+    }
+  }, [location.pathname]);
 
-  const showSecondarySidebar = isChatRoute || isWorkflowRoute;
+  const showSidebar = chatRoutes.some((route) => location.pathname.startsWith(route)) ||
+                      workflowRoutes.some((route) => location.pathname.startsWith(route));
 
   return (
     <div className="flex h-screen w-full bg-background">
       <AppSidebar />
       
-      {/* Secondary sidebar based on route */}
-      {showSecondarySidebar && (
-        <>
-          {isChatRoute && (
-            <ChatSidebar
-              isCollapsed={isSecondarySidebarCollapsed}
-              onToggleCollapse={() => setIsSecondarySidebarCollapsed(!isSecondarySidebarCollapsed)}
-            />
-          )}
-          {isWorkflowRoute && (
-            <WorkflowSidebar
-              isCollapsed={isSecondarySidebarCollapsed}
-              onToggleCollapse={() => setIsSecondarySidebarCollapsed(!isSecondarySidebarCollapsed)}
-              workflowName={workflowName}
-              workflowDescription={workflowDescription}
-              steps={workflowSteps}
-              currentStep={currentWorkflowStep}
-            />
-          )}
-        </>
+      {showSidebar && (
+        <UnifiedSidebar
+          isCollapsed={isCollapsed}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+          mode={sidebarMode}
+          onModeChange={setSidebarMode}
+          workflowName={workflowName}
+          workflowDescription={workflowDescription}
+          steps={workflowSteps}
+          currentStep={currentWorkflowStep}
+        />
       )}
 
       <main className="flex-1 overflow-auto">

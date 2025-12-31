@@ -51,10 +51,10 @@ const AppSidebar = () => {
   const [workflowsOpen, setWorkflowsOpen] = useState(true);
 
   const mainNavItems: NavItem[] = [
-    { id: "new-chat", label: "New Chat", icon: Plus, href: "/chat" },
+    { id: "new-chat", label: "New Chat", icon: Plus, href: "/dashboard" },
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { id: "community", label: "Community Feed", icon: Users, href: "/community-feed" },
-    { id: "messages", label: "Messages", icon: MessageSquare, href: "/chat" },
+    { id: "messages", label: "Messages", icon: MessageSquare, href: "/dashboard" },
     { id: "history", label: "History", icon: History, href: "/history" },
   ];
 

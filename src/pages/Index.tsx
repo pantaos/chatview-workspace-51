@@ -361,7 +361,7 @@ const Index = () => {
         />
       ) : (
         <MainLayout>
-          <div className="p-8 max-w-6xl">
+          <div className="p-8 max-w-5xl mx-auto">
             {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>

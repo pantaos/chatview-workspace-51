@@ -261,19 +261,19 @@ const AppSidebar = ({
       {/* Inbox Content */}
       <ScrollArea className="flex-1">
         <div className="py-1">
-          <p className="text-[11px] text-muted-foreground/50 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
+          <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
           {notifications.map((notif) => (
             <button
               key={notif.id}
               className={cn(
                 "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group relative",
                 notif.unread 
-                  ? "bg-primary/[0.02] hover:bg-primary/[0.04]" 
-                  : "hover:bg-muted/40"
+                  ? "bg-primary/[0.06] hover:bg-primary/[0.10]" 
+                  : "hover:bg-muted/50"
               )}
             >
               {notif.unread && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/40 rounded-r" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 rounded-r" />
               )}
               <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
                 <AvatarImage src={notif.user.avatar} />
@@ -289,12 +289,12 @@ const AppSidebar = ({
                   )}>
                     {notif.user.name}
                   </span>
-                  <span className="text-[13px] text-muted-foreground/60">{notif.action}</span>
-                  <span className="text-[13px] text-foreground/70">{notif.project}</span>
+                  <span className="text-[13px] text-muted-foreground/80">{notif.action}</span>
+                  <span className="text-[13px] text-foreground/80">{notif.project}</span>
                 </div>
-                <p className="text-[12px] text-muted-foreground/50 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
+                <p className="text-[12px] text-muted-foreground/70 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
               </div>
-              <span className="text-[11px] text-muted-foreground/40 flex-shrink-0 mt-0.5">{notif.time}</span>
+              <span className="text-[11px] text-muted-foreground/60 flex-shrink-0 mt-0.5">{notif.time}</span>
             </button>
           ))}
         </div>

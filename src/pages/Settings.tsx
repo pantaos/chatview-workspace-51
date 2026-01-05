@@ -425,38 +425,38 @@ const Settings = () => {
 
             {/* Microsoft Apps Selection Dialog */}
             <Dialog open={microsoftAppsDialogOpen} onOpenChange={setMicrosoftAppsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
-                      <span className="text-white font-semibold text-xs">M</span>
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">M</span>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Microsoft</h3>
-                      <p className="text-[11px] text-muted-foreground/70">Select apps to enable</p>
+                      <h3 className="text-base font-medium text-foreground">Microsoft</h3>
+                      <p className="text-xs text-muted-foreground">Select apps to enable</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1">
-                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
-                        <Mail className="w-3 h-3 text-white" />
+                <div className="py-2">
+                  <div className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <Mail className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">Outlook</p>
-                        <p className="text-[10px] text-muted-foreground/60">Email</p>
+                        <p className="text-sm font-medium text-foreground">Outlook</p>
+                        <p className="text-xs text-muted-foreground">Email management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         disabled={!microsoftApps.outlook}
                         onClick={() => setOutlookPermissionsDialogOpen(true)}
-                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-40"
                       >
                         Configure
                       </button>
@@ -466,26 +466,25 @@ const Settings = () => {
                           setMicrosoftApps({...microsoftApps, outlook: checked});
                           if (checked) setTimeout(() => setOutlookPermissionsDialogOpen(true), 300);
                         }}
-                        className="scale-75"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-                        <Calendar className="w-3 h-3 text-white" />
+                  <div className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <Calendar className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">Calendar</p>
-                        <p className="text-[10px] text-muted-foreground/60">Events</p>
+                        <p className="text-sm font-medium text-foreground">Calendar</p>
+                        <p className="text-xs text-muted-foreground">Events & scheduling</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         disabled={!microsoftApps.calendar}
                         onClick={() => setCalendarPermissionsDialogOpen(true)}
-                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-40"
                       >
                         Configure
                       </button>
@@ -495,26 +494,25 @@ const Settings = () => {
                           setMicrosoftApps({...microsoftApps, calendar: checked});
                           if (checked) setTimeout(() => setCalendarPermissionsDialogOpen(true), 300);
                         }}
-                        className="scale-75"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-6 h-6 bg-blue-700 rounded flex items-center justify-center">
-                        <FileText className="w-3 h-3 text-white" />
+                  <div className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">SharePoint</p>
-                        <p className="text-[10px] text-muted-foreground/60">Documents</p>
+                        <p className="text-sm font-medium text-foreground">SharePoint</p>
+                        <p className="text-xs text-muted-foreground">Documents & files</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         disabled={!microsoftApps.sharepoint}
                         onClick={() => setSharepointPermissionsDialogOpen(true)}
-                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-40"
                       >
                         Configure
                       </button>
@@ -524,17 +522,16 @@ const Settings = () => {
                           setMicrosoftApps({...microsoftApps, sharepoint: checked});
                           if (checked) setTimeout(() => setSharepointPermissionsDialogOpen(true), 300);
                         }}
-                        className="scale-75"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                <div className="flex justify-end gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
                   <DialogClose asChild>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                    <Button variant="ghost" size="sm" className="h-8">Cancel</Button>
                   </DialogClose>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setMicrosoftAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, microsoft: true});
                     toast.success("Microsoft apps configured");
@@ -545,38 +542,38 @@ const Settings = () => {
 
             {/* Google Apps Selection Dialog */}
             <Dialog open={googleAppsDialogOpen} onOpenChange={setGoogleAppsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
-                      <span className="text-white font-semibold text-xs">G</span>
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">G</span>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Google</h3>
-                      <p className="text-[11px] text-muted-foreground/70">Select apps to enable</p>
+                      <h3 className="text-base font-medium text-foreground">Google</h3>
+                      <p className="text-xs text-muted-foreground">Select apps to enable</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1">
-                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
-                        <Mail className="w-3 h-3 text-white" />
+                <div className="py-2">
+                  <div className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                        <Mail className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">Gmail</p>
-                        <p className="text-[10px] text-muted-foreground/60">Email</p>
+                        <p className="text-sm font-medium text-foreground">Gmail</p>
+                        <p className="text-xs text-muted-foreground">Email management</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         disabled={!googleApps.gmail}
                         onClick={() => setGmailPermissionsDialogOpen(true)}
-                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-40"
                       >
                         Configure
                       </button>
@@ -586,17 +583,16 @@ const Settings = () => {
                           setGoogleApps({...googleApps, gmail: checked});
                           if (checked) setTimeout(() => setGmailPermissionsDialogOpen(true), 300);
                         }}
-                        className="scale-75"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                <div className="flex justify-end gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
                   <DialogClose asChild>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                    <Button variant="ghost" size="sm" className="h-8">Cancel</Button>
                   </DialogClose>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setGoogleAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, google: true});
                     toast.success("Google apps configured");
@@ -607,38 +603,38 @@ const Settings = () => {
 
             {/* Notion Apps Selection Dialog */}
             <Dialog open={notionAppsDialogOpen} onOpenChange={setNotionAppsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-slate-800 rounded-md flex items-center justify-center">
-                      <span className="text-white font-semibold text-xs">N</span>
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">N</span>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Notion</h3>
-                      <p className="text-[11px] text-muted-foreground/70">Select features to enable</p>
+                      <h3 className="text-base font-medium text-foreground">Notion</h3>
+                      <p className="text-xs text-muted-foreground">Select features to enable</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1">
-                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-[10px]">N</span>
+                <div className="py-2">
+                  <div className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-xs">N</span>
                       </div>
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">Notion</p>
-                        <p className="text-[10px] text-muted-foreground/60">Pages & databases</p>
+                        <p className="text-sm font-medium text-foreground">Notion</p>
+                        <p className="text-xs text-muted-foreground">Pages & databases</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         disabled={!notionApps.notion}
                         onClick={() => setNotionPermissionsDialogOpen(true)}
-                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-40"
                       >
                         Configure
                       </button>
@@ -648,17 +644,16 @@ const Settings = () => {
                           setNotionApps({...notionApps, notion: checked});
                           if (checked) setTimeout(() => setNotionPermissionsDialogOpen(true), 300);
                         }}
-                        className="scale-75"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                <div className="flex justify-end gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
                   <DialogClose asChild>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                    <Button variant="ghost" size="sm" className="h-8">Cancel</Button>
                   </DialogClose>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setNotionAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, notion: true});
                     toast.success("Notion configured");
@@ -670,23 +665,23 @@ const Settings = () => {
 
             {/* Outlook Permissions Dialog */}
             <Dialog open={outlookPermissionsDialogOpen} onOpenChange={setOutlookPermissionsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
-                      <Mail className="w-3.5 h-3.5 text-white" />
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Outlook Controls</h3>
-                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
+                      <h3 className="text-base font-medium text-foreground">Outlook Controls</h3>
+                      <p className="text-xs text-muted-foreground">AI workflow permissions</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1 max-h-64 overflow-y-auto">
+                <div className="py-2 max-h-72 overflow-y-auto">
                   {[
                     { key: 'readEmails', label: 'Read emails', desc: 'View messages' },
                     { key: 'draftEmails', label: 'Draft emails', desc: 'Create drafts' },
@@ -694,28 +689,27 @@ const Settings = () => {
                     { key: 'searchEmails', label: 'Search emails', desc: 'Search mailbox' },
                     { key: 'manageLabels', label: 'Manage labels', desc: 'Add/remove labels' },
                   ].map((perm) => (
-                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                    <div key={perm.key} className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
-                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                        <p className="text-sm font-medium text-foreground">{perm.label}</p>
+                        <p className="text-xs text-muted-foreground">{perm.desc}</p>
                       </div>
                       <Switch 
                         checked={outlookPermissions[perm.key as keyof typeof outlookPermissions]}
                         onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, [perm.key]: checked})}
-                        className="scale-75"
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                <div className="flex justify-between gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-8" onClick={() => {
                     setOutlookPermissionsDialogOpen(false);
                     setMicrosoftAppsDialogOpen(true);
                   }}>
-                    <ArrowLeft className="w-3 h-3 mr-1" />Back
+                    <ArrowLeft className="w-4 h-4 mr-1" />Back
                   </Button>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setOutlookPermissionsDialogOpen(false);
                     toast.success("Outlook permissions updated");
                   }}>Save</Button>
@@ -725,23 +719,23 @@ const Settings = () => {
 
             {/* Calendar Permissions Dialog */}
             <Dialog open={calendarPermissionsDialogOpen} onOpenChange={setCalendarPermissionsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-blue-600 rounded-md flex items-center justify-center">
-                      <Calendar className="w-3.5 h-3.5 text-white" />
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Calendar Controls</h3>
-                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
+                      <h3 className="text-base font-medium text-foreground">Calendar Controls</h3>
+                      <p className="text-xs text-muted-foreground">AI workflow permissions</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1 max-h-64 overflow-y-auto">
+                <div className="py-2 max-h-72 overflow-y-auto">
                   {[
                     { key: 'readEvents', label: 'Read events', desc: 'View calendar' },
                     { key: 'createEvents', label: 'Create events', desc: 'Add new events' },
@@ -749,28 +743,27 @@ const Settings = () => {
                     { key: 'deleteEvents', label: 'Delete events', desc: 'Remove events' },
                     { key: 'findAvailability', label: 'Find availability', desc: 'Check free slots' },
                   ].map((perm) => (
-                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                    <div key={perm.key} className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
-                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                        <p className="text-sm font-medium text-foreground">{perm.label}</p>
+                        <p className="text-xs text-muted-foreground">{perm.desc}</p>
                       </div>
                       <Switch 
                         checked={calendarPermissions[perm.key as keyof typeof calendarPermissions]}
                         onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, [perm.key]: checked})}
-                        className="scale-75"
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                <div className="flex justify-between gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-8" onClick={() => {
                     setCalendarPermissionsDialogOpen(false);
                     setMicrosoftAppsDialogOpen(true);
                   }}>
-                    <ArrowLeft className="w-3 h-3 mr-1" />Back
+                    <ArrowLeft className="w-4 h-4 mr-1" />Back
                   </Button>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setCalendarPermissionsDialogOpen(false);
                     toast.success("Calendar permissions updated");
                   }}>Save</Button>
@@ -780,23 +773,23 @@ const Settings = () => {
 
             {/* SharePoint Permissions Dialog */}
             <Dialog open={sharepointPermissionsDialogOpen} onOpenChange={setSharepointPermissionsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-blue-700 rounded-md flex items-center justify-center">
-                      <FileText className="w-3.5 h-3.5 text-white" />
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">SharePoint Controls</h3>
-                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
+                      <h3 className="text-base font-medium text-foreground">SharePoint Controls</h3>
+                      <p className="text-xs text-muted-foreground">AI workflow permissions</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1 max-h-64 overflow-y-auto">
+                <div className="py-2 max-h-72 overflow-y-auto">
                   {[
                     { key: 'listDocuments', label: 'List documents', desc: 'View files' },
                     { key: 'uploadDocuments', label: 'Upload documents', desc: 'Add files' },
@@ -804,28 +797,27 @@ const Settings = () => {
                     { key: 'searchDocuments', label: 'Search documents', desc: 'Find files' },
                     { key: 'shareDocuments', label: 'Share documents', desc: 'Share with others' },
                   ].map((perm) => (
-                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                    <div key={perm.key} className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
-                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                        <p className="text-sm font-medium text-foreground">{perm.label}</p>
+                        <p className="text-xs text-muted-foreground">{perm.desc}</p>
                       </div>
                       <Switch 
                         checked={sharepointPermissions[perm.key as keyof typeof sharepointPermissions]}
                         onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, [perm.key]: checked})}
-                        className="scale-75"
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                <div className="flex justify-between gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-8" onClick={() => {
                     setSharepointPermissionsDialogOpen(false);
                     setMicrosoftAppsDialogOpen(true);
                   }}>
-                    <ArrowLeft className="w-3 h-3 mr-1" />Back
+                    <ArrowLeft className="w-4 h-4 mr-1" />Back
                   </Button>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setSharepointPermissionsDialogOpen(false);
                     toast.success("SharePoint permissions updated");
                   }}>Save</Button>
@@ -835,23 +827,23 @@ const Settings = () => {
 
             {/* Gmail Permissions Dialog */}
             <Dialog open={gmailPermissionsDialogOpen} onOpenChange={setGmailPermissionsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
-                      <Mail className="w-3.5 h-3.5 text-white" />
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Gmail Controls</h3>
-                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
+                      <h3 className="text-base font-medium text-foreground">Gmail Controls</h3>
+                      <p className="text-xs text-muted-foreground">AI workflow permissions</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1 max-h-64 overflow-y-auto">
+                <div className="py-2 max-h-72 overflow-y-auto">
                   {[
                     { key: 'readEmails', label: 'Read emails', desc: 'View messages' },
                     { key: 'draftEmails', label: 'Draft emails', desc: 'Create drafts' },
@@ -859,28 +851,27 @@ const Settings = () => {
                     { key: 'searchEmails', label: 'Search emails', desc: 'Search mailbox' },
                     { key: 'manageLabels', label: 'Manage labels', desc: 'Add/remove labels' },
                   ].map((perm) => (
-                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                    <div key={perm.key} className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
-                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                        <p className="text-sm font-medium text-foreground">{perm.label}</p>
+                        <p className="text-xs text-muted-foreground">{perm.desc}</p>
                       </div>
                       <Switch 
                         checked={gmailPermissions[perm.key as keyof typeof gmailPermissions]}
                         onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, [perm.key]: checked})}
-                        className="scale-75"
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                <div className="flex justify-between gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-8" onClick={() => {
                     setGmailPermissionsDialogOpen(false);
                     setGoogleAppsDialogOpen(true);
                   }}>
-                    <ArrowLeft className="w-3 h-3 mr-1" />Back
+                    <ArrowLeft className="w-4 h-4 mr-1" />Back
                   </Button>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setGmailPermissionsDialogOpen(false);
                     toast.success("Gmail permissions updated");
                   }}>Save</Button>
@@ -890,23 +881,23 @@ const Settings = () => {
 
             {/* Notion Permissions Dialog */}
             <Dialog open={notionPermissionsDialogOpen} onOpenChange={setNotionPermissionsDialogOpen}>
-              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-slate-800 rounded-md flex items-center justify-center">
-                      <span className="text-white font-bold text-xs">N</span>
+              <DialogContent className="max-w-md p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">N</span>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-foreground/90">Notion Controls</h3>
-                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
+                      <h3 className="text-base font-medium text-foreground">Notion Controls</h3>
+                      <p className="text-xs text-muted-foreground">AI workflow permissions</p>
                     </div>
                   </div>
-                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                    <X className="h-3.5 w-3.5" />
+                  <DialogClose className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all">
+                    <X className="h-4 w-4" />
                   </DialogClose>
                 </div>
                 
-                <div className="py-1 max-h-64 overflow-y-auto">
+                <div className="py-2 max-h-72 overflow-y-auto">
                   {[
                     { key: 'searchPages', label: 'Search pages', desc: 'Find pages' },
                     { key: 'createPages', label: 'Create pages', desc: 'Add new pages' },
@@ -914,28 +905,27 @@ const Settings = () => {
                     { key: 'queryDatabase', label: 'Query database', desc: 'Access data' },
                     { key: 'createEntries', label: 'Create entries', desc: 'Add to databases' },
                   ].map((perm) => (
-                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                    <div key={perm.key} className="flex items-center justify-between px-5 py-3 hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
-                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                        <p className="text-sm font-medium text-foreground">{perm.label}</p>
+                        <p className="text-xs text-muted-foreground">{perm.desc}</p>
                       </div>
                       <Switch 
                         checked={notionPermissions[perm.key as keyof typeof notionPermissions]}
                         onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, [perm.key]: checked})}
-                        className="scale-75"
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
-                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                <div className="flex justify-between gap-2 px-5 py-4 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-8" onClick={() => {
                     setNotionPermissionsDialogOpen(false);
                     setNotionAppsDialogOpen(true);
                   }}>
-                    <ArrowLeft className="w-3 h-3 mr-1" />Back
+                    <ArrowLeft className="w-4 h-4 mr-1" />Back
                   </Button>
-                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                  <Button size="sm" className="h-8" onClick={() => {
                     setNotionPermissionsDialogOpen(false);
                     toast.success("Notion permissions updated");
                   }}>Save</Button>

@@ -4,11 +4,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X, Plus, Mail, Image } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { Integration } from "./AdminIntegrations";
 
 interface AddIntegrationDialogProps {
@@ -40,13 +39,8 @@ export const AddIntegrationDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
-        <DialogHeader className="flex flex-row items-center justify-between">
+        <DialogHeader>
           <DialogTitle>Integration hinzufügen</DialogTitle>
-          <DialogClose asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogClose>
         </DialogHeader>
 
         <div className="space-y-4">

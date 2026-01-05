@@ -279,54 +279,47 @@ const AdminSettings = () => {
 
             {/* Outlook Connection Dialog */}
             <Dialog open={outlookDialogOpen} onOpenChange={setOutlookDialogOpen}>
-              <DialogContent className="max-w-md mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <div className="flex justify-center items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                      <div className="w-6 h-6 bg-primary rounded-full"></div>
+              <DialogContent className="max-w-sm mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Mail className="w-4 h-4 text-white" />
                     </div>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                      <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-white" />
+                    <div>
+                      <h3 className="text-sm font-medium text-foreground/90">Connect Microsoft Outlook</h3>
+                      <p className="text-[11px] text-muted-foreground/70">Developed by Panta Flows</p>
                     </div>
                   </div>
-                  <DialogTitle className="text-xl font-semibold">Connect Microsoft Outlook</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Developed by Panta Flows
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      This page will redirect to Microsoft for sign-in and permissions.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Your Microsoft Calendar data is private and only used to answer your prompts — never to train models, unless you share it as feedback.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You're in control: deleting a conversation also deletes any linked Microsoft data.
-                    </p>
-                  </div>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
                 </div>
-                <div className="mt-6 flex gap-3">
+                
+                <div className="px-5 py-4 space-y-2.5">
+                  <p className="text-[12px] text-muted-foreground/80 leading-relaxed">
+                    This page will redirect to Microsoft for sign-in and permissions.
+                  </p>
+                  <p className="text-[12px] text-muted-foreground/80 leading-relaxed">
+                    Your data is private and only used to answer your prompts — never to train models.
+                  </p>
+                  <p className="text-[12px] text-muted-foreground/80 leading-relaxed">
+                    You're in control: deleting a conversation also deletes any linked data.
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-2 px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline" className="flex-1">
-                      Cancel
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Cancel</Button>
                   </DialogClose>
                   <Button 
-                    className="flex-1 bg-black hover:bg-black/90 text-white font-medium py-3 rounded-xl"
+                    size="sm"
+                    className="text-xs h-8"
                     onClick={() => {
                       setOutlookDialogOpen(false);
                       toast.success("Redirecting to Microsoft Outlook...");
                     }}
                   >
-                    Continue to Microsoft Outlook
+                    Continue to Outlook
                   </Button>
                 </div>
               </DialogContent>
@@ -334,70 +327,68 @@ const AdminSettings = () => {
 
             {/* Manage Access Dialog */}
             <Dialog open={manageAccessDialogOpen} onOpenChange={setManageAccessDialogOpen}>
-              <DialogContent className="max-w-2xl mx-auto rounded-2xl">
-                <DialogHeader className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <DialogTitle className="text-2xl font-semibold">Manage Integration Access</DialogTitle>
-                      <DialogDescription className="text-muted-foreground mt-2">
-                        Select what you'd like to manage for integrated services
-                      </DialogDescription>
-                    </div>
-                    <div className="flex items-start space-x-2 max-w-[140px]">
-                      <Checkbox
-                        id="org-access"
-                        checked={grantOrgAccess}
-                        onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
-                        className="mt-0.5"
-                      />
-                      <Label htmlFor="org-access" className="text-xs font-normal cursor-pointer leading-tight">
-                        Grant entire organization access
-                      </Label>
-                    </div>
+              <DialogContent className="max-w-sm mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground/90">Manage Integration Access</h3>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">Select what to manage</p>
                   </div>
-                </DialogHeader>
-                
-                <div className="space-y-4 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setManageAccessDialogOpen(false);
-                        setUsersDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <User className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">Users</h3>
-                        <p className="text-sm text-muted-foreground">Manage user access permissions</p>
-                      </div>
-                    </Card>
-
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setManageAccessDialogOpen(false);
-                        setUserGroupsDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <Users className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">User Groups</h3>
-                        <p className="text-sm text-muted-foreground">Manage group access permissions</p>
-                      </div>
-                    </Card>
-                  </div>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
                 </div>
 
-                <div className="mt-6 flex justify-end">
+                <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border/40 bg-muted/30">
+                  <Checkbox
+                    id="org-access"
+                    checked={grantOrgAccess}
+                    onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                    className="h-3.5 w-3.5"
+                  />
+                  <Label htmlFor="org-access" className="text-[11px] text-muted-foreground/70 cursor-pointer">
+                    Grant entire organization access
+                  </Label>
+                </div>
+                
+                <div className="p-3 space-y-1">
+                  <button 
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-all text-left group"
+                    onClick={() => {
+                      setManageAccessDialogOpen(false);
+                      setUsersDialogOpen(true);
+                    }}
+                  >
+                    <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+                      <User className="w-4 h-4 text-secondary-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-[13px] font-medium text-foreground/90 group-hover:text-foreground">Users</h4>
+                      <p className="text-[11px] text-muted-foreground/70">Manage user access</p>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/60" />
+                  </button>
+
+                  <button 
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-all text-left group"
+                    onClick={() => {
+                      setManageAccessDialogOpen(false);
+                      setUserGroupsDialogOpen(true);
+                    }}
+                  >
+                    <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+                      <Users className="w-4 h-4 text-secondary-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-[13px] font-medium text-foreground/90 group-hover:text-foreground">User Groups</h4>
+                      <p className="text-[11px] text-muted-foreground/70">Manage group access</p>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/60" />
+                  </button>
+                </div>
+
+                <div className="flex justify-end px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline">
-                      Close
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Close</Button>
                   </DialogClose>
                 </div>
               </DialogContent>
@@ -405,314 +396,293 @@ const AdminSettings = () => {
 
             {/* Assistants Access Dialog */}
             <Dialog open={assistantsDialogOpen} onOpenChange={setAssistantsDialogOpen}>
-              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <DialogTitle className="text-2xl font-semibold">Manage Assistant Access</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Control which assistants have access to integrated services
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <Shield className="w-5 h-5" />
-                        Assistants (8)
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const assistantCount = 8;
-                          if (selectedAssistants.length === assistantCount) {
-                            setSelectedAssistants([]);
-                          } else {
-                            setSelectedAssistants(Array.from({ length: assistantCount }, (_, i) => i));
-                          }
-                        }}
-                      >
-                        Select All
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        { name: "Customer Support Bot", status: "Connected", users: 12 },
-                        { name: "Sales Assistant", status: "Connected", users: 8 },
-                        { name: "HR Helper", status: "Pending", users: 0 },
-                        { name: "Marketing AI", status: "Connected", users: 5 },
-                        { name: "Data Analyst", status: "Connected", users: 15 },
-                        { name: "Content Creator", status: "Pending", users: 0 },
-                        { name: "Project Manager", status: "Connected", users: 7 },
-                        { name: "Financial Advisor", status: "Connected", users: 3 }
-                      ].map((assistant, index) => (
-                        <Card key={index} className="p-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex-1">
-                              <h4 className="font-medium">{assistant.name}</h4>
-                              <p className="text-sm text-muted-foreground">{assistant.users} users</p>
-                            </div>
-                            <Checkbox
-                              checked={selectedAssistants.includes(index)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setSelectedAssistants([...selectedAssistants, index]);
-                                } else {
-                                  setSelectedAssistants(selectedAssistants.filter(i => i !== index));
-                                }
-                              }}
-                            />
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
+              <DialogContent className="max-w-md mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden max-h-[85vh]">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground/90">Manage Assistant Access</h3>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">8 assistants available</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[11px] h-7 px-2"
+                      onClick={() => {
+                        const assistantCount = 8;
+                        if (selectedAssistants.length === assistantCount) {
+                          setSelectedAssistants([]);
+                        } else {
+                          setSelectedAssistants(Array.from({ length: assistantCount }, (_, i) => i));
+                        }
+                      }}
+                    >
+                      {selectedAssistants.length === 8 ? "Deselect All" : "Select All"}
+                    </Button>
+                    <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                      <X className="h-3.5 w-3.5" />
+                    </DialogClose>
                   </div>
                 </div>
+                
+                <div className="p-3 space-y-1 overflow-y-auto max-h-[50vh]">
+                  {[
+                    { name: "Customer Support Bot", users: 12 },
+                    { name: "Sales Assistant", users: 8 },
+                    { name: "HR Helper", users: 0 },
+                    { name: "Marketing AI", users: 5 },
+                    { name: "Data Analyst", users: 15 },
+                    { name: "Content Creator", users: 0 },
+                    { name: "Project Manager", users: 7 },
+                    { name: "Financial Advisor", users: 3 }
+                  ].map((assistant, index) => (
+                    <button 
+                      key={index}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-muted/50 transition-all text-left"
+                      onClick={() => {
+                        if (selectedAssistants.includes(index)) {
+                          setSelectedAssistants(selectedAssistants.filter(i => i !== index));
+                        } else {
+                          setSelectedAssistants([...selectedAssistants, index]);
+                        }
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedAssistants.includes(index)}
+                        className="h-3.5 w-3.5"
+                      />
+                      <div className="flex-1">
+                        <h4 className="text-[13px] font-medium text-foreground/90">{assistant.name}</h4>
+                        <p className="text-[11px] text-muted-foreground/70">{assistant.users} users</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
 
-                <div className="mt-6 flex justify-end gap-3">
+                <div className="flex justify-end gap-2 px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline">
-                      Close
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Close</Button>
                   </DialogClose>
-                  <Button className="bg-black hover:bg-black/90 text-white">
-                    Save Changes
-                  </Button>
+                  <Button size="sm" className="text-xs h-8">Save Changes</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Users Access Dialog */}
             <Dialog open={usersDialogOpen} onOpenChange={setUsersDialogOpen}>
-              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <DialogTitle className="text-2xl font-semibold">Manage User Access</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Control which users have access to integrated services
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <User className="w-5 h-5" />
-                        Users (47)
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const userCount = 9;
-                          if (selectedUsers.length === userCount) {
-                            setSelectedUsers([]);
-                          } else {
-                            setSelectedUsers(Array.from({ length: userCount }, (_, i) => i));
-                          }
-                        }}
-                      >
-                        Select All
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      {[
-                        { name: "Sarah Chen", email: "sarah@company.com", status: "Connected", integrations: 3 },
-                        { name: "Mike Johnson", email: "mike@company.com", status: "Connected", integrations: 2 },
-                        { name: "Emma Wilson", email: "emma@company.com", status: "Pending", integrations: 0 },
-                        { name: "David Lee", email: "david@company.com", status: "Connected", integrations: 1 },
-                        { name: "Lisa Brown", email: "lisa@company.com", status: "Connected", integrations: 4 },
-                        { name: "Tom Davis", email: "tom@company.com", status: "Connected", integrations: 2 },
-                        { name: "Anna Rodriguez", email: "anna@company.com", status: "Connected", integrations: 3 },
-                        { name: "James Wilson", email: "james@company.com", status: "Pending", integrations: 0 },
-                        { name: "Sophie Turner", email: "sophie@company.com", status: "Connected", integrations: 1 }
-                      ].map((user, index) => (
-                        <Card key={index} className="p-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex-1">
-                              <h4 className="font-medium">{user.name}</h4>
-                              <p className="text-sm text-muted-foreground">{user.email}</p>
-                              <p className="text-xs text-muted-foreground">{user.integrations} integrations</p>
-                            </div>
-                            <Checkbox
-                              checked={selectedUsers.includes(index)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setSelectedUsers([...selectedUsers, index]);
-                                } else {
-                                  setSelectedUsers(selectedUsers.filter(i => i !== index));
-                                }
-                              }}
-                            />
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
+              <DialogContent className="max-w-md mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden max-h-[85vh]">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground/90">Manage User Access</h3>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">47 users available</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[11px] h-7 px-2"
+                      onClick={() => {
+                        const userCount = 9;
+                        if (selectedUsers.length === userCount) {
+                          setSelectedUsers([]);
+                        } else {
+                          setSelectedUsers(Array.from({ length: userCount }, (_, i) => i));
+                        }
+                      }}
+                    >
+                      {selectedUsers.length === 9 ? "Deselect All" : "Select All"}
+                    </Button>
+                    <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                      <X className="h-3.5 w-3.5" />
+                    </DialogClose>
                   </div>
                 </div>
+                
+                <div className="p-3 space-y-1 overflow-y-auto max-h-[50vh]">
+                  {[
+                    { name: "Sarah Chen", email: "sarah@company.com", integrations: 3 },
+                    { name: "Mike Johnson", email: "mike@company.com", integrations: 2 },
+                    { name: "Emma Wilson", email: "emma@company.com", integrations: 0 },
+                    { name: "David Lee", email: "david@company.com", integrations: 1 },
+                    { name: "Lisa Brown", email: "lisa@company.com", integrations: 4 },
+                    { name: "Tom Davis", email: "tom@company.com", integrations: 2 },
+                    { name: "Anna Rodriguez", email: "anna@company.com", integrations: 3 },
+                    { name: "James Wilson", email: "james@company.com", integrations: 0 },
+                    { name: "Sophie Turner", email: "sophie@company.com", integrations: 1 }
+                  ].map((user, index) => (
+                    <button 
+                      key={index}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-muted/50 transition-all text-left"
+                      onClick={() => {
+                        if (selectedUsers.includes(index)) {
+                          setSelectedUsers(selectedUsers.filter(i => i !== index));
+                        } else {
+                          setSelectedUsers([...selectedUsers, index]);
+                        }
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedUsers.includes(index)}
+                        className="h-3.5 w-3.5"
+                      />
+                      <div className="flex-1">
+                        <h4 className="text-[13px] font-medium text-foreground/90">{user.name}</h4>
+                        <p className="text-[11px] text-muted-foreground/70">{user.email}</p>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground/60">{user.integrations} int.</span>
+                    </button>
+                  ))}
+                </div>
 
-                <div className="mt-6 flex justify-end gap-3">
+                <div className="flex justify-end gap-2 px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline">
-                      Close
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Close</Button>
                   </DialogClose>
-                  <Button className="bg-black hover:bg-black/90 text-white">
-                    Save Changes
-                  </Button>
+                  <Button size="sm" className="text-xs h-8">Save Changes</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* User Groups Access Dialog */}
             <Dialog open={userGroupsDialogOpen} onOpenChange={setUserGroupsDialogOpen}>
-              <DialogContent className="max-w-4xl mx-auto rounded-2xl">
-                <DialogHeader className="text-center space-y-4">
-                  <DialogTitle className="text-2xl font-semibold">Manage User Group Access</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Control which user groups have access to integrated services
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 mt-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <Users className="w-5 h-5" />
-                        User Groups (12)
-                      </h3>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const groupCount = 12;
-                          if (selectedUserGroups.length === groupCount) {
-                            setSelectedUserGroups([]);
-                          } else {
-                            setSelectedUserGroups(Array.from({ length: groupCount }, (_, i) => i));
-                          }
-                        }}
-                      >
-                        Select All
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        { name: "Sales Team", members: 15, status: "Connected", integrations: 4 },
-                        { name: "Marketing Department", members: 22, status: "Connected", integrations: 3 },
-                        { name: "Customer Support", members: 18, status: "Pending", integrations: 0 },
-                        { name: "HR Team", members: 8, status: "Connected", integrations: 2 },
-                        { name: "Engineering", members: 35, status: "Connected", integrations: 5 },
-                        { name: "Finance Department", members: 12, status: "Connected", integrations: 3 },
-                        { name: "Operations Team", members: 14, status: "Pending", integrations: 0 },
-                        { name: "Executive Team", members: 6, status: "Connected", integrations: 4 },
-                        { name: "Product Management", members: 10, status: "Connected", integrations: 3 },
-                        { name: "Quality Assurance", members: 16, status: "Connected", integrations: 2 },
-                        { name: "Business Development", members: 9, status: "Pending", integrations: 0 },
-                        { name: "Research & Development", members: 20, status: "Connected", integrations: 4 }
-                      ].map((group, index) => (
-                        <Card key={index} className="p-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex-1">
-                              <h4 className="font-medium">{group.name}</h4>
-                              <p className="text-sm text-muted-foreground">{group.members} members</p>
-                              <p className="text-xs text-muted-foreground">{group.integrations} integrations</p>
-                            </div>
-                            <Checkbox
-                              checked={selectedUserGroups.includes(index)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setSelectedUserGroups([...selectedUserGroups, index]);
-                                } else {
-                                  setSelectedUserGroups(selectedUserGroups.filter(i => i !== index));
-                                }
-                              }}
-                            />
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
+              <DialogContent className="max-w-md mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden max-h-[85vh]">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground/90">Manage User Group Access</h3>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">12 groups available</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[11px] h-7 px-2"
+                      onClick={() => {
+                        const groupCount = 12;
+                        if (selectedUserGroups.length === groupCount) {
+                          setSelectedUserGroups([]);
+                        } else {
+                          setSelectedUserGroups(Array.from({ length: groupCount }, (_, i) => i));
+                        }
+                      }}
+                    >
+                      {selectedUserGroups.length === 12 ? "Deselect All" : "Select All"}
+                    </Button>
+                    <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                      <X className="h-3.5 w-3.5" />
+                    </DialogClose>
                   </div>
                 </div>
+                
+                <div className="p-3 space-y-1 overflow-y-auto max-h-[50vh]">
+                  {[
+                    { name: "Sales Team", members: 15 },
+                    { name: "Marketing Department", members: 22 },
+                    { name: "Customer Support", members: 18 },
+                    { name: "HR Team", members: 8 },
+                    { name: "Engineering", members: 35 },
+                    { name: "Finance Department", members: 12 },
+                    { name: "Operations Team", members: 14 },
+                    { name: "Executive Team", members: 6 },
+                    { name: "Product Management", members: 10 },
+                    { name: "Quality Assurance", members: 16 },
+                    { name: "Business Development", members: 9 },
+                    { name: "Research & Development", members: 20 }
+                  ].map((group, index) => (
+                    <button 
+                      key={index}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-muted/50 transition-all text-left"
+                      onClick={() => {
+                        if (selectedUserGroups.includes(index)) {
+                          setSelectedUserGroups(selectedUserGroups.filter(i => i !== index));
+                        } else {
+                          setSelectedUserGroups([...selectedUserGroups, index]);
+                        }
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedUserGroups.includes(index)}
+                        className="h-3.5 w-3.5"
+                      />
+                      <div className="flex-1">
+                        <h4 className="text-[13px] font-medium text-foreground/90">{group.name}</h4>
+                        <p className="text-[11px] text-muted-foreground/70">{group.members} members</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
 
-                <div className="mt-6 flex justify-end gap-3">
+                <div className="flex justify-end gap-2 px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline">
-                      Close
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Close</Button>
                   </DialogClose>
-                  <Button className="bg-black hover:bg-black/90 text-white">
-                    Save Changes
-                  </Button>
+                  <Button size="sm" className="text-xs h-8">Save Changes</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Images Access Selection Dialog */}
             <Dialog open={imagesAccessDialogOpen} onOpenChange={setImagesAccessDialogOpen}>
-              <DialogContent className="max-w-2xl mx-auto rounded-2xl">
-                <DialogHeader className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <DialogTitle className="text-2xl font-semibold">Manage Images Access & Limits</DialogTitle>
-                      <DialogDescription className="text-muted-foreground mt-2">
-                        Select what you'd like to manage for image generation access and limits
-                      </DialogDescription>
-                    </div>
-                    <div className="flex items-start space-x-2 max-w-[140px]">
-                      <Checkbox
-                        id="org-access-images"
-                        checked={grantOrgAccess}
-                        onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
-                        className="mt-0.5"
-                      />
-                      <Label htmlFor="org-access-images" className="text-xs font-normal cursor-pointer leading-tight">
-                        Grant entire organization access
-                      </Label>
-                    </div>
+              <DialogContent className="max-w-sm mx-auto rounded-xl border-border/60 shadow-xl shadow-black/5 p-0 overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground/90">Manage Images Access</h3>
+                    <p className="text-[11px] text-muted-foreground/70 mt-0.5">Configure generation limits</p>
                   </div>
-                </DialogHeader>
-                
-                <div className="space-y-4 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setImagesAccessDialogOpen(false);
-                        setImagesUserGroupsDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <Users className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">User Groups</h3>
-                        <p className="text-sm text-muted-foreground">Manage group image generation limits</p>
-                      </div>
-                    </Card>
-
-                    <Card 
-                      className="p-6 hover:bg-muted/50 transition-colors cursor-pointer group"
-                      onClick={() => {
-                        setImagesAccessDialogOpen(false);
-                        setImagesUsersDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col items-center text-center space-y-3">
-                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                          <User className="w-6 h-6 text-secondary-foreground" />
-                        </div>
-                        <h3 className="font-medium text-base group-hover:text-primary">Users</h3>
-                        <p className="text-sm text-muted-foreground">Manage user image generation limits</p>
-                      </div>
-                    </Card>
-                  </div>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
                 </div>
 
-                <div className="mt-6 flex justify-end">
+                <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border/40 bg-muted/30">
+                  <Checkbox
+                    id="org-access-images"
+                    checked={grantOrgAccess}
+                    onCheckedChange={(checked) => setGrantOrgAccess(checked === true)}
+                    className="h-3.5 w-3.5"
+                  />
+                  <Label htmlFor="org-access-images" className="text-[11px] text-muted-foreground/70 cursor-pointer">
+                    Grant entire organization access
+                  </Label>
+                </div>
+                
+                <div className="p-3 space-y-1">
+                  <button 
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-all text-left group"
+                    onClick={() => {
+                      setImagesAccessDialogOpen(false);
+                      setImagesUserGroupsDialogOpen(true);
+                    }}
+                  >
+                    <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+                      <Users className="w-4 h-4 text-secondary-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-[13px] font-medium text-foreground/90 group-hover:text-foreground">User Groups</h4>
+                      <p className="text-[11px] text-muted-foreground/70">Group image limits</p>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/60" />
+                  </button>
+
+                  <button 
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-all text-left group"
+                    onClick={() => {
+                      setImagesAccessDialogOpen(false);
+                      setImagesUsersDialogOpen(true);
+                    }}
+                  >
+                    <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+                      <User className="w-4 h-4 text-secondary-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-[13px] font-medium text-foreground/90 group-hover:text-foreground">Users</h4>
+                      <p className="text-[11px] text-muted-foreground/70">User image limits</p>
+                    </div>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground/60" />
+                  </button>
+                </div>
+
+                <div className="flex justify-end px-5 py-3 border-t border-border/40">
                   <DialogClose asChild>
-                    <Button variant="outline">
-                      Close
-                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-8">Close</Button>
                   </DialogClose>
                 </div>
               </DialogContent>

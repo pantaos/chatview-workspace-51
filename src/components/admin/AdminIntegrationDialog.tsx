@@ -436,26 +436,29 @@ export const AdminIntegrationDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[80vh] max-h-[700px]">
-        <div className="flex h-full">
+        {/* Header with X button top right */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 shrink-0">
+          <h2 className="text-lg font-semibold">{integration.name}</h2>
+          <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+            <X className="h-4 w-4" />
+          </DialogClose>
+        </div>
+
+        <div className="flex flex-1 min-h-0">
           {/* Sidebar - hidden on sub-screens */}
           {!isSubScreen && (
             <div className="w-48 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
-              <div className="p-3 border-b border-border/40">
-                <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-                  <X className="h-4 w-4" />
-                </DialogClose>
-              </div>
               <nav className="flex-1 p-2 space-y-0.5">
                 {tabs.map((tab) => {
                   const app = integration.apps.find(a => a.id === tab.id);
-                  const isActive = activeScreen === tab.id;
+                  const isActiveTab = activeScreen === tab.id;
                   
                   return (
                     <button
                       key={tab.id}
                       onClick={() => setActiveScreen(tab.id)}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
-                        isActive 
+                        isActiveTab 
                           ? "bg-primary/10 text-primary font-medium" 
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}

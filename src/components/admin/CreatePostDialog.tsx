@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Bold, Italic, List, Link, Image, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { X, Bold, Italic, Strikethrough, Code, Heading1, Heading2, Heading3, List, ListOrdered, Quote, Link, Image, Film, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { toast } from "sonner";
 
 interface CreatePostDialogProps {
@@ -20,195 +21,221 @@ export const CreatePostDialog = ({ open, onOpenChange }: CreatePostDialogProps) 
   const [selectedUserGroups, setSelectedUserGroups] = useState<string[]>([]);
 
   const userGroups = [
-    "All Users",
-    "Sales Team",
-    "Marketing Team", 
-    "Customer Support",
-    "Engineering Team",
-    "Management"
+    "Alle Benutzer:innen",
+    "Rohan team",
+    "Robert Sales", 
+    "Johannes KI",
+    "Dev Team1",
+    "Product",
+    "Social Media Team"
   ];
 
-  const handleUserGroupChange = (userGroup: string) => {
+  const handleUserGroupChange = (userGroup: string, checked: boolean) => {
     setSelectedUserGroups(prev => 
-      prev.includes(userGroup) 
-        ? prev.filter(g => g !== userGroup)
-        : [...prev, userGroup]
+      checked 
+        ? [...prev, userGroup]
+        : prev.filter(g => g !== userGroup)
     );
   };
 
-  const handleSubmit = () => {
-    if (!title || !type || !content) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    
-    toast.success("Community post created successfully!");
-    onOpenChange(false);
-    
-    // Reset form
+  const resetForm = () => {
     setTitle("");
     setType("");
     setContent("");
     setSelectedUserGroups([]);
   };
 
+  const handlePublish = () => {
+    if (!title || !type || !content) {
+      toast.error("Bitte alle Pflichtfelder ausfüllen");
+      return;
+    }
+    
+    toast.success("Beitrag erfolgreich veröffentlicht!");
+    onOpenChange(false);
+    resetForm();
+  };
+
+  const handleSaveDraft = () => {
+    if (!title) {
+      toast.error("Bitte einen Titel eingeben");
+      return;
+    }
+    
+    toast.success("Entwurf gespeichert!");
+    onOpenChange(false);
+    resetForm();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
-          <DialogTitle className="text-xl font-semibold">Create New Community Post</DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogHeader className="flex flex-row items-center justify-between p-6 pb-4 border-b">
+          <DialogTitle className="text-xl font-semibold">Neuen Community-Beitrag erstellen</DialogTitle>
           <DialogClose asChild>
-            <Button variant="ghost" size="icon" className="h-6 w-6 rounded-md">
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md">
               <X className="h-4 w-4" />
             </Button>
           </DialogClose>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Title */}
-          <div className="space-y-1">
+        <div className="p-6 space-y-6">
+          {/* Beitragstitel */}
+          <div className="space-y-2">
             <Label htmlFor="title" className="text-sm font-medium">
-              Title
+              Beitragstitel
             </Label>
             <Input
               id="title"
-              placeholder="Enter post title..."
+              placeholder="Beitragstitel eingeben..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="border-2 border-primary/20 focus:border-primary rounded-xl"
+              className="h-11"
             />
           </div>
 
-          {/* Type */}
-          <div className="space-y-1">
+          {/* Beitragstyp */}
+          <div className="space-y-2">
             <Label htmlFor="type" className="text-sm font-medium">
-              Type
+              Beitragstyp
             </Label>
             <Select value={type} onValueChange={setType}>
-              <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Select post type" />
+              <SelectTrigger className="h-11">
+                <SelectValue placeholder="Beitragstyp auswählen" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="platform-update">Platform Update</SelectItem>
-                <SelectItem value="company-update">Company Update</SelectItem>
+                <SelectItem value="company-update">Unternehmens-Update</SelectItem>
+                <SelectItem value="platform-update">Plattform-Update</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Content */}
-          <div className="space-y-1">
-            <Label htmlFor="content" className="text-sm font-medium">
-              Content
+          {/* Inhaltstyp (Rich Editor) */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              Inhaltstyp
             </Label>
             
             {/* Rich Text Editor Toolbar */}
-            <div className="flex items-center gap-1 p-2 border rounded-t-xl bg-muted/30">
-              <Select defaultValue="paragraph">
-                <SelectTrigger className="w-32 h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="paragraph">Paragraph</SelectItem>
-                  <SelectItem value="heading1">Heading 1</SelectItem>
-                  <SelectItem value="heading2">Heading 2</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <div className="h-4 w-px bg-border mx-1" />
-              
+            <div className="flex items-center gap-0.5 p-2 border rounded-t-lg bg-muted/30 flex-wrap">
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Bold className="h-3 w-3" />
+                <Bold className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Italic className="h-3 w-3" />
-              </Button>
-              
-              <div className="h-4 w-px bg-border mx-1" />
-              
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <List className="h-3 w-3" />
+                <Italic className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <List className="h-3 w-3" />
-              </Button>
-              
-              <div className="h-4 w-px bg-border mx-1" />
-              
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <AlignLeft className="h-3 w-3" />
+                <Strikethrough className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <AlignCenter className="h-3 w-3" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <AlignRight className="h-3 w-3" />
+                <Code className="h-4 w-4" />
               </Button>
               
-              <div className="h-4 w-px bg-border mx-1" />
+              <div className="h-6 w-px bg-border mx-1" />
               
               <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Link className="h-3 w-3" />
+                <Heading1 className="h-4 w-4" />
               </Button>
-              <Button variant="outline" className="h-8 px-3 text-xs">
-                <Image className="h-3 w-3 mr-1" />
-                Add Media
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Heading2 className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Heading3 className="h-4 w-4" />
+              </Button>
+              
+              <div className="h-6 w-px bg-border mx-1" />
+              
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <List className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <ListOrdered className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Quote className="h-4 w-4" />
+              </Button>
+              
+              <div className="h-6 w-px bg-border mx-1" />
+              
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Link className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Image className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Film className="h-4 w-4" />
+              </Button>
+              
+              <div className="h-6 w-px bg-border mx-1" />
+              
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <AlignLeft className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <AlignCenter className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <AlignRight className="h-4 w-4" />
               </Button>
             </div>
             
             <Textarea
-              id="content"
-              placeholder="Write your post content..."
+              placeholder="Schreibe deinen Beitrag..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="min-h-48 rounded-t-none border-t-0 rounded-b-xl resize-none"
+              className="min-h-[200px] rounded-t-none border-t-0 resize-none"
             />
           </div>
 
-          {/* Audience */}
+          {/* Zielgruppe */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-muted-foreground">
-              Audience
+            <Label className="text-sm font-medium">
+              Zielgruppe
             </Label>
 
-            {/* User Groups */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-sm bg-muted flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-foreground" />
-                </div>
-                <span className="font-medium">User Groups</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2">
-                {userGroups.map((userGroup) => (
-                  <label key={userGroup} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedUserGroups.includes(userGroup)}
-                      onChange={() => handleUserGroupChange(userGroup)}
-                      className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
-                    />
-                    <span className="text-sm">{userGroup}</span>
-                  </label>
-                ))}
-              </div>
+            <div className="grid grid-cols-2 gap-3">
+              {userGroups.map((userGroup) => (
+                <label 
+                  key={userGroup} 
+                  className="flex items-center gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 cursor-pointer transition-colors"
+                >
+                  <Checkbox
+                    checked={selectedUserGroups.includes(userGroup)}
+                    onCheckedChange={(checked) => handleUserGroupChange(userGroup, checked as boolean)}
+                  />
+                  <span className="text-sm">{userGroup}</span>
+                </label>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
-          <DialogClose asChild>
-            <Button variant="outline" className="px-6">
-              Cancel
+        <div className="flex items-center justify-between p-6 pt-4 border-t bg-muted/20">
+          <p className="text-sm text-muted-foreground">
+            Beitrag ist sichtbar für ausgewählte Benutzergruppen
+          </p>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+            >
+              Abbrechen
             </Button>
-          </DialogClose>
-          <Button 
-            onClick={handleSubmit}
-            className="px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-          >
-            Create Post
-          </Button>
+            <Button 
+              variant="outline"
+              onClick={handleSaveDraft}
+            >
+              Als Entwurf speichern
+            </Button>
+            <Button 
+              onClick={handlePublish}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Veröffentlichen
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -434,7 +434,7 @@ export const AdminIntegrationDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[550px]">
+      <DialogContent className="max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[80vh] max-h-[700px]">
         <div className="flex h-full">
           {/* Sidebar - hidden on sub-screens */}
           {!isSubScreen && (

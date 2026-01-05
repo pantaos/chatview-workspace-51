@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   Plus,
   MessageSquare,
-  History,
   Settings,
   Shield,
   ChevronDown,
@@ -12,8 +11,7 @@ import {
   Inbox,
   X,
   Filter,
-  Search,
-  Grid3X3,
+  LayoutDashboard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -115,6 +113,8 @@ const AppSidebar = ({
 
   // Check if we're in a workflow
   const hasActiveWorkflow = workflowSteps.length > 0 && workflowName;
+  const totalSteps = workflowSteps.length;
+  const completedSteps = workflowSteps.filter(s => s.status === "completed").length;
 
   const isActive = (href?: string) => {
     if (!href) return false;
@@ -155,11 +155,16 @@ const AppSidebar = ({
             <Plus className="h-5 w-5" />
           </button>
           <button
-            onClick={() => navigate("/chat")}
-            className="p-2 rounded-lg text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
-            title="Chats suchen"
+            onClick={() => navigate("/dashboard")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/dashboard")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Dashboard"
           >
-            <Search className="h-5 w-5" />
+            <LayoutDashboard className="h-5 w-5" />
           </button>
           <button
             onClick={() => navigate("/community-feed")}
@@ -193,7 +198,7 @@ const AppSidebar = ({
         <div className="flex-1" />
 
         {/* Bottom icons */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-0.5">
           <button
             onClick={() => navigate("/admin-settings")}
             className={cn(
@@ -204,7 +209,7 @@ const AppSidebar = ({
             )}
             title="Admin"
           >
-            <Shield className="h-5 w-5" />
+            <Shield className="h-4 w-4" />
           </button>
           <button
             onClick={() => navigate("/settings")}
@@ -216,22 +221,20 @@ const AppSidebar = ({
             )}
             title="Settings"
           >
-            <Settings className="h-5 w-5" />
+            <Settings className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => navigate("/profile")}
+            className="p-1 mt-1"
+          >
+            <Avatar className="h-7 w-7">
+              <AvatarImage src="/placeholder.svg" alt="User" />
+              <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
+                AO
+              </AvatarFallback>
+            </Avatar>
           </button>
         </div>
-
-        {/* User Avatar */}
-        <button
-          onClick={() => navigate("/profile")}
-          className="mt-3 p-1"
-        >
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder.svg" alt="User" />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              AO
-            </AvatarFallback>
-          </Avatar>
-        </button>
       </aside>
     );
   }
@@ -342,13 +345,18 @@ const AppSidebar = ({
       {/* Main Content */}
       <ScrollArea className="flex-1 px-3 py-4">
         {/* Quick Actions */}
-        <nav className="space-y-1 mb-6">
+        <nav className="space-y-0.5 mb-6">
           <button
-            onClick={() => navigate("/chat")}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+            onClick={() => navigate("/dashboard")}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              isActive("/dashboard")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
           >
-            <Search className="h-5 w-5 flex-shrink-0" />
-            <span>Chats suchen</span>
+            <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
+            <span>Dashboard</span>
           </button>
           <button
             onClick={() => navigate("/community-feed")}
@@ -359,7 +367,7 @@ const AppSidebar = ({
                 : "text-foreground/70 hover:bg-muted hover:text-foreground"
             )}
           >
-            <MessageSquare className="h-5 w-5 flex-shrink-0" />
+            <MessageSquare className="h-4 w-4 flex-shrink-0" />
             <span>Community Feed</span>
           </button>
           <button
@@ -372,7 +380,7 @@ const AppSidebar = ({
             )}
           >
             <div className="flex items-center gap-3">
-              <Inbox className="h-5 w-5 flex-shrink-0" />
+              <Inbox className="h-4 w-4 flex-shrink-0" />
               <span>Inbox</span>
             </div>
             {unreadCount > 0 && (
@@ -381,29 +389,63 @@ const AppSidebar = ({
           </button>
         </nav>
 
-        {/* History Section */}
-        <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
-          <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-            {historyOpen ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
-            <History className="h-3 w-3" />
-            History
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-0.5 mt-1">
-            {chatHistory.map((chat) => (
-              <button
-                key={chat.id}
-                onClick={() => navigate("/chat")}
-                className="w-full flex items-center px-3 py-1.5 text-sm text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
-              >
-                <span className="truncate">{chat.title}</span>
-              </button>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
+        {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}
+        {hasActiveWorkflow && (
+          <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} className="mb-4">
+            <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+              <div className="flex items-center gap-2">
+                {workflowOpen ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+                <span className="truncate">{workflowName}</span>
+              </div>
+            </CollapsibleTrigger>
+            
+            {/* Progress indicator */}
+            <div className="px-3 py-2">
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1.5">
+                <span>Step {currentWorkflowStep + 1} of {totalSteps}</span>
+                <span>{Math.round(((completedSteps) / totalSteps) * 100)}%</span>
+              </div>
+              <div className="flex gap-1">
+                {workflowSteps.map((step, idx) => (
+                  <div
+                    key={step.id}
+                    className={cn(
+                      "h-1 flex-1 rounded-full transition-colors",
+                      step.status === "completed" 
+                        ? "bg-primary" 
+                        : step.status === "current"
+                        ? "bg-primary/50"
+                        : "bg-muted-foreground/20"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            <CollapsibleContent className="space-y-0.5">
+              {workflowSteps.map((step, index) => (
+                <button
+                  key={step.id}
+                  className={cn(
+                    "w-full flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left",
+                    step.status === "current"
+                      ? "bg-primary/10 text-primary font-medium"
+                      : step.status === "completed"
+                      ? "text-foreground/50"
+                      : "text-foreground/40"
+                  )}
+                >
+                  <span className="text-xs w-4 text-center">{index + 1}.</span>
+                  <span className="truncate">{step.title}</span>
+                </button>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+        )}
 
         {/* Apps Section (Combined Assistants + Workflows) */}
         <Collapsible open={appsOpen} onOpenChange={setAppsOpen} className="mb-4">
@@ -413,7 +455,6 @@ const AppSidebar = ({
             ) : (
               <ChevronRight className="h-3 w-3" />
             )}
-            <Grid3X3 className="h-3 w-3" />
             Apps
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-0.5 mt-1">
@@ -434,82 +475,71 @@ const AppSidebar = ({
           </CollapsibleContent>
         </Collapsible>
 
-        {/* Active Workflow Steps (only when in a workflow) */}
-        {hasActiveWorkflow && (
-          <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} className="mb-4">
-            <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-              {workflowOpen ? (
-                <ChevronDown className="h-3 w-3" />
-              ) : (
-                <ChevronRight className="h-3 w-3" />
-              )}
-              {workflowName}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-0.5 mt-1">
-              {workflowSteps.map((step, index) => (
-                <button
-                  key={step.id}
-                  className={cn(
-                    "w-full flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left",
-                    step.status === "current"
-                      ? "bg-primary/10 text-primary font-medium"
-                      : step.status === "completed"
-                      ? "text-foreground/50"
-                      : "text-foreground/40"
-                  )}
-                >
-                  <span className="text-xs w-4 text-center">{index + 1}.</span>
-                  <span className="truncate">{step.title}</span>
-                </button>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-        )}
+        {/* History Section - NOW AT BOTTOM */}
+        <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
+          <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+            {historyOpen ? (
+              <ChevronDown className="h-3 w-3" />
+            ) : (
+              <ChevronRight className="h-3 w-3" />
+            )}
+            History
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-0.5 mt-1">
+            {chatHistory.map((chat) => (
+              <button
+                key={chat.id}
+                onClick={() => navigate("/chat")}
+                className="w-full flex items-center px-3 py-1.5 text-sm text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
+              >
+                <span className="truncate">{chat.title}</span>
+              </button>
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
       </ScrollArea>
 
-      {/* Bottom Navigation */}
-      <div className="px-3 py-2 border-t border-border">
-        <nav className="space-y-1">
+      {/* Bottom Navigation - Modernized with less spacing */}
+      <div className="px-3 py-2 border-t border-border space-y-0.5">
+        <div className="flex gap-1">
           <button
             onClick={() => navigate("/admin-settings")}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              "flex-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
               isActive("/admin-settings")
                 ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
-            <Shield className="h-5 w-5 flex-shrink-0" />
+            <Shield className="h-3.5 w-3.5" />
             <span>Admin</span>
           </button>
           <button
             onClick={() => navigate("/settings")}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              "flex-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
               isActive("/settings")
                 ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
-            <Settings className="h-5 w-5 flex-shrink-0" />
+            <Settings className="h-3.5 w-3.5" />
             <span>Settings</span>
           </button>
-        </nav>
-      </div>
-
-      {/* User Profile */}
-      <div className="px-3 py-4 border-t border-border">
+        </div>
+        
+        {/* User Profile - Compact */}
         <button
           onClick={() => navigate("/profile")}
-          className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+          className="flex items-center gap-2.5 w-full px-2 py-1.5 rounded-md hover:bg-muted transition-colors"
         >
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-6 w-6">
             <AvatarImage src="/placeholder.svg" alt="User" />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+            <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
               AO
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium text-foreground truncate">
+          <span className="text-xs font-medium text-foreground truncate">
             Arian Okhovat
           </span>
         </button>

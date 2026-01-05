@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, ChevronDown, ThumbsUp, Pin } from "lucide-react";
+import { Calendar, ChevronDown, Heart, Pin } from "lucide-react";
 import MainLayout from "@/components/MainLayout";
 import PromptDetailDialog from "@/components/PromptDetailDialog";
 import NewWorkflowDialog from "@/components/NewWorkflowDialog";
@@ -268,43 +268,43 @@ const CommunityFeed = () => {
   };
 
   const renderPosts = (posts: typeof communityPosts) => (
-    <div className="space-y-6">
+    <div className="space-y-0 divide-y divide-border">
       {posts.map((post) => {
         const isExpanded = expandedPosts.includes(post.id);
+        const isPinned = post.tags.some(tag => tag.name === "Pinned");
+        const categoryTag = post.tags.find(tag => tag.name !== "Pinned");
+        
         return (
-          <div key={post.id} className="bg-white dark:bg-slate-800 rounded-lg border p-6 space-y-4">
-            {/* Post Header */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="w-4 h-4" />
-              <span>{post.date}</span>
-              <span>•</span>
-              <span className="font-medium text-foreground">{post.author}</span>
+          <div key={post.id} className="py-6 first:pt-0">
+            {/* Post Header with Date, Author and Tags */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="w-4 h-4" />
+                <span>{post.date}</span>
+                <span className="text-muted-foreground/50">·</span>
+                <span>{post.author}</span>
+              </div>
+              
+              {/* Tags on the right */}
+              <div className="flex items-center gap-2">
+                {categoryTag && (
+                  <span className="px-3 py-1 text-xs font-medium rounded-full border border-red-200 text-red-600 dark:border-red-800 dark:text-red-400 bg-red-50 dark:bg-red-950/30">
+                    {categoryTag.name}
+                  </span>
+                )}
+                {isPinned && (
+                  <span className="flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full border border-red-200 text-red-600 dark:border-red-800 dark:text-red-400 bg-red-50 dark:bg-red-950/30">
+                    <Pin className="w-3 h-3" />
+                    Pinned
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Post Title */}
-            <h3 className="text-xl font-semibold text-foreground">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {post.title}
             </h3>
-
-            {/* Tags */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {post.tags.map((tag, index) => {
-                const TagIcon = tag.icon;
-                return (
-                  <Badge 
-                    key={index}
-                    variant={
-                      tag.color === "blue" ? "default" :
-                      tag.color === "orange" ? "secondary" : "outline"
-                    }
-                    className="flex items-center gap-1"
-                  >
-                    {TagIcon && <TagIcon className="w-3 h-3" />}
-                    {tag.name}
-                  </Badge>
-                );
-              })}
-            </div>
 
             {/* Post Content */}
             <div className="text-muted-foreground leading-relaxed">
@@ -316,7 +316,7 @@ const CommunityFeed = () => {
               <Button
                 variant="link"
                 onClick={() => togglePostExpansion(post.id)}
-                className="p-0 h-auto text-primary font-medium flex items-center gap-1"
+                className="p-0 h-auto text-primary font-medium flex items-center gap-1 mt-2"
               >
                 {isExpanded ? "Show less" : "Read more"}
                 <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
@@ -324,24 +324,16 @@ const CommunityFeed = () => {
             )}
 
             {/* Reactions */}
-            <div className="flex items-center gap-2 pt-2 border-t">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3 hover:bg-muted/50 rounded-full flex items-center gap-1"
-              >
-                <ThumbsUp className="w-4 h-4" />
-                <span className="text-sm">{post.reactions.thumbsUp}</span>
-              </Button>
+            <div className="flex items-center gap-4 mt-4">
+              <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Heart className="w-4 h-4" />
+                <span>{post.reactions.thumbsUp}</span>
+              </button>
               
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3 hover:bg-muted/50 rounded-full flex items-center gap-1"
-              >
+              <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <Pin className="w-4 h-4" />
-                <span className="text-sm">{post.reactions.pin}</span>
-              </Button>
+                <span>Pin</span>
+              </button>
             </div>
           </div>
         );
@@ -351,19 +343,19 @@ const CommunityFeed = () => {
 
   return (
     <MainLayout>
-      <div className="p-8 max-w-4xl">
+      <div className="p-8 max-w-4xl mx-auto">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Community Feed</h1>
-          <p className="text-muted-foreground mt-1">Stay updated with the latest platform updates and company news</p>
+          <p className="text-muted-foreground mt-2">Stay updated with the latest platform updates and company news</p>
         </div>
 
         <Tabs defaultValue="latest" className="w-full">
-          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8">
-            <TabsTrigger value="latest" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Latest</TabsTrigger>
-            <TabsTrigger value="pinned" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Pinned</TabsTrigger>
-            <TabsTrigger value="company" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Company</TabsTrigger>
-            <TabsTrigger value="platform" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Platform</TabsTrigger>
+          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 w-full justify-start gap-6">
+            <TabsTrigger value="latest" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Latest</TabsTrigger>
+            <TabsTrigger value="pinned" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Pinned</TabsTrigger>
+            <TabsTrigger value="company" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Company</TabsTrigger>
+            <TabsTrigger value="platform" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Platform</TabsTrigger>
           </TabsList>
             
             <TabsContent value="latest" className="mt-0">

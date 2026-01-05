@@ -181,16 +181,17 @@ export const AdminIntegrationDialog = ({
       const type = activeScreen.split("-")[1];
 
       return (
-        <div className="space-y-4 h-full flex flex-col">
-          <Input
-            placeholder={`Search ${type}...`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="h-full flex flex-col">
+          <div className="shrink-0 space-y-4 pb-4">
+            <Input
+              placeholder={`Search ${type}...`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <p className="text-sm text-muted-foreground">{items.length} {type} available</p>
+          </div>
 
-          <p className="text-sm text-muted-foreground">{items.length} {type} available</p>
-
-          <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-1 -mx-2 px-2">
             {items.map((item: any) => (
               <div
                 key={item.id}
@@ -208,7 +209,7 @@ export const AdminIntegrationDialog = ({
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-border/40">
+          <div className="shrink-0 flex items-center justify-between pt-4 border-t border-border/40 mt-4">
             <p className="text-sm text-muted-foreground">{tempSelectedIds.length} selected</p>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
@@ -471,7 +472,7 @@ export const AdminIntegrationDialog = ({
           )}
 
           {/* Content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             {isSubScreen && (
               <div className="flex items-center gap-3 p-4 border-b border-border/40 shrink-0">
                 <button 
@@ -483,7 +484,7 @@ export const AdminIntegrationDialog = ({
                 <h2 className="text-base font-medium">{getScreenTitle()}</h2>
               </div>
             )}
-            <div className="flex-1 p-6 overflow-y-auto">
+            <div className="flex-1 min-h-0 p-6 overflow-y-auto">
               {renderContent()}
             </div>
           </div>

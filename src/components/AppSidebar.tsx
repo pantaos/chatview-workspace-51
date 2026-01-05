@@ -306,39 +306,23 @@ const AppSidebar = ({
     <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0 relative">
       {/* Header with Logo and Toggle */}
       <div className="h-14 px-3 flex items-center justify-between border-b border-border">
-        <div 
-          className="relative cursor-pointer"
-          onMouseEnter={() => setIsLogoHovered(true)}
-          onMouseLeave={() => setIsLogoHovered(false)}
-        >
-          {isLogoHovered ? (
-            <button
-              onClick={() => setIsCollapsed(true)}
-              className="flex items-center gap-2 p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <PanelLeft className="h-5 w-5" />
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <img 
-                src="/panta-logo.png" 
-                alt="Logo" 
-                className="w-7 h-7 object-contain"
-              />
-              <span className="text-sm font-bold text-foreground">PANTA</span>
-            </div>
-          )}
+        <div className="flex items-center gap-2">
+          <img 
+            src="/panta-logo.png" 
+            alt="Logo" 
+            className="w-7 h-7 object-contain"
+          />
+          <span className="text-sm font-bold text-foreground">PANTA</span>
         </div>
         
         <button
-          onClick={() => navigate("/chat")}
-          className="p-2 text-muted-foreground hover:bg-muted rounded-md transition-colors"
-          title="Neuer Chat"
+          onClick={() => setIsCollapsed(true)}
+          className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-md transition-colors"
+          title="Sidebar einklappen"
         >
-          <Plus className="h-4 w-4" />
+          <PanelLeft className="h-4 w-4" />
         </button>
       </div>
-
       {/* Inbox Panel */}
       {showInbox && renderInboxPanel()}
 
@@ -346,6 +330,13 @@ const AppSidebar = ({
       <ScrollArea className="flex-1 px-3 py-4">
         {/* Quick Actions */}
         <nav className="space-y-0.5 mb-6">
+          <button
+            onClick={() => navigate("/chat")}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <Plus className="h-4 w-4 flex-shrink-0" />
+            <span>New Chat</span>
+          </button>
           <button
             onClick={() => navigate("/dashboard")}
             className={cn(
@@ -499,34 +490,32 @@ const AppSidebar = ({
         </Collapsible>
       </ScrollArea>
 
-      {/* Bottom Navigation - Modernized with less spacing */}
+      {/* Bottom Navigation */}
       <div className="px-3 py-2 border-t border-border space-y-0.5">
-        <div className="flex gap-1">
-          <button
-            onClick={() => navigate("/admin-settings")}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
-              isActive("/admin-settings")
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <Shield className="h-3.5 w-3.5" />
-            <span>Admin</span>
-          </button>
-          <button
-            onClick={() => navigate("/settings")}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
-              isActive("/settings")
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <Settings className="h-3.5 w-3.5" />
-            <span>Settings</span>
-          </button>
-        </div>
+        <button
+          onClick={() => navigate("/admin-settings")}
+          className={cn(
+            "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+            isActive("/admin-settings")
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Shield className="h-4 w-4" />
+          <span>Admin</span>
+        </button>
+        <button
+          onClick={() => navigate("/settings")}
+          className={cn(
+            "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+            isActive("/settings")
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Settings className="h-4 w-4" />
+          <span>Settings</span>
+        </button>
         
         {/* User Profile - Compact */}
         <button

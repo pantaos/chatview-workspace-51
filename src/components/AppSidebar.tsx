@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   Plus,
   LayoutDashboard,
-  Users,
   MessageSquare,
   History,
   Compass,
@@ -147,7 +146,7 @@ const AppSidebar = ({
 
   const mainNavItems: NavItem[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { id: "community", label: "Community Feed", icon: Users, href: "/community-feed" },
+    { id: "community", label: "Community Feed", icon: MessageSquare, href: "/community-feed" },
     { id: "inbox", label: "Inbox", icon: Inbox, onClick: () => setShowInbox(!showInbox) },
     { id: "history", label: "History", icon: History, href: "/history" },
   ];

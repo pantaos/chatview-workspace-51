@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Plus, 
@@ -8,15 +7,13 @@ import {
   Image,
   FileText,
   Video,
-  Music,
-  Star
+  Music
 } from "lucide-react";
 
 import { 
   Sidebar, 
   SidebarContent, 
   SidebarHeader, 
-  SidebarTrigger,
   SidebarGroup,
   SidebarMenu,
   SidebarMenuItem,
@@ -79,47 +76,50 @@ const ChatSidebar = () => {
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     {
       id: "chat1",
-      title: "Marketing strategy analysis",
+      title: "Marketing strategy analysis for Q2 campaign",
       workflowType: "Chat Assistant",
-      timestamp: new Date(Date.now() - 1000 * 60 * 30),
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
       icon: MessageSquare,
       status: "completed",
       isFavorite: true
     },
     {
       id: "chat2",
-      title: "Customer feedback summary",
+      title: "Customer feedback summary report",
       workflowType: "Document Helper",
-      timestamp: new Date(Date.now() - 1000 * 60 * 120),
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
       icon: FileText,
       status: "completed",
       isFavorite: false
     },
     {
       id: "chat3",
-      title: "Product design ideas",
+      title: "Product design ideas brainstorm",
       workflowType: "Image Creator",
-      timestamp: new Date(Date.now() - 1000 * 60 * 240),
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6), // 6 days ago
       icon: Image,
-      status: "failed",
+      status: "completed",
+      isFavorite: false
+    },
+    {
+      id: "chat4",
+      title: "API documentation review",
+      workflowType: "Code Helper",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days ago
+      icon: Code,
+      status: "completed",
       isFavorite: false
     }
   ]);
 
-  const toggleFavorite = (id: string) => {
-    setChatHistory(prev =>
-      prev.map(item => 
-        item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-      )
-    );
-  };
-
-  const renameChat = (id: string, newTitle: string) => {
-    setChatHistory(prev =>
-      prev.map(item => 
-        item.id === id ? { ...item, title: newTitle } : item
-      )
-    );
+  const getRelativeTime = (date: Date) => {
+    const diff = Date.now() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    
+    if (hours < 1) return "vor kurzem";
+    if (hours < 24) return `vor ${hours}h`;
+    return `vor ${days}d`;
   };
   
   const handleNewChat = () => {
@@ -161,7 +161,7 @@ const ChatSidebar = () => {
         <SidebarGroup>
           {state === "expanded" && (
             <div className="px-2 mb-4">
-              <div className="text-xs font-medium text-gray-500 mb-2 px-2">WORKFLOWS</div>
+              <div className="text-xs font-medium text-muted-foreground mb-2 px-2">WORKFLOWS</div>
               <SidebarMenu>
                 {workflows.map((workflow) => (
                   <SidebarMenuItem key={workflow.id}>
@@ -177,21 +177,20 @@ const ChatSidebar = () => {
           
           {state === "expanded" && (
             <div className="px-2">
-              <div className="text-xs font-medium text-gray-500 mb-2 px-2">HISTORY</div>
+              <div className="text-xs font-medium text-muted-foreground mb-2 px-2">HISTORY</div>
               <ScrollArea className="h-[calc(100vh-320px)]">
-                <div className="p-2 space-y-1">
+                <div className="space-y-1 px-1">
                   {chatHistory.map((chat) => (
                     <div 
                       key={chat.id} 
-                      className="flex items-center px-2 py-2 rounded-md hover:bg-gray-100 cursor-pointer"
+                      className="px-3 py-2.5 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
                     >
-                      <div className="flex-shrink-0 mr-3 flex items-center">
-                        <chat.icon className="w-4 h-4 text-gray-500" />
-                      </div>
-                      <div className="flex-1 min-w-0 line-clamp-1 text-sm">{chat.title}</div>
-                      {chat.isFavorite && (
-                        <Star className="w-4 h-4 ml-2 text-amber-400 flex-shrink-0" />
-                      )}
+                      <p className="text-sm font-medium text-foreground truncate leading-tight">
+                        {chat.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {getRelativeTime(chat.timestamp)}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -224,9 +223,6 @@ const ChatSidebar = () => {
                               className="h-8 w-8 rounded-full"
                             >
                               <chat.icon className="h-4 w-4" />
-                              {chat.isFavorite && (
-                                <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full"></div>
-                              )}
                             </Button>
                           </div>
                         </TooltipTrigger>

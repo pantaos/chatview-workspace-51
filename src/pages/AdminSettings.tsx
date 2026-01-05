@@ -1,15 +1,13 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, TrendingUp, Workflow, UsersIcon, CreditCard, Puzzle, MessageSquare } from "lucide-react";
+import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MainLayout from "@/components/MainLayout";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminUsers from "@/components/admin/AdminUsers";
-import AdminWorkflows from "@/components/admin/AdminWorkflows";
 import AdminTeams from "@/components/admin/AdminTeams";
-import AdminCreditUsage from "@/components/admin/AdminCreditUsage";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
 
@@ -62,18 +60,6 @@ const AdminSettings = () => {
       label: "Tenant Integrations", 
       icon: Puzzle,
       description: "Connected Services"
-    },
-    { 
-      id: "workflows", 
-      label: "Workflows", 
-      icon: Workflow,
-      description: "AI Workflows & Assistants"
-    },
-    { 
-      id: "credits", 
-      label: "Credits", 
-      icon: CreditCard,
-      description: "Usage & Billing"
     }
   ], []);
 
@@ -101,12 +87,8 @@ const AdminSettings = () => {
         return <AdminTeams />;
       case "community":
         return <CommunityFeed />;
-      case "workflows":
-        return <AdminWorkflows />;
       case "integrations":
         return <AdminIntegrations />;
-      case "credits":
-        return <AdminCreditUsage />;
       default:
         return <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />;
     }
@@ -129,9 +111,8 @@ const AdminSettings = () => {
             <TabsTrigger value="dashboard" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Analytics</TabsTrigger>
             <TabsTrigger value="users" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Users</TabsTrigger>
             <TabsTrigger value="teams" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Teams</TabsTrigger>
+            <TabsTrigger value="community" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Community Feed</TabsTrigger>
             <TabsTrigger value="integrations" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Integrations</TabsTrigger>
-            <TabsTrigger value="workflows" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Workflows</TabsTrigger>
-            <TabsTrigger value="credits" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Credits</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-0">
@@ -143,14 +124,11 @@ const AdminSettings = () => {
           <TabsContent value="teams" className="mt-0">
             <AdminTeams />
           </TabsContent>
+          <TabsContent value="community" className="mt-0">
+            <CommunityFeed />
+          </TabsContent>
           <TabsContent value="integrations" className="mt-0">
             <AdminIntegrations />
-          </TabsContent>
-          <TabsContent value="workflows" className="mt-0">
-            <AdminWorkflows />
-          </TabsContent>
-          <TabsContent value="credits" className="mt-0">
-            <AdminCreditUsage />
           </TabsContent>
         </Tabs>
       </div>

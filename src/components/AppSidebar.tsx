@@ -402,7 +402,7 @@ const AppSidebar = ({
               className={cn(
                 "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 showInbox
-                  ? "bg-primary/10 text-primary"
+                  ? "bg-muted text-foreground"
                   : "text-foreground/70 hover:bg-muted hover:text-foreground"
               )}
             >
@@ -411,9 +411,7 @@ const AppSidebar = ({
                 <span>Inbox</span>
               </div>
               {unreadCount > 0 && (
-                <span className="w-5 h-5 bg-red-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
-                  {unreadCount}
-                </span>
+                <span className="w-2 h-2 bg-primary/60 rounded-full" />
               )}
             </button>
           ) : (
@@ -462,54 +460,63 @@ const AppSidebar = ({
     </>
   );
 
-  // Render Inbox Panel (Notion-style)
+  // Render Inbox Panel (Subtle, Modern Design)
   const renderInboxPanel = () => (
-    <div className="absolute left-full top-0 ml-1 w-80 h-[500px] bg-background border border-border rounded-lg shadow-lg z-50 flex flex-col overflow-hidden">
+    <div className="absolute left-full top-0 ml-2 w-80 h-[480px] bg-background border border-border/60 rounded-xl shadow-xl shadow-black/5 z-50 flex flex-col overflow-hidden animate-fade-in">
       {/* Inbox Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <h3 className="font-semibold text-foreground">Inbox</h3>
-        <div className="flex items-center gap-1">
-          <button className="p-1.5 text-muted-foreground hover:bg-muted rounded-md transition-colors">
-            <Filter className="h-4 w-4" />
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+        <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
+        <div className="flex items-center gap-0.5">
+          <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
+            <Filter className="h-3.5 w-3.5" />
           </button>
           <button 
             onClick={() => setShowInbox(false)}
-            className="p-1.5 text-muted-foreground hover:bg-muted rounded-md transition-colors"
+            className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
 
       {/* Inbox Content */}
       <ScrollArea className="flex-1">
-        <div className="p-2">
-          <p className="text-xs text-muted-foreground px-2 py-1 mb-1">Today</p>
-          {notifications.map((notif) => (
+        <div className="py-1">
+          <p className="text-[11px] text-muted-foreground/50 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
+          {notifications.map((notif, index) => (
             <button
               key={notif.id}
-              className="w-full flex items-start gap-3 px-3 py-3 rounded-md hover:bg-muted transition-colors text-left"
+              className={cn(
+                "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group",
+                notif.unread 
+                  ? "bg-primary/[0.02] hover:bg-primary/[0.04]" 
+                  : "hover:bg-muted/40"
+              )}
             >
-              <Avatar className="h-8 w-8 flex-shrink-0 mt-0.5">
+              {/* Unread indicator line */}
+              {notif.unread && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/40 rounded-r" />
+              )}
+              <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
                 <AvatarImage src={notif.user.avatar} />
-                <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-medium">
                   {notif.user.initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1 flex-wrap">
-                  <span className="font-medium text-sm text-foreground">{notif.user.name}</span>
-                  <span className="text-sm text-muted-foreground">{notif.action}</span>
-                  <span className="text-sm font-medium text-foreground">{notif.project}</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className={cn(
+                    "text-[13px] text-foreground/90",
+                    notif.unread ? "font-medium" : "font-normal"
+                  )}>
+                    {notif.user.name}
+                  </span>
+                  <span className="text-[13px] text-muted-foreground/60">{notif.action}</span>
+                  <span className="text-[13px] text-foreground/70">{notif.project}</span>
                 </div>
-                <p className="text-sm text-muted-foreground truncate mt-0.5">{notif.preview}</p>
+                <p className="text-[12px] text-muted-foreground/50 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xs text-muted-foreground">{notif.time}</span>
-                {notif.unread && (
-                  <div className="w-2 h-2 bg-primary rounded-full" />
-                )}
-              </div>
+              <span className="text-[11px] text-muted-foreground/40 flex-shrink-0 mt-0.5">{notif.time}</span>
             </button>
           ))}
         </div>

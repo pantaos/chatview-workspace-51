@@ -14,19 +14,19 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background/95 group-[.toaster]:backdrop-blur-sm group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:border-border/40 group-[.toaster]:shadow-2xl group-[.toaster]:shadow-black/10 group-[.toaster]:rounded-2xl group-[.toaster]:px-4 group-[.toaster]:py-3",
-          title: "group-[.toast]:text-[13px] group-[.toast]:font-medium group-[.toast]:text-foreground/90",
-          description: "group-[.toast]:text-[12px] group-[.toast]:text-muted-foreground/70 group-[.toast]:leading-relaxed",
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:border-border/50 group-[.toaster]:shadow-lg group-[.toaster]:rounded-xl group-[.toaster]:p-4",
+          title: "group-[.toast]:text-sm group-[.toast]:font-semibold",
+          description: "group-[.toast]:text-sm group-[.toast]:text-muted-foreground",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:text-[12px] group-[.toast]:font-medium group-[.toast]:rounded-lg group-[.toast]:px-3 group-[.toast]:py-1.5",
+            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:text-sm group-[.toast]:font-medium group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-2 group-[.toast]:hover:bg-primary/90",
           cancelButton:
-            "group-[.toast]:bg-muted/50 group-[.toast]:text-muted-foreground group-[.toast]:text-[12px] group-[.toast]:rounded-lg group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:hover:bg-muted",
+            "group-[.toast]:bg-secondary group-[.toast]:text-secondary-foreground group-[.toast]:text-sm group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-2 group-[.toast]:hover:bg-secondary/80",
           closeButton:
-            "group-[.toast]:!bg-transparent group-[.toast]:!border-0 group-[.toast]:text-muted-foreground/60 group-[.toast]:hover:text-foreground group-[.toast]:transition-colors",
-          success: "group-[.toaster]:!border-l-2 group-[.toaster]:!border-l-green-500/60",
-          error: "group-[.toaster]:!border-l-2 group-[.toaster]:!border-l-red-500/60",
-          warning: "group-[.toaster]:!border-l-2 group-[.toaster]:!border-l-yellow-500/60",
-          info: "group-[.toaster]:!border-l-2 group-[.toaster]:!border-l-primary/60",
+            "group-[.toast]:bg-background group-[.toast]:text-muted-foreground group-[.toast]:border group-[.toast]:border-border/50 group-[.toast]:hover:bg-muted group-[.toast]:hover:text-foreground group-[.toast]:rounded-md group-[.toast]:transition-all",
+          success: "group-[.toaster]:text-foreground [&>svg]:text-green-500",
+          error: "group-[.toaster]:text-foreground [&>svg]:text-red-500",
+          warning: "group-[.toaster]:text-foreground [&>svg]:text-amber-500",
+          info: "group-[.toaster]:text-foreground [&>svg]:text-blue-500",
         },
       }}
       {...props}

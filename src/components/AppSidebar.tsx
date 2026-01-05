@@ -13,6 +13,7 @@ import {
   Filter,
   LayoutDashboard,
   CheckCheck,
+  History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -78,11 +79,25 @@ interface AppSidebarProps {
   currentWorkflowStep?: number;
 }
 
+// Helper for relative time in German
+const getRelativeTime = (date: Date) => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMins < 60) return `vor ${diffMins}m`;
+  if (diffHours < 24) return `vor ${diffHours}h`;
+  if (diffDays === 1) return "vor 1 Tag";
+  return `vor ${diffDays} Tagen`;
+};
+
 // Sample data
 const chatHistory = [
-  { id: "1", title: "Offering Assistance" },
-  { id: "2", title: "Project Planning" },
-  { id: "3", title: "Code Review Help" },
+  { id: "1", title: "Offering Assistance", timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
+  { id: "2", title: "Project Planning", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+  { id: "3", title: "Code Review Help", timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000) },
 ];
 
 // Combined Apps (Assistants + Workflows)
@@ -198,6 +213,18 @@ const AppSidebar = ({
             {unreadCount > 0 && (
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary/60 rounded-full" />
             )}
+          </button>
+          <button
+            onClick={() => navigate("/history")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/history")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="History"
+          >
+            <History className="h-5 w-5" />
           </button>
         </div>
 
@@ -393,6 +420,18 @@ const AppSidebar = ({
               <span className="w-2 h-2 bg-primary/60 rounded-full" />
             )}
           </button>
+          <button
+            onClick={() => navigate("/history")}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              isActive("/history")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+          >
+            <History className="h-4 w-4 flex-shrink-0" />
+            <span>History</span>
+          </button>
         </nav>
 
         {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}
@@ -496,9 +535,10 @@ const AppSidebar = ({
               <button
                 key={chat.id}
                 onClick={() => navigate("/chat")}
-                className="w-full flex items-center px-3 py-1.5 text-sm text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
+                className="w-full flex flex-col items-start px-3 py-2 text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
               >
-                <span className="truncate">{chat.title}</span>
+                <span className="text-sm truncate w-full text-left">{chat.title}</span>
+                <span className="text-xs text-muted-foreground">{getRelativeTime(chat.timestamp)}</span>
               </button>
             ))}
           </CollapsibleContent>

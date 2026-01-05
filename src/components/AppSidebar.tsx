@@ -14,6 +14,8 @@ import {
   LayoutDashboard,
   CheckCheck,
   History,
+  User,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,6 +25,13 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Sample notifications data - now as initial state
 const initialNotifications = [
@@ -572,21 +581,38 @@ const AppSidebar = ({
           <span>Settings</span>
         </button>
         
-        {/* User Profile - Compact */}
-        <button
-          onClick={() => navigate("/profile")}
-          className="flex items-center gap-2.5 w-full px-2 py-1.5 rounded-md hover:bg-muted transition-colors"
-        >
-          <Avatar className="h-6 w-6">
-            <AvatarImage src="/placeholder.svg" alt="User" />
-            <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
-              AO
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-sm font-medium text-foreground truncate">
-            Arian Okhovat
-          </span>
-        </button>
+        {/* User Profile - Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2.5 w-full px-2 py-1.5 rounded-md hover:bg-muted transition-colors">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="/placeholder.svg" alt="User" />
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">
+                  AO
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium text-foreground truncate">
+                Arian Okhovat
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          
+          <DropdownMenuContent align="start" side="top" className="w-48">
+            <DropdownMenuItem onClick={() => navigate("/settings?tab=profile")}>
+              <User className="mr-2 h-4 w-4" />
+              Profil
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/settings?tab=general")}>
+              <Settings className="mr-2 h-4 w-4" />
+              Allgemein
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-red-500 focus:text-red-500">
+              <LogOut className="mr-2 h-4 w-4" />
+              Abmelden
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

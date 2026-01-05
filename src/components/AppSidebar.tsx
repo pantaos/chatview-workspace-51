@@ -12,6 +12,7 @@ import {
   X,
   Filter,
   LayoutDashboard,
+  CheckCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,8 +23,8 @@ import {
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Sample notifications data
-const notifications = [
+// Sample notifications data - now as initial state
+const initialNotifications = [
   {
     id: "1",
     user: { name: "Jörg Salamon", avatar: "", initials: "JS" },
@@ -103,6 +104,7 @@ const AppSidebar = ({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const [notifications, setNotifications] = useState(initialNotifications);
   
   // Collapsible states
   const [historyOpen, setHistoryOpen] = useState(true);
@@ -110,6 +112,10 @@ const AppSidebar = ({
   const [workflowOpen, setWorkflowOpen] = useState(true);
   
   const unreadCount = notifications.filter(n => n.unread).length;
+  
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+  };
 
   // Check if we're in a workflow
   const hasActiveWorkflow = workflowSteps.length > 0 && workflowName;
@@ -246,6 +252,15 @@ const AppSidebar = ({
       <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
         <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
         <div className="flex items-center gap-0.5">
+          {unreadCount > 0 && (
+            <button 
+              onClick={markAllAsRead}
+              className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-muted-foreground/70 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
+            >
+              <CheckCheck className="h-3 w-3" />
+              <span>Mark all read</span>
+            </button>
+          )}
           <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
             <Filter className="h-3.5 w-3.5" />
           </button>

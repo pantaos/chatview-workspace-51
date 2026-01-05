@@ -125,7 +125,7 @@ const History = () => {
 
   return (
     <MainLayout>
-      <div className="p-8 max-w-4xl">
+      <div className="p-8 max-w-5xl">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Chat History</h1>

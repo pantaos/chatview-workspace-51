@@ -9,13 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, User, Mail, Edit, Camera } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-import LiquidGlassHeader from "@/components/LiquidGlassHeader";
+import MainLayout from "@/components/MainLayout";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const isMobile = useIsMobile();
   const [firstName, setFirstName] = useState("Moin");
   const [lastName, setLastName] = useState("Arian");
@@ -25,7 +23,6 @@ const Profile = () => {
   const [userType] = useState("Admin");
   
   const fullName = `${firstName} ${lastName}`;
-  const currentUser = { firstName, lastName, email };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -57,18 +54,17 @@ const Profile = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300 ${theme.isDarkMode ? 'dark' : ''}`}>
-      <LiquidGlassHeader
-        title="Profile Settings"
-        subtitle="Manage your account and preferences"
-        currentUser={currentUser}
-      />
+    <MainLayout>
+      <div className="p-8 max-w-5xl">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
+          <p className="text-muted-foreground mt-2">Manage your account and preferences</p>
+        </div>
 
-      {/* Main content */}
-      <main className="container mx-auto px-4 py-6 max-w-4xl -mt-8 relative z-10">
         <div className="space-y-6">
-          {/* Profile Picture Card - Mobile Optimized */}
-          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+          {/* Profile Picture Card */}
+          <Card>
             <CardContent className="p-6">
               <div className={`flex ${isMobile ? 'flex-col items-center text-center' : 'items-center'} gap-6`}>
                 <div className="relative group">
@@ -95,10 +91,10 @@ const Profile = () => {
                 
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {fullName}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {email}
                     </p>
                   </div>
@@ -124,7 +120,7 @@ const Profile = () => {
           </Card>
 
           {/* Personal Information Card */}
-          <Card className="border-0 shadow-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+          <Card>
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-3 text-lg">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary">
@@ -136,7 +132,7 @@ const Profile = () => {
             <CardContent className="space-y-6">
               <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2'}`}>
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
                     First Name
                   </Label>
                   <Input
@@ -144,11 +140,11 @@ const Profile = () => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="Enter your first name"
-                    className="h-10 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                    className="h-10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
                     Last Name
                   </Label>
                   <Input
@@ -156,53 +152,53 @@ const Profile = () => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Enter your last name"
-                    className="h-10 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                    className="h-10"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     disabled
-                    className="pl-10 h-10 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border-slate-200 dark:border-slate-700"
+                    className="pl-10 h-10 bg-muted text-muted-foreground cursor-not-allowed"
                     placeholder="Email address (read-only)"
                   />
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Email address cannot be changed. Contact your administrator if needed.
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          {/* Mobile-optimized Action Buttons */}
+          {/* Action Buttons */}
           <div className={`flex gap-3 ${isMobile ? 'flex-col' : 'justify-end'}`}>
             <Button 
               variant="outline"
               onClick={() => navigate(-1)}
-              className={`${isMobile ? 'order-2' : ''} bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-black hover:text-white`}
+              className={`${isMobile ? 'order-2' : ''} hover:bg-black hover:text-white`}
             >
               Cancel
             </Button>
             <Button 
               onClick={handleSave}
-              className={`${isMobile ? 'order-1' : ''} bg-gradient-to-r from-primary to-accent hover:bg-black hover:text-white shadow-lg`}
+              className={`${isMobile ? 'order-1' : ''}`}
             >
               <Edit className="w-4 h-4 mr-2" />
               Save Changes
             </Button>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X, ChevronLeft, Building2, Users, Bot, User, Check } from "lucide-react";
+import { X, ChevronLeft, Building2, Users, Bot, User, Check, Gauge } from "lucide-react";
 import { toast } from "sonner";
 import { Integration, IntegrationApp } from "./AdminIntegrations";
 
@@ -20,6 +20,7 @@ interface AdminIntegrationDialogProps {
 
 type ScreenType = 
   | "general" 
+  | "limits"
   | string  // app IDs like "outlook", "calendar", etc.
   | `${string}-teams` 
   | `${string}-assistants` 
@@ -63,14 +64,45 @@ export const AdminIntegrationDialog = ({
   const [tempSelectedIds, setTempSelectedIds] = useState<string[]>([]);
   const [currentAppId, setCurrentAppId] = useState<string | null>(null);
 
+  // Reset to general tab when dialog opens
+  useEffect(() => {
+    if (open) {
+      setActiveScreen("general");
+      setSearchTerm("");
+      setTempSelectedIds([]);
+      setCurrentAppId(null);
+    }
+  }, [open]);
+
+  const isImageGeneration = integration.id === "images";
+
   const tabs = [
     { id: "general", label: "General" },
-    ...integration.apps.map(app => ({ id: app.id, label: app.name }))
+    ...integration.apps.map(app => ({ id: app.id, label: app.name })),
+    ...(isImageGeneration ? [{ id: "limits", label: "Limits" }] : [])
   ];
 
   const isSubScreen = activeScreen.includes("-teams") || 
                       activeScreen.includes("-assistants") || 
                       activeScreen.includes("-users");
+
+  const handleLimitChange = (appId: string, field: "enabled" | "perUserPerDay" | "perTeamPerDay", value: boolean | number) => {
+    const updatedApps = integration.apps.map(app => {
+      if (app.id === appId) {
+        return {
+          ...app,
+          limits: {
+            enabled: app.limits?.enabled ?? false,
+            perUserPerDay: app.limits?.perUserPerDay ?? 50,
+            perTeamPerDay: app.limits?.perTeamPerDay ?? 200,
+            [field]: value
+          }
+        };
+      }
+      return app;
+    });
+    onIntegrationUpdate({ ...integration, apps: updatedApps });
+  };
 
   const handleBack = () => {
     if (currentAppId) {
@@ -287,6 +319,85 @@ export const AdminIntegrationDialog = ({
               Disconnect {integration.name}
             </Button>
           )}
+        </div>
+      );
+    }
+
+    // Limits screen (for Image Generation)
+    if (activeScreen === "limits" && isImageGeneration) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-medium text-foreground mb-1">Usage Limits</h2>
+            <p className="text-sm text-muted-foreground">
+              Set daily generation limits per user and per team
+            </p>
+          </div>
+          
+          <div className="h-px bg-border/50" />
+
+          <div className="space-y-6">
+            {integration.apps.map(app => (
+              <div key={app.id} className="space-y-4 p-4 rounded-lg border border-border/40 bg-muted/20">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium text-sm">{app.name}</h4>
+                    <p className="text-xs text-muted-foreground">{app.description}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor={`${app.id}-limit-toggle`} className="text-xs text-muted-foreground">
+                      Limits aktiv
+                    </Label>
+                    <Switch
+                      id={`${app.id}-limit-toggle`}
+                      checked={app.limits?.enabled ?? false}
+                      onCheckedChange={(checked) => handleLimitChange(app.id, "enabled", checked)}
+                    />
+                  </div>
+                </div>
+
+                {app.limits?.enabled && (
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="space-y-2">
+                      <Label className="text-xs text-muted-foreground flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        Pro User / Tag
+                      </Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={1000}
+                        value={app.limits.perUserPerDay}
+                        onChange={(e) => handleLimitChange(app.id, "perUserPerDay", parseInt(e.target.value) || 1)}
+                        className="h-9"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        Pro Team / Tag
+                      </Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={10000}
+                        value={app.limits.perTeamPerDay}
+                        onChange={(e) => handleLimitChange(app.id, "perTeamPerDay", parseInt(e.target.value) || 1)}
+                        className="h-9"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+            <p className="text-xs text-blue-600 dark:text-blue-400">
+              <strong>Hinweis:</strong> Limits werden um Mitternacht (UTC) zurückgesetzt. 
+              Nutzer erhalten eine Benachrichtigung bei 80% Nutzung.
+            </p>
+          </div>
         </div>
       );
     }

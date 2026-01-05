@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Calendar, FileText, Image } from "lucide-react";
+import { Mail, Image, Plus, ChevronRight } from "lucide-react";
 import { AdminIntegrationDialog } from "./AdminIntegrationDialog";
+import { AddIntegrationDialog } from "./AddIntegrationDialog";
 
 export interface IntegrationApp {
   id: string;
@@ -14,6 +14,11 @@ export interface IntegrationApp {
   selectedTeams: string[];
   selectedAssistants: string[];
   selectedUsers: string[];
+  limits?: {
+    enabled: boolean;
+    perUserPerDay: number;
+    perTeamPerDay: number;
+  };
 }
 
 export interface Integration {
@@ -26,7 +31,7 @@ export interface Integration {
   apps: IntegrationApp[];
 }
 
-const initialIntegrations: Integration[] = [
+const allIntegrations: Integration[] = [
   {
     id: "microsoft",
     name: "Microsoft 365",
@@ -93,16 +98,16 @@ const initialIntegrations: Integration[] = [
     description: "Notes and documentation",
     icon: <span className="text-white font-bold text-base">N</span>,
     iconBg: "bg-slate-800",
-    connected: true,
+    connected: false,
     apps: [
       { 
         id: "notion", 
         name: "Notion", 
         description: "Workspace access",
-        enabled: true, 
-        accessScope: "assistants",
+        enabled: false, 
+        accessScope: null,
         selectedTeams: [],
-        selectedAssistants: ["1", "2"],
+        selectedAssistants: [],
         selectedUsers: []
       }
     ]
@@ -123,12 +128,42 @@ const initialIntegrations: Integration[] = [
         accessScope: "organization",
         selectedTeams: [],
         selectedAssistants: [],
-        selectedUsers: []
+        selectedUsers: [],
+        limits: {
+          enabled: true,
+          perUserPerDay: 50,
+          perTeamPerDay: 200
+        }
       },
       { 
         id: "midjourney", 
         name: "Midjourney", 
         description: "Artistic image generation",
+        enabled: false, 
+        accessScope: null,
+        selectedTeams: [],
+        selectedAssistants: [],
+        selectedUsers: [],
+        limits: {
+          enabled: false,
+          perUserPerDay: 20,
+          perTeamPerDay: 100
+        }
+      }
+    ]
+  },
+  {
+    id: "slack",
+    name: "Slack",
+    description: "Team communication",
+    icon: <span className="text-white font-bold text-base">S</span>,
+    iconBg: "bg-emerald-600",
+    connected: false,
+    apps: [
+      { 
+        id: "slack", 
+        name: "Slack", 
+        description: "Messaging integration",
         enabled: false, 
         accessScope: null,
         selectedTeams: [],
@@ -140,9 +175,13 @@ const initialIntegrations: Integration[] = [
 ];
 
 const AdminIntegrations = () => {
-  const [integrations, setIntegrations] = useState<Integration[]>(initialIntegrations);
+  const [integrations, setIntegrations] = useState<Integration[]>(allIntegrations);
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+  const connectedIntegrations = integrations.filter(i => i.connected);
+  const availableIntegrations = integrations.filter(i => !i.connected);
 
   const handleManageClick = (integration: Integration) => {
     setSelectedIntegration(integration);
@@ -154,6 +193,16 @@ const AdminIntegrations = () => {
       prev.map(i => i.id === updatedIntegration.id ? updatedIntegration : i)
     );
     setSelectedIntegration(updatedIntegration);
+  };
+
+  const handleAddIntegration = (integrationId: string) => {
+    setIntegrations(prev =>
+      prev.map(i => 
+        i.id === integrationId 
+          ? { ...i, connected: true }
+          : i
+      )
+    );
   };
 
   const getEnabledAppsCount = (integration: Integration) => {
@@ -182,58 +231,65 @@ const AdminIntegrations = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {integrations.map((integration) => {
+      <div className="space-y-2">
+        {connectedIntegrations.map((integration) => {
           const enabledCount = getEnabledAppsCount(integration);
           const scopeSummary = getAccessScopeSummary(integration);
           
           return (
-            <Card 
+            <div 
               key={integration.id}
-              className="p-5 hover:bg-muted/50 transition-colors"
+              className="flex items-center justify-between p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 transition-all group cursor-pointer"
+              onClick={() => handleManageClick(integration)}
             >
-              <div className="flex flex-col h-full">
-                <div className="flex items-start justify-between mb-4">
-                  <div 
-                    className={`w-12 h-12 ${integration.iconBg} rounded-xl flex items-center justify-center`}
-                  >
-                    {integration.icon}
-                  </div>
-                  {integration.connected && (
-                    <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
-                      Connected
-                    </Badge>
-                  )}
+              <div className="flex items-center gap-4">
+                <div 
+                  className={`w-10 h-10 ${integration.iconBg} rounded-lg flex items-center justify-center`}
+                >
+                  {integration.icon}
                 </div>
-
-                <h3 className="font-semibold text-base mb-1">{integration.name}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{integration.description}</p>
-
-                <div className="flex items-center gap-2 mb-4 mt-auto">
-                  {enabledCount > 0 && (
-                    <Badge variant="outline" className="text-[10px]">
-                      {enabledCount} {enabledCount === 1 ? 'app' : 'apps'} enabled
-                    </Badge>
-                  )}
-                  {scopeSummary && (
-                    <Badge variant="outline" className="text-[10px]">
-                      {scopeSummary}
-                    </Badge>
-                  )}
+                <div>
+                  <h3 className="font-medium text-sm">{integration.name}</h3>
+                  <p className="text-xs text-muted-foreground">{integration.description}</p>
                 </div>
+              </div>
 
+              <div className="flex items-center gap-3">
+                {enabledCount > 0 && (
+                  <Badge variant="outline" className="text-[10px] bg-green-500/10 text-green-600 border-green-500/30">
+                    {enabledCount} {enabledCount === 1 ? 'app' : 'apps'}
+                  </Badge>
+                )}
+                {scopeSummary && (
+                  <Badge variant="outline" className="text-[10px]">
+                    {scopeSummary}
+                  </Badge>
+                )}
                 <Button 
-                  variant="outline" 
+                  variant="ghost" 
                   size="sm"
-                  className="w-full hover:bg-primary hover:text-primary-foreground"
-                  onClick={() => handleManageClick(integration)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleManageClick(integration);
+                  }}
                 >
                   Manage
+                  <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
-            </Card>
+            </div>
           );
         })}
+
+        {/* Add Integration Button */}
+        <button 
+          onClick={() => setAddDialogOpen(true)}
+          className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border border-dashed border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-muted/30 transition-all"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="text-sm">Integration hinzufügen</span>
+        </button>
       </div>
 
       {selectedIntegration && (
@@ -244,6 +300,13 @@ const AdminIntegrations = () => {
           onIntegrationUpdate={handleIntegrationUpdate}
         />
       )}
+
+      <AddIntegrationDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        availableIntegrations={availableIntegrations}
+        onAddIntegration={handleAddIntegration}
+      />
     </div>
   );
 };

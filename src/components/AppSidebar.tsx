@@ -528,7 +528,7 @@ const AppSidebar = ({
               AO
             </AvatarFallback>
           </Avatar>
-          <span className="text-xs font-medium text-foreground truncate">
+          <span className="text-sm font-medium text-foreground truncate">
             Arian Okhovat
           </span>
         </button>

@@ -425,251 +425,244 @@ const Settings = () => {
 
             {/* Microsoft Apps Selection Dialog */}
             <Dialog open={microsoftAppsDialogOpen} onOpenChange={setMicrosoftAppsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">M</span>
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
+                      <span className="text-white font-semibold text-xs">M</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Microsoft Apps</DialogTitle>
-                      <DialogDescription>Select which Microsoft apps you want to enable</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Microsoft</h3>
+                      <p className="text-[11px] text-muted-foreground/70">Select apps to enable</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-6 pl-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
-                        <Mail className="w-4 h-4 text-white" />
+                <div className="py-1">
+                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
+                        <Mail className="w-3 h-3 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">Outlook</p>
-                        <p className="text-sm text-muted-foreground">Email management</p>
+                        <p className="text-[13px] font-medium text-foreground/90">Outlook</p>
+                        <p className="text-[10px] text-muted-foreground/60">Email</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Label className="text-xs text-muted-foreground">Enable</Label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!microsoftApps.outlook}
+                        onClick={() => setOutlookPermissionsDialogOpen(true)}
+                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                      >
+                        Configure
+                      </button>
                       <Switch 
                         checked={microsoftApps.outlook}
                         onCheckedChange={(checked) => {
                           setMicrosoftApps({...microsoftApps, outlook: checked});
-                          if (checked) {
-                            setTimeout(() => setOutlookPermissionsDialogOpen(true), 300);
-                          }
+                          if (checked) setTimeout(() => setOutlookPermissionsDialogOpen(true), 300);
                         }}
+                        className="scale-75"
                       />
-                      <button
-                        disabled={!microsoftApps.outlook}
-                        onClick={() => setOutlookPermissionsDialogOpen(true)}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                        <Calendar className="w-4 h-4 text-white" />
+                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+                        <Calendar className="w-3 h-3 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">Calendar</p>
-                        <p className="text-sm text-muted-foreground">Calendar and events management</p>
+                        <p className="text-[13px] font-medium text-foreground/90">Calendar</p>
+                        <p className="text-[10px] text-muted-foreground/60">Events</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Label className="text-xs text-muted-foreground">Enable</Label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!microsoftApps.calendar}
+                        onClick={() => setCalendarPermissionsDialogOpen(true)}
+                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                      >
+                        Configure
+                      </button>
                       <Switch 
                         checked={microsoftApps.calendar}
                         onCheckedChange={(checked) => {
                           setMicrosoftApps({...microsoftApps, calendar: checked});
-                          if (checked) {
-                            setTimeout(() => setCalendarPermissionsDialogOpen(true), 300);
-                          }
+                          if (checked) setTimeout(() => setCalendarPermissionsDialogOpen(true), 300);
                         }}
+                        className="scale-75"
                       />
-                      <button
-                        disabled={!microsoftApps.calendar}
-                        onClick={() => setCalendarPermissionsDialogOpen(true)}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-700 rounded flex items-center justify-center">
-                        <FileText className="w-4 h-4 text-white" />
+                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-6 h-6 bg-blue-700 rounded flex items-center justify-center">
+                        <FileText className="w-3 h-3 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">SharePoint</p>
-                        <p className="text-sm text-muted-foreground">Document management</p>
+                        <p className="text-[13px] font-medium text-foreground/90">SharePoint</p>
+                        <p className="text-[10px] text-muted-foreground/60">Documents</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Label className="text-xs text-muted-foreground">Enable</Label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!microsoftApps.sharepoint}
+                        onClick={() => setSharepointPermissionsDialogOpen(true)}
+                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                      >
+                        Configure
+                      </button>
                       <Switch 
                         checked={microsoftApps.sharepoint}
                         onCheckedChange={(checked) => {
                           setMicrosoftApps({...microsoftApps, sharepoint: checked});
-                          if (checked) {
-                            setTimeout(() => setSharepointPermissionsDialogOpen(true), 300);
-                          }
+                          if (checked) setTimeout(() => setSharepointPermissionsDialogOpen(true), 300);
                         }}
+                        className="scale-75"
                       />
-                      <button
-                        disabled={!microsoftApps.sharepoint}
-                        onClick={() => setSharepointPermissionsDialogOpen(true)}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setMicrosoftAppsDialogOpen(false)}>
-                    Close
-                  </Button>
-                  <Button onClick={() => {
+                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <DialogClose asChild>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                  </DialogClose>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
                     setMicrosoftAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, microsoft: true});
                     toast.success("Microsoft apps configured");
-                  }}>
-                    Save
-                  </Button>
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Google Apps Selection Dialog */}
             <Dialog open={googleAppsDialogOpen} onOpenChange={setGoogleAppsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">G</span>
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
+                      <span className="text-white font-semibold text-xs">G</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Google Apps</DialogTitle>
-                      <DialogDescription>Select which Google apps you want to enable</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Google</h3>
+                      <p className="text-[11px] text-muted-foreground/70">Select apps to enable</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-6 pl-4">
-                  <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
-                        <Mail className="w-4 h-4 text-white" />
+                <div className="py-1">
+                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
+                        <Mail className="w-3 h-3 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">Gmail</p>
-                        <p className="text-sm text-muted-foreground">Email management</p>
+                        <p className="text-[13px] font-medium text-foreground/90">Gmail</p>
+                        <p className="text-[10px] text-muted-foreground/60">Email</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Label className="text-xs text-muted-foreground">Enable</Label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!googleApps.gmail}
+                        onClick={() => setGmailPermissionsDialogOpen(true)}
+                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                      >
+                        Configure
+                      </button>
                       <Switch 
                         checked={googleApps.gmail}
                         onCheckedChange={(checked) => {
                           setGoogleApps({...googleApps, gmail: checked});
-                          if (checked) {
-                            setTimeout(() => setGmailPermissionsDialogOpen(true), 300);
-                          }
+                          if (checked) setTimeout(() => setGmailPermissionsDialogOpen(true), 300);
                         }}
+                        className="scale-75"
                       />
-                      <button
-                        disabled={!googleApps.gmail}
-                        onClick={() => setGmailPermissionsDialogOpen(true)}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setGoogleAppsDialogOpen(false)}>
-                    Close
-                  </Button>
-                  <Button onClick={() => {
+                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <DialogClose asChild>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                  </DialogClose>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
                     setGoogleAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, google: true});
                     toast.success("Google apps configured");
-                  }}>
-                    Save
-                  </Button>
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Notion Apps Selection Dialog */}
             <Dialog open={notionAppsDialogOpen} onOpenChange={setNotionAppsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-base">N</span>
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-slate-800 rounded-md flex items-center justify-center">
+                      <span className="text-white font-semibold text-xs">N</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Notion</DialogTitle>
-                      <DialogDescription>Enable Notion integration</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Notion</h3>
+                      <p className="text-[11px] text-muted-foreground/70">Select features to enable</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-6 pl-4">
-                  <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-slate-800 rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">N</span>
+                <div className="py-1">
+                  <div className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                        <span className="text-white font-bold text-[10px]">N</span>
                       </div>
                       <div>
-                        <p className="font-medium">Notion</p>
-                        <p className="text-sm text-muted-foreground">Pages and database management</p>
+                        <p className="text-[13px] font-medium text-foreground/90">Notion</p>
+                        <p className="text-[10px] text-muted-foreground/60">Pages & databases</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Label className="text-xs text-muted-foreground">Enable</Label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!notionApps.notion}
+                        onClick={() => setNotionPermissionsDialogOpen(true)}
+                        className="text-[10px] text-primary/70 hover:text-primary transition-colors disabled:opacity-40"
+                      >
+                        Configure
+                      </button>
                       <Switch 
                         checked={notionApps.notion}
                         onCheckedChange={(checked) => {
                           setNotionApps({...notionApps, notion: checked});
-                          if (checked) {
-                            setTimeout(() => setNotionPermissionsDialogOpen(true), 300);
-                          }
+                          if (checked) setTimeout(() => setNotionPermissionsDialogOpen(true), 300);
                         }}
+                        className="scale-75"
                       />
-                      <button
-                        disabled={!notionApps.notion}
-                        onClick={() => setNotionPermissionsDialogOpen(true)}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Configure
-                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" onClick={() => setNotionAppsDialogOpen(false)}>
-                    Close
-                  </Button>
-                  <Button onClick={() => {
+                <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <DialogClose asChild>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3">Cancel</Button>
+                  </DialogClose>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
                     setNotionAppsDialogOpen(false);
                     setPlatformStatus({...platformStatus, notion: true});
                     toast.success("Notion configured");
-                  }}>
-                    Save
-                  </Button>
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -677,620 +670,275 @@ const Settings = () => {
 
             {/* Outlook Permissions Dialog */}
             <Dialog open={outlookPermissionsDialogOpen} onOpenChange={setOutlookPermissionsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-white" />
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
+                      <Mail className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Outlook AI Workflow Controls</DialogTitle>
-                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Outlook Controls</h3>
+                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Read emails</p>
-                      <p className="text-sm text-muted-foreground">Access and view your email messages</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {outlookPermissions.readEmails ? 'On' : 'Off'}
-                      </span>
+                <div className="py-1 max-h-64 overflow-y-auto">
+                  {[
+                    { key: 'readEmails', label: 'Read emails', desc: 'View messages' },
+                    { key: 'draftEmails', label: 'Draft emails', desc: 'Create drafts' },
+                    { key: 'sendEmails', label: 'Send emails', desc: 'Send on your behalf' },
+                    { key: 'searchEmails', label: 'Search emails', desc: 'Search mailbox' },
+                    { key: 'manageLabels', label: 'Manage labels', desc: 'Add/remove labels' },
+                  ].map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                      </div>
                       <Switch 
-                        checked={outlookPermissions.readEmails}
-                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, readEmails: checked})}
+                        checked={outlookPermissions[perm.key as keyof typeof outlookPermissions]}
+                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, [perm.key]: checked})}
+                        className="scale-75"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Draft emails</p>
-                      <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {outlookPermissions.draftEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={outlookPermissions.draftEmails}
-                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, draftEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Send emails</p>
-                      <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {outlookPermissions.sendEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={outlookPermissions.sendEmails}
-                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, sendEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Search emails</p>
-                      <p className="text-sm text-muted-foreground">Search through your mailbox</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {outlookPermissions.searchEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={outlookPermissions.searchEmails}
-                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, searchEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium">Manage labels</p>
-                      <p className="text-sm text-muted-foreground">Add or remove email labels</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {outlookPermissions.manageLabels ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={outlookPermissions.manageLabels}
-                        onCheckedChange={(checked) => setOutlookPermissions({...outlookPermissions, manageLabels: checked})}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setOutlookPermissionsDialogOpen(false);
-                      setMicrosoftAppsDialogOpen(true);
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
+                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                    setOutlookPermissionsDialogOpen(false);
+                    setMicrosoftAppsDialogOpen(true);
+                  }}>
+                    <ArrowLeft className="w-3 h-3 mr-1" />Back
                   </Button>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setOutlookPermissionsDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={() => {
-                      setOutlookPermissionsDialogOpen(false);
-                      toast.success("Outlook permissions updated");
-                    }}>
-                      Save Changes
-                    </Button>
-                  </div>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                    setOutlookPermissionsDialogOpen(false);
+                    toast.success("Outlook permissions updated");
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Calendar Permissions Dialog */}
             <Dialog open={calendarPermissionsDialogOpen} onOpenChange={setCalendarPermissionsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <Calendar className="w-6 h-6 text-white" />
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-blue-600 rounded-md flex items-center justify-center">
+                      <Calendar className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Calendar AI Workflow Controls</DialogTitle>
-                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Calendar Controls</h3>
+                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Read events</p>
-                      <p className="text-sm text-muted-foreground">View your calendar and events</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {calendarPermissions.readEvents ? 'On' : 'Off'}
-                      </span>
+                <div className="py-1 max-h-64 overflow-y-auto">
+                  {[
+                    { key: 'readEvents', label: 'Read events', desc: 'View calendar' },
+                    { key: 'createEvents', label: 'Create events', desc: 'Add new events' },
+                    { key: 'updateEvents', label: 'Update events', desc: 'Modify events' },
+                    { key: 'deleteEvents', label: 'Delete events', desc: 'Remove events' },
+                    { key: 'findAvailability', label: 'Find availability', desc: 'Check free slots' },
+                  ].map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                      </div>
                       <Switch 
-                        checked={calendarPermissions.readEvents}
-                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, readEvents: checked})}
+                        checked={calendarPermissions[perm.key as keyof typeof calendarPermissions]}
+                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, [perm.key]: checked})}
+                        className="scale-75"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Create events</p>
-                      <p className="text-sm text-muted-foreground">Add new events to your calendar</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {calendarPermissions.createEvents ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={calendarPermissions.createEvents}
-                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, createEvents: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Update events</p>
-                      <p className="text-sm text-muted-foreground">Modify existing calendar events</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {calendarPermissions.updateEvents ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={calendarPermissions.updateEvents}
-                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, updateEvents: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Delete events</p>
-                      <p className="text-sm text-muted-foreground">Remove events from calendar</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {calendarPermissions.deleteEvents ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={calendarPermissions.deleteEvents}
-                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, deleteEvents: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium">Find availability</p>
-                      <p className="text-sm text-muted-foreground">Check free time slots</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {calendarPermissions.findAvailability ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={calendarPermissions.findAvailability}
-                        onCheckedChange={(checked) => setCalendarPermissions({...calendarPermissions, findAvailability: checked})}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setCalendarPermissionsDialogOpen(false);
-                      setMicrosoftAppsDialogOpen(true);
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
+                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                    setCalendarPermissionsDialogOpen(false);
+                    setMicrosoftAppsDialogOpen(true);
+                  }}>
+                    <ArrowLeft className="w-3 h-3 mr-1" />Back
                   </Button>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setCalendarPermissionsDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={() => {
-                      setCalendarPermissionsDialogOpen(false);
-                      toast.success("Calendar permissions updated");
-                    }}>
-                      Save Changes
-                    </Button>
-                  </div>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                    setCalendarPermissionsDialogOpen(false);
+                    toast.success("Calendar permissions updated");
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* SharePoint Permissions Dialog */}
             <Dialog open={sharepointPermissionsDialogOpen} onOpenChange={setSharepointPermissionsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-blue-700 rounded-lg flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-white" />
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-blue-700 rounded-md flex items-center justify-center">
+                      <FileText className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">SharePoint AI Workflow Controls</DialogTitle>
-                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">SharePoint Controls</h3>
+                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">List documents</p>
-                      <p className="text-sm text-muted-foreground">View all documents in libraries</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {sharepointPermissions.listDocuments ? 'On' : 'Off'}
-                      </span>
+                <div className="py-1 max-h-64 overflow-y-auto">
+                  {[
+                    { key: 'listDocuments', label: 'List documents', desc: 'View files' },
+                    { key: 'uploadDocuments', label: 'Upload documents', desc: 'Add files' },
+                    { key: 'downloadDocuments', label: 'Download documents', desc: 'Get files' },
+                    { key: 'searchDocuments', label: 'Search documents', desc: 'Find files' },
+                    { key: 'shareDocuments', label: 'Share documents', desc: 'Share with others' },
+                  ].map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                      </div>
                       <Switch 
-                        checked={sharepointPermissions.listDocuments}
-                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, listDocuments: checked})}
+                        checked={sharepointPermissions[perm.key as keyof typeof sharepointPermissions]}
+                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, [perm.key]: checked})}
+                        className="scale-75"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Upload documents</p>
-                      <p className="text-sm text-muted-foreground">Add new files to SharePoint</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {sharepointPermissions.uploadDocuments ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={sharepointPermissions.uploadDocuments}
-                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, uploadDocuments: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Download documents</p>
-                      <p className="text-sm text-muted-foreground">Download files from SharePoint</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {sharepointPermissions.downloadDocuments ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={sharepointPermissions.downloadDocuments}
-                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, downloadDocuments: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Search documents</p>
-                      <p className="text-sm text-muted-foreground">Search across SharePoint sites</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {sharepointPermissions.searchDocuments ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={sharepointPermissions.searchDocuments}
-                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, searchDocuments: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium">Share documents</p>
-                      <p className="text-sm text-muted-foreground">Share files with others</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {sharepointPermissions.shareDocuments ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={sharepointPermissions.shareDocuments}
-                        onCheckedChange={(checked) => setSharepointPermissions({...sharepointPermissions, shareDocuments: checked})}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setSharepointPermissionsDialogOpen(false);
-                      setMicrosoftAppsDialogOpen(true);
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
+                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                    setSharepointPermissionsDialogOpen(false);
+                    setMicrosoftAppsDialogOpen(true);
+                  }}>
+                    <ArrowLeft className="w-3 h-3 mr-1" />Back
                   </Button>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setSharepointPermissionsDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={() => {
-                      setSharepointPermissionsDialogOpen(false);
-                      toast.success("SharePoint permissions updated");
-                    }}>
-                      Save Changes
-                    </Button>
-                  </div>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                    setSharepointPermissionsDialogOpen(false);
+                    toast.success("SharePoint permissions updated");
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Gmail Permissions Dialog */}
             <Dialog open={gmailPermissionsDialogOpen} onOpenChange={setGmailPermissionsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-white" />
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
+                      <Mail className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Gmail AI Workflow Controls</DialogTitle>
-                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Gmail Controls</h3>
+                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Read emails</p>
-                      <p className="text-sm text-muted-foreground">Access and view your email messages</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {gmailPermissions.readEmails ? 'On' : 'Off'}
-                      </span>
+                <div className="py-1 max-h-64 overflow-y-auto">
+                  {[
+                    { key: 'readEmails', label: 'Read emails', desc: 'View messages' },
+                    { key: 'draftEmails', label: 'Draft emails', desc: 'Create drafts' },
+                    { key: 'sendEmails', label: 'Send emails', desc: 'Send on your behalf' },
+                    { key: 'searchEmails', label: 'Search emails', desc: 'Search mailbox' },
+                    { key: 'manageLabels', label: 'Manage labels', desc: 'Add/remove labels' },
+                  ].map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                      </div>
                       <Switch 
-                        checked={gmailPermissions.readEmails}
-                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, readEmails: checked})}
+                        checked={gmailPermissions[perm.key as keyof typeof gmailPermissions]}
+                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, [perm.key]: checked})}
+                        className="scale-75"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Draft emails</p>
-                      <p className="text-sm text-muted-foreground">Create draft messages in your mailbox</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {gmailPermissions.draftEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={gmailPermissions.draftEmails}
-                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, draftEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Send emails</p>
-                      <p className="text-sm text-muted-foreground">Send emails on your behalf</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {gmailPermissions.sendEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={gmailPermissions.sendEmails}
-                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, sendEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Search emails</p>
-                      <p className="text-sm text-muted-foreground">Search through your mailbox</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {gmailPermissions.searchEmails ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={gmailPermissions.searchEmails}
-                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, searchEmails: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium">Manage labels</p>
-                      <p className="text-sm text-muted-foreground">Add or remove email labels</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {gmailPermissions.manageLabels ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={gmailPermissions.manageLabels}
-                        onCheckedChange={(checked) => setGmailPermissions({...gmailPermissions, manageLabels: checked})}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setGmailPermissionsDialogOpen(false);
-                      setGoogleAppsDialogOpen(true);
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
+                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                    setGmailPermissionsDialogOpen(false);
+                    setGoogleAppsDialogOpen(true);
+                  }}>
+                    <ArrowLeft className="w-3 h-3 mr-1" />Back
                   </Button>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setGmailPermissionsDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={() => {
-                      setGmailPermissionsDialogOpen(false);
-                      toast.success("Gmail permissions updated");
-                    }}>
-                      Save Changes
-                    </Button>
-                  </div>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                    setGmailPermissionsDialogOpen(false);
+                    toast.success("Gmail permissions updated");
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>
 
             {/* Notion Permissions Dialog */}
             <Dialog open={notionPermissionsDialogOpen} onOpenChange={setNotionPermissionsDialogOpen}>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-xl">N</span>
+              <DialogContent className="max-w-xs p-0 rounded-xl border-border/60 shadow-xl shadow-black/5 overflow-hidden [&>button]:hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-slate-800 rounded-md flex items-center justify-center">
+                      <span className="text-white font-bold text-xs">N</span>
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl">Notion AI Workflow Controls</DialogTitle>
-                      <DialogDescription>Choose which tasks the AI can handle on its own and which ones you want to review first.</DialogDescription>
+                      <h3 className="text-sm font-medium text-foreground/90">Notion Controls</h3>
+                      <p className="text-[11px] text-muted-foreground/70">AI workflow permissions</p>
                     </div>
                   </div>
-                </DialogHeader>
+                  <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
+                    <X className="h-3.5 w-3.5" />
+                  </DialogClose>
+                </div>
                 
-                <div className="space-y-4 mt-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Search pages</p>
-                      <p className="text-sm text-muted-foreground">Search across your workspace</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {notionPermissions.searchPages ? 'On' : 'Off'}
-                      </span>
+                <div className="py-1 max-h-64 overflow-y-auto">
+                  {[
+                    { key: 'searchPages', label: 'Search pages', desc: 'Find pages' },
+                    { key: 'createPages', label: 'Create pages', desc: 'Add new pages' },
+                    { key: 'updatePages', label: 'Update pages', desc: 'Modify pages' },
+                    { key: 'queryDatabase', label: 'Query database', desc: 'Access data' },
+                    { key: 'createEntries', label: 'Create entries', desc: 'Add to databases' },
+                  ].map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between px-4 py-2 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground/90">{perm.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{perm.desc}</p>
+                      </div>
                       <Switch 
-                        checked={notionPermissions.searchPages}
-                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, searchPages: checked})}
+                        checked={notionPermissions[perm.key as keyof typeof notionPermissions]}
+                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, [perm.key]: checked})}
+                        className="scale-75"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Create pages</p>
-                      <p className="text-sm text-muted-foreground">Add new pages to workspace</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {notionPermissions.createPages ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={notionPermissions.createPages}
-                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createPages: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Update pages</p>
-                      <p className="text-sm text-muted-foreground">Modify existing pages</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {notionPermissions.updatePages ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={notionPermissions.updatePages}
-                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, updatePages: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <div>
-                      <p className="font-medium">Query database</p>
-                      <p className="text-sm text-muted-foreground">Access database content</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {notionPermissions.queryDatabase ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={notionPermissions.queryDatabase}
-                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, queryDatabase: checked})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium">Create entries</p>
-                      <p className="text-sm text-muted-foreground">Add entries to databases</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Full Control: {notionPermissions.createEntries ? 'On' : 'Off'}
-                      </span>
-                      <Switch 
-                        checked={notionPermissions.createEntries}
-                        onCheckedChange={(checked) => setNotionPermissions({...notionPermissions, createEntries: checked})}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setNotionPermissionsDialogOpen(false);
-                      setNotionAppsDialogOpen(true);
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
+                <div className="flex justify-between gap-2 px-4 py-3 border-t border-border/40 bg-muted/20">
+                  <Button variant="ghost" size="sm" className="h-7 text-xs px-2" onClick={() => {
+                    setNotionPermissionsDialogOpen(false);
+                    setNotionAppsDialogOpen(true);
+                  }}>
+                    <ArrowLeft className="w-3 h-3 mr-1" />Back
                   </Button>
-                  <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => setNotionPermissionsDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={() => {
-                      setNotionPermissionsDialogOpen(false);
-                      toast.success("Notion permissions updated");
-                    }}>
-                      Save Changes
-                    </Button>
-                  </div>
+                  <Button size="sm" className="h-7 text-xs px-3" onClick={() => {
+                    setNotionPermissionsDialogOpen(false);
+                    toast.success("Notion permissions updated");
+                  }}>Save</Button>
                 </div>
               </DialogContent>
             </Dialog>

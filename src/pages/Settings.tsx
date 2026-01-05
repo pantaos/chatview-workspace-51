@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,8 +10,9 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MainLayout from "@/components/MainLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Mail, Globe, User, Puzzle, MessageSquare, Image, Sun, Moon } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, Image, Sun, Moon, HelpCircle, ExternalLink } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { MicrosoftIntegrationDialog } from "@/components/integrations/MicrosoftIntegrationDialog";
 import { GoogleIntegrationDialog } from "@/components/integrations/GoogleIntegrationDialog";
 import { NotionIntegrationDialog } from "@/components/integrations/NotionIntegrationDialog";
@@ -19,9 +21,23 @@ const Settings = () => {
   const { theme, toggleDarkMode } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState("account");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
+  
+  const [activeTab, setActiveTab] = useState(
+    tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)
+      ? tabFromUrl
+      : "general"
+  );
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatLanguage, setChatLanguage] = useState<LanguageType>("en");
+  
+  // Sync tab with URL
+  useEffect(() => {
+    if (tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
   
   // Integration dialog states
   const [microsoftDialogOpen, setMicrosoftDialogOpen] = useState(false);
@@ -129,10 +145,11 @@ const Settings = () => {
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
     if (isMobile) {
       setSidebarOpen(false);
     }
-  }, [isMobile]);
+  }, [isMobile, setSearchParams]);
 
   const handleToggleIntegration = useCallback((integration: string) => {
     setIntegrationToggles(prev => ({
@@ -446,28 +463,35 @@ const Settings = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="mb-8 bg-transparent border-b border-border rounded-none p-0 h-auto">
             <TabsTrigger 
-              value="account" 
+              value="general" 
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
             >
-              General
+              Allgemein
+            </TabsTrigger>
+            <TabsTrigger 
+              value="profile" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
+            >
+              Profil
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
             >
-              Integrations
+              Integrationen
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="account" className="mt-0">
+          {/* General Tab */}
+          <TabsContent value="general" className="mt-0">
             <div className="space-y-8">
               {/* Theme Mode */}
               <div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">Theme Mode</h3>
-                <p className="text-sm text-muted-foreground mb-4">Choose between light and dark mode for the interface</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Design-Modus</h3>
+                <p className="text-sm text-muted-foreground mb-4">Wähle zwischen hellem und dunklem Modus</p>
                 <div className="flex gap-3">
                   <Button
                     variant={!theme.isDarkMode ? "default" : "outline"}
@@ -475,7 +499,7 @@ const Settings = () => {
                     onClick={() => theme.isDarkMode && toggleDarkMode?.()}
                   >
                     <Sun className="h-4 w-4" />
-                    Light
+                    Hell
                   </Button>
                   <Button
                     variant={theme.isDarkMode ? "default" : "outline"}
@@ -483,15 +507,15 @@ const Settings = () => {
                     onClick={() => !theme.isDarkMode && toggleDarkMode?.()}
                   >
                     <Moon className="h-4 w-4" />
-                    Dark
+                    Dunkel
                   </Button>
                 </div>
               </div>
 
               {/* Language Preferences */}
               <div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">Language Preferences</h3>
-                <p className="text-sm text-muted-foreground mb-4">Choose your language</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Spracheinstellungen</h3>
+                <p className="text-sm text-muted-foreground mb-4">Wähle deine bevorzugte Sprache</p>
                 <div className="flex items-center gap-3">
                   <div className="flex gap-3">
                     {availableLanguages.map((lang) => (
@@ -504,17 +528,98 @@ const Settings = () => {
                       </Button>
                     ))}
                   </div>
-                  <Button 
-                    className="ml-auto"
-                    onClick={() => toast.success("Language saved!")}
-                  >
-                    Save Language
-                  </Button>
                 </div>
               </div>
+
+              {/* Support Section */}
+              <Card className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <HelpCircle className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium mb-1">Hilfe & Support</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Bei Problemen oder Fragen kannst du dich jederzeit an uns wenden.
+                    </p>
+                    
+                    <div className="space-y-3">
+                      <a 
+                        href="mailto:support@pantaflows.com" 
+                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <Mail className="w-4 h-4" />
+                        support@pantaflows.com
+                      </a>
+                      
+                      <a 
+                        href="https://help.pantaflows.com" 
+                        target="_blank"
+                        rel="noopener noreferrer" 
+                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Help Center besuchen
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </TabsContent>
 
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="mt-0">
+            <div className="space-y-6">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">Profil-Informationen</h2>
+                <p className="text-muted-foreground">
+                  Diese Informationen können nur von einem Administrator geändert werden.
+                </p>
+              </div>
+              
+              <Card className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <Label className="text-muted-foreground">Vorname</Label>
+                    <Input 
+                      value={currentUser.firstName} 
+                      disabled 
+                      className="mt-2 bg-muted text-muted-foreground cursor-not-allowed" 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Nachname</Label>
+                    <Input 
+                      value={currentUser.lastName} 
+                      disabled 
+                      className="mt-2 bg-muted text-muted-foreground cursor-not-allowed" 
+                    />
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <Label className="text-muted-foreground">E-Mail</Label>
+                  <Input 
+                    value={currentUser.email} 
+                    disabled 
+                    className="mt-2 bg-muted text-muted-foreground cursor-not-allowed" 
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-muted-foreground">Benutzertyp</Label>
+                  <div className="mt-2">
+                    <Badge variant="secondary" className="bg-muted text-muted-foreground">
+                      {currentUser.userType}
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Integrations Tab */}
           <TabsContent value="integrations" className="mt-0">
             {renderContent()}
           </TabsContent>

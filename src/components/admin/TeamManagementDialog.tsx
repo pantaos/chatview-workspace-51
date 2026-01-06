@@ -1,14 +1,19 @@
-
 import { useState } from "react";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Team, TeamMember, User } from "@/types/admin";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogTabs,
+  ResponsiveDialogContent,
+} from "@/components/ui/responsive-dialog";
 
 interface TeamManagementDialogProps {
   team: Team;
@@ -50,6 +55,7 @@ const TeamManagementDialog = ({
     description: team.description || "",
     color: team.color
   });
+  const isMobile = useIsMobile();
 
   const [allocatedWorkflows, setAllocatedWorkflows] = useState([
     { id: "1", title: "Content Generator", icon: "✨" },
@@ -210,7 +216,7 @@ const TeamManagementDialog = ({
               />
             </div>
 
-            <div className="flex items-center justify-between max-w-md">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 max-w-md">
               <div>
                 <p className="text-sm font-medium text-foreground">Team Color</p>
                 <p className="text-xs text-muted-foreground">Choose a color to identify this team</p>
@@ -221,7 +227,7 @@ const TeamManagementDialog = ({
                     key={color.value}
                     type="button"
                     onClick={() => setEditData({ ...editData, color: color.value })}
-                    className={`w-6 h-6 rounded-full ${getColorPreview(color.value)} transition-all ${
+                    className={`w-8 h-8 md:w-6 md:h-6 rounded-full ${getColorPreview(color.value)} transition-all ${
                       editData.color === color.value 
                         ? "ring-2 ring-primary ring-offset-2 ring-offset-background" 
                         : "hover:scale-110"
@@ -233,7 +239,7 @@ const TeamManagementDialog = ({
             </div>
 
             <div className="pt-2">
-              <Button size="sm" onClick={handleSave}>Save Changes</Button>
+              <Button size="sm" onClick={handleSave} className="min-h-[44px]">Save Changes</Button>
             </div>
           </div>
         );
@@ -246,7 +252,7 @@ const TeamManagementDialog = ({
                 <h2 className="text-lg font-medium text-foreground mb-1">Members</h2>
                 <p className="text-sm text-muted-foreground">{team.members.length} team members</p>
               </div>
-              <Button size="sm" variant="outline" onClick={() => setActiveScreen("add-members")}>
+              <Button size="sm" variant="outline" onClick={() => setActiveScreen("add-members")} className="min-h-[44px]">
                 Add
               </Button>
             </div>
@@ -260,7 +266,7 @@ const TeamManagementDialog = ({
                 {team.members.map((member) => (
                   <div 
                     key={member.id} 
-                    className="flex items-center justify-between py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors"
+                    className="flex items-center justify-between py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors min-h-[56px]"
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="w-9 h-9">
@@ -276,7 +282,7 @@ const TeamManagementDialog = ({
                     </div>
                     <button
                       onClick={() => handleRemoveMember(member.id)}
-                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                      className="text-xs text-muted-foreground hover:text-destructive transition-colors min-h-[44px] px-2"
                     >
                       Remove
                     </button>
@@ -294,6 +300,7 @@ const TeamManagementDialog = ({
               placeholder="Search users..."
               value={memberSearchTerm}
               onChange={(e) => setMemberSearchTerm(e.target.value)}
+              className="min-h-[44px]"
             />
 
             <p className="text-sm text-muted-foreground">{filteredUsers.length} users available</p>
@@ -307,7 +314,7 @@ const TeamManagementDialog = ({
                 filteredUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer"
+                    className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer min-h-[56px]"
                     onClick={() => {
                       if (selectedUserIds.includes(user.id)) {
                         setSelectedUserIds(selectedUserIds.filter(id => id !== user.id));
@@ -332,11 +339,11 @@ const TeamManagementDialog = ({
               )}
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-border/40">
+            <div className="flex items-center justify-between pt-4 border-t border-border/40 shrink-0">
               <p className="text-sm text-muted-foreground">{selectedUserIds.length} selected</p>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
-                <Button size="sm" onClick={handleAddMembers} disabled={selectedUserIds.length === 0}>
+                <Button variant="outline" size="sm" onClick={handleBack} className="min-h-[44px]">Cancel</Button>
+                <Button size="sm" onClick={handleAddMembers} disabled={selectedUserIds.length === 0} className="min-h-[44px]">
                   Add {selectedUserIds.length > 0 ? selectedUserIds.length : ""}
                 </Button>
               </div>
@@ -352,7 +359,7 @@ const TeamManagementDialog = ({
                 <h2 className="text-lg font-medium text-foreground mb-1">Workflows</h2>
                 <p className="text-sm text-muted-foreground">{allocatedWorkflows.length} allocated workflows</p>
               </div>
-              <Button size="sm" variant="outline" onClick={() => setActiveScreen("add-workflows")}>
+              <Button size="sm" variant="outline" onClick={() => setActiveScreen("add-workflows")} className="min-h-[44px]">
                 Add
               </Button>
             </div>
@@ -366,7 +373,7 @@ const TeamManagementDialog = ({
                 {allocatedWorkflows.map((workflow) => (
                   <div 
                     key={workflow.id} 
-                    className="flex items-center justify-between py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors"
+                    className="flex items-center justify-between py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors min-h-[56px]"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">{workflow.icon}</span>
@@ -374,7 +381,7 @@ const TeamManagementDialog = ({
                     </div>
                     <button
                       onClick={() => handleRemoveWorkflow(workflow.id)}
-                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                      className="text-xs text-muted-foreground hover:text-destructive transition-colors min-h-[44px] px-2"
                     >
                       Remove
                     </button>
@@ -392,6 +399,7 @@ const TeamManagementDialog = ({
               placeholder="Search workflows..."
               value={workflowSearchTerm}
               onChange={(e) => setWorkflowSearchTerm(e.target.value)}
+              className="min-h-[44px]"
             />
 
             <p className="text-sm text-muted-foreground">{filteredWorkflows.length} workflows available</p>
@@ -405,7 +413,7 @@ const TeamManagementDialog = ({
                 filteredWorkflows.map((workflow) => (
                   <div
                     key={workflow.id}
-                    className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer"
+                    className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer min-h-[56px]"
                     onClick={() => {
                       if (selectedWorkflowIds.includes(workflow.id)) {
                         setSelectedWorkflowIds(selectedWorkflowIds.filter(id => id !== workflow.id));
@@ -422,11 +430,11 @@ const TeamManagementDialog = ({
               )}
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-border/40">
+            <div className="flex items-center justify-between pt-4 border-t border-border/40 shrink-0">
               <p className="text-sm text-muted-foreground">{selectedWorkflowIds.length} selected</p>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
-                <Button size="sm" onClick={handleAddWorkflows} disabled={selectedWorkflowIds.length === 0}>
+                <Button variant="outline" size="sm" onClick={handleBack} className="min-h-[44px]">Cancel</Button>
+                <Button size="sm" onClick={handleAddWorkflows} disabled={selectedWorkflowIds.length === 0} className="min-h-[44px]">
                   Add {selectedWorkflowIds.length > 0 ? selectedWorkflowIds.length : ""}
                 </Button>
               </div>
@@ -439,24 +447,28 @@ const TeamManagementDialog = ({
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-medium text-foreground mb-1">Danger Zone</h2>
-              <p className="text-sm text-muted-foreground">Irreversible actions</p>
+              <p className="text-sm text-muted-foreground">Irreversible and destructive actions</p>
             </div>
             
             <div className="h-px bg-border/50" />
 
-            <div className="flex items-center justify-between py-2">
-              <div>
-                <p className="text-sm font-medium text-foreground">Delete Team</p>
-                <p className="text-xs text-muted-foreground">Permanently delete this team and remove all members</p>
+            <div className="p-4 rounded-lg border border-destructive/30 bg-destructive/5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Delete this team</p>
+                  <p className="text-xs text-muted-foreground">
+                    Once you delete a team, there is no going back. Please be certain.
+                  </p>
+                </div>
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={handleDelete}
+                  className="min-h-[44px] w-full sm:w-auto"
+                >
+                  Delete Team
+                </Button>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
-                onClick={handleDelete}
-              >
-                Delete
-              </Button>
             </div>
           </div>
         );
@@ -464,62 +476,50 @@ const TeamManagementDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[500px]">
-        {/* Header with X button top right */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 shrink-0">
-          <h2 className="text-lg font-semibold">{team.name}</h2>
-          <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-            <X className="h-4 w-4" />
-          </DialogClose>
-        </div>
+    <ResponsiveDialog 
+      open={open} 
+      onOpenChange={onOpenChange}
+      title={team.name}
+    >
+      <ResponsiveDialogBody
+        showSidebar={!isSubScreen}
+        sidebar={
+          <ResponsiveDialogTabs
+            tabs={tabs}
+            activeTab={activeScreen}
+            onTabChange={(id) => setActiveScreen(id as ScreenType)}
+          />
+        }
+      >
+        {/* Mobile tabs when not in sub screen */}
+        {isMobile && !isSubScreen && (
+          <ResponsiveDialogTabs
+            tabs={tabs}
+            activeTab={activeScreen}
+            onTabChange={(id) => setActiveScreen(id as ScreenType)}
+          />
+        )}
 
-        <div className="flex flex-1 min-h-0">
-          {/* Sidebar - hidden on sub-screens */}
-          {!isSubScreen && (
-            <div className="w-52 border-r border-border/40 flex flex-col shrink-0">
-              <nav className="flex-1 p-2 space-y-0.5">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveScreen(tab.id)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                      activeScreen === tab.id
-                        ? "bg-muted font-medium text-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Sub-screen header with back button */}
-            {isSubScreen && (
-              <div className="flex items-center gap-3 p-4 border-b border-border/40">
-                <button
-                  onClick={handleBack}
-                  className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <h2 className="text-base font-medium text-foreground">
-                  {activeScreen === "add-members" ? "Add Members" : "Add Workflows"}
-                </h2>
-              </div>
-            )}
-
-            <div className="flex-1 p-6 overflow-y-auto">
-              {renderContent()}
-            </div>
+        {/* Sub-screen header with back button */}
+        {isSubScreen && (
+          <div className="flex items-center gap-3 p-4 border-b border-border/40 shrink-0">
+            <button
+              onClick={handleBack}
+              className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <h2 className="text-base font-medium text-foreground">
+              {activeScreen === "add-members" ? "Add Members" : "Add Workflows"}
+            </h2>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        )}
+
+        <ResponsiveDialogContent>
+          {renderContent()}
+        </ResponsiveDialogContent>
+      </ResponsiveDialogBody>
+    </ResponsiveDialog>
   );
 };
 

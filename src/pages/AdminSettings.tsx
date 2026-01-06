@@ -33,31 +33,36 @@ const AdminSettings = () => {
   const tabs = useMemo(() => [
     { 
       id: "dashboard", 
-      label: "Dashboard", 
+      label: "Analytics", 
+      shortLabel: "Analytics",
       icon: TrendingUp,
       description: "Overview & Analytics"
     },
     { 
       id: "users", 
       label: "Users", 
+      shortLabel: "Users",
       icon: Users,
       description: "User Management"
     },
     { 
       id: "teams", 
       label: "Teams", 
+      shortLabel: "Teams",
       icon: UsersIcon,
       description: "Team Organization"
     },
     { 
       id: "community", 
       label: "Community Feed", 
+      shortLabel: "Community",
       icon: MessageSquare,
       description: "Community Posts & Updates"
     },
     { 
       id: "integrations", 
-      label: "Tenant Integrations", 
+      label: "Integrations", 
+      shortLabel: "Integr.",
       icon: Puzzle,
       description: "Connected Services"
     }
@@ -98,21 +103,26 @@ const AdminSettings = () => {
 
   return (
     <MainLayout>
-      <div className="p-8 max-w-6xl">
+      <div className="p-4 md:p-8 max-w-6xl">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
-          <p className="text-muted-foreground mt-1">Manage users, teams, workflows, and system settings</p>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Admin Panel</h1>
+          <p className="text-muted-foreground mt-1 text-sm md:text-base">Manage users, teams, workflows, and system settings</p>
         </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8 flex-wrap">
-            <TabsTrigger value="dashboard" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Analytics</TabsTrigger>
-            <TabsTrigger value="users" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Users</TabsTrigger>
-            <TabsTrigger value="teams" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Teams</TabsTrigger>
-            <TabsTrigger value="community" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Community Feed</TabsTrigger>
-            <TabsTrigger value="integrations" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">Integrations</TabsTrigger>
+          <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 md:mb-8 w-full">
+            {tabs.map((tab) => (
+              <TabsTrigger 
+                key={tab.id}
+                value={tab.id} 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
+              >
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.shortLabel}</span>
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-0">

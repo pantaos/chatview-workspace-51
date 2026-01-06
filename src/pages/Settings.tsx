@@ -171,10 +171,9 @@ const Settings = () => {
 
           {/* General Tab */}
           <TabsContent value="general" className="mt-0 space-y-6">
-            {/* Theme Settings */}
-            <Card className="p-4 md:p-6">
-              <h3 className="text-lg md:text-xl font-semibold mb-4">Erscheinungsbild</h3>
-              <div className="flex items-center justify-between">
+            {/* Theme & Language */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between py-3 border-b border-border">
                 <div className="flex items-center gap-3">
                   {theme.isDarkMode ? (
                     <Moon className="w-5 h-5 text-muted-foreground" />
@@ -182,8 +181,8 @@ const Settings = () => {
                     <Sun className="w-5 h-5 text-muted-foreground" />
                   )}
                   <div>
-                    <p className="font-medium text-sm md:text-base">Dark Mode</p>
-                    <p className="text-xs md:text-sm text-muted-foreground">Dunkles Erscheinungsbild aktivieren</p>
+                    <p className="font-medium text-sm">Dark Mode</p>
+                    <p className="text-xs text-muted-foreground">Dunkles Erscheinungsbild</p>
                   </div>
                 </div>
                 <Switch
@@ -191,176 +190,132 @@ const Settings = () => {
                   onCheckedChange={toggleDarkMode}
                 />
               </div>
-            </Card>
 
-            {/* Language Settings */}
-            <Card className="p-4 md:p-6">
-              <h3 className="text-lg md:text-xl font-semibold mb-4">Sprache</h3>
-              <p className="text-xs md:text-sm text-muted-foreground mb-4">
-                Wähle deine bevorzugte Sprache für Panta Flows
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                {availableLanguages.map((lang) => (
-                  <Button
-                    key={lang.code}
-                    variant={language === lang.code ? "default" : "outline"}
-                    onClick={() => handleLanguageChange(lang.code)}
-                    className="w-full min-h-[44px]"
-                  >
-                    {lang.name}
-                  </Button>
-                ))}
-              </div>
-            </Card>
-
-            {/* Support Section */}
-            <Card className="p-4 md:p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                  <HelpCircle className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium mb-1 text-sm md:text-base">Hilfe & Support</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground mb-4">
-                    Bei Problemen oder Fragen kannst du dich jederzeit an uns wenden.
-                  </p>
-                  
-                  <div className="space-y-3">
-                    <a 
-                      href="mailto:support@pantaflows.com" 
-                      className="flex items-center gap-2 text-sm text-primary hover:underline"
-                    >
-                      <Mail className="w-4 h-4 shrink-0" />
-                      <span className="truncate">support@pantaflows.com</span>
-                    </a>
-                    
-                    <a 
-                      href="https://help.pantaflows.com" 
-                      target="_blank"
-                      rel="noopener noreferrer" 
-                      className="flex items-center gap-2 text-sm text-primary hover:underline"
-                    >
-                      <ExternalLink className="w-4 h-4 shrink-0" />
-                      <span>Help Center besuchen</span>
-                    </a>
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <Globe className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium text-sm">Sprache</p>
+                    <p className="text-xs text-muted-foreground">App-Sprache wählen</p>
                   </div>
                 </div>
+                <div className="flex gap-2">
+                  {availableLanguages.map((lang) => (
+                    <Button
+                      key={lang.code}
+                      variant={language === lang.code ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => handleLanguageChange(lang.code)}
+                    >
+                      {lang.code.toUpperCase()}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </Card>
+
+              <div className="flex items-center justify-between py-3">
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium text-sm">Hilfe & Support</p>
+                    <p className="text-xs text-muted-foreground">support@pantaflows.com</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" asChild>
+                  <a href="https://help.pantaflows.com" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </Button>
+              </div>
+            </div>
           </TabsContent>
 
           {/* Profile Tab */}
-          <TabsContent value="profile" className="mt-0 space-y-6">
-            <Card className="p-4 md:p-6">
-              <h3 className="text-lg md:text-xl font-semibold mb-4">Profil-Informationen</h3>
-              <p className="text-xs md:text-sm text-muted-foreground mb-6">
-                Diese Informationen können nur von einem Administrator geändert werden.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <Label className="text-muted-foreground text-sm">Vorname</Label>
-                  <Input 
-                    value={currentUser.firstName} 
-                    disabled 
-                    className="mt-1.5 bg-muted text-muted-foreground cursor-not-allowed" 
-                  />
-                </div>
-                <div>
-                  <Label className="text-muted-foreground text-sm">Nachname</Label>
-                  <Input 
-                    value={currentUser.lastName} 
-                    disabled 
-                    className="mt-1.5 bg-muted text-muted-foreground cursor-not-allowed" 
-                  />
-                </div>
+          <TabsContent value="profile" className="mt-0">
+            <p className="text-xs text-muted-foreground mb-4">
+              Nur durch Admin änderbar
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <span className="text-sm text-muted-foreground">Name</span>
+                <span className="text-sm font-medium">{currentUser.firstName} {currentUser.lastName}</span>
               </div>
-              
-              <div className="mb-4">
-                <Label className="text-muted-foreground text-sm">E-Mail</Label>
-                <Input 
-                  value={currentUser.email} 
-                  disabled 
-                  className="mt-1.5 bg-muted text-muted-foreground cursor-not-allowed" 
-                />
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <span className="text-sm text-muted-foreground">E-Mail</span>
+                <span className="text-sm font-medium">{currentUser.email}</span>
               </div>
-              
-              <div>
-                <Label className="text-muted-foreground text-sm">Benutzertyp</Label>
-                <div className="mt-2">
-                  <Badge variant="secondary" className="bg-muted text-muted-foreground">
-                    {currentUser.userType}
-                  </Badge>
-                </div>
+              <div className="flex items-center justify-between py-3">
+                <span className="text-sm text-muted-foreground">Rolle</span>
+                <Badge variant="secondary">{currentUser.userType}</Badge>
               </div>
-            </Card>
+            </div>
           </TabsContent>
 
           {/* Integrations Tab */}
-          <TabsContent value="integrations" className="mt-0 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {/* Microsoft Platform Card */}
-              <Card className="p-4 hover:bg-muted/50 transition-colors group">
-                <div 
-                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => setMicrosoftDialogOpen(true)}
-                >
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">M</span>
+          <TabsContent value="integrations" className="mt-0">
+            <div className="space-y-2">
+              {/* Microsoft */}
+              <div 
+                className="flex items-center justify-between py-3 border-b border-border cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                onClick={() => setMicrosoftDialogOpen(true)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">M</span>
                   </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Microsoft</h3>
-                  <p className={`text-xs font-medium ${platformStatus.microsoft ? 'text-foreground' : 'text-red-500'}`}>
-                    {platformStatus.microsoft ? 'Connected' : 'Not Connected'}
-                  </p>
-                  {platformStatus.microsoft && (
+                  <div>
+                    <p className="font-medium text-sm">Microsoft</p>
                     <p className="text-xs text-muted-foreground">
-                      {Object.values(microsoftApps).filter(Boolean).length} apps enabled
+                      {Object.values(microsoftApps).filter(Boolean).length} Apps aktiv
                     </p>
-                  )}
+                  </div>
                 </div>
-              </Card>
+                <Badge variant={platformStatus.microsoft ? "default" : "secondary"}>
+                  {platformStatus.microsoft ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
 
-              {/* Google Platform Card */}
-              <Card className="p-4 hover:bg-muted/50 transition-colors group">
-                <div 
-                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => setGoogleDialogOpen(true)}
-                >
-                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">G</span>
+              {/* Google */}
+              <div 
+                className="flex items-center justify-between py-3 border-b border-border cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                onClick={() => setGoogleDialogOpen(true)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">G</span>
                   </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Google</h3>
-                  <p className={`text-xs font-medium ${platformStatus.google ? 'text-foreground' : 'text-red-500'}`}>
-                    {platformStatus.google ? 'Connected' : 'Not Connected'}
-                  </p>
-                  {platformStatus.google && (
+                  <div>
+                    <p className="font-medium text-sm">Google</p>
                     <p className="text-xs text-muted-foreground">
-                      {Object.values(googleApps).filter(Boolean).length} apps enabled
+                      {Object.values(googleApps).filter(Boolean).length} Apps aktiv
                     </p>
-                  )}
+                  </div>
                 </div>
-              </Card>
+                <Badge variant={platformStatus.google ? "default" : "secondary"}>
+                  {platformStatus.google ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
 
-              {/* Notion Platform Card */}
-              <Card className="p-4 hover:bg-muted/50 transition-colors group">
-                <div 
-                  className="flex flex-col items-center text-center space-y-2 cursor-pointer"
-                  onClick={() => setNotionDialogOpen(true)}
-                >
-                  <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-base">N</span>
+              {/* Notion */}
+              <div 
+                className="flex items-center justify-between py-3 cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                onClick={() => setNotionDialogOpen(true)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">N</span>
                   </div>
-                  <h3 className="font-medium text-sm group-hover:text-primary">Notion</h3>
-                  <p className={`text-xs font-medium ${platformStatus.notion ? 'text-foreground' : 'text-red-500'}`}>
-                    {platformStatus.notion ? 'Connected' : 'Not Connected'}
-                  </p>
-                  {platformStatus.notion && (
+                  <div>
+                    <p className="font-medium text-sm">Notion</p>
                     <p className="text-xs text-muted-foreground">
-                      {Object.values(notionApps).filter(Boolean).length} apps enabled
+                      {Object.values(notionApps).filter(Boolean).length} Apps aktiv
                     </p>
-                  )}
+                  </div>
                 </div>
-              </Card>
+                <Badge variant={platformStatus.notion ? "default" : "secondary"}>
+                  {platformStatus.notion ? 'Verbunden' : 'Nicht verbunden'}
+                </Badge>
+              </div>
             </div>
 
             {/* Integration Dialogs */}

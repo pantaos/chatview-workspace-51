@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -7,8 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X, ChevronLeft, Building2, Users, Bot, User, Check, Gauge } from "lucide-react";
+import { ChevronLeft, Building2, Users, Bot, User, Check, Gauge } from "lucide-react";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogTabs,
+  ResponsiveDialogContent,
+} from "@/components/ui/responsive-dialog";
 import { Integration, IntegrationApp } from "./AdminIntegrations";
 
 interface AdminIntegrationDialogProps {
@@ -21,7 +27,7 @@ interface AdminIntegrationDialogProps {
 type ScreenType = 
   | "general" 
   | "limits"
-  | string  // app IDs like "outlook", "calendar", etc.
+  | string
   | `${string}-teams` 
   | `${string}-assistants` 
   | `${string}-users`;
@@ -63,6 +69,7 @@ export const AdminIntegrationDialog = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [tempSelectedIds, setTempSelectedIds] = useState<string[]>([]);
   const [currentAppId, setCurrentAppId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   // Reset to general tab when dialog opens
   useEffect(() => {
@@ -219,6 +226,7 @@ export const AdminIntegrationDialog = ({
               placeholder={`Search ${type}...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="min-h-[44px]"
             />
             <p className="text-sm text-muted-foreground">{items.length} {type} available</p>
           </div>
@@ -227,7 +235,7 @@ export const AdminIntegrationDialog = ({
             {items.map((item: any) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer"
+                className="flex items-center gap-3 py-3 hover:bg-muted/30 -mx-2 px-2 rounded-lg transition-colors cursor-pointer min-h-[56px]"
                 onClick={() => toggleSelection(item.id)}
               >
                 <Checkbox checked={tempSelectedIds.includes(item.id)} />
@@ -244,8 +252,8 @@ export const AdminIntegrationDialog = ({
           <div className="shrink-0 flex items-center justify-between pt-4 border-t border-border/40 mt-4">
             <p className="text-sm text-muted-foreground">{tempSelectedIds.length} selected</p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
-              <Button size="sm" onClick={handleSaveSelection}>
+              <Button variant="outline" size="sm" onClick={handleBack} className="min-h-[44px]">Cancel</Button>
+              <Button size="sm" onClick={handleSaveSelection} className="min-h-[44px]">
                 Save
               </Button>
             </div>
@@ -266,7 +274,7 @@ export const AdminIntegrationDialog = ({
           <div className="h-px bg-border/50" />
 
           <div className="flex items-center gap-4">
-            <div className={`w-14 h-14 ${integration.iconBg} rounded-xl flex items-center justify-center`}>
+            <div className={`w-14 h-14 ${integration.iconBg} rounded-xl flex items-center justify-center shrink-0`}>
               {integration.icon}
             </div>
             <div>
@@ -313,7 +321,7 @@ export const AdminIntegrationDialog = ({
           {integration.connected && (
             <Button 
               variant="outline" 
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 min-h-[44px]"
               onClick={() => toast.info("Disconnect functionality coming soon")}
             >
               Disconnect {integration.name}
@@ -339,7 +347,7 @@ export const AdminIntegrationDialog = ({
           <div className="space-y-6">
             {integration.apps.map(app => (
               <div key={app.id} className="space-y-4 p-4 rounded-lg border border-border/40 bg-muted/20">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
                     <h4 className="font-medium text-sm">{app.name}</h4>
                     <p className="text-xs text-muted-foreground">{app.description}</p>
@@ -357,7 +365,7 @@ export const AdminIntegrationDialog = ({
                 </div>
 
                 {app.limits?.enabled && (
-                  <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div className="space-y-2">
                       <Label className="text-xs text-muted-foreground flex items-center gap-1">
                         <User className="w-3 h-3" />
@@ -369,7 +377,7 @@ export const AdminIntegrationDialog = ({
                         max={1000}
                         value={app.limits.perUserPerDay}
                         onChange={(e) => handleLimitChange(app.id, "perUserPerDay", parseInt(e.target.value) || 1)}
-                        className="h-9"
+                        className="h-11"
                       />
                     </div>
                     <div className="space-y-2">
@@ -383,7 +391,7 @@ export const AdminIntegrationDialog = ({
                         max={10000}
                         value={app.limits.perTeamPerDay}
                         onChange={(e) => handleLimitChange(app.id, "perTeamPerDay", parseInt(e.target.value) || 1)}
-                        className="h-9"
+                        className="h-11"
                       />
                     </div>
                   </div>
@@ -414,7 +422,7 @@ export const AdminIntegrationDialog = ({
           
           <div className="h-px bg-border/50" />
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between min-h-[56px]">
             <div>
               <p className="text-sm font-medium">Enable {app.name}</p>
               <p className="text-xs text-muted-foreground">Allow organization to use this app</p>
@@ -443,7 +451,7 @@ export const AdminIntegrationDialog = ({
                   className="space-y-3"
                 >
                   {/* Organization */}
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors min-h-[56px]">
                     <RadioGroupItem value="organization" id={`${app.id}-org`} className="mt-1" />
                     <div className="flex-1">
                       <Label htmlFor={`${app.id}-org`} className="flex items-center gap-2 cursor-pointer">
@@ -457,10 +465,10 @@ export const AdminIntegrationDialog = ({
                   </div>
 
                   {/* Teams */}
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors min-h-[56px]">
                     <RadioGroupItem value="teams" id={`${app.id}-teams`} className="mt-1" />
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <Label htmlFor={`${app.id}-teams`} className="flex items-center gap-2 cursor-pointer">
                           <Users className="w-4 h-4 text-muted-foreground" />
                           <span className="font-medium">Specific Teams</span>
@@ -469,7 +477,7 @@ export const AdminIntegrationDialog = ({
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-7 text-xs"
+                            className="h-9 text-xs"
                             onClick={() => handleSelectClick(app.id, "teams")}
                           >
                             {getScopeCount(app, "teams")} selected
@@ -483,10 +491,10 @@ export const AdminIntegrationDialog = ({
                   </div>
 
                   {/* Assistants */}
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors min-h-[56px]">
                     <RadioGroupItem value="assistants" id={`${app.id}-assistants`} className="mt-1" />
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <Label htmlFor={`${app.id}-assistants`} className="flex items-center gap-2 cursor-pointer">
                           <Bot className="w-4 h-4 text-muted-foreground" />
                           <span className="font-medium">Specific Assistants</span>
@@ -495,7 +503,7 @@ export const AdminIntegrationDialog = ({
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-7 text-xs"
+                            className="h-9 text-xs"
                             onClick={() => handleSelectClick(app.id, "assistants")}
                           >
                             {getScopeCount(app, "assistants")} selected
@@ -509,10 +517,10 @@ export const AdminIntegrationDialog = ({
                   </div>
 
                   {/* Users */}
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:bg-muted/30 transition-colors min-h-[56px]">
                     <RadioGroupItem value="users" id={`${app.id}-users`} className="mt-1" />
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <Label htmlFor={`${app.id}-users`} className="flex items-center gap-2 cursor-pointer">
                           <User className="w-4 h-4 text-muted-foreground" />
                           <span className="font-medium">Specific Users</span>
@@ -521,7 +529,7 @@ export const AdminIntegrationDialog = ({
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-7 text-xs"
+                            className="h-9 text-xs"
                             onClick={() => handleSelectClick(app.id, "users")}
                           >
                             {getScopeCount(app, "users")} selected
@@ -545,65 +553,47 @@ export const AdminIntegrationDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[80vh] max-h-[700px]">
-        {/* Header with X button top right */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 shrink-0">
-          <h2 className="text-lg font-semibold">{integration.name}</h2>
-          <DialogClose className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all">
-            <X className="h-4 w-4" />
-          </DialogClose>
-        </div>
+    <ResponsiveDialog 
+      open={open} 
+      onOpenChange={onOpenChange}
+      title={integration.name}
+    >
+      <ResponsiveDialogBody
+        showSidebar={!isSubScreen}
+        sidebar={
+          <ResponsiveDialogTabs
+            tabs={tabs}
+            activeTab={activeScreen}
+            onTabChange={(id) => setActiveScreen(id as ScreenType)}
+          />
+        }
+      >
+        {/* Mobile tabs when not in sub screen */}
+        {isMobile && !isSubScreen && (
+          <ResponsiveDialogTabs
+            tabs={tabs}
+            activeTab={activeScreen}
+            onTabChange={(id) => setActiveScreen(id as ScreenType)}
+          />
+        )}
 
-        <div className="flex flex-1 min-h-0">
-          {/* Sidebar - hidden on sub-screens */}
-          {!isSubScreen && (
-            <div className="w-48 border-r border-border/40 flex flex-col shrink-0 bg-muted/20">
-              <nav className="flex-1 p-2 space-y-0.5">
-                {tabs.map((tab) => {
-                  const app = integration.apps.find(a => a.id === tab.id);
-                  const isActiveTab = activeScreen === tab.id;
-                  
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveScreen(tab.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
-                        isActiveTab 
-                          ? "bg-primary/10 text-primary font-medium" 
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                      }`}
-                    >
-                      <span>{tab.label}</span>
-                      {app?.enabled && (
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
-                      )}
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            {isSubScreen && (
-              <div className="flex items-center gap-3 p-4 border-b border-border/40 shrink-0">
-                <button 
-                  onClick={handleBack}
-                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-all"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <h2 className="text-base font-medium">{getScreenTitle()}</h2>
-              </div>
-            )}
-            <div className="flex-1 min-h-0 p-6 overflow-y-auto">
-              {renderContent()}
-            </div>
+        {/* Sub-screen header with back button */}
+        {isSubScreen && (
+          <div className="flex items-center gap-3 p-4 border-b border-border/40 shrink-0">
+            <button 
+              onClick={handleBack}
+              className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <h2 className="text-base font-medium">{getScreenTitle()}</h2>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        )}
+
+        <ResponsiveDialogContent>
+          {renderContent()}
+        </ResponsiveDialogContent>
+      </ResponsiveDialogBody>
+    </ResponsiveDialog>
   );
 };

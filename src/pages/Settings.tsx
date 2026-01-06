@@ -148,7 +148,7 @@ const Settings = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 md:mb-8 w-full">
+          <TabsList className="flex justify-start overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 md:mb-8 w-full">
             <TabsTrigger 
               value="general" 
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"

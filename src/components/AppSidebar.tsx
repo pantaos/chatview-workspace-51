@@ -32,6 +32,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Sample notifications data - now as initial state
 const initialNotifications = [
@@ -125,6 +127,7 @@ const AppSidebar = ({
 }: AppSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
@@ -150,6 +153,78 @@ const AppSidebar = ({
     if (!href) return false;
     return location.pathname === href;
   };
+
+  // Inbox Content Component (reusable for both mobile and desktop)
+  const InboxContent = () => (
+    <>
+      {/* Inbox Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
+        <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
+        <div className="flex items-center gap-0.5">
+          {unreadCount > 0 && (
+            <button 
+              onClick={markAllAsRead}
+              className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-muted-foreground/70 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
+            >
+              <CheckCheck className="h-3 w-3" />
+              <span>Mark all read</span>
+            </button>
+          )}
+          <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
+            <Filter className="h-3.5 w-3.5" />
+          </button>
+          <button 
+            onClick={() => setShowInbox(false)}
+            className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Inbox Content */}
+      <ScrollArea className="flex-1">
+        <div className="py-1">
+          <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
+          {notifications.map((notif) => (
+            <button
+              key={notif.id}
+              className={cn(
+                "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group relative min-h-[60px]",
+                notif.unread 
+                  ? "bg-primary/[0.06] hover:bg-primary/[0.10]" 
+                  : "hover:bg-muted/50"
+              )}
+            >
+              {notif.unread && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 rounded-r" />
+              )}
+              <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
+                <AvatarImage src={notif.user.avatar} />
+                <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-medium">
+                  {notif.user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className={cn(
+                    "text-[13px] text-foreground/90",
+                    notif.unread ? "font-medium" : "font-normal"
+                  )}>
+                    {notif.user.name}
+                  </span>
+                  <span className="text-[13px] text-muted-foreground/80">{notif.action}</span>
+                  <span className="text-[13px] text-foreground/80">{notif.project}</span>
+                </div>
+                <p className="text-[12px] text-muted-foreground/70 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
+              </div>
+              <span className="text-[11px] text-muted-foreground/60 flex-shrink-0 mt-0.5">{notif.time}</span>
+            </button>
+          ))}
+        </div>
+      </ScrollArea>
+    </>
+  );
 
   // Render collapsed sidebar
   if (isCollapsed) {
@@ -281,77 +356,24 @@ const AppSidebar = ({
     );
   }
 
-  // Render Inbox Panel
-  const renderInboxPanel = () => (
-    <div className="absolute left-full top-0 ml-2 w-80 h-[480px] bg-background border border-border/60 rounded-xl shadow-xl shadow-black/5 z-50 flex flex-col overflow-hidden animate-fade-in">
-      {/* Inbox Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
-        <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
-        <div className="flex items-center gap-0.5">
-          {unreadCount > 0 && (
-            <button 
-              onClick={markAllAsRead}
-              className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-muted-foreground/70 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
-            >
-              <CheckCheck className="h-3 w-3" />
-              <span>Mark all read</span>
-            </button>
-          )}
-          <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
-            <Filter className="h-3.5 w-3.5" />
-          </button>
-          <button 
-            onClick={() => setShowInbox(false)}
-            className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+  // Render Inbox Panel - now supports mobile fullscreen drawer
+  const renderInboxPanel = () => {
+    if (isMobile) {
+      return (
+        <Drawer open={showInbox} onOpenChange={setShowInbox}>
+          <DrawerContent className="h-[95vh] max-h-[95vh] flex flex-col">
+            <InboxContent />
+          </DrawerContent>
+        </Drawer>
+      );
+    }
 
-      {/* Inbox Content */}
-      <ScrollArea className="flex-1">
-        <div className="py-1">
-          <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
-          {notifications.map((notif) => (
-            <button
-              key={notif.id}
-              className={cn(
-                "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group relative",
-                notif.unread 
-                  ? "bg-primary/[0.06] hover:bg-primary/[0.10]" 
-                  : "hover:bg-muted/50"
-              )}
-            >
-              {notif.unread && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 rounded-r" />
-              )}
-              <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
-                <AvatarImage src={notif.user.avatar} />
-                <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-medium">
-                  {notif.user.initials}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className={cn(
-                    "text-[13px] text-foreground/90",
-                    notif.unread ? "font-medium" : "font-normal"
-                  )}>
-                    {notif.user.name}
-                  </span>
-                  <span className="text-[13px] text-muted-foreground/80">{notif.action}</span>
-                  <span className="text-[13px] text-foreground/80">{notif.project}</span>
-                </div>
-                <p className="text-[12px] text-muted-foreground/70 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
-              </div>
-              <span className="text-[11px] text-muted-foreground/60 flex-shrink-0 mt-0.5">{notif.time}</span>
-            </button>
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
-  );
+    return (
+      <div className="absolute left-full top-0 ml-2 w-80 h-[480px] bg-background border border-border/60 rounded-xl shadow-xl shadow-black/5 z-50 flex flex-col overflow-hidden animate-fade-in">
+        <InboxContent />
+      </div>
+    );
+  };
 
   return (
     <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0 relative">

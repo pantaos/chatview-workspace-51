@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDown, CheckCircle, X } from "lucide-react";
 import { ConversationalStep } from "@/types/workflow";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SlideUpFormPanelProps {
   step: ConversationalStep;
@@ -18,6 +20,7 @@ const SlideUpFormPanel = ({ step, onSubmit, onClose, isVisible }: SlideUpFormPan
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,22 +48,120 @@ const SlideUpFormPanel = ({ step, onSubmit, onClose, isVisible }: SlideUpFormPan
 
   if (!isVisible) return null;
 
+  const formContent = (
+    <form onSubmit={handleSubmit} className="flex flex-col h-full">
+      <ScrollArea className="flex-1 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {step.fields.map((field) => (
+            <div key={field.id} className="space-y-2">
+              <Label htmlFor={field.id} className="text-sm font-medium">
+                {field.label}
+                {field.required && <span className="text-destructive ml-1">*</span>}
+              </Label>
+              
+              {field.type === 'textarea' ? (
+                <Textarea
+                  id={field.id}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  value={formData[field.id] || ''}
+                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                  className="min-h-[80px] resize-none"
+                />
+              ) : field.type === 'select' ? (
+                <select
+                  id={field.id}
+                  required={field.required}
+                  value={formData[field.id] || ''}
+                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="">{field.placeholder || 'Select an option'}</option>
+                  {field.options?.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  id={field.id}
+                  type={field.type === 'url' ? 'url' : 'text'}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  value={formData[field.id] || ''}
+                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+      
+      <div className="flex justify-end gap-3 p-4 border-t bg-background shrink-0">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+              Processing...
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              Submit
+            </div>
+          )}
+        </Button>
+      </div>
+    </form>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={isVisible} onOpenChange={(open) => !open && onClose()}>
+        <DrawerContent className="h-[80vh] max-h-[80vh] flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
+            <div className="flex items-center gap-3">
+              <h3 className="font-semibold">{step.title}</h3>
+              <span className="text-sm text-muted-foreground">({step.fields.length} fields)</span>
+            </div>
+            <button 
+              onClick={onClose}
+              className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          {formContent}
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
   return (
-    <div className={`fixed bottom-0 left-0 right-0 bg-white border-t-2 border-purple-200 shadow-2xl transition-all duration-500 ease-out z-40 ${
+    <div className={`fixed bottom-0 left-0 right-0 bg-background border-t-2 border-border shadow-2xl transition-all duration-500 ease-out z-40 ${
       isCollapsed ? 'h-16' : 'h-80'
     }`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-purple-50 to-blue-50">
+      <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-3">
-          <h3 className="font-semibold text-purple-900">{step.title}</h3>
-          <span className="text-sm text-purple-600">({step.fields.length} fields)</span>
+          <h3 className="font-semibold">{step.title}</h3>
+          <span className="text-sm text-muted-foreground">({step.fields.length} fields)</span>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-purple-600 hover:text-purple-800"
           >
             <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
           </Button>
@@ -68,7 +169,6 @@ const SlideUpFormPanel = ({ step, onSubmit, onClose, isVisible }: SlideUpFormPan
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -76,82 +176,10 @@ const SlideUpFormPanel = ({ step, onSubmit, onClose, isVisible }: SlideUpFormPan
       </div>
       
       {/* Form Content */}
-      <div className={`overflow-y-auto transition-all duration-300 ${
+      <div className={`overflow-hidden transition-all duration-300 ${
         isCollapsed ? 'h-0 opacity-0' : 'h-64 opacity-100'
       }`}>
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {step.fields.map((field) => (
-              <div key={field.id} className="space-y-2">
-                <Label htmlFor={field.id} className="text-sm font-medium text-gray-700">
-                  {field.label}
-                  {field.required && <span className="text-red-500 ml-1">*</span>}
-                </Label>
-                
-                {field.type === 'textarea' ? (
-                  <Textarea
-                    id={field.id}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                    value={formData[field.id] || ''}
-                    onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                    className="min-h-[80px] resize-none"
-                  />
-                ) : field.type === 'select' ? (
-                  <select
-                    id={field.id}
-                    required={field.required}
-                    value={formData[field.id] || ''}
-                    onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    <option value="">{field.placeholder || 'Select an option'}</option>
-                    {field.options?.map((option) => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <Input
-                    id={field.id}
-                    type={field.type === 'url' ? 'url' : 'text'}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                    value={formData[field.id] || ''}
-                    onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-            >
-              {isSubmitting ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Processing...
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" />
-                  Submit
-                </div>
-              )}
-            </Button>
-          </div>
-        </form>
+        {formContent}
       </div>
     </div>
   );

@@ -22,7 +22,8 @@ import HistoryItem from "@/components/HistoryItem";
 import ChatInterface from "@/components/ChatInterface";
 import { Slider } from "@/components/ui/slider";
 import WorkflowCreationDialog from "@/components/WorkflowCreationDialog";
-import TagFilter from "@/components/TagFilter";
+import ManageTagsDialog from "@/components/ManageTagsDialog";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -87,6 +88,7 @@ const Index = () => {
   ]);
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
+  const [showManageTagsDialog, setShowManageTagsDialog] = useState(false);
   const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>([
     {
       id: "chat",
@@ -218,6 +220,12 @@ const Index = () => {
     };
     setDefaultTags(prev => [...prev, newTag]);
     toast.success(`Tag "${tagData.name}" created successfully!`);
+  };
+
+  const handleDeleteTag = (tagId: string) => {
+    setDefaultTags(prev => prev.filter(tag => tag.id !== tagId));
+    setSelectedTags(prev => prev.filter(id => id !== tagId));
+    toast.success("Tag deleted successfully!");
   };
 
   const handleCreateWorkflow = (workflowData: any) => {
@@ -369,7 +377,7 @@ const Index = () => {
             </div>
             
             {/* Search */}
-            <section className="mb-10">
+            <section className="mb-6">
               <SearchChat 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -378,6 +386,52 @@ const Index = () => {
                 title=""
                 placeholder="Start a conversation..."
               />
+            </section>
+
+            {/* Tag Filter Section */}
+            <section className="mb-8">
+              <h3 className="text-sm font-medium text-foreground mb-3">Filter by Tags</h3>
+              <div className="flex flex-wrap gap-2 items-center">
+                {defaultTags.map((tag) => {
+                  const isSelected = selectedTags.includes(tag.id);
+                  return (
+                    <Badge
+                      key={tag.id}
+                      variant={isSelected ? "default" : "secondary"}
+                      className={`cursor-pointer transition-all ${
+                        isSelected 
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      }`}
+                      onClick={() => 
+                        isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
+                      }
+                    >
+                      <div 
+                        className="w-2 h-2 rounded-full mr-2"
+                        style={{ backgroundColor: isSelected ? 'currentColor' : tag.color }}
+                      />
+                      {tag.name}
+                    </Badge>
+                  );
+                })}
+                <Badge
+                  variant="outline"
+                  className="cursor-pointer transition-colors hover:bg-muted"
+                  onClick={() => setShowManageTagsDialog(true)}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  New Tag
+                </Badge>
+                {selectedTags.length > 0 && (
+                  <button 
+                    onClick={handleClearAllTags}
+                    className="text-xs text-muted-foreground hover:text-foreground ml-2"
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
             </section>
             
             {/* Workflows & Assistants */}
@@ -499,6 +553,14 @@ const Index = () => {
               onCreateWorkflow={handleCreateWorkflow}
               availableTags={defaultTags}
               onCreateTag={handleCreateTag}
+            />
+
+            <ManageTagsDialog
+              open={showManageTagsDialog}
+              onOpenChange={setShowManageTagsDialog}
+              tags={defaultTags}
+              onCreateTag={handleCreateTag}
+              onDeleteTag={handleDeleteTag}
             />
           </div>
         </MainLayout>

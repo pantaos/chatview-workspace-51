@@ -129,13 +129,13 @@ export function MicrosoftIntegrationDialog({
 
       case "outlook":
         return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold mb-1">Outlook</h2>
+          <div className="space-y-4">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Outlook</h2>
               <p className="text-sm text-muted-foreground">Email management</p>
             </div>
 
-            <div className="flex items-center justify-between py-3 border-b border-border/40">
+            <div className="flex items-center justify-between py-2 border-b border-border/40">
               <div>
                 <p className="text-sm font-medium">Enable Outlook</p>
                 <p className="text-xs text-muted-foreground">Allow AI to access your emails</p>
@@ -146,7 +146,7 @@ export function MicrosoftIntegrationDialog({
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-2">
               <div>
                 <p className="text-sm font-medium">Permissions</p>
                 <p className="text-xs text-muted-foreground">
@@ -171,13 +171,13 @@ export function MicrosoftIntegrationDialog({
 
       case "calendar":
         return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold mb-1">Calendar</h2>
+          <div className="space-y-4">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Calendar</h2>
               <p className="text-sm text-muted-foreground">Events & scheduling</p>
             </div>
 
-            <div className="flex items-center justify-between py-3 border-b border-border/40">
+            <div className="flex items-center justify-between py-2 border-b border-border/40">
               <div>
                 <p className="text-sm font-medium">Enable Calendar</p>
                 <p className="text-xs text-muted-foreground">Allow AI to access your calendar</p>
@@ -188,7 +188,7 @@ export function MicrosoftIntegrationDialog({
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-2">
               <div>
                 <p className="text-sm font-medium">Permissions</p>
                 <p className="text-xs text-muted-foreground">
@@ -213,13 +213,13 @@ export function MicrosoftIntegrationDialog({
 
       case "sharepoint":
         return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold mb-1">SharePoint</h2>
+          <div className="space-y-4">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">SharePoint</h2>
               <p className="text-sm text-muted-foreground">Documents & files</p>
             </div>
 
-            <div className="flex items-center justify-between py-3 border-b border-border/40">
+            <div className="flex items-center justify-between py-2 border-b border-border/40">
               <div>
                 <p className="text-sm font-medium">Enable SharePoint</p>
                 <p className="text-xs text-muted-foreground">Allow AI to access your documents</p>
@@ -230,7 +230,7 @@ export function MicrosoftIntegrationDialog({
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-2">
               <div>
                 <p className="text-sm font-medium">Permissions</p>
                 <p className="text-xs text-muted-foreground">

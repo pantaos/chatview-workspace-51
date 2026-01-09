@@ -20,6 +20,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { 
   MessageSquare, 
   Code, 
@@ -34,8 +39,8 @@ import {
   Sparkles,
   RotateCcw,
   Library,
-  Mail,
-  Calendar
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import TagManager from "./TagManager";
 import { WorkflowTag } from "@/types/workflow";
@@ -72,19 +77,111 @@ const iconColors = [
   { name: "Yellow", color: "bg-yellow-500", textColor: "text-white" },
 ];
 
-const integrations = [
-  { name: "Microsoft Office", enabled: false },
-  { name: "Notion", enabled: false },
-  { name: "Gmail", enabled: false },
-  { name: "GitHub", enabled: false },
-  { name: "AWS", enabled: false },
-  { name: "Slack", enabled: false },
-  { name: "Calendar", enabled: false },
-  { name: "SharePoint", enabled: false },
-  { name: "Trello", enabled: false },
-  { name: "Asana", enabled: false },
-  { name: "Jira", enabled: false },
+// Available integrations with their apps and permissions
+const availableIntegrations = [
+  {
+    id: 'microsoft',
+    name: 'Microsoft 365',
+    shortName: 'M',
+    colorClass: 'bg-blue-500',
+    apps: [
+      {
+        id: 'outlook',
+        name: 'Outlook',
+        permissions: [
+          { id: 'readEmails', label: 'Emails lesen' },
+          { id: 'draftEmails', label: 'Emails entwerfen' },
+          { id: 'sendEmails', label: 'Emails senden' },
+        ]
+      },
+      {
+        id: 'calendar',
+        name: 'Kalender',
+        permissions: [
+          { id: 'readEvents', label: 'Termine lesen' },
+          { id: 'createEvents', label: 'Termine erstellen' },
+        ]
+      },
+      {
+        id: 'sharepoint',
+        name: 'SharePoint',
+        permissions: [
+          { id: 'readDocs', label: 'Dokumente lesen' },
+          { id: 'uploadDocs', label: 'Dokumente hochladen' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'notion',
+    name: 'Notion',
+    shortName: 'N',
+    colorClass: 'bg-neutral-800',
+    apps: [
+      {
+        id: 'pages',
+        name: 'Seiten',
+        permissions: [
+          { id: 'readPages', label: 'Seiten lesen' },
+          { id: 'createPages', label: 'Seiten erstellen' },
+          { id: 'editPages', label: 'Seiten bearbeiten' },
+        ]
+      },
+      {
+        id: 'databases',
+        name: 'Datenbanken',
+        permissions: [
+          { id: 'readDb', label: 'Datenbanken lesen' },
+          { id: 'writeDb', label: 'Einträge erstellen' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'google',
+    name: 'Google',
+    shortName: 'G',
+    colorClass: 'bg-red-500',
+    apps: [
+      {
+        id: 'gmail',
+        name: 'Gmail',
+        permissions: [
+          { id: 'readEmails', label: 'Emails lesen' },
+          { id: 'sendEmails', label: 'Emails senden' },
+        ]
+      },
+      {
+        id: 'calendar',
+        name: 'Kalender',
+        permissions: [
+          { id: 'readEvents', label: 'Termine lesen' },
+          { id: 'createEvents', label: 'Termine erstellen' },
+        ]
+      },
+      {
+        id: 'drive',
+        name: 'Drive',
+        permissions: [
+          { id: 'readFiles', label: 'Dateien lesen' },
+          { id: 'uploadFiles', label: 'Dateien hochladen' },
+        ]
+      }
+    ]
+  }
 ];
+
+type IntegrationState = {
+  [integrationId: string]: {
+    enabled: boolean;
+    expanded: boolean;
+    apps: {
+      [appId: string]: {
+        [permissionId: string]: boolean;
+      };
+    };
+  };
+};
 
 const NewWorkflowDialog = ({ 
   open, 
@@ -106,14 +203,27 @@ const NewWorkflowDialog = ({
   const [manualNameEntry, setManualNameEntry] = useState(false);
   const [manualDescriptionEntry, setManualDescriptionEntry] = useState(false);
   const [manualStartersEntry, setManualStartersEntry] = useState(false);
-  const [enabledIntegrations, setEnabledIntegrations] = useState(
-    integrations.reduce((acc, integration) => {
-      acc[integration.name] = integration.enabled;
-      return acc;
-    }, {} as Record<string, boolean>)
-  );
   const [promptLibraryOpen, setPromptLibraryOpen] = useState(false);
-  const [integrationsExpanded, setIntegrationsExpanded] = useState(false);
+  
+  // Integration state
+  const [integrations, setIntegrations] = useState<IntegrationState>(() => {
+    const initial: IntegrationState = {};
+    availableIntegrations.forEach(integration => {
+      const apps: IntegrationState[string]['apps'] = {};
+      integration.apps.forEach(app => {
+        apps[app.id] = {};
+        app.permissions.forEach(perm => {
+          apps[app.id][perm.id] = false;
+        });
+      });
+      initial[integration.id] = {
+        enabled: false,
+        expanded: false,
+        apps
+      };
+    });
+    return initial;
+  });
 
   // Update system prompt when prefilledPrompt changes
   React.useEffect(() => {
@@ -126,6 +236,22 @@ const NewWorkflowDialog = ({
     e.preventDefault();
     
     if (!title.trim()) return;
+
+    // Collect enabled integrations with their permissions
+    const enabledIntegrations: { [key: string]: { [appId: string]: string[] } } = {};
+    Object.entries(integrations).forEach(([integrationId, data]) => {
+      if (data.enabled) {
+        enabledIntegrations[integrationId] = {};
+        Object.entries(data.apps).forEach(([appId, permissions]) => {
+          const enabledPerms = Object.entries(permissions)
+            .filter(([, enabled]) => enabled)
+            .map(([permId]) => permId);
+          if (enabledPerms.length > 0) {
+            enabledIntegrations[integrationId][appId] = enabledPerms;
+          }
+        });
+      }
+    });
 
     const workflow = {
       title: title.trim(),
@@ -155,12 +281,25 @@ const NewWorkflowDialog = ({
     setManualNameEntry(false);
     setManualDescriptionEntry(false);
     setManualStartersEntry(false);
-    setEnabledIntegrations(
-      integrations.reduce((acc, integration) => {
-        acc[integration.name] = integration.enabled;
-        return acc;
-      }, {} as Record<string, boolean>)
-    );
+    // Reset integrations
+    setIntegrations(() => {
+      const initial: IntegrationState = {};
+      availableIntegrations.forEach(integration => {
+        const apps: IntegrationState[string]['apps'] = {};
+        integration.apps.forEach(app => {
+          apps[app.id] = {};
+          app.permissions.forEach(perm => {
+            apps[app.id][perm.id] = false;
+          });
+        });
+        initial[integration.id] = {
+          enabled: false,
+          expanded: false,
+          apps
+        };
+      });
+      return initial;
+    });
   };
 
   const addStarter = () => {
@@ -174,11 +313,51 @@ const NewWorkflowDialog = ({
     setStarters(starters.filter((_, i) => i !== index));
   };
 
-  const toggleIntegration = (name: string) => {
-    setEnabledIntegrations(prev => ({
+  const toggleIntegration = (integrationId: string) => {
+    setIntegrations(prev => ({
       ...prev,
-      [name]: !prev[name]
+      [integrationId]: {
+        ...prev[integrationId],
+        enabled: !prev[integrationId].enabled,
+        expanded: !prev[integrationId].enabled ? true : prev[integrationId].expanded
+      }
     }));
+  };
+
+  const toggleIntegrationExpanded = (integrationId: string) => {
+    setIntegrations(prev => ({
+      ...prev,
+      [integrationId]: {
+        ...prev[integrationId],
+        expanded: !prev[integrationId].expanded
+      }
+    }));
+  };
+
+  const togglePermission = (integrationId: string, appId: string, permissionId: string) => {
+    setIntegrations(prev => ({
+      ...prev,
+      [integrationId]: {
+        ...prev[integrationId],
+        apps: {
+          ...prev[integrationId].apps,
+          [appId]: {
+            ...prev[integrationId].apps[appId],
+            [permissionId]: !prev[integrationId].apps[appId][permissionId]
+          }
+        }
+      }
+    }));
+  };
+
+  const getEnabledPermissionCount = (integrationId: string): number => {
+    const data = integrations[integrationId];
+    if (!data) return 0;
+    let count = 0;
+    Object.values(data.apps).forEach(perms => {
+      count += Object.values(perms).filter(Boolean).length;
+    });
+    return count;
   };
 
   const isMobile = useIsMobile();
@@ -466,6 +645,97 @@ const NewWorkflowDialog = ({
               </Button>
             </div>
           </div>
+
+          {/* Integrations Section */}
+          <div>
+            <Label className="mb-3 block">Integrationen</Label>
+            <div className="space-y-2">
+              {availableIntegrations.map((integration) => {
+                const isEnabled = integrations[integration.id]?.enabled;
+                const isExpanded = integrations[integration.id]?.expanded;
+                const permCount = getEnabledPermissionCount(integration.id);
+
+                return (
+                  <div
+                    key={integration.id}
+                    className={`border rounded-lg transition-all ${
+                      isEnabled ? 'border-primary/40 bg-primary/5' : 'border-border'
+                    }`}
+                  >
+                    {/* Integration Header */}
+                    <div className="flex items-center justify-between p-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-md ${integration.colorClass} flex items-center justify-center text-white text-sm font-semibold`}>
+                          {integration.shortName}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium">{integration.name}</span>
+                          {isEnabled && permCount > 0 && (
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              {permCount} Berechtigung{permCount !== 1 ? 'en' : ''}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isEnabled && (
+                          <button
+                            type="button"
+                            onClick={() => toggleIntegrationExpanded(integration.id)}
+                            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
+                        )}
+                        <Button
+                          type="button"
+                          variant={isEnabled ? "outline" : "secondary"}
+                          size="sm"
+                          onClick={() => toggleIntegration(integration.id)}
+                          className="text-xs"
+                        >
+                          {isEnabled ? 'Entfernen' : 'Hinzufügen'}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Expanded Permissions */}
+                    {isEnabled && isExpanded && (
+                      <div className="px-3 pb-3 pt-0 border-t border-border/50">
+                        <div className="pt-3 space-y-4">
+                          {integration.apps.map((app) => (
+                            <div key={app.id}>
+                              <p className="text-xs font-medium text-muted-foreground mb-2">
+                                {app.name}
+                              </p>
+                              <div className="space-y-2">
+                                {app.permissions.map((perm) => (
+                                  <div
+                                    key={perm.id}
+                                    className="flex items-center justify-between py-1"
+                                  >
+                                    <span className="text-sm">{perm.label}</span>
+                                    <Switch
+                                      checked={integrations[integration.id]?.apps[app.id]?.[perm.id] ?? false}
+                                      onCheckedChange={() => togglePermission(integration.id, app.id, perm.id)}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="flex gap-3 pt-4 sticky bottom-0 bg-background pb-4">
@@ -488,7 +758,7 @@ const NewWorkflowDialog = ({
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
               <div>
                 <h2 className="text-base font-semibold">Create New Assistant</h2>
-                <p className="text-xs text-muted-foreground">Custom AI assistant</p>
+                <p className="text-xs text-muted-foreground">Configure your assistant</p>
               </div>
               <button 
                 onClick={onClose}
@@ -503,7 +773,10 @@ const NewWorkflowDialog = ({
         <PromptLibrary
           open={promptLibraryOpen}
           onClose={() => setPromptLibraryOpen(false)}
-          onSelectPrompt={(prompt) => setSystemPrompt(prompt)}
+          onSelectPrompt={(prompt) => {
+            setSystemPrompt(prompt);
+            setPromptLibraryOpen(false);
+          }}
         />
       </>
     );
@@ -512,11 +785,11 @@ const NewWorkflowDialog = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col p-0">
-          <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
+        <DialogContent className="max-w-2xl h-[85vh] p-0 flex flex-col gap-0">
+          <DialogHeader className="px-6 pt-6 pb-4 shrink-0 border-b">
             <DialogTitle>Create New Assistant</DialogTitle>
             <DialogDescription>
-              Create a chat-based AI assistant with custom prompts and conversation starters.
+              Configure your assistant with custom prompts and integrations.
             </DialogDescription>
           </DialogHeader>
           {formContent}
@@ -525,7 +798,10 @@ const NewWorkflowDialog = ({
       <PromptLibrary
         open={promptLibraryOpen}
         onClose={() => setPromptLibraryOpen(false)}
-        onSelectPrompt={(prompt) => setSystemPrompt(prompt)}
+        onSelectPrompt={(prompt) => {
+          setSystemPrompt(prompt);
+          setPromptLibraryOpen(false);
+        }}
       />
     </>
   );

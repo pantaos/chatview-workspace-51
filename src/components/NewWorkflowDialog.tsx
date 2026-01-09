@@ -360,6 +360,41 @@ const NewWorkflowDialog = ({
     return count;
   };
 
+  const areAllPermissionsEnabled = (integrationId: string): boolean => {
+    const integration = availableIntegrations.find(i => i.id === integrationId);
+    if (!integration) return false;
+    
+    return integration.apps.every(app =>
+      app.permissions.every(perm =>
+        integrations[integrationId]?.apps[app.id]?.[perm.id] === true
+      )
+    );
+  };
+
+  const toggleAllPermissions = (integrationId: string) => {
+    const allEnabled = areAllPermissionsEnabled(integrationId);
+    const integration = availableIntegrations.find(i => i.id === integrationId);
+    if (!integration) return;
+
+    setIntegrations(prev => {
+      const newApps: IntegrationState[string]['apps'] = {};
+      integration.apps.forEach(app => {
+        newApps[app.id] = {};
+        app.permissions.forEach(perm => {
+          newApps[app.id][perm.id] = !allEnabled;
+        });
+      });
+      
+      return {
+        ...prev,
+        [integrationId]: {
+          ...prev[integrationId],
+          apps: newApps
+        }
+      };
+    });
+  };
+
   const isMobile = useIsMobile();
 
   const formContent = (
@@ -707,6 +742,15 @@ const NewWorkflowDialog = ({
                     {isEnabled && isExpanded && (
                       <div className="px-3 pb-3 pt-0 border-t border-border/50">
                         <div className="pt-3 space-y-4">
+                          {/* Alle auswählen */}
+                          <div className="flex items-center justify-between py-2 border-b border-border/30 pb-3">
+                            <span className="text-sm font-medium">Alle Berechtigungen</span>
+                            <Switch
+                              checked={areAllPermissionsEnabled(integration.id)}
+                              onCheckedChange={() => toggleAllPermissions(integration.id)}
+                            />
+                          </div>
+                          
                           {integration.apps.map((app) => (
                             <div key={app.id}>
                               <p className="text-xs font-medium text-muted-foreground mb-2">

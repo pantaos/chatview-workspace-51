@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Bot, Workflow, Search, Users, Edit, Settings } from "lucide-react";
 import { WorkflowItem, Assistant, Workflow as WorkflowType, WorkflowTag } from "@/types/workflow";
 import { User, UserTeam, AccessPermission } from "@/types/admin";
-import WorkflowCreationDialog from "@/components/WorkflowCreationDialog";
+import NewWorkflowDialog from "@/components/NewWorkflowDialog";
 import { toast } from "sonner";
 
 const AdminWorkflows = () => {
@@ -318,7 +318,7 @@ const AdminWorkflows = () => {
         </div>
       )}
 
-      <WorkflowCreationDialog
+      <NewWorkflowDialog
         open={showNewWorkflowDialog}
         onClose={() => setShowNewWorkflowDialog(false)}
         onCreateWorkflow={handleCreateWorkflow}

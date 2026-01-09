@@ -21,7 +21,7 @@ import WorkflowCard from "@/components/WorkflowCard";
 import HistoryItem from "@/components/HistoryItem";
 import ChatInterface from "@/components/ChatInterface";
 import { Slider } from "@/components/ui/slider";
-import WorkflowCreationDialog from "@/components/WorkflowCreationDialog";
+import NewWorkflowDialog from "@/components/NewWorkflowDialog";
 import ManageTagsDialog from "@/components/ManageTagsDialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -547,7 +547,7 @@ const Index = () => {
               </Tabs>
             </section>
 
-            <WorkflowCreationDialog
+            <NewWorkflowDialog
               open={showNewWorkflowDialog}
               onClose={() => setShowNewWorkflowDialog(false)}
               onCreateWorkflow={handleCreateWorkflow}

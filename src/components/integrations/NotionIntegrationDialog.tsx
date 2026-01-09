@@ -113,57 +113,37 @@ export function NotionIntegrationDialog({
 
       case "notion":
         return (
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">N</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Notion</h2>
-                  <p className="text-sm text-muted-foreground">Pages & databases</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Enable Notion</p>
+                <p className="text-xs text-muted-foreground">Allow AI to access your workspace</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Manage your Notion workspace with AI-powered assistance.
-              </p>
+              <Switch
+                checked={apps.notion}
+                onCheckedChange={(checked) => onAppsChange({ ...apps, notion: checked })}
+              />
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">Settings</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Enable Notion</p>
-                    <p className="text-xs text-muted-foreground">Allow AI to access your workspace</p>
-                  </div>
-                  <Switch
-                    checked={apps.notion}
-                    onCheckedChange={(checked) => onAppsChange({ ...apps, notion: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Permissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(permissions.notion).filter(Boolean).length} of {Object.keys(permissions.notion).length} enabled
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!apps.notion}
-                    className="min-h-[44px]"
-                    onClick={() => {
-                      setTempPermissions(permissions);
-                      setActiveScreen("notion-config");
-                    }}
-                  >
-                    Configure
-                  </Button>
-                </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Permissions</p>
+                <p className="text-xs text-muted-foreground">
+                  {Object.values(permissions.notion).filter(Boolean).length} of {Object.keys(permissions.notion).length} enabled
+                </p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!apps.notion}
+                className="min-h-[44px]"
+                onClick={() => {
+                  setTempPermissions(permissions);
+                  setActiveScreen("notion-config");
+                }}
+              >
+                Configure
+              </Button>
             </div>
           </div>
         );

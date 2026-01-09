@@ -113,57 +113,37 @@ export function GoogleIntegrationDialog({
 
       case "gmail":
         return (
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">G</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Gmail</h2>
-                  <p className="text-sm text-muted-foreground">Email management</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Enable Gmail</p>
+                <p className="text-xs text-muted-foreground">Allow AI to access your emails</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Manage your email workflows with AI-powered assistance.
-              </p>
+              <Switch
+                checked={apps.gmail}
+                onCheckedChange={(checked) => onAppsChange({ ...apps, gmail: checked })}
+              />
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">Settings</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Enable Gmail</p>
-                    <p className="text-xs text-muted-foreground">Allow AI to access your emails</p>
-                  </div>
-                  <Switch
-                    checked={apps.gmail}
-                    onCheckedChange={(checked) => onAppsChange({ ...apps, gmail: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Permissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(permissions.gmail).filter(Boolean).length} of {Object.keys(permissions.gmail).length} enabled
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!apps.gmail}
-                    className="min-h-[44px]"
-                    onClick={() => {
-                      setTempPermissions(permissions);
-                      setActiveScreen("gmail-config");
-                    }}
-                  >
-                    Configure
-                  </Button>
-                </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Permissions</p>
+                <p className="text-xs text-muted-foreground">
+                  {Object.values(permissions.gmail).filter(Boolean).length} of {Object.keys(permissions.gmail).length} enabled
+                </p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!apps.gmail}
+                className="min-h-[44px]"
+                onClick={() => {
+                  setTempPermissions(permissions);
+                  setActiveScreen("gmail-config");
+                }}
+              >
+                Configure
+              </Button>
             </div>
           </div>
         );

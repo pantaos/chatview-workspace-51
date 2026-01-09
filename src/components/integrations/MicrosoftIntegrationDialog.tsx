@@ -129,171 +129,111 @@ export function MicrosoftIntegrationDialog({
 
       case "outlook":
         return (
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">O</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Outlook</h2>
-                  <p className="text-sm text-muted-foreground">Email management</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Enable Outlook</p>
+                <p className="text-xs text-muted-foreground">Allow AI to access your emails</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Manage your email workflows with AI-powered assistance.
-              </p>
+              <Switch
+                checked={apps.outlook}
+                onCheckedChange={(checked) => onAppsChange({ ...apps, outlook: checked })}
+              />
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">Settings</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Enable Outlook</p>
-                    <p className="text-xs text-muted-foreground">Allow AI to access your emails</p>
-                  </div>
-                  <Switch
-                    checked={apps.outlook}
-                    onCheckedChange={(checked) => onAppsChange({ ...apps, outlook: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Permissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(permissions.outlook).filter(Boolean).length} of {Object.keys(permissions.outlook).length} enabled
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!apps.outlook}
-                    className="min-h-[44px]"
-                    onClick={() => {
-                      setTempPermissions(permissions);
-                      setActiveScreen("outlook-config");
-                    }}
-                  >
-                    Configure
-                  </Button>
-                </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Permissions</p>
+                <p className="text-xs text-muted-foreground">
+                  {Object.values(permissions.outlook).filter(Boolean).length} of {Object.keys(permissions.outlook).length} enabled
+                </p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!apps.outlook}
+                className="min-h-[44px]"
+                onClick={() => {
+                  setTempPermissions(permissions);
+                  setActiveScreen("outlook-config");
+                }}
+              >
+                Configure
+              </Button>
             </div>
           </div>
         );
 
       case "calendar":
         return (
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">C</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">Calendar</h2>
-                  <p className="text-sm text-muted-foreground">Events & scheduling</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Enable Calendar</p>
+                <p className="text-xs text-muted-foreground">Allow AI to access your calendar</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Manage your calendar and scheduling with AI assistance.
-              </p>
+              <Switch
+                checked={apps.calendar}
+                onCheckedChange={(checked) => onAppsChange({ ...apps, calendar: checked })}
+              />
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">Settings</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Enable Calendar</p>
-                    <p className="text-xs text-muted-foreground">Allow AI to access your calendar</p>
-                  </div>
-                  <Switch
-                    checked={apps.calendar}
-                    onCheckedChange={(checked) => onAppsChange({ ...apps, calendar: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Permissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(permissions.calendar).filter(Boolean).length} of {Object.keys(permissions.calendar).length} enabled
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!apps.calendar}
-                    className="min-h-[44px]"
-                    onClick={() => {
-                      setTempPermissions(permissions);
-                      setActiveScreen("calendar-config");
-                    }}
-                  >
-                    Configure
-                  </Button>
-                </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Permissions</p>
+                <p className="text-xs text-muted-foreground">
+                  {Object.values(permissions.calendar).filter(Boolean).length} of {Object.keys(permissions.calendar).length} enabled
+                </p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!apps.calendar}
+                className="min-h-[44px]"
+                onClick={() => {
+                  setTempPermissions(permissions);
+                  setActiveScreen("calendar-config");
+                }}
+              >
+                Configure
+              </Button>
             </div>
           </div>
         );
 
       case "sharepoint":
         return (
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">S</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">SharePoint</h2>
-                  <p className="text-sm text-muted-foreground">Documents & files</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Enable SharePoint</p>
+                <p className="text-xs text-muted-foreground">Allow AI to access your documents</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Access and manage your documents with AI assistance.
-              </p>
+              <Switch
+                checked={apps.sharepoint}
+                onCheckedChange={(checked) => onAppsChange({ ...apps, sharepoint: checked })}
+              />
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">Settings</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Enable SharePoint</p>
-                    <p className="text-xs text-muted-foreground">Allow AI to access your documents</p>
-                  </div>
-                  <Switch
-                    checked={apps.sharepoint}
-                    onCheckedChange={(checked) => onAppsChange({ ...apps, sharepoint: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Permissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(permissions.sharepoint).filter(Boolean).length} of {Object.keys(permissions.sharepoint).length} enabled
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!apps.sharepoint}
-                    className="min-h-[44px]"
-                    onClick={() => {
-                      setTempPermissions(permissions);
-                      setActiveScreen("sharepoint-config");
-                    }}
-                  >
-                    Configure
-                  </Button>
-                </div>
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium">Permissions</p>
+                <p className="text-xs text-muted-foreground">
+                  {Object.values(permissions.sharepoint).filter(Boolean).length} of {Object.keys(permissions.sharepoint).length} enabled
+                </p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!apps.sharepoint}
+                className="min-h-[44px]"
+                onClick={() => {
+                  setTempPermissions(permissions);
+                  setActiveScreen("sharepoint-config");
+                }}
+              >
+                Configure
+              </Button>
             </div>
           </div>
         );

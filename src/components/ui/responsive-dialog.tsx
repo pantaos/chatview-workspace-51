@@ -48,7 +48,12 @@ export function ResponsiveDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[500px]", className)}>
+      <DialogContent
+        className={cn(
+          "max-w-2xl p-0 rounded-xl border-border/60 shadow-lg overflow-hidden [&>button]:hidden h-[500px] flex flex-col gap-0",
+          className
+        )}
+      >
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 shrink-0">
             <h2 className="text-lg font-semibold">{title}</h2>

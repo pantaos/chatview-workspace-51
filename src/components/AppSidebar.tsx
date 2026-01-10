@@ -25,7 +25,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -186,7 +186,7 @@ const AppSidebar = ({
       </div>
 
       {/* Inbox Content */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="py-1">
           <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
           {notifications.map((notif) => (
@@ -225,7 +225,7 @@ const AppSidebar = ({
             </button>
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </>
   );
 
@@ -422,8 +422,7 @@ const AppSidebar = ({
       {showInbox && renderInboxPanel()}
 
       {/* Main Content - Scrollable area with flex-1 */}
-      <div className="flex-1 overflow-hidden flex flex-col min-h-0">
-        <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
           <div className="px-3 py-4">
             {/* Quick Actions */}
             <nav className="space-y-0.5 mb-6">
@@ -611,7 +610,6 @@ const AppSidebar = ({
               </CollapsibleContent>
             </Collapsible>
           </div>
-        </ScrollArea>
       </div>
 
       {/* Bottom Navigation - Fixed at bottom with shrink-0 */}

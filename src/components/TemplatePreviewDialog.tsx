@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
-  Star,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -114,19 +113,6 @@ export function TemplatePreviewDialog({
             <p className="text-muted-foreground text-sm mb-2">
               {template.description}
             </p>
-            <div className="flex items-center gap-3 text-sm">
-              {template.rating && (
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <span className="font-medium">{template.rating}</span>
-                </div>
-              )}
-              {template.usageCount && (
-                <span className="text-muted-foreground">
-                  {formatUsageCount(template.usageCount)} Nutzungen
-                </span>
-              )}
-            </div>
           </div>
         </div>
 

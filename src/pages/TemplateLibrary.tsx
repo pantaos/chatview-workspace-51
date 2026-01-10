@@ -71,18 +71,11 @@ export default function TemplateLibrary() {
       <div className="flex-1 overflow-auto">
         <div className="container max-w-6xl mx-auto py-6 px-4 md:px-6">
           {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <LayoutGrid className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Template Library</h1>
-                <p className="text-muted-foreground text-sm">
-                  Entdecke und füge vorgefertigte Assistenten und Apps hinzu
-                </p>
-              </div>
-            </div>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-foreground">Template Library</h1>
+            <p className="text-muted-foreground mt-2">
+              Entdecke und füge vorgefertigte Assistenten und Apps hinzu
+            </p>
           </div>
 
           {/* Featured Hero Section */}

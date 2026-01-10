@@ -99,7 +99,7 @@ const MainLayout = ({
       {/* Mobile Sidebar as Sheet */}
       {isMobile ? (
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-          <SheetContent side="left" className="p-0 w-[280px]">
+          <SheetContent side="left" className="p-0 w-[280px] [&>button]:hidden">
             <AppSidebar
               workflowName={workflowName}
               workflowDescription={workflowDescription}

@@ -89,6 +89,7 @@ interface AppSidebarProps {
   workflowDescription?: string;
   workflowSteps?: WorkflowStep[];
   currentWorkflowStep?: number;
+  onNavigate?: () => void;
 }
 
 // Helper for relative time in German
@@ -125,6 +126,7 @@ const AppSidebar = ({
   workflowName,
   workflowSteps = [],
   currentWorkflowStep = 0,
+  onNavigate,
 }: AppSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -388,10 +390,15 @@ const AppSidebar = ({
     );
   };
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    onNavigate?.();
+  };
+
   return (
-    <aside className="w-64 h-screen bg-background border-r border-border flex flex-col flex-shrink-0 relative">
+    <aside className="w-64 h-full bg-background border-r border-border flex flex-col flex-shrink-0 relative">
       {/* Header with Logo and Toggle */}
-      <div className="h-14 px-3 flex items-center justify-between border-b border-border">
+      <div className="h-14 px-3 flex items-center justify-between border-b border-border shrink-0">
         <div className="flex items-center gap-2">
           <img 
             src="/panta-logo.png" 
@@ -401,210 +408,216 @@ const AppSidebar = ({
           <span className="text-sm font-bold text-foreground">PANTA</span>
         </div>
         
-        <button
-          onClick={() => setIsCollapsed(true)}
-          className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-md transition-colors"
-          title="Sidebar einklappen"
-        >
-          <PanelLeft className="h-4 w-4" />
-        </button>
+        {!isMobile && (
+          <button
+            onClick={() => setIsCollapsed(true)}
+            className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-md transition-colors"
+            title="Sidebar einklappen"
+          >
+            <PanelLeft className="h-4 w-4" />
+          </button>
+        )}
       </div>
       {/* Inbox Panel */}
       {showInbox && renderInboxPanel()}
 
-      {/* Main Content */}
-      <ScrollArea className="flex-1 px-3 py-4">
-        {/* Quick Actions */}
-        <nav className="space-y-0.5 mb-6">
-          <button
-            onClick={() => navigate("/chat")}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
-          >
-            <Plus className="h-4 w-4 flex-shrink-0" />
-            <span>New Chat</span>
-          </button>
-          <button
-            onClick={() => navigate("/dashboard")}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              isActive("/dashboard")
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
-            <span>Dashboard</span>
-          </button>
-          <button
-            onClick={() => navigate("/community-feed")}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              isActive("/community-feed")
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <MessageSquare className="h-4 w-4 flex-shrink-0" />
-            <span>Community Feed</span>
-          </button>
-          <button
-            onClick={() => setShowInbox(!showInbox)}
-            className={cn(
-              "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              showInbox
-                ? "bg-muted text-foreground"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <Inbox className="h-4 w-4 flex-shrink-0" />
-              <span>Inbox</span>
-            </div>
-            {unreadCount > 0 && (
-              <span className="w-2 h-2 bg-primary/60 rounded-full" />
-            )}
-          </button>
-          <button
-            onClick={() => navigate("/history")}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              isActive("/history")
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <History className="h-4 w-4 flex-shrink-0" />
-            <span>History</span>
-          </button>
-          <button
-            onClick={() => navigate("/templates")}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              isActive("/templates")
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <LayoutGrid className="h-4 w-4 flex-shrink-0" />
-            <span>Templates</span>
-          </button>
-        </nav>
-
-        {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}
-        {hasActiveWorkflow && (
-          <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} className="mb-4">
-            <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-              <div className="flex items-center gap-2">
-                {workflowOpen ? (
-                  <ChevronDown className="h-3 w-3" />
-                ) : (
-                  <ChevronRight className="h-3 w-3" />
-                )}
-                <span className="truncate">{workflowName}</span>
-              </div>
-            </CollapsibleTrigger>
-            
-            {/* Progress indicator */}
-            <div className="px-3 py-2">
-              <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1.5">
-                <span>Step {currentWorkflowStep + 1} of {totalSteps}</span>
-                <span>{Math.round(((completedSteps) / totalSteps) * 100)}%</span>
-              </div>
-              <div className="flex gap-1">
-                {workflowSteps.map((step, idx) => (
-                  <div
-                    key={step.id}
-                    className={cn(
-                      "h-1 flex-1 rounded-full transition-colors",
-                      step.status === "completed" 
-                        ? "bg-primary" 
-                        : step.status === "current"
-                        ? "bg-primary/50"
-                        : "bg-muted-foreground/20"
-                    )}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            <CollapsibleContent className="space-y-0.5">
-              {workflowSteps.map((step, index) => (
-                <button
-                  key={step.id}
-                  className={cn(
-                    "w-full flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left",
-                    step.status === "current"
-                      ? "bg-primary/10 text-primary font-medium"
-                      : step.status === "completed"
-                      ? "text-foreground/50"
-                      : "text-foreground/40"
-                  )}
-                >
-                  <span className="text-xs w-4 text-center">{index + 1}.</span>
-                  <span className="truncate">{step.title}</span>
-                </button>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-
-        {/* Apps Section (Combined Assistants + Workflows) */}
-        <Collapsible open={appsOpen} onOpenChange={setAppsOpen} className="mb-4">
-          <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-            {appsOpen ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
-            Apps
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-0.5 mt-1">
-            {apps.map((app) => (
+      {/* Main Content - Scrollable area with flex-1 */}
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+        <ScrollArea className="flex-1">
+          <div className="px-3 py-4">
+            {/* Quick Actions */}
+            <nav className="space-y-0.5 mb-6">
               <button
-                key={app.id}
-                onClick={() => navigate(app.href)}
+                onClick={() => handleNavigate("/chat")}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <Plus className="h-4 w-4 flex-shrink-0" />
+                <span>New Chat</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/dashboard")}
                 className={cn(
-                  "w-full flex items-center px-3 py-1.5 text-sm rounded-md transition-colors",
-                  isActive(app.href)
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/dashboard")
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
               >
-                <span className="truncate">{app.name}</span>
+                <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
+                <span>Dashboard</span>
               </button>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-
-        {/* History Section - NOW AT BOTTOM */}
-        <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
-          <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-            {historyOpen ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
-            History
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-0.5 mt-1">
-            {chatHistory.map((chat) => (
               <button
-                key={chat.id}
-                onClick={() => navigate("/chat")}
-                className="w-full flex flex-col items-start px-3 py-2 text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
+                onClick={() => handleNavigate("/community-feed")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/community-feed")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
               >
-                <span className="text-sm truncate w-full text-left">{chat.title}</span>
-                <span className="text-xs text-muted-foreground">{getRelativeTime(chat.timestamp)}</span>
+                <MessageSquare className="h-4 w-4 flex-shrink-0" />
+                <span>Community Feed</span>
               </button>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      </ScrollArea>
+              <button
+                onClick={() => setShowInbox(!showInbox)}
+                className={cn(
+                  "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  showInbox
+                    ? "bg-muted text-foreground"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <Inbox className="h-4 w-4 flex-shrink-0" />
+                  <span>Inbox</span>
+                </div>
+                {unreadCount > 0 && (
+                  <span className="w-2 h-2 bg-primary/60 rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => handleNavigate("/history")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/history")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <History className="h-4 w-4 flex-shrink-0" />
+                <span>History</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/templates")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/templates")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <LayoutGrid className="h-4 w-4 flex-shrink-0" />
+                <span>Templates</span>
+              </button>
+            </nav>
 
-      {/* Bottom Navigation */}
-      <div className="px-3 py-2 border-t border-border space-y-0.5">
+            {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}
+            {hasActiveWorkflow && (
+              <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} className="mb-4">
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+                  <div className="flex items-center gap-2">
+                    {workflowOpen ? (
+                      <ChevronDown className="h-3 w-3" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3" />
+                    )}
+                    <span className="truncate">{workflowName}</span>
+                  </div>
+                </CollapsibleTrigger>
+                
+                {/* Progress indicator */}
+                <div className="px-3 py-2">
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1.5">
+                    <span>Step {currentWorkflowStep + 1} of {totalSteps}</span>
+                    <span>{Math.round(((completedSteps) / totalSteps) * 100)}%</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {workflowSteps.map((step, idx) => (
+                      <div
+                        key={step.id}
+                        className={cn(
+                          "h-1 flex-1 rounded-full transition-colors",
+                          step.status === "completed" 
+                            ? "bg-primary" 
+                            : step.status === "current"
+                            ? "bg-primary/50"
+                            : "bg-muted-foreground/20"
+                        )}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <CollapsibleContent className="space-y-0.5">
+                  {workflowSteps.map((step, index) => (
+                    <button
+                      key={step.id}
+                      className={cn(
+                        "w-full flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left",
+                        step.status === "current"
+                          ? "bg-primary/10 text-primary font-medium"
+                          : step.status === "completed"
+                          ? "text-foreground/50"
+                          : "text-foreground/40"
+                      )}
+                    >
+                      <span className="text-xs w-4 text-center">{index + 1}.</span>
+                      <span className="truncate">{step.title}</span>
+                    </button>
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+
+            {/* Apps Section (Combined Assistants + Workflows) */}
+            <Collapsible open={appsOpen} onOpenChange={setAppsOpen} className="mb-4">
+              <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+                {appsOpen ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+                Apps
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-0.5 mt-1">
+                {apps.map((app) => (
+                  <button
+                    key={app.id}
+                    onClick={() => handleNavigate(app.href)}
+                    className={cn(
+                      "w-full flex items-center px-3 py-1.5 text-sm rounded-md transition-colors",
+                      isActive(app.href)
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <span className="truncate">{app.name}</span>
+                  </button>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+
+            {/* History Section - NOW AT BOTTOM */}
+            <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
+              <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+                {historyOpen ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+                History
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-0.5 mt-1">
+                {chatHistory.map((chat) => (
+                  <button
+                    key={chat.id}
+                    onClick={() => handleNavigate("/chat")}
+                    className="w-full flex flex-col items-start px-3 py-2 text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
+                  >
+                    <span className="text-sm truncate w-full text-left">{chat.title}</span>
+                    <span className="text-xs text-muted-foreground">{getRelativeTime(chat.timestamp)}</span>
+                  </button>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+        </ScrollArea>
+      </div>
+
+      {/* Bottom Navigation - Fixed at bottom with shrink-0 */}
+      <div className="px-3 py-2 border-t border-border space-y-0.5 shrink-0 bg-background">
         <button
-          onClick={() => navigate("/admin-settings")}
+          onClick={() => handleNavigate("/admin-settings")}
           className={cn(
             "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
             isActive("/admin-settings")
@@ -616,7 +629,7 @@ const AppSidebar = ({
           <span>Admin</span>
         </button>
         <button
-          onClick={() => navigate("/settings")}
+          onClick={() => handleNavigate("/settings")}
           className={cn(
             "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
             isActive("/settings")
@@ -645,11 +658,11 @@ const AppSidebar = ({
           </DropdownMenuTrigger>
           
           <DropdownMenuContent align="start" side="top" className="w-48">
-            <DropdownMenuItem onClick={() => navigate("/settings?tab=profile")}>
+            <DropdownMenuItem onClick={() => handleNavigate("/settings?tab=profile")}>
               <User className="mr-2 h-4 w-4" />
               Profil
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/settings?tab=general")}>
+            <DropdownMenuItem onClick={() => handleNavigate("/settings?tab=general")}>
               <Settings className="mr-2 h-4 w-4" />
               Allgemein
             </DropdownMenuItem>

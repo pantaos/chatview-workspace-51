@@ -82,7 +82,7 @@ export default function TemplateLibrary() {
           {featuredTemplates.length > 0 && (
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-4">Empfohlen</h2>
-              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 pr-16 md:pr-4 scrollbar-hide snap-x snap-mandatory">
                 {featuredTemplates.map((template) => (
                   <FeaturedTemplateCard
                     key={template.id}

@@ -7,21 +7,24 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplateCard } from "@/components/TemplateCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
-import { templates, TemplateItem } from "@/data/templates";
-import { Search, LayoutGrid, X } from "lucide-react";
+import { templates, templateTags, TemplateItem } from "@/data/templates";
+import { Search, LayoutGrid } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedTag, setSelectedTag] = useState<string>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedCategory("all");
+    setSelectedTag("all");
   };
 
   const filteredTemplates = useMemo(() => {
@@ -37,9 +40,13 @@ export default function TemplateLibrary() {
       const matchesCategory =
         selectedCategory === "all" || template.category === selectedCategory;
 
-      return matchesSearch && matchesCategory;
+      const matchesTag =
+        selectedTag === "all" ||
+        template.tags.some((t) => t.id === selectedTag);
+
+      return matchesSearch && matchesCategory && matchesTag;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, selectedTag]);
 
   const featuredTemplates = useMemo(() => {
     return templates.filter((t) => t.isFeatured);
@@ -57,7 +64,7 @@ export default function TemplateLibrary() {
     navigate("/");
   };
 
-  const hasActiveFilters = searchQuery !== "" || selectedCategory !== "all";
+  const hasActiveFilters = searchQuery !== "" || selectedCategory !== "all" || selectedTag !== "all";
 
   return (
     <MainLayout>
@@ -139,21 +146,39 @@ export default function TemplateLibrary() {
               </div>
             </Tabs>
 
-            {hasActiveFilters && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                <X className="h-4 w-4 mr-1" />
-                Filter zurücksetzen
-              </Button>
-            )}
+            {/* Tag Filter Tabs */}
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+              <button
+                onClick={() => setSelectedTag("all")}
+                className={cn(
+                  "px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors",
+                  selectedTag === "all" 
+                    ? "bg-primary text-primary-foreground" 
+                    : "bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Alle
+              </button>
+              {templateTags.map((tag) => (
+                <button
+                  key={tag.id}
+                  onClick={() => setSelectedTag(tag.id)}
+                  className={cn(
+                    "px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors",
+                    selectedTag === tag.id 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {tag.name}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* All Templates */}
           <div>
-            <h2 className="text-lg font-semibold mb-4">
-              {hasActiveFilters
-                ? `${filteredTemplates.length} Ergebnis${filteredTemplates.length !== 1 ? "se" : ""}`
-                : "Alle Templates"}
-            </h2>
+            <h2 className="text-lg font-semibold mb-4">Alle Templates</h2>
             {filteredTemplates.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredTemplates.map((template) => (

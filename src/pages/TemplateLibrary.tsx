@@ -6,10 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplateCard } from "@/components/TemplateCard";
+import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
 import { templates, templateTags, TemplateItem } from "@/data/templates";
-import { Search, LayoutGrid, Sparkles, X } from "lucide-react";
+import { Search, LayoutGrid, X } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
@@ -36,7 +38,6 @@ export default function TemplateLibrary() {
 
   const filteredTemplates = useMemo(() => {
     return templates.filter((template) => {
-      // Search filter
       const matchesSearch =
         searchQuery === "" ||
         template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -45,11 +46,9 @@ export default function TemplateLibrary() {
           uc.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
-      // Category filter
       const matchesCategory =
         selectedCategory === "all" || template.category === selectedCategory;
 
-      // Tags filter
       const matchesTags =
         selectedTags.length === 0 ||
         selectedTags.some((tagId) =>
@@ -71,10 +70,7 @@ export default function TemplateLibrary() {
 
   const handleAddTemplate = (template: TemplateItem) => {
     setPreviewOpen(false);
-    // Navigate to home with template data to open NewWorkflowDialog pre-filled
     toast.success(`"${template.title}" wird hinzugefügt...`);
-    
-    // Store template in sessionStorage to pass to Index page
     sessionStorage.setItem("addTemplate", JSON.stringify(template));
     navigate("/");
   };
@@ -86,7 +82,7 @@ export default function TemplateLibrary() {
       <div className="flex-1 overflow-auto">
         <div className="container max-w-6xl mx-auto py-6 px-4 md:px-6">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                 <LayoutGrid className="h-5 w-5 text-primary" />
@@ -99,6 +95,22 @@ export default function TemplateLibrary() {
               </div>
             </div>
           </div>
+
+          {/* Featured Hero Section */}
+          {featuredTemplates.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-4">Empfohlen</h2>
+              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+                {featuredTemplates.map((template) => (
+                  <FeaturedTemplateCard
+                    key={template.id}
+                    template={template}
+                    onClick={() => handleTemplateClick(template)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Search and Filters */}
           <div className="space-y-4 mb-6">
@@ -132,18 +144,16 @@ export default function TemplateLibrary() {
               )}
             </div>
 
-            {/* Tag Filters */}
+            {/* Tag Filters - Cleaner look */}
             <div className="flex flex-wrap gap-2">
               {templateTags.map((tag) => (
                 <Badge
                   key={tag.id}
                   variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-                  className="cursor-pointer transition-colors"
-                  style={
-                    selectedTags.includes(tag.id)
-                      ? { backgroundColor: tag.color, borderColor: tag.color }
-                      : { borderColor: `${tag.color}50`, color: tag.color }
-                  }
+                  className={cn(
+                    "cursor-pointer transition-colors",
+                    !selectedTags.includes(tag.id) && "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  )}
                   onClick={() => toggleTag(tag.id)}
                 >
                   {tag.name}
@@ -151,25 +161,6 @@ export default function TemplateLibrary() {
               ))}
             </div>
           </div>
-
-          {/* Featured Section */}
-          {!hasActiveFilters && featuredTemplates.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-amber-500" />
-                Empfohlen
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {featuredTemplates.map((template) => (
-                  <TemplateCard
-                    key={template.id}
-                    template={template}
-                    onClick={() => handleTemplateClick(template)}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* All Templates */}
           <div>

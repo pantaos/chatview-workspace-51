@@ -423,12 +423,12 @@ const AppSidebar = ({
 
       {/* Main Content - Scrollable area with flex-1 */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-          <div className="px-4 py-4">
+          <div className="px-2 py-4">
             {/* Quick Actions */}
             <nav className="space-y-0.5 mb-6">
               <button
                 onClick={() => handleNavigate("/chat")}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
               >
                 <Plus className="h-4 w-4 flex-shrink-0" />
                 <span>New Chat</span>
@@ -436,7 +436,7 @@ const AppSidebar = ({
               <button
                 onClick={() => handleNavigate("/dashboard")}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive("/dashboard")
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -448,7 +448,7 @@ const AppSidebar = ({
               <button
                 onClick={() => handleNavigate("/community-feed")}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive("/community-feed")
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -460,7 +460,7 @@ const AppSidebar = ({
               <button
                 onClick={() => setShowInbox(!showInbox)}
                 className={cn(
-                  "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center justify-between px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   showInbox
                     ? "bg-muted text-foreground"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -477,7 +477,7 @@ const AppSidebar = ({
               <button
                 onClick={() => handleNavigate("/history")}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive("/history")
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -489,7 +489,7 @@ const AppSidebar = ({
               <button
                 onClick={() => handleNavigate("/templates")}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive("/templates")
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -503,7 +503,7 @@ const AppSidebar = ({
             {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}
             {hasActiveWorkflow && (
               <Collapsible open={workflowOpen} onOpenChange={setWorkflowOpen} className="mb-4">
-                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
                   <div className="flex items-center gap-2">
                     {workflowOpen ? (
                       <ChevronDown className="h-3 w-3" />
@@ -515,7 +515,7 @@ const AppSidebar = ({
                 </CollapsibleTrigger>
                 
                 {/* Progress indicator */}
-                <div className="px-3 py-2">
+                <div className="px-4 py-2">
                   <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1.5">
                     <span>Step {currentWorkflowStep + 1} of {totalSteps}</span>
                     <span>{Math.round(((completedSteps) / totalSteps) * 100)}%</span>
@@ -542,7 +542,7 @@ const AppSidebar = ({
                     <button
                       key={step.id}
                       className={cn(
-                        "w-full flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left",
+                        "w-full flex items-center gap-2 px-4 py-1.5 text-sm rounded-md transition-colors text-left",
                         step.status === "current"
                           ? "bg-primary/10 text-primary font-medium"
                           : step.status === "completed"
@@ -560,7 +560,7 @@ const AppSidebar = ({
 
             {/* Apps Section (Combined Assistants + Workflows) */}
             <Collapsible open={appsOpen} onOpenChange={setAppsOpen} className="mb-4">
-              <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+              <CollapsibleTrigger className="flex items-center gap-2 px-4 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
                 {appsOpen ? (
                   <ChevronDown className="h-3 w-3" />
                 ) : (
@@ -574,7 +574,7 @@ const AppSidebar = ({
                     key={app.id}
                     onClick={() => handleNavigate(app.href)}
                     className={cn(
-                      "w-full flex items-center px-3 py-1.5 text-sm rounded-md transition-colors",
+                      "w-full flex items-center px-4 py-1.5 text-sm rounded-md transition-colors",
                       isActive(app.href)
                         ? "bg-primary/10 text-primary"
                         : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -588,7 +588,7 @@ const AppSidebar = ({
 
             {/* History Section - NOW AT BOTTOM */}
             <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
-              <CollapsibleTrigger className="flex items-center gap-2 px-3 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+              <CollapsibleTrigger className="flex items-center gap-2 px-4 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
                 {historyOpen ? (
                   <ChevronDown className="h-3 w-3" />
                 ) : (
@@ -601,7 +601,7 @@ const AppSidebar = ({
                   <button
                     key={chat.id}
                     onClick={() => handleNavigate("/chat")}
-                    className="w-full flex flex-col items-start px-3 py-2 text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
+                    className="w-full flex flex-col items-start px-4 py-2 text-foreground/70 hover:bg-muted hover:text-foreground rounded-md transition-colors"
                   >
                     <span className="text-sm truncate w-full text-left">{chat.title}</span>
                     <span className="text-xs text-muted-foreground">{getRelativeTime(chat.timestamp)}</span>
@@ -613,11 +613,11 @@ const AppSidebar = ({
       </div>
 
       {/* Bottom Navigation - Fixed at bottom with shrink-0 */}
-      <div className="px-3 py-2 space-y-0.5 shrink-0 bg-background">
+      <div className="px-2 py-2 space-y-0.5 shrink-0 bg-background">
         <button
           onClick={() => handleNavigate("/admin-settings")}
           className={cn(
-            "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+            "w-full flex items-center gap-3 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             isActive("/admin-settings")
               ? "bg-primary/10 text-primary"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -629,7 +629,7 @@ const AppSidebar = ({
         <button
           onClick={() => handleNavigate("/settings")}
           className={cn(
-            "w-full flex items-center gap-3 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+            "w-full flex items-center gap-3 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             isActive("/settings")
               ? "bg-primary/10 text-primary"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -642,7 +642,7 @@ const AppSidebar = ({
         {/* User Profile - Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2.5 w-full px-2 py-1.5 rounded-md hover:bg-muted transition-colors">
+            <button className="flex items-center gap-2.5 w-full px-4 py-1.5 rounded-md hover:bg-muted transition-colors">
               <Avatar className="h-6 w-6">
                 <AvatarImage src="/placeholder.svg" alt="User" />
                 <AvatarFallback className="bg-primary text-primary-foreground text-[10px]">

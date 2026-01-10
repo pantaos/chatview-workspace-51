@@ -398,7 +398,7 @@ const AppSidebar = ({
   return (
     <aside className="w-64 h-full bg-background flex flex-col flex-shrink-0 relative">
       {/* Header with Logo and Toggle */}
-      <div className="h-14 px-3 flex items-center justify-between shrink-0">
+      <div className="h-14 px-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
           <img 
             src="/panta-logo.png" 
@@ -423,7 +423,7 @@ const AppSidebar = ({
 
       {/* Main Content - Scrollable area with flex-1 */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-          <div className="px-3 py-4">
+          <div className="px-4 py-4">
             {/* Quick Actions */}
             <nav className="space-y-0.5 mb-6">
               <button

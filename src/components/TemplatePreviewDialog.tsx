@@ -164,18 +164,18 @@ export function TemplatePreviewDialog({
               {template.screenshots.length > 1 && (
                 <>
                   <button
-                    onClick={handlePrevScreenshot}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handlePrevScreenshot(); }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background transition-colors z-10 shadow-md"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={handleNextScreenshot}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleNextScreenshot(); }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background transition-colors z-10 shadow-md"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
                     {template.screenshots.map((_, index) => (
                       <div
                         key={index}
@@ -308,7 +308,7 @@ export function TemplatePreviewDialog({
           <DrawerHeader className="pb-0">
             <DrawerTitle className="sr-only">{template.title}</DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-6 pb-safe">
             {content}
             {footer}
           </div>

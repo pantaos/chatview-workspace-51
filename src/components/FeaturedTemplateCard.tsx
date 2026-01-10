@@ -26,7 +26,7 @@ export function FeaturedTemplateCard({ template, onClick }: FeaturedTemplateCard
 
   return (
     <Card
-      className={`group relative min-w-[280px] max-w-[320px] cursor-pointer overflow-hidden rounded-2xl border-0 bg-gradient-to-br ${gradient} p-6 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl`}
+      className={`group relative min-w-[260px] md:min-w-[280px] max-w-[320px] flex-shrink-0 snap-start cursor-pointer overflow-hidden rounded-2xl border-0 bg-gradient-to-br ${gradient} p-5 md:p-6 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl`}
       onClick={onClick}
     >
       {/* Icon */}

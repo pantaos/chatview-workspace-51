@@ -16,6 +16,7 @@ import {
   History,
   User,
   LogOut,
+  LayoutGrid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -310,6 +311,18 @@ const AppSidebar = ({
           >
             <History className="h-5 w-5" />
           </button>
+          <button
+            onClick={() => navigate("/templates")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/templates")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Templates"
+          >
+            <LayoutGrid className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex-1" />
@@ -462,6 +475,18 @@ const AppSidebar = ({
           >
             <History className="h-4 w-4 flex-shrink-0" />
             <span>History</span>
+          </button>
+          <button
+            onClick={() => navigate("/templates")}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              isActive("/templates")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+          >
+            <LayoutGrid className="h-4 w-4 flex-shrink-0" />
+            <span>Templates</span>
           </button>
         </nav>
 

@@ -28,6 +28,7 @@ import ReportCardEdit from "./pages/reportcard/ReportCardEdit";
 import ReportCardDownload from "./pages/reportcard/ReportCardDownload";
 import ConversationalWorkflow from "./components/ConversationalWorkflow";
 import CommunityFeed from "./pages/CommunityFeed";
+import TemplateLibrary from "./pages/TemplateLibrary";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -64,6 +65,7 @@ const App = () => {
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/admin-settings" element={<AdminSettings />} />
                   <Route path="/community-feed" element={<CommunityFeed />} />
+                  <Route path="/templates" element={<TemplateLibrary />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   
                   {/* Trendcast Workflow Routes */}

@@ -396,7 +396,10 @@ const AppSidebar = ({
   };
 
   return (
-    <aside className="w-64 h-full bg-background flex flex-col flex-shrink-0 relative">
+    <aside className={cn(
+      "h-full bg-background flex flex-col flex-shrink-0 relative",
+      isMobile ? "w-full" : "w-64"
+    )}>
       {/* Header with Logo and Toggle */}
       <div className="h-14 px-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
@@ -408,7 +411,15 @@ const AppSidebar = ({
           <span className="text-sm font-bold text-foreground">PANTA</span>
         </div>
         
-        {!isMobile && (
+        {isMobile ? (
+          <button
+            onClick={() => onNavigate?.()}
+            className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-md transition-colors"
+            title="Schließen"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        ) : (
           <button
             onClick={() => setIsCollapsed(true)}
             className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-md transition-colors"

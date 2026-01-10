@@ -396,9 +396,15 @@ const AppSidebar = ({
   };
 
   return (
-    <aside className="w-64 h-full bg-background border-r border-border flex flex-col flex-shrink-0 relative">
+    <aside className={cn(
+      "w-64 h-full bg-background flex flex-col flex-shrink-0 relative",
+      !isMobile && "border-r border-border"
+    )}>
       {/* Header with Logo and Toggle */}
-      <div className="h-14 px-3 flex items-center justify-between border-b border-border shrink-0">
+      <div className={cn(
+        "h-14 px-3 flex items-center justify-between shrink-0",
+        !isMobile && "border-b border-border"
+      )}>
         <div className="flex items-center gap-2">
           <img 
             src="/panta-logo.png" 
@@ -615,7 +621,10 @@ const AppSidebar = ({
       </div>
 
       {/* Bottom Navigation - Fixed at bottom with shrink-0 */}
-      <div className="px-3 py-2 border-t border-border space-y-0.5 shrink-0 bg-background">
+      <div className={cn(
+        "px-3 py-2 space-y-0.5 shrink-0 bg-background",
+        !isMobile && "border-t border-border"
+      )}>
         <button
           onClick={() => handleNavigate("/admin-settings")}
           className={cn(

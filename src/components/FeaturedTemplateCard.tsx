@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { TemplateItem } from "@/data/templates";
-import { Star, Users, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
 interface FeaturedTemplateCardProps {
@@ -23,13 +23,6 @@ const categoryLabels: Record<string, string> = {
 export function FeaturedTemplateCard({ template, onClick }: FeaturedTemplateCardProps) {
   const IconComponent = (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) || LucideIcons.Sparkles;
   const gradient = categoryGradients[template.category] || categoryGradients.assistant;
-
-  const formatUsageCount = (count: number) => {
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`;
-    }
-    return count.toString();
-  };
 
   return (
     <Card
@@ -57,18 +50,6 @@ export function FeaturedTemplateCard({ template, onClick }: FeaturedTemplateCard
       <p className="mb-4 line-clamp-2 text-sm text-white/80">
         {template.description}
       </p>
-
-      {/* Stats */}
-      <div className="flex items-center gap-4 text-sm text-white/70">
-        <div className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-white/90 text-white/90" />
-          <span className="text-white/90">{template.rating}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Users className="h-4 w-4" />
-          <span>{formatUsageCount(template.usageCount)} Nutzungen</span>
-        </div>
-      </div>
 
       {/* Hover effect overlay */}
       <div className="absolute inset-0 bg-white/0 transition-colors group-hover:bg-white/5" />

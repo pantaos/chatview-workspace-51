@@ -2,37 +2,25 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/MainLayout";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplateCard } from "@/components/TemplateCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
-import { templates, templateTags, TemplateItem } from "@/data/templates";
+import { templates, TemplateItem } from "@/data/templates";
 import { Search, LayoutGrid, X } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const toggleTag = (tagId: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId]
-    );
-  };
-
   const clearFilters = () => {
     setSearchQuery("");
-    setSelectedTags([]);
     setSelectedCategory("all");
   };
 
@@ -49,15 +37,9 @@ export default function TemplateLibrary() {
       const matchesCategory =
         selectedCategory === "all" || template.category === selectedCategory;
 
-      const matchesTags =
-        selectedTags.length === 0 ||
-        selectedTags.some((tagId) =>
-          template.tags.some((tag) => tag.id === tagId)
-        );
-
-      return matchesSearch && matchesCategory && matchesTags;
+      return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory, selectedTags]);
+  }, [searchQuery, selectedCategory]);
 
   const featuredTemplates = useMemo(() => {
     return templates.filter((t) => t.isFeatured);
@@ -75,7 +57,7 @@ export default function TemplateLibrary() {
     navigate("/");
   };
 
-  const hasActiveFilters = searchQuery !== "" || selectedTags.length > 0 || selectedCategory !== "all";
+  const hasActiveFilters = searchQuery !== "" || selectedCategory !== "all";
 
   return (
     <MainLayout>
@@ -125,41 +107,44 @@ export default function TemplateLibrary() {
               />
             </div>
 
-            {/* Category Tabs */}
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-                <TabsList className="bg-muted/50">
-                  <TabsTrigger value="all">Alle</TabsTrigger>
-                  <TabsTrigger value="assistant">Assistenten</TabsTrigger>
-                  <TabsTrigger value="workflow">Workflows</TabsTrigger>
-                  <TabsTrigger value="app">Apps</TabsTrigger>
+            {/* Category Tabs - Settings style */}
+            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
+              <div className="flex items-center justify-between">
+                <TabsList className="flex justify-start overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto w-full">
+                  <TabsTrigger 
+                    value="all"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
+                  >
+                    Alle
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="assistant"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
+                  >
+                    Assistenten
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="workflow"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
+                  >
+                    Workflows
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="app"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
+                  >
+                    Apps
+                  </TabsTrigger>
                 </TabsList>
-              </Tabs>
+              </div>
+            </Tabs>
 
-              {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 mr-1" />
-                  Filter zurücksetzen
-                </Button>
-              )}
-            </div>
-
-            {/* Tag Filters - Cleaner look */}
-            <div className="flex flex-wrap gap-2">
-              {templateTags.map((tag) => (
-                <Badge
-                  key={tag.id}
-                  variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-                  className={cn(
-                    "cursor-pointer transition-colors",
-                    !selectedTags.includes(tag.id) && "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  )}
-                  onClick={() => toggleTag(tag.id)}
-                >
-                  {tag.name}
-                </Badge>
-              ))}
-            </div>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                <X className="h-4 w-4 mr-1" />
+                Filter zurücksetzen
+              </Button>
+            )}
           </div>
 
           {/* All Templates */}

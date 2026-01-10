@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TemplateItem } from "@/data/templates";
-import { Star, Users, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
 interface TemplateCardProps {
@@ -17,13 +17,6 @@ const categoryLabels: Record<string, string> = {
 
 export function TemplateCard({ template, onClick }: TemplateCardProps) {
   const IconComponent = (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) || LucideIcons.Sparkles;
-
-  const formatUsageCount = (count: number) => {
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`;
-    }
-    return count.toString();
-  };
 
   return (
     <Card
@@ -75,21 +68,6 @@ export function TemplateCard({ template, onClick }: TemplateCardProps) {
           ))}
         </div>
       )}
-
-      {/* Divider */}
-      <div className="my-3 h-px bg-border/50" />
-
-      {/* Stats - Muted */}
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <Star className="h-3.5 w-3.5" />
-          <span>{template.rating}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Users className="h-3.5 w-3.5" />
-          <span>{formatUsageCount(template.usageCount)}</span>
-        </div>
-      </div>
     </Card>
   );
 }

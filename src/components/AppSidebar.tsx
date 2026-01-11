@@ -397,8 +397,8 @@ const AppSidebar = ({
 
   return (
     <aside className={cn(
-      "h-full bg-background flex flex-col flex-shrink-0 relative",
-      isMobile ? "w-full" : "w-64"
+      "h-full flex flex-col flex-shrink-0 relative border-r",
+      isMobile ? "w-full bg-background" : "w-64 bg-muted/30"
     )}>
       {/* Header with Logo and Toggle */}
       <div className="h-14 px-4 flex items-center justify-between shrink-0">

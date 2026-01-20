@@ -28,6 +28,7 @@ import ReportCardEdit from "./pages/reportcard/ReportCardEdit";
 import ReportCardDownload from "./pages/reportcard/ReportCardDownload";
 import ConversationalWorkflow from "./components/ConversationalWorkflow";
 import CommunityFeed from "./pages/CommunityFeed";
+import WorkflowEditor from "./pages/WorkflowEditor";
 import TemplateLibrary from "./pages/TemplateLibrary";
 
 // Theme wrapper to apply colors on mount and theme changes
@@ -120,6 +121,9 @@ const App = () => {
                   
                   {/* Image Cropper Tool */}
                   <Route path="/image-cropper" element={<ImageCropper />} />
+                  
+                  {/* Workflow Editor */}
+                  <Route path="/workflow-editor/:workflowId" element={<WorkflowEditor />} />
                   
                   <Route path="/" element={<Navigate to="/login" replace />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

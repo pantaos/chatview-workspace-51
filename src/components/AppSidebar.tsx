@@ -145,9 +145,9 @@ const AppSidebar = ({
 
   // Customizable Apps/Workflows
   const customizableApps = [
-    { id: "1", name: "HDI Content", route: "/admin-settings?tab=workflow-builder&workflow=hdi" },
-    { id: "2", name: "Trendcast", route: "/admin-settings?tab=workflow-builder&workflow=trendcast" },
-    { id: "3", name: "Report Card", route: "/admin-settings?tab=workflow-builder&workflow=reportcard" },
+    { id: "1", name: "HDI Content", route: "/workflow-editor/hdi-content" },
+    { id: "2", name: "Trendcast", route: "/workflow-editor/trendcast" },
+    { id: "3", name: "Report Card", route: "/workflow-editor/report-card" },
   ];
   
   const unreadCount = notifications.filter(n => n.unread).length;

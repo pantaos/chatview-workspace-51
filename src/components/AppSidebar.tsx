@@ -613,31 +613,7 @@ const AppSidebar = ({
               </CollapsibleContent>
             </Collapsible>
 
-            {/* Apps anpassen Section */}
-            <Collapsible open={customizeAppsOpen} onOpenChange={setCustomizeAppsOpen} className="mb-4">
-              <CollapsibleTrigger className="flex items-center gap-2 px-4 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
-                {customizeAppsOpen ? (
-                  <ChevronDown className="h-3 w-3" />
-                ) : (
-                  <ChevronRight className="h-3 w-3" />
-                )}
-                <Sliders className="h-3 w-3" />
-                Apps anpassen
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-0.5 mt-1">
-                {customizableApps.map((app) => (
-                  <button
-                    key={app.id}
-                    onClick={() => handleNavigate(app.route)}
-                    className="w-full flex items-center px-4 py-1.5 text-sm rounded-md transition-colors text-foreground/70 hover:bg-muted hover:text-foreground"
-                  >
-                    <span className="truncate">{app.name}</span>
-                  </button>
-                ))}
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* History Section - NOW AT BOTTOM */}
+            {/* History Section */}
             <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="mb-4">
               <CollapsibleTrigger className="flex items-center gap-2 px-4 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
                 {historyOpen ? (
@@ -656,6 +632,30 @@ const AppSidebar = ({
                   >
                     <span className="text-sm truncate w-full text-left">{chat.title}</span>
                     <span className="text-xs text-muted-foreground">{getRelativeTime(chat.timestamp)}</span>
+                  </button>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+
+            {/* Apps anpassen Section - Below History */}
+            <Collapsible open={customizeAppsOpen} onOpenChange={setCustomizeAppsOpen} className="mb-4">
+              <CollapsibleTrigger className="flex items-center gap-2 px-4 py-2 w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">
+                {customizeAppsOpen ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+                <Sliders className="h-3 w-3" />
+                Apps anpassen
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-0.5 mt-1">
+                {customizableApps.map((app) => (
+                  <button
+                    key={app.id}
+                    onClick={() => handleNavigate(app.route)}
+                    className="w-full flex items-center px-4 py-1.5 text-sm rounded-md transition-colors text-foreground/70 hover:bg-muted hover:text-foreground"
+                  >
+                    <span className="truncate">{app.name}</span>
                   </button>
                 ))}
               </CollapsibleContent>

@@ -75,7 +75,7 @@ const Login = () => {
         <Card className="w-full max-w-md p-6 md:p-8 border border-gray-100 shadow-lg bg-white rounded-xl">
           <div className="text-center mb-8">
             <h2 className="text-lg font-medium text-gray-500">Willkommen zurück!</h2>
-            <h1 className="text-2xl md:text-3xl font-bold mt-2" style={{ color: '#4A7DC9' }}>Log dich ein</h1>
+            <h1 className="text-2xl md:text-3xl font-bold mt-2" style={{ color: '#3f5fa9' }}>Log dich ein</h1>
           </div>
 
           <CardContent className="p-0">
@@ -87,7 +87,7 @@ const Login = () => {
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 rounded-md border-gray-200 focus:border-[#4A7DC9] focus:ring-[#4A7DC9] bg-gray-50/50"
+                  className="h-11 rounded-md border-gray-200 focus:border-[#3f5fa9] focus:ring-[#3f5fa9] bg-gray-50/50"
                 />
               </div>
               
@@ -99,7 +99,7 @@ const Login = () => {
                     type={showPassword ? "text" : "password"} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 pr-10 rounded-md border-gray-200 focus:border-[#4A7DC9] focus:ring-[#4A7DC9] bg-gray-50/50"
+                    className="h-11 pr-10 rounded-md border-gray-200 focus:border-[#3f5fa9] focus:ring-[#3f5fa9] bg-gray-50/50"
                   />
                   <button 
                     type="button"
@@ -110,7 +110,7 @@ const Login = () => {
                   </button>
                 </div>
                 <div className="text-right">
-                  <a href="#" className="text-sm text-gray-500 hover:text-[#4A7DC9] hover:underline transition-colors">
+                  <a href="#" className="text-sm text-gray-500 hover:text-[#3f5fa9] hover:underline transition-colors">
                     Passwort vergessen?
                   </a>
                 </div>

@@ -39,9 +39,7 @@ const Login = () => {
       <div 
         className="w-full lg:w-1/2 flex flex-col p-8 md:p-16 justify-center relative overflow-hidden min-h-[50vh] lg:min-h-screen"
         style={{ 
-          backgroundImage: `url(${loginGradient})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          background: 'linear-gradient(180deg, #5B8FD9 0%, #4A7DC9 30%, #3D9B9B 70%, #3A8B8B 100%)',
         }}
       >
         <div className="absolute top-8 left-8">

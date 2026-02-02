@@ -39,7 +39,7 @@ const Login = () => {
       <div 
         className="w-full lg:w-1/2 flex flex-col p-8 md:p-16 justify-center relative overflow-hidden min-h-[50vh] lg:min-h-screen"
         style={{ 
-          background: 'linear-gradient(180deg, #5B8FD9 0%, #4A7DC9 30%, #3D9B9B 70%, #3A8B8B 100%)',
+          background: 'linear-gradient(160deg, #6B9FE8 0%, #5889D4 25%, #4A7BC8 50%, #4B8AC0 75%, #4D9BB8 100%)',
         }}
       >
         <div className="absolute top-8 left-8">

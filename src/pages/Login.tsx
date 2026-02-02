@@ -118,12 +118,7 @@ const Login = () => {
               
               <Button 
                 type="submit" 
-                className="w-full h-11 text-base font-medium rounded-md text-white shadow-md hover:shadow-lg transition-all duration-200"
-                style={{ 
-                  backgroundImage: `url(${loginGradient})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
+                className="w-full h-11 text-base font-medium rounded-md text-white shadow-md hover:shadow-lg hover:bg-gray-800 transition-all duration-200 bg-gray-700"
                 disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Einloggen"}

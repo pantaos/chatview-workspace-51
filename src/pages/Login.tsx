@@ -75,7 +75,7 @@ const Login = () => {
         <Card className="w-full max-w-md p-6 md:p-8 border border-gray-100 shadow-lg bg-white rounded-xl">
           <div className="text-center mb-8">
             <h2 className="text-lg font-medium text-gray-500">Willkommen zurück!</h2>
-            <h1 className="text-2xl md:text-3xl font-bold mt-2" style={{ color: '#3f5fa9' }}>Log dich ein</h1>
+            <h1 className="text-2xl md:text-3xl font-bold mt-2 text-gray-700">Log dich ein</h1>
           </div>
 
           <CardContent className="p-0">
@@ -120,7 +120,9 @@ const Login = () => {
                 type="submit" 
                 className="w-full h-11 text-base font-medium rounded-md text-white shadow-md hover:shadow-lg transition-all duration-200"
                 style={{ 
-                  background: 'linear-gradient(135deg, #3f5fa9 0%, #5a7dc4 100%)',
+                  backgroundImage: `url(${loginGradient})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                 }}
                 disabled={isLoading}
               >

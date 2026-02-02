@@ -37,12 +37,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Hero Section */}
       <div 
-        className="w-full lg:w-1/2 flex flex-col p-8 md:p-16 justify-center relative overflow-hidden"
+        className="w-full lg:w-1/2 flex flex-col p-8 md:p-16 justify-center relative overflow-hidden min-h-[50vh] lg:min-h-screen"
         style={{ 
-          background: `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)` 
+          background: `linear-gradient(180deg, #5673eb 0%, #4BA3C7 50%, #3D9D9D 100%)` 
         }}
       >
         <div className="absolute top-8 left-8">
@@ -50,78 +50,75 @@ const Login = () => {
         </div>
 
         <div className="mt-24 lg:mt-0 z-10 max-w-lg">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            {theme.tagline || "discover designInspiration"}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            discover<br />designInspiration
           </h1>
           
-          <p className="text-white/90 text-xl max-w-md mt-4 leading-relaxed">
+          <p className="text-white/80 text-lg md:text-xl max-w-md mt-4 leading-relaxed">
             Unleash your creativity with AI-powered workflows designed for modern teams
           </p>
 
           {/* Modern "prompt tag" design */}
           <div className="mt-12 flex flex-wrap gap-3">
-            <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm">
-              <span className="mr-2">+</span>
+            <div className="inline-flex items-center px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white text-sm border border-white/20">
+              <span className="mr-2 text-white/70">+</span>
               <span>kostengünstiges ufo für musikvideo</span>
             </div>
-            <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm">
-              <span className="mr-2">+</span>
+            <div className="inline-flex items-center px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white text-sm border border-white/20">
+              <span className="mr-2 text-white/70">+</span>
               <span>logo re-design modern</span>
             </div>
           </div>
         </div>
 
-        {/* Modern background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute right-[-5%] bottom-[-5%] w-1/2 h-1/2 rounded-full bg-white/20"></div>
-          <div className="absolute left-[-10%] top-[30%] w-1/3 h-1/3 rounded-full bg-white/10"></div>
+        {/* Subtle background shapes */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute right-[-10%] bottom-[-10%] w-[60%] h-[60%] rounded-full bg-white/10"></div>
+          <div className="absolute left-[-15%] top-[20%] w-[40%] h-[40%] rounded-full bg-white/5"></div>
         </div>
       </div>
 
       {/* Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 bg-gray-50">
-        <Card className="w-full max-w-md p-8 border shadow-lg bg-white rounded-xl">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 md:p-8 bg-[#f8f9fb] min-h-[50vh] lg:min-h-screen">
+        <Card className="w-full max-w-md p-6 md:p-8 border-0 shadow-xl bg-white rounded-2xl">
           <div className="text-center mb-8">
-            <h2 className="text-xl font-medium text-gray-600">Willkommen zurück!</h2>
-            <h1 className="text-3xl font-bold mt-2 mb-2" 
-              style={{ color: theme.primaryColor }}>Log dich ein</h1>
+            <h2 className="text-lg font-medium text-gray-600">Willkommen zurück!</h2>
+            <h1 className="text-2xl md:text-3xl font-bold mt-2 text-primary">Log dich ein</h1>
           </div>
 
           <CardContent className="p-0">
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">E-Mail</Label>
+                <Label htmlFor="email" className="text-gray-700 font-medium">E-Mail</Label>
                 <Input 
                   id="email" 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12"
+                  className="h-12 rounded-lg border-gray-200 focus:border-primary"
                 />
               </div>
               
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label htmlFor="password">Passwort</Label>
-                </div>
+                <Label htmlFor="password" className="text-gray-700 font-medium">Passwort</Label>
                 <div className="relative">
                   <Input 
                     id="password" 
                     type={showPassword ? "text" : "password"} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 pr-10"
+                    className="h-12 pr-10 rounded-lg border-gray-200 focus:border-primary"
                   />
                   <button 
                     type="button"
                     onClick={() => setShowPassword(!showPassword)} 
-                    className="absolute right-3 top-3 text-gray-500"
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
                 <div className="text-right">
-                  <a href="#" className="text-sm text-gray-500 hover:underline">
+                  <a href="#" className="text-sm text-gray-500 hover:text-primary hover:underline transition-colors">
                     Passwort vergessen?
                   </a>
                 </div>
@@ -129,8 +126,7 @@ const Login = () => {
               
               <Button 
                 type="submit" 
-                className="w-full h-12 text-base"
-                style={{ backgroundColor: theme.primaryColor }}
+                className="w-full h-12 text-base font-medium rounded-lg bg-primary hover:bg-primary/90 transition-colors"
                 disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Einloggen"}
@@ -138,17 +134,17 @@ const Login = () => {
               
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">oder</span>
+                  <span className="px-4 bg-white text-gray-400">oder</span>
                 </div>
               </div>
               
               <Button 
                 type="button" 
                 variant="outline" 
-                className="w-full h-12"
+                className="w-full h-12 rounded-lg border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_24dp.png" 
                      alt="Google" 

@@ -120,7 +120,7 @@ const Login = () => {
                 type="submit" 
                 className="w-full h-11 text-base font-medium rounded-md text-white shadow-md hover:shadow-lg transition-all duration-200"
                 style={{ 
-                  background: 'linear-gradient(135deg, #4A7DC9 0%, #5B9FE3 100%)',
+                  background: 'linear-gradient(135deg, #3f5fa9 0%, #5a7dc4 100%)',
                 }}
                 disabled={isLoading}
               >

@@ -14,6 +14,6 @@ export interface LibraryItem {
   mimeType?: string;
 }
 
-export type LibraryFilterType = 'all' | 'video' | 'image' | 'pdf' | 'word' | 'link' | 'other';
-export type LibraryDateFilter = 'newest' | 'oldest' | 'this-week' | 'this-month';
+export type LibraryFilterType = 'video' | 'image' | 'pdf' | 'word' | 'link' | 'other';
+export type LibrarySortOption = 'newest' | 'oldest' | 'name-asc' | 'name-desc';
 export type LibrarySourceFilter = 'all' | 'workflows' | 'chats';

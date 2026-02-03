@@ -1,16 +1,15 @@
 import { useState, useMemo } from "react";
-import { isWithinInterval, subDays, startOfWeek, startOfMonth } from "date-fns";
 import MainLayout from "@/components/MainLayout";
 import { LibraryCard } from "@/components/library/LibraryCard";
 import { LibraryFilters } from "@/components/library/LibraryFilters";
 import { LibraryPreviewDialog } from "@/components/library/LibraryPreviewDialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { mockLibraryItems } from "@/data/libraryData";
-import { LibraryItem, LibraryFilterType, LibraryDateFilter, LibrarySourceFilter } from "@/types/library";
+import { LibraryItem, LibraryFilterType, LibrarySortOption, LibrarySourceFilter } from "@/types/library";
 
 export default function Library() {
   const [sourceFilter, setSourceFilter] = useState<LibrarySourceFilter>("all");
-  const [dateFilter, setDateFilter] = useState<LibraryDateFilter>("newest");
+  const [sortOption, setSortOption] = useState<LibrarySortOption>("newest");
   const [typeFilters, setTypeFilters] = useState<LibraryFilterType[]>([]);
   const [previewItem, setPreviewItem] = useState<LibraryItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -42,30 +41,23 @@ export default function Library() {
       items = items.filter((item) => typeFilters.includes(item.type));
     }
 
-    // Date filter
-    const now = new Date();
-    if (dateFilter === "this-week") {
-      const weekStart = startOfWeek(now, { weekStartsOn: 1 });
-      items = items.filter((item) =>
-        isWithinInterval(item.createdAt, { start: weekStart, end: now })
-      );
-    } else if (dateFilter === "this-month") {
-      const monthStart = startOfMonth(now);
-      items = items.filter((item) =>
-        isWithinInterval(item.createdAt, { start: monthStart, end: now })
-      );
-    }
-
     // Sort
     items.sort((a, b) => {
-      if (dateFilter === "oldest") {
-        return a.createdAt.getTime() - b.createdAt.getTime();
+      switch (sortOption) {
+        case "oldest":
+          return a.createdAt.getTime() - b.createdAt.getTime();
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "newest":
+        default:
+          return b.createdAt.getTime() - a.createdAt.getTime();
       }
-      return b.createdAt.getTime() - a.createdAt.getTime();
     });
 
     return items;
-  }, [sourceFilter, dateFilter, typeFilters]);
+  }, [sourceFilter, sortOption, typeFilters]);
 
   return (
     <MainLayout>
@@ -109,8 +101,8 @@ export default function Library() {
 
               {/* Filters */}
               <LibraryFilters
-                dateFilter={dateFilter}
-                onDateFilterChange={setDateFilter}
+                sortOption={sortOption}
+                onSortChange={setSortOption}
                 typeFilters={typeFilters}
                 onTypeFilterChange={setTypeFilters}
               />
@@ -169,7 +161,7 @@ function ContentGrid({ items, onPreview, onDownload }: ContentGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
       {items.map((item) => (
         <LibraryCard
           key={item.id}

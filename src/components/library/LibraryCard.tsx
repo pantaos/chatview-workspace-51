@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   Play, 
   Eye, 
@@ -8,7 +9,11 @@ import {
   FileImage, 
   FileText, 
   File, 
-  Link as LinkIcon 
+  Link as LinkIcon,
+  MoreHorizontal,
+  MessageSquare,
+  FolderPlus,
+  Trash2
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -20,11 +25,24 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { mockProjects } from "@/data/libraryData";
+import { toast } from "@/hooks/use-toast";
 
 interface LibraryCardProps {
   item: LibraryItem;
   onPreview: (item: LibraryItem) => void;
   onDownload: (item: LibraryItem) => void;
+  onDelete: (item: LibraryItem) => void;
 }
 
 const typeConfig = {
@@ -54,8 +72,9 @@ const typeConfig = {
   },
 };
 
-export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
+export function LibraryCard({ item, onPreview, onDownload, onDelete }: LibraryCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
   const config = typeConfig[item.type];
   const TypeIcon = config.icon;
 
@@ -63,6 +82,25 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
     if (item.type === "link") {
       window.open(item.url, "_blank", "noopener,noreferrer");
     }
+  };
+
+  const handleChat = () => {
+    navigate("/", { 
+      state: { 
+        attachedFile: {
+          name: item.name,
+          url: item.url,
+          type: item.mimeType || item.type
+        }
+      }
+    });
+  };
+
+  const handleAddToProject = (projectId: string, projectName: string) => {
+    toast({
+      title: "Added to project",
+      description: `${item.name} has been added to ${projectName}.`,
+    });
   };
 
   const renderThumbnail = () => {
@@ -107,19 +145,82 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* 3-dot Menu */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className={cn(
+              "absolute top-2 right-2 z-10 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white transition-opacity",
+              isHovered ? "opacity-100" : "opacity-0"
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MoreHorizontal className="h-3.5 w-3.5" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <FolderPlus className="mr-2 h-4 w-4" />
+              Add to Project
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              {mockProjects.map((project) => (
+                <DropdownMenuItem 
+                  key={project.id}
+                  onClick={() => handleAddToProject(project.id, project.name)}
+                >
+                  {project.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          
+          <DropdownMenuItem onClick={handleChat}>
+            <MessageSquare className="mr-2 h-4 w-4" />
+            Chat
+          </DropdownMenuItem>
+          
+          {item.type !== "link" ? (
+            <DropdownMenuItem onClick={() => onDownload(item)}>
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={handleOpenLink}>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Open Link
+            </DropdownMenuItem>
+          )}
+          
+          <DropdownMenuSeparator />
+          
+          <DropdownMenuItem 
+            onClick={() => onDelete(item)}
+            className="text-destructive focus:text-destructive"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       {/* Thumbnail Area */}
-      <AspectRatio ratio={16 / 9} className="bg-muted overflow-hidden">
+      <AspectRatio ratio={16 / 9} className="bg-muted overflow-hidden cursor-pointer" onClick={() => onPreview(item)}>
         {renderThumbnail()}
         
-        {/* Hover Overlay with Actions */}
+        {/* Hover Overlay with Preview */}
         <div className={cn(
-          "absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-opacity duration-200",
+          "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-200",
           isHovered ? "opacity-100" : "opacity-0"
         )}>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => onPreview(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPreview(item);
+                }}
                 className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
               >
                 <Eye className="h-4 w-4" />
@@ -127,34 +228,6 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
             </TooltipTrigger>
             <TooltipContent>Preview</TooltipContent>
           </Tooltip>
-
-          {item.type !== "link" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => onDownload(item)}
-                  className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
-                >
-                  <Download className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Download</TooltipContent>
-            </Tooltip>
-          )}
-
-          {item.type === "link" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleOpenLink}
-                  className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Open Link</TooltipContent>
-            </Tooltip>
-          )}
         </div>
       </AspectRatio>
 

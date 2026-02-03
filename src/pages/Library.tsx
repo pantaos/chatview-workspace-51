@@ -6,11 +6,20 @@ import { LibraryPreviewDialog } from "@/components/library/LibraryPreviewDialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { mockLibraryItems } from "@/data/libraryData";
 import { LibraryItem, LibraryFilterType, LibrarySortOption, LibrarySourceFilter } from "@/types/library";
+import { toast } from "@/hooks/use-toast";
 
 export default function Library() {
-  const [sourceFilter, setSourceFilter] = useState<LibrarySourceFilter>("all");
-  const [sortOption, setSortOption] = useState<LibrarySortOption>("newest");
-  const [typeFilters, setTypeFilters] = useState<LibraryFilterType[]>([]);
+  // Generated content state
+  const [generatedSourceFilter, setGeneratedSourceFilter] = useState<LibrarySourceFilter>("all");
+  const [generatedSortOption, setGeneratedSortOption] = useState<LibrarySortOption>("newest");
+  const [generatedTypeFilters, setGeneratedTypeFilters] = useState<LibraryFilterType[]>([]);
+  
+  // Uploaded content state
+  const [uploadedSortOption, setUploadedSortOption] = useState<LibrarySortOption>("newest");
+  const [uploadedTypeFilters, setUploadedTypeFilters] = useState<LibraryFilterType[]>([]);
+  
+  // Shared state
+  const [items, setItems] = useState<LibraryItem[]>(mockLibraryItems);
   const [previewItem, setPreviewItem] = useState<LibraryItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -20,30 +29,41 @@ export default function Library() {
   };
 
   const handleDownload = (item: LibraryItem) => {
-    // In a real app, this would trigger an actual download
     console.log("Downloading:", item.name);
-    // For demo purposes, just show a notification
-    alert(`Downloading: ${item.name}`);
+    toast({
+      title: "Download started",
+      description: `Downloading ${item.name}...`,
+    });
   };
 
-  const filteredItems = useMemo(() => {
-    let items = [...mockLibraryItems];
+  const handleDelete = (item: LibraryItem) => {
+    if (confirm(`Delete "${item.name}"? This action cannot be undone.`)) {
+      setItems(prev => prev.filter(i => i.id !== item.id));
+      toast({
+        title: "Deleted",
+        description: `${item.name} has been removed.`,
+      });
+    }
+  };
+
+  const generatedItems = useMemo(() => {
+    let filtered = items.filter(item => item.category === "generated");
 
     // Source filter
-    if (sourceFilter === "workflows") {
-      items = items.filter((item) => item.source.type === "workflow");
-    } else if (sourceFilter === "chats") {
-      items = items.filter((item) => item.source.type === "chat");
+    if (generatedSourceFilter === "workflows") {
+      filtered = filtered.filter((item) => item.source.type === "workflow");
+    } else if (generatedSourceFilter === "chats") {
+      filtered = filtered.filter((item) => item.source.type === "chat");
     }
 
     // Type filters
-    if (typeFilters.length > 0) {
-      items = items.filter((item) => typeFilters.includes(item.type));
+    if (generatedTypeFilters.length > 0) {
+      filtered = filtered.filter((item) => generatedTypeFilters.includes(item.type));
     }
 
     // Sort
-    items.sort((a, b) => {
-      switch (sortOption) {
+    filtered.sort((a, b) => {
+      switch (generatedSortOption) {
         case "oldest":
           return a.createdAt.getTime() - b.createdAt.getTime();
         case "name-asc":
@@ -56,8 +76,34 @@ export default function Library() {
       }
     });
 
-    return items;
-  }, [sourceFilter, sortOption, typeFilters]);
+    return filtered;
+  }, [items, generatedSourceFilter, generatedSortOption, generatedTypeFilters]);
+
+  const uploadedItems = useMemo(() => {
+    let filtered = items.filter(item => item.category === "uploaded");
+
+    // Type filters
+    if (uploadedTypeFilters.length > 0) {
+      filtered = filtered.filter((item) => uploadedTypeFilters.includes(item.type));
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (uploadedSortOption) {
+        case "oldest":
+          return a.createdAt.getTime() - b.createdAt.getTime();
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "newest":
+        default:
+          return b.createdAt.getTime() - a.createdAt.getTime();
+      }
+    });
+
+    return filtered;
+  }, [items, uploadedSortOption, uploadedTypeFilters]);
 
   return (
     <MainLayout>
@@ -67,70 +113,97 @@ export default function Library() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">Library</h1>
             <p className="mt-1 text-muted-foreground">
-              All your generated content in one place
+              All your content in one place
             </p>
           </div>
 
-          {/* Tabs */}
-          <Tabs
-            value={sourceFilter}
-            onValueChange={(v) => setSourceFilter(v as LibrarySourceFilter)}
-            className="w-full"
-          >
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
-                <TabsTrigger
-                  value="all"
-                  className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                >
-                  All
-                </TabsTrigger>
-                <TabsTrigger
-                  value="workflows"
-                  className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                >
-                  Workflows
-                </TabsTrigger>
-                <TabsTrigger
-                  value="chats"
-                  className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                >
-                  Chats
-                </TabsTrigger>
-              </TabsList>
+          {/* Two-Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left: Generated Content */}
+            <div>
+              <Tabs
+                value={generatedSourceFilter}
+                onValueChange={(v) => setGeneratedSourceFilter(v as LibrarySourceFilter)}
+                className="w-full"
+              >
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-2">Generated Content</h2>
+                    <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
+                      <TabsTrigger
+                        value="all"
+                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                      >
+                        All
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="workflows"
+                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                      >
+                        Workflows
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="chats"
+                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                      >
+                        Chats
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <LibraryFilters
+                    sortOption={generatedSortOption}
+                    onSortChange={setGeneratedSortOption}
+                    typeFilters={generatedTypeFilters}
+                    onTypeFilterChange={setGeneratedTypeFilters}
+                  />
+                </div>
 
-              {/* Filters */}
-              <LibraryFilters
-                sortOption={sortOption}
-                onSortChange={setSortOption}
-                typeFilters={typeFilters}
-                onTypeFilterChange={setTypeFilters}
-              />
+                <TabsContent value="all" className="mt-0">
+                  <ContentGrid
+                    items={generatedItems}
+                    onPreview={handlePreview}
+                    onDownload={handleDownload}
+                    onDelete={handleDelete}
+                  />
+                </TabsContent>
+                <TabsContent value="workflows" className="mt-0">
+                  <ContentGrid
+                    items={generatedItems}
+                    onPreview={handlePreview}
+                    onDownload={handleDownload}
+                    onDelete={handleDelete}
+                  />
+                </TabsContent>
+                <TabsContent value="chats" className="mt-0">
+                  <ContentGrid
+                    items={generatedItems}
+                    onPreview={handlePreview}
+                    onDownload={handleDownload}
+                    onDelete={handleDelete}
+                  />
+                </TabsContent>
+              </Tabs>
             </div>
 
-            {/* Content Grid */}
-            <TabsContent value="all" className="mt-0">
+            {/* Right: Uploaded Content */}
+            <div>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <h2 className="text-lg font-semibold text-foreground">Uploaded Content</h2>
+                <LibraryFilters
+                  sortOption={uploadedSortOption}
+                  onSortChange={setUploadedSortOption}
+                  typeFilters={uploadedTypeFilters}
+                  onTypeFilterChange={setUploadedTypeFilters}
+                />
+              </div>
               <ContentGrid
-                items={filteredItems}
+                items={uploadedItems}
                 onPreview={handlePreview}
                 onDownload={handleDownload}
+                onDelete={handleDelete}
               />
-            </TabsContent>
-            <TabsContent value="workflows" className="mt-0">
-              <ContentGrid
-                items={filteredItems}
-                onPreview={handlePreview}
-                onDownload={handleDownload}
-              />
-            </TabsContent>
-            <TabsContent value="chats" className="mt-0">
-              <ContentGrid
-                items={filteredItems}
-                onPreview={handlePreview}
-                onDownload={handleDownload}
-              />
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -149,9 +222,10 @@ interface ContentGridProps {
   items: LibraryItem[];
   onPreview: (item: LibraryItem) => void;
   onDownload: (item: LibraryItem) => void;
+  onDelete: (item: LibraryItem) => void;
 }
 
-function ContentGrid({ items, onPreview, onDownload }: ContentGridProps) {
+function ContentGrid({ items, onPreview, onDownload, onDelete }: ContentGridProps) {
   if (items.length === 0) {
     return (
       <div className="py-16 text-center">
@@ -161,13 +235,14 @@ function ContentGrid({ items, onPreview, onDownload }: ContentGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
       {items.map((item) => (
         <LibraryCard
           key={item.id}
           item={item}
           onPreview={onPreview}
           onDownload={onDownload}
+          onDelete={onDelete}
         />
       ))}
     </div>

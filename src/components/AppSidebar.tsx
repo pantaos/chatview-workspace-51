@@ -18,6 +18,7 @@ import {
   LogOut,
   LayoutGrid,
   Sliders,
+  FolderOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -284,6 +285,18 @@ const AppSidebar = ({
             <LayoutDashboard className="h-5 w-5" />
           </button>
           <button
+            onClick={() => navigate("/library")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/library")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Library"
+          >
+            <FolderOpen className="h-5 w-5" />
+          </button>
+          <button
             onClick={() => navigate("/community-feed")}
             className={cn(
               "p-2 rounded-lg transition-colors",
@@ -471,6 +484,18 @@ const AppSidebar = ({
               >
                 <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
                 <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/library")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/library")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <FolderOpen className="h-4 w-4 flex-shrink-0" />
+                <span>Library</span>
               </button>
               <button
                 onClick={() => handleNavigate("/community-feed")}

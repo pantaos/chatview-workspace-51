@@ -1,175 +1,250 @@
 
-# Library Page Implementation Plan
+# Library Page Enhancement: Two-Column Layout with Project Assignment
 
 ## Overview
-Create a new "Library" page that displays all generated content from workflows and chats. The page will showcase videos, images, files (PDFs, Word docs), and links in a modern, sleek grid layout with hover actions for preview, download, and opening links.
+Restructure the Library page into a two-column layout with **Generated Content** on the left and **Uploaded Content** on the right. Both sections will have the ability to add assets to projects via a contextual menu.
 
-## Page Location & Navigation
-The Library will be added below "Dashboard" in the sidebar navigation, accessible at `/library`.
+## New Layout Structure
 
-## Design Approach
-
-### Header Section
-- Large "Library" headline (matching Community Feed style: `text-3xl font-bold`)
-- Subline describing the content: "All your generated content in one place"
-
-### Tab Navigation
-Following the existing Dashboard pattern with underline-style tabs:
-- **All** - Shows all content types
-- **Workflows** - Content from workflow executions (Trendcast videos, Report Cards, etc.)
-- **Chats** - Content from chat conversations (images, files)
-
-### Filter System
-Horizontal filter bar with:
-- **Date Filter**: Dropdown to sort/filter by date (Newest, Oldest, This Week, This Month)
-- **Type Filter**: Multi-select badges for content types:
-  - Video
-  - Image
-  - PDF
-  - Word
-  - Links
-  - Other
-
-## Content Cards
-
-### Grid Layout
 ```text
-+------------------+------------------+------------------+
-|   [Thumbnail]    |   [Thumbnail]    |   [Thumbnail]    |
-|   Video.mp4      |   Design.png     |   Report.pdf     |
-|   Trendcast      |   Chat           |   Report Card    |
-|   2 hours ago    |   Yesterday      |   3 days ago     |
-+------------------+------------------+------------------+
++----------------------------------------------------------+
+| Library                                                   |
+| All your content in one place                             |
++----------------------------------------------------------+
+|                                                           |
+| Generated Content              | Uploaded Content         |
+| [All] [Workflows] [Chats]      | [Sort] [Filter]          |
+| [Sort] [Filter]                |                          |
++-------------------------------|---------------------------+
+|                               |                           |
+| +------+ +------+ +------+    | +------+ +------+         |
+| | vid  | | img  | | pdf  |    | | img  | | doc  |         |
+| +------+ +------+ +------+    | +------+ +------+         |
+|                               |                           |
+| +------+ +------+ +------+    | +------+ +------+         |
+| | doc  | | link | | vid  |    | | pdf  | | img  |         |
+| +------+ +------+ +------+    | +------+ +------+         |
++----------------------------------------------------------+
 ```
 
-Responsive grid: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`
+On mobile, these sections will stack vertically.
 
-### Card Design
-Each card will have:
-- **Thumbnail area** (aspect-video ratio)
-  - Videos: Video thumbnail with play icon overlay
-  - Images: Image preview
-  - PDFs/Docs: File type icon with color coding
-  - Links: Favicon or link icon with gradient background
-- **Content info below thumbnail**:
-  - File name (truncated with tooltip)
-  - Source badge (workflow name or "Chat")
-  - Timestamp (relative time using date-fns)
-  - File type badge
+## Key Changes
 
-### Hover Actions
-On hover, an overlay appears with action buttons:
-- **Preview** (Eye icon) - Opens preview dialog/modal
-- **Download** (Download icon) - Downloads the file
-- **Open** (ExternalLink icon) - For links, opens in new tab
+### 1. Split Layout (Left/Right Columns)
+- **Left Column**: Generated Content (existing items from workflows and chats)
+- **Right Column**: Uploaded Content (files directly uploaded by users)
+- Desktop: Side-by-side columns (50/50 split)
+- Mobile: Stacked vertically (Generated first, then Uploaded)
 
-## File Structure
+### 2. Card Action Menu (3-dot menu)
+Each card will have a hover menu with options:
+- **Add to Project** - Opens a dropdown to select a project
+- **Chat** - Initiate a chat with this asset attached
+- **Download** (for files) / **Open Link** (for links)
+- **Delete** - Remove the asset (with confirmation)
 
-### New Files to Create
-
-1. **`src/pages/Library.tsx`** - Main Library page component
-2. **`src/components/library/LibraryCard.tsx`** - Individual content card component
-3. **`src/components/library/LibraryFilters.tsx`** - Filter bar component
-4. **`src/components/library/LibraryPreviewDialog.tsx`** - Preview modal for content
-
-### Files to Modify
-
-1. **`src/App.tsx`** - Add route for `/library`
-2. **`src/components/AppSidebar.tsx`** - Add Library navigation item with FolderOpen icon
-
-## Technical Details
-
-### Data Structure
+### 3. Data Model Updates
+Add `category` field to LibraryItem:
 ```typescript
 interface LibraryItem {
-  id: string;
-  name: string;
-  type: 'video' | 'image' | 'pdf' | 'word' | 'link' | 'other';
-  source: {
-    type: 'workflow' | 'chat';
-    name: string;
-    id: string;
-  };
-  thumbnail?: string;
-  url: string;
-  createdAt: Date;
-  size?: number;
-  mimeType?: string;
+  // ... existing fields
+  category: 'uploaded' | 'generated';
+  projectId?: string;  // optional: if assigned to a project
 }
 ```
 
-### Mock Data
-The page will include mock data representing:
-- Videos from Trendcast workflow
-- Images from Chat Assistant
-- PDFs from Report Card workflow
-- External links shared in chats
-
-### Component Breakdown
-
-**Library.tsx**
-- Uses MainLayout wrapper
-- Page header with title and subtitle
-- LibraryFilters component
-- Tabs component (All, Workflows, Chats)
-- Grid of LibraryCard components
-
-**LibraryCard.tsx**
-- Thumbnail area with type-specific rendering
-- Hover overlay with action buttons
-- Content info section
-- Click handlers for preview/download/open
-
-**LibraryFilters.tsx**
-- Date dropdown (Select component)
-- Type filter badges (toggle buttons)
-- Clear filters button
-
-**LibraryPreviewDialog.tsx**
-- Modal dialog for content preview
-- Video player for videos
-- Image viewer for images
-- PDF preview or download prompt for documents
-
-### Sidebar Integration
-Add navigation item in AppSidebar.tsx after Dashboard:
+Add `'upload'` as a new source type:
 ```typescript
-<button
-  onClick={() => handleNavigate("/library")}
-  className={cn(
-    "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-    isActive("/library")
-      ? "bg-primary/10 text-primary"
-      : "text-foreground/70 hover:bg-muted hover:text-foreground"
-  )}
->
-  <FolderOpen className="h-4 w-4 flex-shrink-0" />
-  <span>Library</span>
-</button>
+source: {
+  type: 'workflow' | 'chat' | 'upload';
+  name: string;
+  id: string;
+}
 ```
 
-Also add to collapsed sidebar view.
+---
 
-### Icon Selection
-- FolderOpen (lucide-react) for sidebar navigation
-- Play, Eye, Download, ExternalLink for card actions
-- FileVideo, FileImage, FileText, File for type indicators
+## Technical Implementation
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/pages/Library.tsx` | Restructure to two-column layout, add section headers, separate filters per section |
+| `src/components/library/LibraryCard.tsx` | Add 3-dot dropdown menu with Chat, Add to Project, Download, Delete options |
+| `src/types/library.ts` | Add `category` field, `projectId` field, `'upload'` source type |
+| `src/data/libraryData.ts` | Add `category` to existing items, add new mock uploaded items |
+
+### New Components (Optional)
+- `LibrarySectionHeader.tsx` - Reusable header for each section with title and filter controls
+
+---
+
+## Library.tsx New Structure
+
+```tsx
+<MainLayout>
+  <div className="min-h-screen bg-background">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Library</h1>
+        <p className="text-muted-foreground">All your content in one place</p>
+      </div>
+
+      {/* Two-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left: Generated Content */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Generated Content</h2>
+            <LibraryFilters ... />
+          </div>
+          <Tabs value={sourceFilter} ...>
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="workflows">Workflows</TabsTrigger>
+              <TabsTrigger value="chats">Chats</TabsTrigger>
+            </TabsList>
+            <TabsContent>
+              <ContentGrid items={generatedItems} ... />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Right: Uploaded Content */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Uploaded Content</h2>
+            <LibraryFilters ... />
+          </div>
+          <ContentGrid items={uploadedItems} ... />
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+```
+
+---
+
+## LibraryCard Menu Structure
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <button className="absolute top-2 right-2 p-1.5 rounded-full 
+      bg-black/50 hover:bg-black/70 text-white 
+      opacity-0 group-hover:opacity-100 transition-opacity">
+      <MoreHorizontal className="h-3.5 w-3.5" />
+    </button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    {/* Add to Project - Submenu */}
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>
+        <FolderPlus className="mr-2 h-4 w-4" />
+        Add to Project
+      </DropdownMenuSubTrigger>
+      <DropdownMenuSubContent>
+        <DropdownMenuItem>Project Alpha</DropdownMenuItem>
+        <DropdownMenuItem>Project Beta</DropdownMenuItem>
+        <DropdownMenuItem>Marketing Campaign</DropdownMenuItem>
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
+    
+    <DropdownMenuItem onClick={() => onChat(item)}>
+      <MessageSquare className="mr-2 h-4 w-4" />
+      Chat
+    </DropdownMenuItem>
+    
+    {item.type !== "link" ? (
+      <DropdownMenuItem onClick={() => onDownload(item)}>
+        <Download className="mr-2 h-4 w-4" />
+        Download
+      </DropdownMenuItem>
+    ) : (
+      <DropdownMenuItem onClick={() => onOpenLink(item)}>
+        <ExternalLink className="mr-2 h-4 w-4" />
+        Open Link
+      </DropdownMenuItem>
+    )}
+    
+    <DropdownMenuSeparator />
+    
+    <DropdownMenuItem 
+      onClick={() => onDelete(item)} 
+      className="text-destructive"
+    >
+      <Trash2 className="mr-2 h-4 w-4" />
+      Delete
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+---
+
+## Mock Data Updates
+
+### Add category to existing items
+```typescript
+{
+  id: "1",
+  name: "Trendcast_Q1_2026.mp4",
+  type: "video",
+  category: "generated",  // NEW
+  source: { type: "workflow", name: "Trendcast", id: "trendcast-1" },
+  // ...
+}
+```
+
+### Add new uploaded content items
+```typescript
+{
+  id: "upload-1",
+  name: "Company_Logo.png",
+  type: "image",
+  category: "uploaded",
+  source: { type: "upload", name: "Direct Upload", id: "upload" },
+  thumbnail: "/placeholder.svg",
+  url: "#",
+  createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+  size: 450000,
+  mimeType: "image/png",
+},
+{
+  id: "upload-2",
+  name: "Product_Specs.pdf",
+  type: "pdf",
+  category: "uploaded",
+  source: { type: "upload", name: "Direct Upload", id: "upload" },
+  url: "#",
+  createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000),
+  size: 320000,
+  mimeType: "application/pdf",
+}
+```
+
+---
 
 ## Implementation Order
-1. Create Library page with basic structure
-2. Add route in App.tsx
-3. Add navigation in AppSidebar (both expanded and collapsed states)
-4. Create LibraryCard component
-5. Create LibraryFilters component
-6. Create LibraryPreviewDialog component
-7. Add mock data and filtering logic
-8. Style and polish
 
-## Visual Style Notes
-Following the project's minimalist aesthetic:
-- Use subtle shadows and borders (matching WorkflowCard)
-- Cards with white background, light border
-- Hover effects: subtle scale, shadow increase
-- Type badges with muted colors
-- Grid gaps of 4-6 units
-- Consistent padding matching other pages (p-8)
+1. Update `src/types/library.ts` with new fields
+2. Update `src/data/libraryData.ts` with categories and new mock items
+3. Refactor `src/pages/Library.tsx` to two-column layout
+4. Update `src/components/library/LibraryCard.tsx` with 3-dot dropdown menu
+5. Add project list mock data for "Add to Project" submenu
+6. Test responsive behavior on mobile
+
+---
+
+## Responsive Behavior
+
+| Breakpoint | Layout |
+|------------|--------|
+| Desktop (lg+) | Side-by-side columns |
+| Tablet/Mobile | Stacked vertically, Generated Content first |
+
+Grid classes: `grid grid-cols-1 lg:grid-cols-2 gap-8`

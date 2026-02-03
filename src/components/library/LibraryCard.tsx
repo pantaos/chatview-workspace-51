@@ -30,38 +30,26 @@ interface LibraryCardProps {
 const typeConfig = {
   video: { 
     icon: FileVideo, 
-    color: "text-purple-500", 
-    bgColor: "bg-purple-500/10",
     label: "Video" 
   },
   image: { 
     icon: FileImage, 
-    color: "text-blue-500", 
-    bgColor: "bg-blue-500/10",
     label: "Image" 
   },
   pdf: { 
     icon: FileText, 
-    color: "text-red-500", 
-    bgColor: "bg-red-500/10",
     label: "PDF" 
   },
   word: { 
     icon: FileText, 
-    color: "text-blue-600", 
-    bgColor: "bg-blue-600/10",
     label: "Word" 
   },
   link: { 
     icon: LinkIcon, 
-    color: "text-emerald-500", 
-    bgColor: "bg-emerald-500/10",
     label: "Link" 
   },
   other: { 
     icon: File, 
-    color: "text-muted-foreground", 
-    bgColor: "bg-muted",
     label: "File" 
   },
 };
@@ -107,11 +95,8 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
 
     // Default: show icon
     return (
-      <div className={cn(
-        "w-full h-full flex items-center justify-center",
-        config.bgColor
-      )}>
-        <TypeIcon className={cn("h-12 w-12", config.color)} />
+      <div className="w-full h-full flex items-center justify-center bg-muted">
+        <TypeIcon className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   };
@@ -174,10 +159,10 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
       </AspectRatio>
 
       {/* Content Info */}
-      <div className="p-3 space-y-2">
+      <div className="p-2 space-y-1.5">
         <Tooltip>
           <TooltipTrigger asChild>
-            <h3 className="text-sm font-medium text-foreground truncate cursor-default">
+            <h3 className="text-xs font-medium text-foreground truncate cursor-default">
               {item.name}
             </h3>
           </TooltipTrigger>
@@ -186,14 +171,14 @@ export function LibraryCard({ item, onPreview, onDownload }: LibraryCardProps) {
           </TooltipContent>
         </Tooltip>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-1">
           <Badge 
             variant="secondary" 
-            className="text-[10px] px-1.5 py-0 h-5 font-normal"
+            className="text-[9px] px-1 py-0 h-4 font-normal"
           >
             {item.source.name}
           </Badge>
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[10px] text-muted-foreground">
             {formatDistanceToNow(item.createdAt, { addSuffix: true })}
           </span>
         </div>

@@ -15,6 +15,9 @@ export default function Library() {
   // Top-level category tab
   const [categoryTab, setCategoryTab] = useState<"generated" | "uploaded">("generated");
   
+  // Projects state
+  const [projects, setProjects] = useState(mockProjects);
+  
   // Generated content state
   const [generatedSourceFilter, setGeneratedSourceFilter] = useState<LibrarySourceFilter>("all");
   const [generatedSortOption, setGeneratedSortOption] = useState<LibrarySortOption>("newest");
@@ -114,6 +117,18 @@ export default function Library() {
   
   const handleUploadedProjectRemove = (projectId: string) => {
     setUploadedProjectFilters(prev => prev.filter(id => id !== projectId));
+  };
+
+  const handleCreateProject = (name: string) => {
+    const newProject = {
+      id: `proj-${Date.now()}`,
+      name,
+    };
+    setProjects(prev => [...prev, newProject]);
+    toast({
+      title: "Project created",
+      description: `"${name}" has been added.`,
+    });
   };
 
   const generatedItems = useMemo(() => {
@@ -258,11 +273,12 @@ export default function Library() {
                 {/* Project Filter */}
                 <div className="mb-4">
                   <ProjectFilter
-                    projects={mockProjects}
+                    projects={projects}
                     selectedProjects={generatedProjectFilters}
                     onProjectSelect={handleGeneratedProjectSelect}
                     onProjectRemove={handleGeneratedProjectRemove}
                     onClearAll={() => setGeneratedProjectFilters([])}
+                    onCreateProject={handleCreateProject}
                   />
                 </div>
 
@@ -324,11 +340,12 @@ export default function Library() {
               {/* Project Filter */}
               <div className="mb-4">
                 <ProjectFilter
-                  projects={mockProjects}
+                  projects={projects}
                   selectedProjects={uploadedProjectFilters}
                   onProjectSelect={handleUploadedProjectSelect}
                   onProjectRemove={handleUploadedProjectRemove}
                   onClearAll={() => setUploadedProjectFilters([])}
+                  onCreateProject={handleCreateProject}
                 />
               </div>
 

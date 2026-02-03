@@ -253,66 +253,54 @@ const Settings = () => {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="mt-0">
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {/* Microsoft */}
               <div 
-                className="flex items-center justify-between py-3 border-b border-border cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                className="aspect-square flex flex-col items-center justify-center p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all cursor-pointer text-center"
                 onClick={() => setMicrosoftDialogOpen(true)}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">M</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Microsoft</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(microsoftApps).filter(Boolean).length} Apps aktiv
-                    </p>
-                  </div>
+                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-white font-bold text-lg">M</span>
                 </div>
-                <Badge variant={platformStatus.microsoft ? "default" : "secondary"}>
+                <p className="font-medium text-sm mb-1">Microsoft</p>
+                <p className="text-[10px] text-muted-foreground mb-2">
+                  {Object.values(microsoftApps).filter(Boolean).length} Apps aktiv
+                </p>
+                <Badge variant={platformStatus.microsoft ? "default" : "secondary"} className="text-[9px] px-1.5 py-0">
                   {platformStatus.microsoft ? 'Verbunden' : 'Nicht verbunden'}
                 </Badge>
               </div>
 
               {/* Google */}
               <div 
-                className="flex items-center justify-between py-3 border-b border-border cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                className="aspect-square flex flex-col items-center justify-center p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all cursor-pointer text-center"
                 onClick={() => setGoogleDialogOpen(true)}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">G</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Google</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(googleApps).filter(Boolean).length} Apps aktiv
-                    </p>
-                  </div>
+                <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-white font-bold text-lg">G</span>
                 </div>
-                <Badge variant={platformStatus.google ? "default" : "secondary"}>
+                <p className="font-medium text-sm mb-1">Google</p>
+                <p className="text-[10px] text-muted-foreground mb-2">
+                  {Object.values(googleApps).filter(Boolean).length} Apps aktiv
+                </p>
+                <Badge variant={platformStatus.google ? "default" : "secondary"} className="text-[9px] px-1.5 py-0">
                   {platformStatus.google ? 'Verbunden' : 'Nicht verbunden'}
                 </Badge>
               </div>
 
               {/* Notion */}
               <div 
-                className="flex items-center justify-between py-3 cursor-pointer hover:bg-muted/50 -mx-2 px-2 rounded-lg transition-colors"
+                className="aspect-square flex flex-col items-center justify-center p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all cursor-pointer text-center"
                 onClick={() => setNotionDialogOpen(true)}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">N</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Notion</p>
-                    <p className="text-xs text-muted-foreground">
-                      {Object.values(notionApps).filter(Boolean).length} Apps aktiv
-                    </p>
-                  </div>
+                <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center mb-3">
+                  <span className="text-white font-bold text-lg">N</span>
                 </div>
-                <Badge variant={platformStatus.notion ? "default" : "secondary"}>
+                <p className="font-medium text-sm mb-1">Notion</p>
+                <p className="text-[10px] text-muted-foreground mb-2">
+                  {Object.values(notionApps).filter(Boolean).length} Apps aktiv
+                </p>
+                <Badge variant={platformStatus.notion ? "default" : "secondary"} className="text-[9px] px-1.5 py-0">
                   {platformStatus.notion ? 'Verbunden' : 'Nicht verbunden'}
                 </Badge>
               </div>

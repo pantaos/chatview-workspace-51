@@ -231,7 +231,7 @@ const AdminIntegrations = () => {
         </p>
       </div>
 
-      <div className="space-y-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {connectedIntegrations.map((integration) => {
           const enabledCount = getEnabledAppsCount(integration);
           const scopeSummary = getAccessScopeSummary(integration);
@@ -239,44 +239,28 @@ const AdminIntegrations = () => {
           return (
             <div 
               key={integration.id}
-              className="flex items-center justify-between p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 transition-all group cursor-pointer"
+              className="aspect-square flex flex-col items-center justify-center p-4 rounded-xl border border-border/40 bg-card/50 hover:bg-muted/50 hover:border-primary/30 transition-all group cursor-pointer text-center"
               onClick={() => handleManageClick(integration)}
             >
-              <div className="flex items-center gap-4">
-                <div 
-                  className={`w-10 h-10 ${integration.iconBg} rounded-lg flex items-center justify-center`}
-                >
-                  {integration.icon}
-                </div>
-                <div>
-                  <h3 className="font-medium text-sm">{integration.name}</h3>
-                  <p className="text-xs text-muted-foreground">{integration.description}</p>
-                </div>
+              <div 
+                className={`w-12 h-12 ${integration.iconBg} rounded-xl flex items-center justify-center mb-3`}
+              >
+                {integration.icon}
               </div>
-
-              <div className="flex items-center gap-3">
+              <h3 className="font-medium text-sm mb-1">{integration.name}</h3>
+              <p className="text-[10px] text-muted-foreground line-clamp-1 mb-2">{integration.description}</p>
+              
+              <div className="flex flex-wrap items-center justify-center gap-1">
                 {enabledCount > 0 && (
-                  <Badge variant="outline" className="text-[10px] bg-green-500/10 text-green-600 border-green-500/30">
+                  <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-green-500/10 text-green-600 border-green-500/30">
                     {enabledCount} {enabledCount === 1 ? 'app' : 'apps'}
                   </Badge>
                 )}
                 {scopeSummary && (
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="text-[9px] px-1.5 py-0">
                     {scopeSummary}
                   </Badge>
                 )}
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleManageClick(integration);
-                  }}
-                >
-                  Manage
-                  <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
               </div>
             </div>
           );
@@ -285,10 +269,12 @@ const AdminIntegrations = () => {
         {/* Add Integration Button */}
         <button 
           onClick={() => setAddDialogOpen(true)}
-          className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border border-dashed border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-muted/30 transition-all"
+          className="aspect-square flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-dashed border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-muted/30 transition-all"
         >
-          <Plus className="w-4 h-4" />
-          <span className="text-sm">Integration hinzufügen</span>
+          <div className="w-12 h-12 rounded-xl border-2 border-dashed border-current flex items-center justify-center">
+            <Plus className="w-5 h-5" />
+          </div>
+          <span className="text-xs">Add Integration</span>
         </button>
       </div>
 

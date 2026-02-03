@@ -1,13 +1,4 @@
-import { 
-  FileVideo, 
-  FileImage, 
-  FileText, 
-  File, 
-  Link as LinkIcon,
-  Download,
-  ExternalLink
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Download, ExternalLink } from "lucide-react";
 import { LibraryItem } from "@/types/library";
 import {
   Dialog,
@@ -16,7 +7,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 
 interface LibraryPreviewDialogProps {
@@ -26,15 +16,6 @@ interface LibraryPreviewDialogProps {
   onDownload: (item: LibraryItem) => void;
 }
 
-const typeConfig = {
-  video: { icon: FileVideo, color: "text-purple-500", bgColor: "bg-purple-500/10" },
-  image: { icon: FileImage, color: "text-blue-500", bgColor: "bg-blue-500/10" },
-  pdf: { icon: FileText, color: "text-red-500", bgColor: "bg-red-500/10" },
-  word: { icon: FileText, color: "text-blue-600", bgColor: "bg-blue-600/10" },
-  link: { icon: LinkIcon, color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
-  other: { icon: File, color: "text-muted-foreground", bgColor: "bg-muted" },
-};
-
 export function LibraryPreviewDialog({ 
   item, 
   open, 
@@ -43,14 +24,23 @@ export function LibraryPreviewDialog({
 }: LibraryPreviewDialogProps) {
   if (!item) return null;
 
-  const config = typeConfig[item.type];
-  const TypeIcon = config.icon;
-
   const formatFileSize = (bytes?: number) => {
     if (!bytes) return null;
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const getTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      video: "Video",
+      image: "Image",
+      pdf: "PDF",
+      word: "Document",
+      link: "Link",
+      other: "File"
+    };
+    return labels[type] || "File";
   };
 
   const renderPreviewContent = () => {
@@ -60,80 +50,41 @@ export function LibraryPreviewDialog({
           <img
             src={item.thumbnail}
             alt={item.name}
-            className="max-w-full max-h-[400px] object-contain"
+            className="max-w-full max-h-[300px] object-contain"
           />
         </div>
       );
     }
 
-    if (item.type === "video") {
+    if (item.type === "video" && item.thumbnail) {
       return (
-        <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center">
-          <div className="text-center">
-            <FileVideo className="h-16 w-16 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Video preview not available</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="mt-3"
-              onClick={() => onDownload(item)}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download to view
-            </Button>
-          </div>
+        <div className="w-full aspect-video bg-muted rounded-lg overflow-hidden">
+          <img
+            src={item.thumbnail}
+            alt={item.name}
+            className="w-full h-full object-cover"
+          />
         </div>
       );
     }
 
     if (item.type === "link") {
       return (
-        <div className="w-full py-8 bg-muted rounded-lg flex items-center justify-center">
-          <div className="text-center">
-            <LinkIcon className="h-12 w-12 text-emerald-500 mx-auto mb-3" />
-            <p className="text-sm font-medium text-foreground mb-1">{item.name}</p>
-            <p className="text-xs text-muted-foreground mb-4 max-w-xs truncate">{item.url}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(item.url, "_blank", "noopener,noreferrer")}
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Open in new tab
-            </Button>
-          </div>
+        <div className="py-4">
+          <p className="text-sm text-muted-foreground break-all">{item.url}</p>
         </div>
       );
     }
 
-    // PDF, Word, Other
-    return (
-      <div className="w-full py-8 bg-muted rounded-lg flex items-center justify-center">
-        <div className="text-center">
-          <TypeIcon className={cn("h-16 w-16 mx-auto mb-3", config.color)} />
-          <p className="text-sm text-muted-foreground mb-3">
-            Preview not available for this file type
-          </p>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => onDownload(item)}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Download file
-          </Button>
-        </div>
-      </div>
-    );
+    return null;
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <TypeIcon className={cn("h-5 w-5", config.color)} />
-            <span className="truncate">{item.name}</span>
+          <DialogTitle className="text-base font-medium truncate pr-8">
+            {item.name}
           </DialogTitle>
         </DialogHeader>
 
@@ -142,27 +93,51 @@ export function LibraryPreviewDialog({
           {renderPreviewContent()}
 
           {/* Meta info */}
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <Badge variant="secondary">{item.source.name}</Badge>
-            <span className="text-muted-foreground">
-              {formatDistanceToNow(item.createdAt, { addSuffix: true })}
-            </span>
-            {item.size && (
-              <span className="text-muted-foreground">
-                {formatFileSize(item.size)}
+          <div className="space-y-3">
+            <div className="h-px bg-border/50" />
+            
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Type</span>
+              <span className="text-foreground">{getTypeLabel(item.type)}</span>
+            </div>
+            
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Source</span>
+              <span className="text-foreground">{item.source.name}</span>
+            </div>
+            
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Created</span>
+              <span className="text-foreground">
+                {formatDistanceToNow(item.createdAt, { addSuffix: true })}
               </span>
+            </div>
+            
+            {item.size && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Size</span>
+                <span className="text-foreground">{formatFileSize(item.size)}</span>
+              </div>
             )}
           </div>
 
           {/* Actions */}
-          {item.type !== "link" && (
-            <div className="flex justify-end">
-              <Button onClick={() => onDownload(item)}>
+          <div className="pt-2">
+            {item.type === "link" ? (
+              <Button 
+                className="w-full" 
+                onClick={() => window.open(item.url, "_blank", "noopener,noreferrer")}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open Link
+              </Button>
+            ) : (
+              <Button className="w-full" onClick={() => onDownload(item)}>
                 <Download className="h-4 w-4 mr-2" />
                 Download
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

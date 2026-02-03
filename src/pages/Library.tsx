@@ -9,6 +9,9 @@ import { LibraryItem, LibraryFilterType, LibrarySortOption, LibrarySourceFilter 
 import { toast } from "@/hooks/use-toast";
 
 export default function Library() {
+  // Top-level category tab
+  const [categoryTab, setCategoryTab] = useState<"generated" | "uploaded">("generated");
+  
   // Generated content state
   const [generatedSourceFilter, setGeneratedSourceFilter] = useState<LibrarySourceFilter>("all");
   const [generatedSortOption, setGeneratedSortOption] = useState<LibrarySortOption>("newest");
@@ -110,46 +113,63 @@ export default function Library() {
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className="text-3xl font-bold text-foreground">Library</h1>
             <p className="mt-1 text-muted-foreground">
               All your content in one place
             </p>
           </div>
 
-          {/* Two-Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left: Generated Content */}
-            <div>
+          {/* Top-Level Category Tabs */}
+          <Tabs
+            value={categoryTab}
+            onValueChange={(v) => setCategoryTab(v as "generated" | "uploaded")}
+            className="w-full"
+          >
+            <TabsList className="bg-transparent p-0 h-auto gap-6 justify-start mb-6">
+              <TabsTrigger
+                value="generated"
+                className="px-0 pb-2 text-base data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+              >
+                Generated Content
+              </TabsTrigger>
+              <TabsTrigger
+                value="uploaded"
+                className="px-0 pb-2 text-base data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+              >
+                Uploaded Content
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Generated Content Tab */}
+            <TabsContent value="generated" className="mt-0">
               <Tabs
                 value={generatedSourceFilter}
                 onValueChange={(v) => setGeneratedSourceFilter(v as LibrarySourceFilter)}
                 className="w-full"
               >
-                <div className="flex items-center justify-between gap-4 mb-4">
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-2">Generated Content</h2>
-                    <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
-                      <TabsTrigger
-                        value="all"
-                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                      >
-                        All
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="workflows"
-                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                      >
-                        Workflows
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="chats"
-                        className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
-                      >
-                        Chats
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
+                    <TabsTrigger
+                      value="all"
+                      className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                    >
+                      All
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="workflows"
+                      className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                    >
+                      Workflows
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="chats"
+                      className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"
+                    >
+                      Chats
+                    </TabsTrigger>
+                  </TabsList>
+
                   <LibraryFilters
                     sortOption={generatedSortOption}
                     onSortChange={setGeneratedSortOption}
@@ -183,12 +203,11 @@ export default function Library() {
                   />
                 </TabsContent>
               </Tabs>
-            </div>
+            </TabsContent>
 
-            {/* Right: Uploaded Content */}
-            <div>
-              <div className="flex items-center justify-between gap-4 mb-4">
-                <h2 className="text-lg font-semibold text-foreground">Uploaded Content</h2>
+            {/* Uploaded Content Tab */}
+            <TabsContent value="uploaded" className="mt-0">
+              <div className="flex items-center justify-end gap-4 mb-6">
                 <LibraryFilters
                   sortOption={uploadedSortOption}
                   onSortChange={setUploadedSortOption}
@@ -202,8 +221,8 @@ export default function Library() {
                 onDownload={handleDownload}
                 onDelete={handleDelete}
               />
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
@@ -235,7 +254,7 @@ function ContentGrid({ items, onPreview, onDownload, onDelete }: ContentGridProp
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
       {items.map((item) => (
         <LibraryCard
           key={item.id}

@@ -1,12 +1,15 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import MainLayout from "@/components/MainLayout";
 import { LibraryCard } from "@/components/library/LibraryCard";
 import { LibraryFilters } from "@/components/library/LibraryFilters";
 import { LibraryPreviewDialog } from "@/components/library/LibraryPreviewDialog";
+import { ProjectFilter } from "@/components/library/ProjectFilter";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { mockLibraryItems } from "@/data/libraryData";
+import { Button } from "@/components/ui/button";
+import { mockLibraryItems, mockProjects } from "@/data/libraryData";
 import { LibraryItem, LibraryFilterType, LibrarySortOption, LibrarySourceFilter } from "@/types/library";
 import { toast } from "@/hooks/use-toast";
+import { Upload } from "lucide-react";
 
 export default function Library() {
   // Top-level category tab
@@ -16,15 +19,20 @@ export default function Library() {
   const [generatedSourceFilter, setGeneratedSourceFilter] = useState<LibrarySourceFilter>("all");
   const [generatedSortOption, setGeneratedSortOption] = useState<LibrarySortOption>("newest");
   const [generatedTypeFilters, setGeneratedTypeFilters] = useState<LibraryFilterType[]>([]);
+  const [generatedProjectFilters, setGeneratedProjectFilters] = useState<string[]>([]);
   
   // Uploaded content state
   const [uploadedSortOption, setUploadedSortOption] = useState<LibrarySortOption>("newest");
   const [uploadedTypeFilters, setUploadedTypeFilters] = useState<LibraryFilterType[]>([]);
+  const [uploadedProjectFilters, setUploadedProjectFilters] = useState<string[]>([]);
   
   // Shared state
   const [items, setItems] = useState<LibraryItem[]>(mockLibraryItems);
   const [previewItem, setPreviewItem] = useState<LibraryItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  
+  // File upload ref
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePreview = (item: LibraryItem) => {
     setPreviewItem(item);
@@ -49,6 +57,65 @@ export default function Library() {
     }
   };
 
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      // In a real app, this would upload to storage
+      Array.from(files).forEach(file => {
+        const newItem: LibraryItem = {
+          id: `upload-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          name: file.name,
+          type: getFileType(file.type),
+          category: "uploaded",
+          source: { type: "upload", name: "Direct Upload", id: "upload" },
+          url: URL.createObjectURL(file),
+          createdAt: new Date(),
+          size: file.size,
+          mimeType: file.type,
+        };
+        setItems(prev => [newItem, ...prev]);
+      });
+      
+      toast({
+        title: "Upload complete",
+        description: `${files.length} file(s) uploaded successfully.`,
+      });
+    }
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const getFileType = (mimeType: string): LibraryItem["type"] => {
+    if (mimeType.startsWith("video/")) return "video";
+    if (mimeType.startsWith("image/")) return "image";
+    if (mimeType === "application/pdf") return "pdf";
+    if (mimeType.includes("word") || mimeType.includes("document")) return "word";
+    return "other";
+  };
+
+  // Project filter handlers
+  const handleGeneratedProjectSelect = (projectId: string) => {
+    setGeneratedProjectFilters(prev => [...prev, projectId]);
+  };
+  
+  const handleGeneratedProjectRemove = (projectId: string) => {
+    setGeneratedProjectFilters(prev => prev.filter(id => id !== projectId));
+  };
+  
+  const handleUploadedProjectSelect = (projectId: string) => {
+    setUploadedProjectFilters(prev => [...prev, projectId]);
+  };
+  
+  const handleUploadedProjectRemove = (projectId: string) => {
+    setUploadedProjectFilters(prev => prev.filter(id => id !== projectId));
+  };
+
   const generatedItems = useMemo(() => {
     let filtered = items.filter(item => item.category === "generated");
 
@@ -62,6 +129,11 @@ export default function Library() {
     // Type filters
     if (generatedTypeFilters.length > 0) {
       filtered = filtered.filter((item) => generatedTypeFilters.includes(item.type));
+    }
+
+    // Project filters
+    if (generatedProjectFilters.length > 0) {
+      filtered = filtered.filter((item) => item.projectId && generatedProjectFilters.includes(item.projectId));
     }
 
     // Sort
@@ -80,7 +152,7 @@ export default function Library() {
     });
 
     return filtered;
-  }, [items, generatedSourceFilter, generatedSortOption, generatedTypeFilters]);
+  }, [items, generatedSourceFilter, generatedSortOption, generatedTypeFilters, generatedProjectFilters]);
 
   const uploadedItems = useMemo(() => {
     let filtered = items.filter(item => item.category === "uploaded");
@@ -88,6 +160,11 @@ export default function Library() {
     // Type filters
     if (uploadedTypeFilters.length > 0) {
       filtered = filtered.filter((item) => uploadedTypeFilters.includes(item.type));
+    }
+
+    // Project filters
+    if (uploadedProjectFilters.length > 0) {
+      filtered = filtered.filter((item) => item.projectId && uploadedProjectFilters.includes(item.projectId));
     }
 
     // Sort
@@ -106,7 +183,7 @@ export default function Library() {
     });
 
     return filtered;
-  }, [items, uploadedSortOption, uploadedTypeFilters]);
+  }, [items, uploadedSortOption, uploadedTypeFilters, uploadedProjectFilters]);
 
   return (
     <MainLayout>
@@ -148,7 +225,7 @@ export default function Library() {
                 onValueChange={(v) => setGeneratedSourceFilter(v as LibrarySourceFilter)}
                 className="w-full"
               >
-                <div className="flex items-center justify-between gap-4 mb-6">
+                <div className="flex items-center justify-between gap-4 mb-4">
                   <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
                     <TabsTrigger
                       value="all"
@@ -175,6 +252,17 @@ export default function Library() {
                     onSortChange={setGeneratedSortOption}
                     typeFilters={generatedTypeFilters}
                     onTypeFilterChange={setGeneratedTypeFilters}
+                  />
+                </div>
+
+                {/* Project Filter */}
+                <div className="mb-4">
+                  <ProjectFilter
+                    projects={mockProjects}
+                    selectedProjects={generatedProjectFilters}
+                    onProjectSelect={handleGeneratedProjectSelect}
+                    onProjectRemove={handleGeneratedProjectRemove}
+                    onClearAll={() => setGeneratedProjectFilters([])}
                   />
                 </div>
 
@@ -207,7 +295,24 @@ export default function Library() {
 
             {/* Uploaded Content Tab */}
             <TabsContent value="uploaded" className="mt-0">
-              <div className="flex items-center justify-end gap-4 mb-6">
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleUploadClick}
+                  className="h-8 px-3 text-xs"
+                >
+                  <Upload className="h-3.5 w-3.5 mr-1.5" />
+                  Upload
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileChange}
+                  accept="image/*,video/*,.pdf,.doc,.docx"
+                />
                 <LibraryFilters
                   sortOption={uploadedSortOption}
                   onSortChange={setUploadedSortOption}
@@ -215,6 +320,18 @@ export default function Library() {
                   onTypeFilterChange={setUploadedTypeFilters}
                 />
               </div>
+
+              {/* Project Filter */}
+              <div className="mb-4">
+                <ProjectFilter
+                  projects={mockProjects}
+                  selectedProjects={uploadedProjectFilters}
+                  onProjectSelect={handleUploadedProjectSelect}
+                  onProjectRemove={handleUploadedProjectRemove}
+                  onClearAll={() => setUploadedProjectFilters([])}
+                />
+              </div>
+
               <ContentGrid
                 items={uploadedItems}
                 onPreview={handlePreview}

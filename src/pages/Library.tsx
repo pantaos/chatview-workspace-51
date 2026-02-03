@@ -77,8 +77,8 @@ export default function Library() {
             onValueChange={(v) => setSourceFilter(v as LibrarySourceFilter)}
             className="w-full"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <TabsList className="bg-transparent p-0 h-auto gap-4">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <TabsList className="bg-transparent p-0 h-auto gap-4 justify-start">
                 <TabsTrigger
                   value="all"
                   className="px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground"

@@ -30,6 +30,7 @@ import ConversationalWorkflow from "./components/ConversationalWorkflow";
 import CommunityFeed from "./pages/CommunityFeed";
 import WorkflowEditor from "./pages/WorkflowEditor";
 import TemplateLibrary from "./pages/TemplateLibrary";
+import Library from "./pages/Library";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -67,6 +68,7 @@ const App = () => {
                   <Route path="/admin-settings" element={<AdminSettings />} />
                   <Route path="/community-feed" element={<CommunityFeed />} />
                   <Route path="/templates" element={<TemplateLibrary />} />
+                  <Route path="/library" element={<Library />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   
                   {/* Trendcast Workflow Routes */}

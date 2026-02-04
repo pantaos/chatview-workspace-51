@@ -1,250 +1,162 @@
 
-# Library Page Enhancement: Two-Column Layout with Project Assignment
+# Implementation Plan: Actions Page, Standardized Headers, and Unified Inbox/Messages
 
 ## Overview
-Restructure the Library page into a two-column layout with **Generated Content** on the left and **Uploaded Content** on the right. Both sections will have the ability to add assets to projects via a contextual menu.
 
-## New Layout Structure
-
-```text
-+----------------------------------------------------------+
-| Library                                                   |
-| All your content in one place                             |
-+----------------------------------------------------------+
-|                                                           |
-| Generated Content              | Uploaded Content         |
-| [All] [Workflows] [Chats]      | [Sort] [Filter]          |
-| [Sort] [Filter]                |                          |
-+-------------------------------|---------------------------+
-|                               |                           |
-| +------+ +------+ +------+    | +------+ +------+         |
-| | vid  | | img  | | pdf  |    | | img  | | doc  |         |
-| +------+ +------+ +------+    | +------+ +------+         |
-|                               |                           |
-| +------+ +------+ +------+    | +------+ +------+         |
-| | doc  | | link | | vid  |    | | pdf  | | img  |         |
-| +------+ +------+ +------+    | +------+ +------+         |
-+----------------------------------------------------------+
-```
-
-On mobile, these sections will stack vertically.
-
-## Key Changes
-
-### 1. Split Layout (Left/Right Columns)
-- **Left Column**: Generated Content (existing items from workflows and chats)
-- **Right Column**: Uploaded Content (files directly uploaded by users)
-- Desktop: Side-by-side columns (50/50 split)
-- Mobile: Stacked vertically (Generated first, then Uploaded)
-
-### 2. Card Action Menu (3-dot menu)
-Each card will have a hover menu with options:
-- **Add to Project** - Opens a dropdown to select a project
-- **Chat** - Initiate a chat with this asset attached
-- **Download** (for files) / **Open Link** (for links)
-- **Delete** - Remove the asset (with confirmation)
-
-### 3. Data Model Updates
-Add `category` field to LibraryItem:
-```typescript
-interface LibraryItem {
-  // ... existing fields
-  category: 'uploaded' | 'generated';
-  projectId?: string;  // optional: if assigned to a project
-}
-```
-
-Add `'upload'` as a new source type:
-```typescript
-source: {
-  type: 'workflow' | 'chat' | 'upload';
-  name: string;
-  id: string;
-}
-```
+This plan addresses three interconnected improvements:
+1. Create a new "Aktionen" (Actions) page under Inbox
+2. Standardize the Library page header to match Community Feed and Admin patterns
+3. Merge Inbox and Messages into a unified notification center with popup + dedicated page
 
 ---
 
-## Technical Implementation
+## 1. New "Aktionen" Page
+
+### What We Will Build
+
+Based on the screenshot, we will create a dedicated Actions page that displays workflow-related actions like approvals, handoffs, and other tasks requiring user attention.
+
+**Page Structure:**
+- **Header**: Standardized pattern with headline "Aktionen" and subline "Genehmigungen, Ubergaben und andere Workflow-Aktionen prufen und beantworten"
+- **Tabs**: "Ausstehend" (Pending) and "Abgeschlossen" (Completed) with a refresh button
+- **Empty State**: Checkmark icon with "Keine ausstehenden Aktionen" message
+- **Detail Panel**: Right-side panel showing "Aufgabe auswahlen, um Details anzuzeigen" when no action is selected
+
+### Files to Create
+- `src/pages/Actions.tsx` - Main actions page component
 
 ### Files to Modify
-
-| File | Changes |
-|------|---------|
-| `src/pages/Library.tsx` | Restructure to two-column layout, add section headers, separate filters per section |
-| `src/components/library/LibraryCard.tsx` | Add 3-dot dropdown menu with Chat, Add to Project, Download, Delete options |
-| `src/types/library.ts` | Add `category` field, `projectId` field, `'upload'` source type |
-| `src/data/libraryData.ts` | Add `category` to existing items, add new mock uploaded items |
-
-### New Components (Optional)
-- `LibrarySectionHeader.tsx` - Reusable header for each section with title and filter controls
+- `src/App.tsx` - Add route for `/actions`
+- `src/components/AppSidebar.tsx` - Add "Aufgaben" (or "Aktionen") as a collapsible item under Inbox
 
 ---
 
-## Library.tsx New Structure
+## 2. Standardized Library Header
 
-```tsx
-<MainLayout>
-  <div className="min-h-screen bg-background">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Library</h1>
-        <p className="text-muted-foreground">All your content in one place</p>
-      </div>
-
-      {/* Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left: Generated Content */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Generated Content</h2>
-            <LibraryFilters ... />
-          </div>
-          <Tabs value={sourceFilter} ...>
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="workflows">Workflows</TabsTrigger>
-              <TabsTrigger value="chats">Chats</TabsTrigger>
-            </TabsList>
-            <TabsContent>
-              <ContentGrid items={generatedItems} ... />
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        {/* Right: Uploaded Content */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Uploaded Content</h2>
-            <LibraryFilters ... />
-          </div>
-          <ContentGrid items={uploadedItems} ... />
-        </div>
-      </div>
-    </div>
-  </div>
-</MainLayout>
+### Current State
+The Library page already has a header but will be verified to match the standardized pattern:
+```text
+Library (3xl bold)
+All your content in one place (muted-foreground)
 ```
+
+This matches the pattern used in:
+- Community Feed: "Community Feed" + "Stay updated with..."
+- Admin Panel: "Admin Panel" + "Manage users, teams..."
+
+### Files to Verify/Update
+- `src/pages/Library.tsx` - Ensure header matches the standard pattern (already looks correct)
 
 ---
 
-## LibraryCard Menu Structure
+## 3. Unified Inbox + Messages System
 
-```tsx
-<DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <button className="absolute top-2 right-2 p-1.5 rounded-full 
-      bg-black/50 hover:bg-black/70 text-white 
-      opacity-0 group-hover:opacity-100 transition-opacity">
-      <MoreHorizontal className="h-3.5 w-3.5" />
-    </button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent align="end">
-    {/* Add to Project - Submenu */}
-    <DropdownMenuSub>
-      <DropdownMenuSubTrigger>
-        <FolderPlus className="mr-2 h-4 w-4" />
-        Add to Project
-      </DropdownMenuSubTrigger>
-      <DropdownMenuSubContent>
-        <DropdownMenuItem>Project Alpha</DropdownMenuItem>
-        <DropdownMenuItem>Project Beta</DropdownMenuItem>
-        <DropdownMenuItem>Marketing Campaign</DropdownMenuItem>
-      </DropdownMenuSubContent>
-    </DropdownMenuSub>
-    
-    <DropdownMenuItem onClick={() => onChat(item)}>
-      <MessageSquare className="mr-2 h-4 w-4" />
-      Chat
-    </DropdownMenuItem>
-    
-    {item.type !== "link" ? (
-      <DropdownMenuItem onClick={() => onDownload(item)}>
-        <Download className="mr-2 h-4 w-4" />
-        Download
-      </DropdownMenuItem>
-    ) : (
-      <DropdownMenuItem onClick={() => onOpenLink(item)}>
-        <ExternalLink className="mr-2 h-4 w-4" />
-        Open Link
-      </DropdownMenuItem>
-    )}
-    
-    <DropdownMenuSeparator />
-    
-    <DropdownMenuItem 
-      onClick={() => onDelete(item)} 
-      className="text-destructive"
-    >
-      <Trash2 className="mr-2 h-4 w-4" />
-      Delete
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
+### Current State
+- Inbox opens as a popup panel from the sidebar (notifications/comments)
+- There is no separate "Messages" route currently visible
+
+### Proposed Solution
+
+We will enhance the existing Inbox popup to include:
+1. **Tabs within the popup**: "Nachrichten" (Messages) and "Aufgaben" (Actions)
+2. **Quick action links**: "Alle anzeigen" (View All) that navigates to dedicated pages
+3. **Badge indicators**: Unread count for messages, pending count for actions
+
+**Popup Enhancement:**
+```text
++---------------------------+
+| Inbox                  X  |
++---------------------------+
+| [Nachrichten] [Aufgaben]  |
++---------------------------+
+| Today                     |
+| - Notification item 1     |
+| - Notification item 2     |
++---------------------------+
+| Alle anzeigen -->         |
++---------------------------+
 ```
+
+### Sidebar Simplification
+- Keep single "Inbox" item in sidebar (removes need for separate Messages)
+- Inbox popup serves as the quick-access hub
+- Dedicated pages (/actions) for detailed views
+
+### Files to Modify
+- `src/components/AppSidebar.tsx` - Enhance InboxContent with tabs and "Alle anzeigen" link
+- `src/pages/Actions.tsx` - Create the full-page Actions view
 
 ---
 
-## Mock Data Updates
+## Technical Details
 
-### Add category to existing items
-```typescript
-{
-  id: "1",
-  name: "Trendcast_Q1_2026.mp4",
-  type: "video",
-  category: "generated",  // NEW
-  source: { type: "workflow", name: "Trendcast", id: "trendcast-1" },
-  // ...
-}
+### New Actions Page Structure
+
+```text
+src/pages/Actions.tsx
+├── MainLayout wrapper
+├── Header section (standardized)
+│   ├── h1: "Aktionen" (text-3xl font-bold)
+│   └── p: subtitle (text-muted-foreground)
+├── Tabs component
+│   ├── TabsList: "Ausstehend", "Abgeschlossen" + Refresh button
+│   ├── TabsContent "Ausstehend"
+│   │   └── Split layout (list | detail panel)
+│   └── TabsContent "Abgeschlossen"
+│       └── Completed actions list
+└── Empty states with appropriate icons
 ```
 
-### Add new uploaded content items
-```typescript
-{
-  id: "upload-1",
-  name: "Company_Logo.png",
-  type: "image",
-  category: "uploaded",
-  source: { type: "upload", name: "Direct Upload", id: "upload" },
-  thumbnail: "/placeholder.svg",
-  url: "#",
-  createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-  size: 450000,
-  mimeType: "image/png",
-},
-{
-  id: "upload-2",
-  name: "Product_Specs.pdf",
-  type: "pdf",
-  category: "uploaded",
-  source: { type: "upload", name: "Direct Upload", id: "upload" },
-  url: "#",
-  createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000),
-  size: 320000,
-  mimeType: "application/pdf",
-}
+### Sidebar Inbox Enhancement
+
+The existing InboxContent component will be updated to:
+1. Add internal tabs for Messages and Actions
+2. Add a "View All" link at the bottom that navigates to `/actions`
+3. Show pending action count in the Actions tab
+
+### Route Structure
+
+| Route | Page | Purpose |
+|-------|------|---------|
+| `/actions` | Actions.tsx | Full actions management page |
+| `/library` | Library.tsx | Content library (header standardized) |
+
+---
+
+## Visual Consistency
+
+All pages will follow this header pattern:
+
+```text
+┌─────────────────────────────────────┐
+│ Page Title          (text-3xl bold) │
+│ Description text    (muted, mt-1/2) │
+└─────────────────────────────────────┘
 ```
+
+This matches the existing patterns in:
+- Community Feed (line 348-350)
+- Admin Panel (line 108-110)
+- Library (line 208-212) - already correct
 
 ---
 
 ## Implementation Order
 
-1. Update `src/types/library.ts` with new fields
-2. Update `src/data/libraryData.ts` with categories and new mock items
-3. Refactor `src/pages/Library.tsx` to two-column layout
-4. Update `src/components/library/LibraryCard.tsx` with 3-dot dropdown menu
-5. Add project list mock data for "Add to Project" submenu
-6. Test responsive behavior on mobile
+1. Create `src/pages/Actions.tsx` with the new Actions page
+2. Add the `/actions` route to `src/App.tsx`
+3. Update `src/components/AppSidebar.tsx`:
+   - Add "Aufgaben" item that links to `/actions` 
+   - Enhance InboxContent with tabs and navigation
+4. Verify Library header is standardized (already appears correct)
 
 ---
 
-## Responsive Behavior
+## Summary of Changes
 
-| Breakpoint | Layout |
-|------------|--------|
-| Desktop (lg+) | Side-by-side columns |
-| Tablet/Mobile | Stacked vertically, Generated Content first |
-
-Grid classes: `grid grid-cols-1 lg:grid-cols-2 gap-8`
+| File | Action | Description |
+|------|--------|-------------|
+| `src/pages/Actions.tsx` | Create | New Actions page with pending/completed tabs |
+| `src/App.tsx` | Modify | Add `/actions` route |
+| `src/components/AppSidebar.tsx` | Modify | Add Aufgaben nav item, enhance Inbox popup with tabs |
+| `src/pages/Library.tsx` | Verify | Confirm header matches standard (no changes expected) |

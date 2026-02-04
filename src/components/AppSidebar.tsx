@@ -19,6 +19,8 @@ import {
   LayoutGrid,
   Sliders,
   FolderOpen,
+  ListTodo,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -37,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 // Sample notifications data - now as initial state
 const initialNotifications = [
@@ -167,77 +170,135 @@ const AppSidebar = ({
     return location.pathname === href;
   };
 
-  // Inbox Content Component (reusable for both mobile and desktop)
-  const InboxContent = () => (
-    <>
-      {/* Inbox Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
-        <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
-        <div className="flex items-center gap-0.5">
-          {unreadCount > 0 && (
-            <button 
-              onClick={markAllAsRead}
-              className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-muted-foreground/70 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
-            >
-              <CheckCheck className="h-3 w-3" />
-              <span>Mark all read</span>
-            </button>
-          )}
-          <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
-            <Filter className="h-3.5 w-3.5" />
-          </button>
-          <button 
-            onClick={() => setShowInbox(false)}
-            className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+  // Pending actions count (mock)
+  const pendingActionsCount = 0;
 
-      {/* Inbox Content */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="py-1">
-          <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
-          {notifications.map((notif) => (
-            <button
-              key={notif.id}
-              className={cn(
-                "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group relative min-h-[60px]",
-                notif.unread 
-                  ? "bg-primary/[0.06] hover:bg-primary/[0.10]" 
-                  : "hover:bg-muted/50"
-              )}
-            >
-              {notif.unread && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 rounded-r" />
-              )}
-              <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
-                <AvatarImage src={notif.user.avatar} />
-                <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-medium">
-                  {notif.user.initials}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className={cn(
-                    "text-[13px] text-foreground/90",
-                    notif.unread ? "font-medium" : "font-normal"
-                  )}>
-                    {notif.user.name}
-                  </span>
-                  <span className="text-[13px] text-muted-foreground/80">{notif.action}</span>
-                  <span className="text-[13px] text-foreground/80">{notif.project}</span>
-                </div>
-                <p className="text-[12px] text-muted-foreground/70 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
-              </div>
-              <span className="text-[11px] text-muted-foreground/60 flex-shrink-0 mt-0.5">{notif.time}</span>
+  // Inbox Content Component (reusable for both mobile and desktop)
+  const InboxContent = () => {
+    const [inboxTab, setInboxTab] = useState<"messages" | "actions">("messages");
+    
+    return (
+      <>
+        {/* Inbox Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
+          <h3 className="text-sm font-medium text-foreground/90">Inbox</h3>
+          <div className="flex items-center gap-0.5">
+            {unreadCount > 0 && inboxTab === "messages" && (
+              <button 
+                onClick={markAllAsRead}
+                className="flex items-center gap-1.5 px-2 py-1 text-[11px] text-muted-foreground/70 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
+              >
+                <CheckCheck className="h-3 w-3" />
+                <span>Mark all read</span>
+              </button>
+            )}
+            <button className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200">
+              <Filter className="h-3.5 w-3.5" />
             </button>
-          ))}
+            <button 
+              onClick={() => setShowInbox(false)}
+              className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-md transition-all duration-200"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
-      </div>
-    </>
-  );
+
+        {/* Tabs */}
+        <Tabs value={inboxTab} onValueChange={(v) => setInboxTab(v as "messages" | "actions")} className="flex-1 flex flex-col overflow-hidden">
+          <TabsList className="bg-transparent p-0 h-auto gap-4 px-4 py-2 border-b border-border/40 shrink-0 justify-start">
+            <TabsTrigger
+              value="messages"
+              className="px-0 pb-1 text-sm data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground relative"
+            >
+              Nachrichten
+              {unreadCount > 0 && (
+                <span className="ml-1.5 w-1.5 h-1.5 bg-primary rounded-full" />
+              )}
+            </TabsTrigger>
+            <TabsTrigger
+              value="actions"
+              className="px-0 pb-1 text-sm data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground relative"
+            >
+              Aufgaben
+              {pendingActionsCount > 0 && (
+                <span className="ml-1.5 text-[10px] bg-primary/20 text-primary px-1.5 rounded-full">
+                  {pendingActionsCount}
+                </span>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Messages Tab */}
+          <TabsContent value="messages" className="flex-1 overflow-y-auto scrollbar-hide mt-0">
+            <div className="py-1">
+              <p className="text-[11px] text-muted-foreground/70 px-4 py-2 uppercase tracking-wider font-medium">Today</p>
+              {notifications.map((notif) => (
+                <button
+                  key={notif.id}
+                  className={cn(
+                    "w-full flex items-start gap-3 px-4 py-3 transition-all duration-200 text-left group relative min-h-[60px]",
+                    notif.unread 
+                      ? "bg-primary/[0.06] hover:bg-primary/[0.10]" 
+                      : "hover:bg-muted/50"
+                  )}
+                >
+                  {notif.unread && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 rounded-r" />
+                  )}
+                  <Avatar className="h-7 w-7 flex-shrink-0 mt-0.5">
+                    <AvatarImage src={notif.user.avatar} />
+                    <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-medium">
+                      {notif.user.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className={cn(
+                        "text-[13px] text-foreground/90",
+                        notif.unread ? "font-medium" : "font-normal"
+                      )}>
+                        {notif.user.name}
+                      </span>
+                      <span className="text-[13px] text-muted-foreground/80">{notif.action}</span>
+                      <span className="text-[13px] text-foreground/80">{notif.project}</span>
+                    </div>
+                    <p className="text-[12px] text-muted-foreground/70 truncate mt-0.5 leading-relaxed">{notif.preview}</p>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground/60 flex-shrink-0 mt-0.5">{notif.time}</span>
+                </button>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Actions Tab */}
+          <TabsContent value="actions" className="flex-1 overflow-y-auto scrollbar-hide mt-0">
+            <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+              <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center mb-3">
+                <CheckCheck className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Keine ausstehenden Aufgaben
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* View All Link */}
+        <button
+          onClick={() => {
+            setShowInbox(false);
+            navigate("/actions");
+            onNavigate?.();
+          }}
+          className="flex items-center justify-between w-full px-4 py-3 border-t border-border/40 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors shrink-0"
+        >
+          <span>Alle anzeigen</span>
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </>
+    );
+  };
 
   // Render collapsed sidebar
   if (isCollapsed) {
@@ -334,6 +395,18 @@ const AppSidebar = ({
             title="History"
           >
             <History className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => navigate("/actions")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/actions")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Aufgaben"
+          >
+            <ListTodo className="h-5 w-5" />
           </button>
           <button
             onClick={() => navigate("/admin-settings?tab=workflow-builder")}
@@ -537,6 +610,18 @@ const AppSidebar = ({
               >
                 <History className="h-4 w-4 flex-shrink-0" />
                 <span>History</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/actions")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/actions")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <ListTodo className="h-4 w-4 flex-shrink-0" />
+                <span>Aufgaben</span>
               </button>
               <button
                 onClick={() => handleNavigate("/templates")}

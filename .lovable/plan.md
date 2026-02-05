@@ -1,162 +1,288 @@
 
-# Implementation Plan: Actions Page, Standardized Headers, and Unified Inbox/Messages
+# Plan: Smart Admin Workflow Customization Tab
 
 ## Overview
 
-This plan addresses three interconnected improvements:
-1. Create a new "Aktionen" (Actions) page under Inbox
-2. Standardize the Library page header to match Community Feed and Admin patterns
-3. Merge Inbox and Messages into a unified notification center with popup + dedicated page
+A new **"Workflows"** tab in the Admin Panel for configuring workflow steps, customization parameters, and adding approval/handover gates. Different clients can use the same workflow logic but with more or fewer approval steps.
 
 ---
 
-## 1. New "Aktionen" Page
+## Architecture
 
-### What We Will Build
+### Tab Location
+Position the new "Workflows" tab between "Teams" and "Community Feed" in Admin Panel.
 
-Based on the screenshot, we will create a dedicated Actions page that displays workflow-related actions like approvals, handoffs, and other tasks requiring user attention.
-
-**Page Structure:**
-- **Header**: Standardized pattern with headline "Aktionen" and subline "Genehmigungen, Ubergaben und andere Workflow-Aktionen prufen und beantworten"
-- **Tabs**: "Ausstehend" (Pending) and "Abgeschlossen" (Completed) with a refresh button
-- **Empty State**: Checkmark icon with "Keine ausstehenden Aktionen" message
-- **Detail Panel**: Right-side panel showing "Aufgabe auswahlen, um Details anzuzeigen" when no action is selected
-
-### Files to Create
-- `src/pages/Actions.tsx` - Main actions page component
-
-### Files to Modify
-- `src/App.tsx` - Add route for `/actions`
-- `src/components/AppSidebar.tsx` - Add "Aufgaben" (or "Aktionen") as a collapsible item under Inbox
+### Components
+1. **Workflow Grid** - Square cards (4-per-row) matching Integrations pattern
+2. **Workflow Configuration Dialog** - Multi-tab dialog using ResponsiveDialog (like AdminIntegrationDialog)
 
 ---
 
-## 2. Standardized Library Header
+## 1. Workflow Grid
 
-### Current State
-The Library page already has a header but will be verified to match the standardized pattern:
+Same design pattern as Integrations - square cards with:
+- Workflow icon
+- Workflow name  
+- Step count + Approval count badges
+- Click opens configuration dialog
+
 ```text
-Library (3xl bold)
-All your content in one place (muted-foreground)
++------------------+------------------+------------------+------------------+
+|   TrendCast      |   HDI Content    |   ASB Avatar     |   BitProject     |
+|   [icon]         |   [icon]         |   [icon]         |   [icon]         |
+|   8 Steps        |   10 Steps       |   14 Steps       |   5 Steps        |
+|   2 Approvals    |   3 Approvals    |   6 Approvals    |   0 Approvals    |
++------------------+------------------+------------------+------------------+
 ```
 
-This matches the pattern used in:
-- Community Feed: "Community Feed" + "Stay updated with..."
-- Admin Panel: "Admin Panel" + "Manage users, teams..."
+---
 
-### Files to Verify/Update
-- `src/pages/Library.tsx` - Ensure header matches the standard pattern (already looks correct)
+## 2. Workflow Configuration Dialog
+
+Using the same pattern as AdminIntegrationDialog with:
+- Tab navigation per step (Overview, Step1, Step2, ...)
+- Sub-screens for user/team pickers
+- Clean key-value layout
+
+### Tab Structure
+
+| Tab | Content |
+|-----|---------|
+| **Overview** | Workflow metadata, welcome message, global settings |
+| **Step 1** ... **Step N** | Per-step configuration based on step type |
 
 ---
 
-## 3. Unified Inbox + Messages System
+## 3. Per-Step Configuration (Based on Document Analysis)
 
-### Current State
-- Inbox opens as a popup panel from the sidebar (notifications/comments)
-- There is no separate "Messages" route currently visible
+### Every Step Gets Collaboration Options
 
-### Proposed Solution
+At the bottom of EVERY step configuration, add a collapsible section:
 
-We will enhance the existing Inbox popup to include:
-1. **Tabs within the popup**: "Nachrichten" (Messages) and "Aufgaben" (Actions)
-2. **Quick action links**: "Alle anzeigen" (View All) that navigates to dedicated pages
-3. **Badge indicators**: Unread count for messages, pending count for actions
+**"+ Add Approval/Handover"**
 
-**Popup Enhancement:**
+When enabled, shows:
+- Type: Approval / Handover (radio)
+- Assignee Type: User / Team / Role (radio)
+- Select button → opens picker sub-screen
+- Timeout Hours (number input)
+- Require Comments (toggle)
+- Allow Reassignment (toggle)
+- Escalation settings (collapsible)
+
+This allows clients to add approval gates to any step in a workflow.
+
+---
+
+### Step Type: Form
+
+Configuration options (from document):
+| Setting | Control |
+|---------|---------|
+| Title | Text input |
+| Description | Textarea |
+| Submit Button Text | Text input |
+| Fields | Field list (read-only, shows field labels) |
+
+**Image Cropping (if file fields present):**
+| Setting | Control |
+|---------|---------|
+| Enable Cropping | Toggle |
+| Width | Number input |
+| Height | Number input |
+| Aspect Ratio | Calculated display |
+
+---
+
+### Step Type: Processing
+
+Configuration based on processor type (from document analysis):
+
+| Processor | Configurable Parameters | Controls |
+|-----------|------------------------|----------|
+| scrape_and_generate_script | target_duration (30-300s), max_script_length | Slider, Number |
+| text_to_speech | voice_id, stability, similarity_boost | Voice picker, Sliders |
+| extract_text_and_generate_script | min_script_length, max_script_length | Range slider |
+| content_to_video_generate_scenes | min_scenes, max_scenes | Range slider |
+| generate_titles_and_bullets | max_bullets | Number input |
+| generate_background_images | template_path, title_color, max_bullets | Dropdown, Color picker |
+| generate_mcq_from_script | num_questions (1-20) | Number input |
+| json_to_video | use_captions, use_subtitles, caption_mode | Toggles, Dropdown |
+| ftp_distribution | ftp_server, upload_xml, upload_videos | Config panel |
+
+**Polling Configuration (for long-running):**
+| Setting | Control | Range |
+|---------|---------|-------|
+| Interval Seconds | Slider | 1-60 |
+| Timeout Seconds | Number | 60-7200 |
+| Max Retries | Number | 1-500 |
+
+---
+
+### Step Type: Approval
+
+Configuration options:
+| Setting | Control |
+|---------|---------|
+| Title | Text input |
+| Description | Textarea |
+| On Approve → | Step dropdown |
+| On Reject → | Step dropdown |
+| Auto Approve | Toggle |
+| Approval Message | Text input |
+| Rejection Message | Text input |
+| Group By Field | Field dropdown |
+
+**Collaboration Settings (built-in for approval steps):**
+| Setting | Control |
+|---------|---------|
+| Enable Multi-User | Toggle |
+| Assignee Type | Radio: User / Team / Role |
+| Select Assignees | Button → picker sub-screen |
+| Timeout Hours | Number input |
+| Require Comments | Toggle |
+| Allow Reassignment | Toggle |
+| Escalation | Collapsible config panel |
+
+---
+
+### Step Type: Branch
+
+| Setting | Control |
+|---------|---------|
+| Title | Text input |
+| Description | Textarea |
+| Branch Field | Field picker |
+| Route Mapping | Value → Step mapping list |
+
+---
+
+### Step Type: Output
+
+| Setting | Control |
+|---------|---------|
+| Output Type | Dropdown: text / completion / download |
+| Template | HTML editor with variable picker |
+
+---
+
+## 4. UI Layout Per Step
+
+Clean, minimal layout following existing patterns:
+
 ```text
-+---------------------------+
-| Inbox                  X  |
-+---------------------------+
-| [Nachrichten] [Aufgaben]  |
-+---------------------------+
-| Today                     |
-| - Notification item 1     |
-| - Notification item 2     |
-+---------------------------+
-| Alle anzeigen -->         |
-+---------------------------+
++---------------------------------------------------+
+| STEP CONFIGURATION                                |
++---------------------------------------------------+
+| Step Title:  [_________________________]          |
+| Description: [___________________________         |
+|              ___________________________]         |
++---------------------------------------------------+
+| PROCESSOR SETTINGS (for processing steps)         |
+|                                                   |
+| Script Length                                     |
+| Min: [____]  Max: [____]                         |
+|                                                   |
+| Auto Execute: [toggle]                           |
++---------------------------------------------------+
+| + ADD APPROVAL/HANDOVER                    [▼]   |
+|                                                   |
+| (when expanded)                                   |
+| ○ Approval  ○ Handover                           |
+|                                                   |
+| Assign to:                                        |
+| ○ User  ○ Team  ○ Role                          |
+| [Select Assignees →]                             |
+|                                                   |
+| Timeout: [48] hours                              |
+| □ Require Comments                               |
+| □ Allow Reassignment                             |
+|                                                   |
+| + Escalation Settings                      [▼]   |
++---------------------------------------------------+
 ```
 
-### Sidebar Simplification
-- Keep single "Inbox" item in sidebar (removes need for separate Messages)
-- Inbox popup serves as the quick-access hub
-- Dedicated pages (/actions) for detailed views
+---
 
-### Files to Modify
-- `src/components/AppSidebar.tsx` - Enhance InboxContent with tabs and "Alle anzeigen" link
-- `src/pages/Actions.tsx` - Create the full-page Actions view
+## 5. Files to Create
+
+| File | Purpose |
+|------|---------|
+| `src/components/admin/AdminWorkflowsTab.tsx` | Main workflow grid component |
+| `src/components/admin/WorkflowConfigDialog.tsx` | Configuration dialog with step tabs |
+| `src/types/workflowAdmin.ts` | TypeScript interfaces |
+
+## 6. Files to Modify
+
+| File | Change |
+|------|--------|
+| `src/pages/AdminSettings.tsx` | Add "Workflows" tab |
+
+---
+
+## 7. Mock Data (Based on Document)
+
+Sample workflows with their actual customizable parameters:
+
+| Workflow | Steps | Key Customizations |
+|----------|-------|-------------------|
+| TrendCast Versa | 8 | target_duration, voice_id, caption_mode |
+| HDI Content-to-Video | 10 | script_length range, scene count, image cropping |
+| ASB AI Avatar | 14 | script_length, scene count, max_bullets, num_questions |
+| BitProject FTP | 5 | category options, FTP config, schema_type |
+| BitProject Newsletter | 6 | RSS sources, email template |
 
 ---
 
 ## Technical Details
 
-### New Actions Page Structure
+### TypeScript Interfaces
 
-```text
-src/pages/Actions.tsx
-├── MainLayout wrapper
-├── Header section (standardized)
-│   ├── h1: "Aktionen" (text-3xl font-bold)
-│   └── p: subtitle (text-muted-foreground)
-├── Tabs component
-│   ├── TabsList: "Ausstehend", "Abgeschlossen" + Refresh button
-│   ├── TabsContent "Ausstehend"
-│   │   └── Split layout (list | detail panel)
-│   └── TabsContent "Abgeschlossen"
-│       └── Completed actions list
-└── Empty states with appropriate icons
+```typescript
+interface WorkflowAdminConfig {
+  id: string;
+  name: string;
+  description: string;
+  welcomeMessage: string;
+  steps: WorkflowStepAdmin[];
+  settings: WorkflowSettings;
+}
+
+interface WorkflowStepAdmin {
+  id: string;
+  title: string;
+  type: 'form' | 'processing' | 'approval' | 'branch' | 'output';
+  processorType?: string;
+  config: StepConfig;
+  collaboration?: CollaborationConfig; // Can be added to ANY step
+}
+
+interface CollaborationConfig {
+  enabled: boolean;
+  type: 'approval' | 'handoff';
+  assigneeType: 'user' | 'team' | 'role';
+  assigneeIds: string[];
+  timeoutHours: number;
+  requireComments: boolean;
+  allowReassignment: boolean;
+  escalation?: EscalationConfig;
+}
+
+interface EscalationConfig {
+  enabled: boolean;
+  afterHours: number;
+  toType: 'user' | 'team' | 'role';
+  toIds: string[];
+  notifyOriginal: boolean;
+}
 ```
 
-### Sidebar Inbox Enhancement
-
-The existing InboxContent component will be updated to:
-1. Add internal tabs for Messages and Actions
-2. Add a "View All" link at the bottom that navigates to `/actions`
-3. Show pending action count in the Actions tab
-
-### Route Structure
-
-| Route | Page | Purpose |
-|-------|------|---------|
-| `/actions` | Actions.tsx | Full actions management page |
-| `/library` | Library.tsx | Content library (header standardized) |
-
 ---
 
-## Visual Consistency
+## Summary
 
-All pages will follow this header pattern:
-
-```text
-┌─────────────────────────────────────┐
-│ Page Title          (text-3xl bold) │
-│ Description text    (muted, mt-1/2) │
-└─────────────────────────────────────┘
-```
-
-This matches the existing patterns in:
-- Community Feed (line 348-350)
-- Admin Panel (line 108-110)
-- Library (line 208-212) - already correct
-
----
-
-## Implementation Order
-
-1. Create `src/pages/Actions.tsx` with the new Actions page
-2. Add the `/actions` route to `src/App.tsx`
-3. Update `src/components/AppSidebar.tsx`:
-   - Add "Aufgaben" item that links to `/actions` 
-   - Enhance InboxContent with tabs and navigation
-4. Verify Library header is standardized (already appears correct)
-
----
-
-## Summary of Changes
-
-| File | Action | Description |
-|------|--------|-------------|
-| `src/pages/Actions.tsx` | Create | New Actions page with pending/completed tabs |
-| `src/App.tsx` | Modify | Add `/actions` route |
-| `src/components/AppSidebar.tsx` | Modify | Add Aufgaben nav item, enhance Inbox popup with tabs |
-| `src/pages/Library.tsx` | Verify | Confirm header matches standard (no changes expected) |
+1. **New "Workflows" tab** in Admin with square card grid
+2. **Per-step configuration** with actual customizable parameters from the document
+3. **Every step can have approval/handover added** - enabling different clients to add more approval gates to the same workflow
+4. **Dialog follows AdminIntegrationDialog pattern** - tabs for each step, sub-screens for pickers
+5. **Clean, minimal UI** - no heavy cards, simple key-value layouts with toggles and inputs

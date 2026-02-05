@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare } from "lucide-react";
+import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare, Workflow } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -10,6 +10,7 @@ import AdminUsers from "@/components/admin/AdminUsers";
 import AdminTeams from "@/components/admin/AdminTeams";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
+import AdminWorkflowsTab from "@/components/admin/AdminWorkflowsTab";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
@@ -51,6 +52,13 @@ const AdminSettings = () => {
       shortLabel: "Teams",
       icon: UsersIcon,
       description: "Team Organization"
+    },
+    { 
+      id: "workflows", 
+      label: "Workflows", 
+      shortLabel: "Workflows",
+      icon: Workflow,
+      description: "Workflow Customization"
     },
     { 
       id: "community", 
@@ -133,6 +141,9 @@ const AdminSettings = () => {
           </TabsContent>
           <TabsContent value="teams" className="mt-0">
             <AdminTeams />
+          </TabsContent>
+          <TabsContent value="workflows" className="mt-0">
+            <AdminWorkflowsTab />
           </TabsContent>
           <TabsContent value="community" className="mt-0">
             <CommunityFeed />

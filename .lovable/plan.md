@@ -1,288 +1,102 @@
 
-# Plan: Smart Admin Workflow Customization Tab
 
-## Overview
+# Plan: Workflow Config Dialog Polish
 
-A new **"Workflows"** tab in the Admin Panel for configuring workflow steps, customization parameters, and adding approval/handover gates. Different clients can use the same workflow logic but with more or fewer approval steps.
+## What Changes
 
----
+### 1. Overview Tab - Workflow Info Section
 
-## Architecture
+Add a clear description of what the workflow does at the top of the Overview tab. This includes a short pipeline visualization showing the flow of steps as a compact horizontal chain:
 
-### Tab Location
-Position the new "Workflows" tab between "Teams" and "Community Feed" in Admin Panel.
-
-### Components
-1. **Workflow Grid** - Square cards (4-per-row) matching Integrations pattern
-2. **Workflow Configuration Dialog** - Multi-tab dialog using ResponsiveDialog (like AdminIntegrationDialog)
-
----
-
-## 1. Workflow Grid
-
-Same design pattern as Integrations - square cards with:
-- Workflow icon
-- Workflow name  
-- Step count + Approval count badges
-- Click opens configuration dialog
-
-```text
-+------------------+------------------+------------------+------------------+
-|   TrendCast      |   HDI Content    |   ASB Avatar     |   BitProject     |
-|   [icon]         |   [icon]         |   [icon]         |   [icon]         |
-|   8 Steps        |   10 Steps       |   14 Steps       |   5 Steps        |
-|   2 Approvals    |   3 Approvals    |   6 Approvals    |   0 Approvals    |
-+------------------+------------------+------------------+------------------+
+```
+Upload Links -> Generate Script -> Approve Script -> TTS -> Scenes -> ...
 ```
 
----
+Each step shown as a small pill/badge with its type color, giving admins an instant understanding of the workflow structure.
 
-## 2. Workflow Configuration Dialog
+### 2. Step Locking (Greyed Out Steps)
 
-Using the same pattern as AdminIntegrationDialog with:
-- Tab navigation per step (Overview, Step1, Step2, ...)
-- Sub-screens for user/team pickers
-- Clean key-value layout
+Add an `editable` flag to each step in the mock data. Steps that are core infrastructure (like form uploads, rendering, output/download) get `editable: false`. In the dialog:
 
-### Tab Structure
+- **Sidebar tabs**: Locked steps show a lock icon and appear slightly dimmed
+- **Step content**: When a locked step is selected, all fields are disabled/read-only with a subtle info banner: "This step is part of the core workflow logic and cannot be customized."
+- The "Add Approval/Handover" section at the bottom remains always available, even on locked steps (since that's the whole point - clients can add approval gates anywhere)
 
-| Tab | Content |
-|-----|---------|
-| **Overview** | Workflow metadata, welcome message, global settings |
-| **Step 1** ... **Step N** | Per-step configuration based on step type |
+Steps marked as locked for TrendCast example:
+- Upload Links (form) - locked
+- Render Video (processing) - locked
+- Download (output) - locked
 
----
+Steps that remain editable:
+- Generate Script - editable (has system prompt, target duration, etc.)
+- Text to Speech - editable (voice settings)
+- Generate Scenes - editable (scene count)
+- Approval steps - always editable
 
-## 3. Per-Step Configuration (Based on Document Analysis)
+### 3. System Prompt Field
 
-### Every Step Gets Collaboration Options
+Add a `systemPrompt` field to the `StepConfig` interface. For processing steps like `scrape_and_generate_script` and `extract_text_and_generate_script`, show a dedicated "System Prompt" textarea in the step configuration. This is the AI prompt that runs behind the scenes when the user submits content.
 
-At the bottom of EVERY step configuration, add a collapsible section:
-
-**"+ Add Approval/Handover"**
-
-When enabled, shows:
-- Type: Approval / Handover (radio)
-- Assignee Type: User / Team / Role (radio)
-- Select button → opens picker sub-screen
-- Timeout Hours (number input)
-- Require Comments (toggle)
-- Allow Reassignment (toggle)
-- Escalation settings (collapsible)
-
-This allows clients to add approval gates to any step in a workflow.
-
----
-
-### Step Type: Form
-
-Configuration options (from document):
-| Setting | Control |
-|---------|---------|
-| Title | Text input |
-| Description | Textarea |
-| Submit Button Text | Text input |
-| Fields | Field list (read-only, shows field labels) |
-
-**Image Cropping (if file fields present):**
-| Setting | Control |
-|---------|---------|
-| Enable Cropping | Toggle |
-| Width | Number input |
-| Height | Number input |
-| Aspect Ratio | Calculated display |
-
----
-
-### Step Type: Processing
-
-Configuration based on processor type (from document analysis):
-
-| Processor | Configurable Parameters | Controls |
-|-----------|------------------------|----------|
-| scrape_and_generate_script | target_duration (30-300s), max_script_length | Slider, Number |
-| text_to_speech | voice_id, stability, similarity_boost | Voice picker, Sliders |
-| extract_text_and_generate_script | min_script_length, max_script_length | Range slider |
-| content_to_video_generate_scenes | min_scenes, max_scenes | Range slider |
-| generate_titles_and_bullets | max_bullets | Number input |
-| generate_background_images | template_path, title_color, max_bullets | Dropdown, Color picker |
-| generate_mcq_from_script | num_questions (1-20) | Number input |
-| json_to_video | use_captions, use_subtitles, caption_mode | Toggles, Dropdown |
-| ftp_distribution | ftp_server, upload_xml, upload_videos | Config panel |
-
-**Polling Configuration (for long-running):**
-| Setting | Control | Range |
-|---------|---------|-------|
-| Interval Seconds | Slider | 1-60 |
-| Timeout Seconds | Number | 60-7200 |
-| Max Retries | Number | 1-500 |
-
----
-
-### Step Type: Approval
-
-Configuration options:
-| Setting | Control |
-|---------|---------|
-| Title | Text input |
-| Description | Textarea |
-| On Approve → | Step dropdown |
-| On Reject → | Step dropdown |
-| Auto Approve | Toggle |
-| Approval Message | Text input |
-| Rejection Message | Text input |
-| Group By Field | Field dropdown |
-
-**Collaboration Settings (built-in for approval steps):**
-| Setting | Control |
-|---------|---------|
-| Enable Multi-User | Toggle |
-| Assignee Type | Radio: User / Team / Role |
-| Select Assignees | Button → picker sub-screen |
-| Timeout Hours | Number input |
-| Require Comments | Toggle |
-| Allow Reassignment | Toggle |
-| Escalation | Collapsible config panel |
-
----
-
-### Step Type: Branch
-
-| Setting | Control |
-|---------|---------|
-| Title | Text input |
-| Description | Textarea |
-| Branch Field | Field picker |
-| Route Mapping | Value → Step mapping list |
-
----
-
-### Step Type: Output
-
-| Setting | Control |
-|---------|---------|
-| Output Type | Dropdown: text / completion / download |
-| Template | HTML editor with variable picker |
-
----
-
-## 4. UI Layout Per Step
-
-Clean, minimal layout following existing patterns:
-
-```text
-+---------------------------------------------------+
-| STEP CONFIGURATION                                |
-+---------------------------------------------------+
-| Step Title:  [_________________________]          |
-| Description: [___________________________         |
-|              ___________________________]         |
-+---------------------------------------------------+
-| PROCESSOR SETTINGS (for processing steps)         |
-|                                                   |
-| Script Length                                     |
-| Min: [____]  Max: [____]                         |
-|                                                   |
-| Auto Execute: [toggle]                           |
-+---------------------------------------------------+
-| + ADD APPROVAL/HANDOVER                    [▼]   |
-|                                                   |
-| (when expanded)                                   |
-| ○ Approval  ○ Handover                           |
-|                                                   |
-| Assign to:                                        |
-| ○ User  ○ Team  ○ Role                          |
-| [Select Assignees →]                             |
-|                                                   |
-| Timeout: [48] hours                              |
-| □ Require Comments                               |
-| □ Allow Reassignment                             |
-|                                                   |
-| + Escalation Settings                      [▼]   |
-+---------------------------------------------------+
+Example for TrendCast "Generate Script" step:
+```
+System Prompt
+[large textarea with the prompt that controls how AI generates the script]
 ```
 
----
+This appears as the first field in the processor settings section, clearly labeled, with a helper text: "The AI prompt used to generate content in this step."
 
-## 5. Files to Create
+### 4. Cleaner Design
 
-| File | Purpose |
-|------|---------|
-| `src/components/admin/AdminWorkflowsTab.tsx` | Main workflow grid component |
-| `src/components/admin/WorkflowConfigDialog.tsx` | Configuration dialog with step tabs |
-| `src/types/workflowAdmin.ts` | TypeScript interfaces |
-
-## 6. Files to Modify
-
-| File | Change |
-|------|--------|
-| `src/pages/AdminSettings.tsx` | Add "Workflows" tab |
-
----
-
-## 7. Mock Data (Based on Document)
-
-Sample workflows with their actual customizable parameters:
-
-| Workflow | Steps | Key Customizations |
-|----------|-------|-------------------|
-| TrendCast Versa | 8 | target_duration, voice_id, caption_mode |
-| HDI Content-to-Video | 10 | script_length range, scene count, image cropping |
-| ASB AI Avatar | 14 | script_length, scene count, max_bullets, num_questions |
-| BitProject FTP | 5 | category options, FTP config, schema_type |
-| BitProject Newsletter | 6 | RSS sources, email template |
+- **Remove redundant section headers**: Instead of "Processor Settings" as a header, use a subtle divider only
+- **Tighter spacing**: Reduce space-y-6 to space-y-4 in step configs
+- **Better step type badge**: Move the badge inline with the step title instead of being a separate row
+- **Cleaner overview**: Remove the raw metadata list (Total Steps, Approval Gates, Last Modified) and replace with the pipeline visualization + editable fields only
+- **Sidebar step labels**: Show step number and short name, with type indicated by a small colored dot instead of text
 
 ---
 
 ## Technical Details
 
-### TypeScript Interfaces
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `src/types/workflowAdmin.ts` | Add `editable` field to `WorkflowStepAdmin`, add `systemPrompt` to `StepConfig`, update mock data with locked steps and sample system prompts |
+| `src/components/admin/WorkflowConfigDialog.tsx` | Refactor Overview tab with pipeline view, add lock/disabled state for non-editable steps, add system prompt textarea, cleaner layout |
+
+### Data Model Changes
 
 ```typescript
-interface WorkflowAdminConfig {
-  id: string;
-  name: string;
-  description: string;
-  welcomeMessage: string;
-  steps: WorkflowStepAdmin[];
-  settings: WorkflowSettings;
-}
-
 interface WorkflowStepAdmin {
-  id: string;
-  title: string;
-  type: 'form' | 'processing' | 'approval' | 'branch' | 'output';
-  processorType?: string;
-  config: StepConfig;
-  collaboration?: CollaborationConfig; // Can be added to ANY step
+  // ... existing fields
+  editable?: boolean; // defaults to true, false = greyed out / read-only
 }
 
-interface CollaborationConfig {
-  enabled: boolean;
-  type: 'approval' | 'handoff';
-  assigneeType: 'user' | 'team' | 'role';
-  assigneeIds: string[];
-  timeoutHours: number;
-  requireComments: boolean;
-  allowReassignment: boolean;
-  escalation?: EscalationConfig;
-}
-
-interface EscalationConfig {
-  enabled: boolean;
-  afterHours: number;
-  toType: 'user' | 'team' | 'role';
-  toIds: string[];
-  notifyOriginal: boolean;
+interface StepConfig {
+  // ... existing fields
+  systemPrompt?: string; // AI system prompt for processing steps
 }
 ```
 
----
+### Mock Data Updates
 
-## Summary
+TrendCast steps with `editable` flags:
+- `upload`: editable = false (core form, no customization needed)
+- `scrape`: editable = true + systemPrompt = "You are a video script writer..."
+- `script_approval`: editable = true
+- `tts`: editable = true (voice settings)
+- `scenes`: editable = true (scene count)
+- `scenes_approval`: editable = true
+- `render`: editable = false (core processing)
+- `output`: editable = false (core output)
 
-1. **New "Workflows" tab** in Admin with square card grid
-2. **Per-step configuration** with actual customizable parameters from the document
-3. **Every step can have approval/handover added** - enabling different clients to add more approval gates to the same workflow
-4. **Dialog follows AdminIntegrationDialog pattern** - tabs for each step, sub-screens for pickers
-5. **Clean, minimal UI** - no heavy cards, simple key-value layouts with toggles and inputs
+Similar patterns for other workflows.
+
+### UI Behavior
+
+- Locked steps in sidebar: dimmed text + small lock icon
+- Locked step content: all Input/Switch/Slider/Textarea get `disabled` prop, reduced opacity via `opacity-50` wrapper
+- Info banner at top of locked steps: light muted background with "Core step - configuration locked" text
+- Approval/Handover section at bottom: always enabled regardless of step lock status (this is the key feature)
+- System prompt textarea: taller than regular textareas (rows=6), appears first in processor settings for applicable step types
+

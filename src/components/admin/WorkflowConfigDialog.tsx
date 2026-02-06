@@ -8,13 +8,24 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { ChevronLeft, ChevronDown, ChevronUp, Users, User, Shield, Clock, MessageSquare } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  User,
+  Shield,
+  Clock,
+  MessageSquare,
+  Lock,
+  Info,
+  ArrowRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
-  ResponsiveDialogTabs,
   ResponsiveDialogContent,
 } from "@/components/ui/responsive-dialog";
 import {
@@ -56,6 +67,14 @@ const mockRoles = [
   { id: "admin", name: "Admin", userCount: 5 },
 ];
 
+const stepTypeColors: Record<string, string> = {
+  form: "bg-blue-500",
+  processing: "bg-amber-500",
+  approval: "bg-green-500",
+  branch: "bg-purple-500",
+  output: "bg-slate-500",
+};
+
 export const WorkflowConfigDialog = ({
   workflow,
   open,
@@ -80,14 +99,6 @@ export const WorkflowConfigDialog = ({
       setEscalationOpen({});
     }
   }, [open]);
-
-  const tabs = [
-    { id: "overview", label: "Overview" },
-    ...workflow.steps.map((step, idx) => ({
-      id: step.id,
-      label: `${idx + 1}. ${step.title}`,
-    })),
-  ];
 
   const isSubScreen =
     activeScreen.includes("-teams") ||
@@ -174,6 +185,87 @@ export const WorkflowConfigDialog = ({
     }
   };
 
+  // --- Sidebar Tabs ---
+  const renderSidebar = () => {
+    return (
+      <nav className="flex-1 p-2 space-y-0.5">
+        <button
+          onClick={() => setActiveScreen("overview")}
+          className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${
+            activeScreen === "overview"
+              ? "bg-background text-foreground font-medium shadow-sm"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          Overview
+        </button>
+        {workflow.steps.map((step, idx) => {
+          const isLocked = step.editable === false;
+          const dotColor = stepTypeColors[step.type] || "bg-muted";
+          return (
+            <button
+              key={step.id}
+              onClick={() => setActiveScreen(step.id)}
+              className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 ${
+                activeScreen === step.id
+                  ? "bg-background text-foreground font-medium shadow-sm"
+                  : isLocked
+                  ? "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/30"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+              <span className="truncate flex-1">
+                {idx + 1}. {step.title}
+              </span>
+              {isLocked && <Lock className="w-3 h-3 shrink-0 text-muted-foreground/40" />}
+            </button>
+          );
+        })}
+      </nav>
+    );
+  };
+
+  // --- Mobile Tabs ---
+  const renderMobileTabs = () => {
+    return (
+      <div className="border-b border-border/40 shrink-0">
+        <div className="flex overflow-x-auto scrollbar-hide px-4 py-2 gap-1">
+          <button
+            onClick={() => setActiveScreen("overview")}
+            className={`px-3 py-2 text-sm rounded-lg whitespace-nowrap transition-colors min-h-[44px] ${
+              activeScreen === "overview"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            }`}
+          >
+            Overview
+          </button>
+          {workflow.steps.map((step, idx) => {
+            const isLocked = step.editable === false;
+            return (
+              <button
+                key={step.id}
+                onClick={() => setActiveScreen(step.id)}
+                className={`px-3 py-2 text-sm rounded-lg whitespace-nowrap transition-colors min-h-[44px] flex items-center gap-1.5 ${
+                  activeScreen === step.id
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : isLocked
+                    ? "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/30"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                {idx + 1}. {step.title}
+                {isLocked && <Lock className="w-3 h-3" />}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // --- Collaboration Section ---
   const renderCollaborationSection = (step: WorkflowStepAdmin) => {
     const isOpen = collaborationOpen[step.id] || step.collaboration?.enabled;
     const hasCollaboration = step.collaboration?.enabled;
@@ -271,7 +363,16 @@ export const WorkflowConfigDialog = ({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleSelectClick(step.id, step.collaboration!.assigneeType === "team" ? "teams" : step.collaboration!.assigneeType === "role" ? "roles" : "users")}
+                  onClick={() =>
+                    handleSelectClick(
+                      step.id,
+                      step.collaboration!.assigneeType === "team"
+                        ? "teams"
+                        : step.collaboration!.assigneeType === "role"
+                        ? "roles"
+                        : "users"
+                    )
+                  }
                   className="w-full justify-between min-h-[44px]"
                 >
                   <span>
@@ -325,7 +426,7 @@ export const WorkflowConfigDialog = ({
                 </div>
               </div>
 
-              {/* Escalation Settings */}
+              {/* Escalation */}
               <Collapsible
                 open={escalationOpen[step.id]}
                 onOpenChange={(open) => setEscalationOpen((prev) => ({ ...prev, [step.id]: open }))}
@@ -380,34 +481,51 @@ export const WorkflowConfigDialog = ({
     );
   };
 
+  // --- Step Config ---
   const renderStepConfig = (step: WorkflowStepAdmin) => {
     const badgeColors = stepTypeBadgeColors[step.type] || stepTypeBadgeColors.form;
+    const isLocked = step.editable === false;
 
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <Badge className={`${badgeColors.bg} ${badgeColors.text} border-0`}>
+      <div className="space-y-4">
+        {/* Header: Title + Badge inline */}
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-medium text-foreground">{step.title}</h3>
+          <Badge className={`${badgeColors.bg} ${badgeColors.text} border-0 text-[10px]`}>
             {step.type}
           </Badge>
           {step.processorType && (
-            <span className="text-xs text-muted-foreground">{step.processorType}</span>
+            <span className="text-xs text-muted-foreground ml-auto">{step.processorType}</span>
           )}
         </div>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-sm">Title</Label>
+        {/* Locked Banner */}
+        {isLocked && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/40 border border-border/30">
+            <Lock className="w-3.5 h-3.5 text-muted-foreground/60" />
+            <span className="text-xs text-muted-foreground">
+              Core step — configuration locked. Approval/Handover gates can still be added below.
+            </span>
+          </div>
+        )}
+
+        {/* Editable fields */}
+        <div className={isLocked ? "opacity-50 pointer-events-none space-y-3" : "space-y-3"}>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Title</Label>
             <Input
               value={step.title}
               onChange={(e) => handleStepUpdate(step.id, { title: e.target.value })}
-              className="h-11"
+              disabled={isLocked}
+              className="h-10"
             />
           </div>
-          <div className="space-y-2">
-            <Label className="text-sm">Description</Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Description</Label>
             <Textarea
               value={step.description || ""}
               onChange={(e) => handleStepUpdate(step.id, { description: e.target.value })}
+              disabled={isLocked}
               rows={2}
             />
           </div>
@@ -415,214 +533,277 @@ export const WorkflowConfigDialog = ({
 
         {/* Processing Step Config */}
         {step.type === "processing" && (
-          <>
-            <div className="h-px bg-border/40" />
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium">Processor Settings</h4>
+          <div className={isLocked ? "opacity-50 pointer-events-none space-y-4" : "space-y-4"}>
+            <div className="h-px bg-border/30" />
 
-              {step.processorType === "scrape_and_generate_script" && (
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Target Duration (seconds)</Label>
-                    <div className="flex items-center gap-4">
-                      <Slider
-                        value={[step.config.targetDuration || 120]}
-                        onValueChange={([value]) => handleStepConfigUpdate(step.id, { targetDuration: value })}
-                        min={30}
-                        max={300}
-                        step={10}
-                        className="flex-1"
-                      />
-                      <span className="text-sm w-12 text-right">{step.config.targetDuration || 120}s</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Max Script Length</Label>
-                    <Input
-                      type="number"
-                      value={step.config.maxScriptLength || 4500}
-                      onChange={(e) => handleStepConfigUpdate(step.id, { maxScriptLength: parseInt(e.target.value) })}
-                      className="h-11"
-                    />
-                  </div>
-                </>
-              )}
+            {/* System Prompt - shown for AI-driven processors */}
+            {(step.processorType === "scrape_and_generate_script" ||
+              step.processorType === "extract_text_and_generate_script") && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">System Prompt</Label>
+                <Textarea
+                  value={step.config.systemPrompt || ""}
+                  onChange={(e) => handleStepConfigUpdate(step.id, { systemPrompt: e.target.value })}
+                  disabled={isLocked}
+                  rows={6}
+                  placeholder="The AI prompt used to generate content in this step..."
+                  className="font-mono text-xs leading-relaxed"
+                />
+                <p className="text-[10px] text-muted-foreground/60">
+                  Background prompt controlling AI behavior for this step.
+                </p>
+              </div>
+            )}
 
-              {step.processorType === "text_to_speech" && (
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Voice ID</Label>
-                    <Input
-                      value={step.config.voiceId || ""}
-                      onChange={(e) => handleStepConfigUpdate(step.id, { voiceId: e.target.value })}
-                      className="h-11"
+            {step.processorType === "scrape_and_generate_script" && (
+              <>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Target Duration (seconds)</Label>
+                  <div className="flex items-center gap-4">
+                    <Slider
+                      value={[step.config.targetDuration || 120]}
+                      onValueChange={([value]) => handleStepConfigUpdate(step.id, { targetDuration: value })}
+                      min={30}
+                      max={300}
+                      step={10}
+                      className="flex-1"
+                      disabled={isLocked}
                     />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-xs text-muted-foreground">Stability</Label>
-                      <Slider
-                        value={[step.config.stability || 0.5]}
-                        onValueChange={([value]) => handleStepConfigUpdate(step.id, { stability: value })}
-                        min={0}
-                        max={1}
-                        step={0.1}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs text-muted-foreground">Similarity</Label>
-                      <Slider
-                        value={[step.config.similarityBoost || 0.75]}
-                        onValueChange={([value]) => handleStepConfigUpdate(step.id, { similarityBoost: value })}
-                        min={0}
-                        max={1}
-                        step={0.1}
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {(step.processorType === "extract_text_and_generate_script" ||
-                step.processorType === "content_to_video_generate_scenes") && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">
-                      Min {step.processorType.includes("scene") ? "Scenes" : "Length"}
-                    </Label>
-                    <Input
-                      type="number"
-                      value={step.config.minScriptLength || step.config.minScenes || 3}
-                      onChange={(e) =>
-                        handleStepConfigUpdate(step.id, {
-                          [step.processorType?.includes("scene") ? "minScenes" : "minScriptLength"]:
-                            parseInt(e.target.value),
-                        })
-                      }
-                      className="h-11"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">
-                      Max {step.processorType.includes("scene") ? "Scenes" : "Length"}
-                    </Label>
-                    <Input
-                      type="number"
-                      value={step.config.maxScriptLength || step.config.maxScenes || 10}
-                      onChange={(e) =>
-                        handleStepConfigUpdate(step.id, {
-                          [step.processorType?.includes("scene") ? "maxScenes" : "maxScriptLength"]:
-                            parseInt(e.target.value),
-                        })
-                      }
-                      className="h-11"
-                    />
+                    <span className="text-sm w-12 text-right text-muted-foreground">
+                      {step.config.targetDuration || 120}s
+                    </span>
                   </div>
                 </div>
-              )}
-
-              {step.processorType === "generate_titles_and_bullets" && (
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Max Bullets</Label>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Max Script Length</Label>
                   <Input
                     type="number"
-                    min={1}
-                    max={10}
-                    value={step.config.maxBullets || 5}
-                    onChange={(e) => handleStepConfigUpdate(step.id, { maxBullets: parseInt(e.target.value) })}
-                    className="h-11"
+                    value={step.config.maxScriptLength || 4500}
+                    onChange={(e) => handleStepConfigUpdate(step.id, { maxScriptLength: parseInt(e.target.value) })}
+                    disabled={isLocked}
+                    className="h-10"
                   />
                 </div>
-              )}
+              </>
+            )}
 
-              {step.processorType === "generate_mcq_from_script" && (
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Number of Questions</Label>
-                  <Slider
-                    value={[step.config.numQuestions || 5]}
-                    onValueChange={([value]) => handleStepConfigUpdate(step.id, { numQuestions: value })}
-                    min={1}
-                    max={20}
-                    step={1}
+            {step.processorType === "text_to_speech" && (
+              <>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Voice ID</Label>
+                  <Input
+                    value={step.config.voiceId || ""}
+                    onChange={(e) => handleStepConfigUpdate(step.id, { voiceId: e.target.value })}
+                    disabled={isLocked}
+                    className="h-10"
                   />
-                  <p className="text-xs text-muted-foreground text-right">{step.config.numQuestions || 5} questions</p>
                 </div>
-              )}
-
-              {step.processorType === "json_to_video" && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between min-h-[44px]">
-                    <span className="text-sm">Use Captions</span>
-                    <Switch
-                      checked={step.config.useCaptions ?? true}
-                      onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { useCaptions: checked })}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Stability</Label>
+                    <Slider
+                      value={[step.config.stability || 0.5]}
+                      onValueChange={([value]) => handleStepConfigUpdate(step.id, { stability: value })}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      disabled={isLocked}
                     />
                   </div>
-                  <div className="flex items-center justify-between min-h-[44px]">
-                    <span className="text-sm">Use Subtitles</span>
-                    <Switch
-                      checked={step.config.useSubtitles ?? false}
-                      onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { useSubtitles: checked })}
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Similarity</Label>
+                    <Slider
+                      value={[step.config.similarityBoost || 0.75]}
+                      onValueChange={([value]) => handleStepConfigUpdate(step.id, { similarityBoost: value })}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      disabled={isLocked}
                     />
                   </div>
                 </div>
-              )}
+              </>
+            )}
 
-              <div className="flex items-center justify-between min-h-[44px]">
-                <span className="text-sm">Auto Execute</span>
-                <Switch
-                  checked={step.config.autoExecute ?? true}
-                  onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { autoExecute: checked })}
+            {(step.processorType === "extract_text_and_generate_script" ||
+              step.processorType === "content_to_video_generate_scenes") && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">
+                    Min {step.processorType.includes("scene") ? "Scenes" : "Length"}
+                  </Label>
+                  <Input
+                    type="number"
+                    value={step.config.minScriptLength || step.config.minScenes || 3}
+                    onChange={(e) =>
+                      handleStepConfigUpdate(step.id, {
+                        [step.processorType?.includes("scene") ? "minScenes" : "minScriptLength"]:
+                          parseInt(e.target.value),
+                      })
+                    }
+                    disabled={isLocked}
+                    className="h-10"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">
+                    Max {step.processorType.includes("scene") ? "Scenes" : "Length"}
+                  </Label>
+                  <Input
+                    type="number"
+                    value={step.config.maxScriptLength || step.config.maxScenes || 10}
+                    onChange={(e) =>
+                      handleStepConfigUpdate(step.id, {
+                        [step.processorType?.includes("scene") ? "maxScenes" : "maxScriptLength"]:
+                          parseInt(e.target.value),
+                      })
+                    }
+                    disabled={isLocked}
+                    className="h-10"
+                  />
+                </div>
+              </div>
+            )}
+
+            {step.processorType === "generate_titles_and_bullets" && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Max Bullets</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={10}
+                  value={step.config.maxBullets || 5}
+                  onChange={(e) => handleStepConfigUpdate(step.id, { maxBullets: parseInt(e.target.value) })}
+                  disabled={isLocked}
+                  className="h-10"
                 />
               </div>
+            )}
+
+            {step.processorType === "generate_mcq_from_script" && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Number of Questions</Label>
+                <Slider
+                  value={[step.config.numQuestions || 5]}
+                  onValueChange={([value]) => handleStepConfigUpdate(step.id, { numQuestions: value })}
+                  min={1}
+                  max={20}
+                  step={1}
+                  disabled={isLocked}
+                />
+                <p className="text-xs text-muted-foreground text-right">{step.config.numQuestions || 5} questions</p>
+              </div>
+            )}
+
+            {step.processorType === "json_to_video" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between min-h-[40px]">
+                  <span className="text-sm">Use Captions</span>
+                  <Switch
+                    checked={step.config.useCaptions ?? true}
+                    onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { useCaptions: checked })}
+                    disabled={isLocked}
+                  />
+                </div>
+                <div className="flex items-center justify-between min-h-[40px]">
+                  <span className="text-sm">Use Subtitles</span>
+                  <Switch
+                    checked={step.config.useSubtitles ?? false}
+                    onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { useSubtitles: checked })}
+                    disabled={isLocked}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between min-h-[40px]">
+              <span className="text-sm">Auto Execute</span>
+              <Switch
+                checked={step.config.autoExecute ?? true}
+                onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { autoExecute: checked })}
+                disabled={isLocked}
+              />
             </div>
-          </>
+          </div>
         )}
 
         {/* Approval Step Config */}
         {step.type === "approval" && (
-          <>
-            <div className="h-px bg-border/40" />
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium">Approval Settings</h4>
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Approval Message</Label>
-                <Input
-                  value={step.config.approvalMessage || ""}
-                  onChange={(e) => handleStepConfigUpdate(step.id, { approvalMessage: e.target.value })}
-                  placeholder="Content approved"
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Rejection Message</Label>
-                <Input
-                  value={step.config.rejectionMessage || ""}
-                  onChange={(e) => handleStepConfigUpdate(step.id, { rejectionMessage: e.target.value })}
-                  placeholder="Content rejected"
-                  className="h-11"
-                />
-              </div>
-              <div className="flex items-center justify-between min-h-[44px]">
-                <span className="text-sm">Auto Approve</span>
-                <Switch
-                  checked={step.config.autoApprove ?? false}
-                  onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { autoApprove: checked })}
-                />
-              </div>
+          <div className={isLocked ? "opacity-50 pointer-events-none space-y-3" : "space-y-3"}>
+            <div className="h-px bg-border/30" />
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Approval Message</Label>
+              <Input
+                value={step.config.approvalMessage || ""}
+                onChange={(e) => handleStepConfigUpdate(step.id, { approvalMessage: e.target.value })}
+                placeholder="Content approved"
+                disabled={isLocked}
+                className="h-10"
+              />
             </div>
-          </>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Rejection Message</Label>
+              <Input
+                value={step.config.rejectionMessage || ""}
+                onChange={(e) => handleStepConfigUpdate(step.id, { rejectionMessage: e.target.value })}
+                placeholder="Content rejected"
+                disabled={isLocked}
+                className="h-10"
+              />
+            </div>
+            <div className="flex items-center justify-between min-h-[40px]">
+              <span className="text-sm">Auto Approve</span>
+              <Switch
+                checked={step.config.autoApprove ?? false}
+                onCheckedChange={(checked) => handleStepConfigUpdate(step.id, { autoApprove: checked })}
+                disabled={isLocked}
+              />
+            </div>
+          </div>
         )}
 
-        <div className="h-px bg-border/40" />
+        <div className="h-px bg-border/30" />
 
-        {/* Collaboration Section - Available for ALL step types */}
+        {/* Collaboration Section - ALWAYS enabled even on locked steps */}
         {renderCollaborationSection(step)}
       </div>
     );
   };
 
+  // --- Pipeline Visualization ---
+  const renderPipeline = () => {
+    return (
+      <div className="flex flex-wrap items-center gap-1">
+        {workflow.steps.map((step, idx) => {
+          const dotColor = stepTypeColors[step.type] || "bg-muted";
+          const isLocked = step.editable === false;
+          return (
+            <div key={step.id} className="flex items-center gap-1">
+              <button
+                onClick={() => setActiveScreen(step.id)}
+                className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] border transition-colors hover:bg-muted/50 ${
+                  isLocked
+                    ? "border-border/20 text-muted-foreground/50 bg-muted/10"
+                    : "border-border/40 text-foreground bg-background"
+                }`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+                {step.title}
+                {isLocked && <Lock className="w-2.5 h-2.5" />}
+              </button>
+              {idx < workflow.steps.length - 1 && (
+                <ArrowRight className="w-3 h-3 text-muted-foreground/30 shrink-0" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // --- Content ---
   const renderContent = () => {
+    // Sub-screen (team/user/role picker)
     if (isSubScreen) {
       const items = getFilteredItems();
       const type = activeScreen.split("-")[1];
@@ -672,65 +853,52 @@ export const WorkflowConfigDialog = ({
       );
     }
 
+    // Overview
     if (activeScreen === "overview") {
       return (
-        <div className="space-y-6">
+        <div className="space-y-5">
           <div>
-            <h2 className="text-lg font-medium text-foreground mb-1">Overview</h2>
-            <p className="text-sm text-muted-foreground">Workflow configuration and metadata</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{workflow.description}</p>
           </div>
 
-          <div className="h-px bg-border/50" />
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm">Workflow Name</Label>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Workflow Name</Label>
               <Input
                 value={workflow.name}
                 onChange={(e) => onWorkflowUpdate({ ...workflow, name: e.target.value })}
-                className="h-11"
+                className="h-10"
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm">Description</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Description</Label>
               <Textarea
                 value={workflow.description}
                 onChange={(e) => onWorkflowUpdate({ ...workflow, description: e.target.value })}
                 rows={2}
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm">Welcome Message</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Welcome Message</Label>
               <Textarea
                 value={workflow.welcomeMessage}
                 onChange={(e) => onWorkflowUpdate({ ...workflow, welcomeMessage: e.target.value })}
-                rows={3}
+                rows={2}
               />
             </div>
           </div>
 
-          <div className="h-px bg-border/50" />
+          <div className="h-px bg-border/30" />
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm">Total Steps</span>
-              <span className="text-sm text-muted-foreground">{workflow.steps.length}</span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm">Approval Gates</span>
-              <span className="text-sm text-muted-foreground">
-                {workflow.steps.filter((s) => s.type === "approval" || s.collaboration?.enabled).length}
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm">Last Modified</span>
-              <span className="text-sm text-muted-foreground">{workflow.lastModified}</span>
-            </div>
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Pipeline</Label>
+            {renderPipeline()}
           </div>
         </div>
       );
     }
 
+    // Step config
     const step = workflow.steps.find((s) => s.id === activeScreen);
     if (step) {
       return renderStepConfig(step);
@@ -748,22 +916,20 @@ export const WorkflowConfigDialog = ({
             Back
           </Button>
           <span className="text-sm font-medium">
-            {activeScreen.includes("-teams") ? "Select Teams" : activeScreen.includes("-roles") ? "Select Roles" : "Select Users"}
+            {activeScreen.includes("-teams")
+              ? "Select Teams"
+              : activeScreen.includes("-roles")
+              ? "Select Roles"
+              : "Select Users"}
           </span>
         </div>
       )}
 
       <ResponsiveDialogBody
-        sidebar={
-          !isSubScreen && (
-            <ResponsiveDialogTabs tabs={tabs} activeTab={activeScreen} onTabChange={setActiveScreen} />
-          )
-        }
+        sidebar={!isSubScreen && renderSidebar()}
         showSidebar={!isSubScreen}
       >
-        {!isSubScreen && isMobile && (
-          <ResponsiveDialogTabs tabs={tabs} activeTab={activeScreen} onTabChange={setActiveScreen} />
-        )}
+        {!isSubScreen && isMobile && renderMobileTabs()}
         <ResponsiveDialogContent>{renderContent()}</ResponsiveDialogContent>
       </ResponsiveDialogBody>
     </ResponsiveDialog>

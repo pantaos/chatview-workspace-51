@@ -30,12 +30,16 @@ export interface WorkflowStepAdmin {
   processorType?: string;
   config: StepConfig;
   collaboration?: CollaborationConfig;
+  editable?: boolean; // defaults to true, false = greyed out / read-only
 }
 
 export interface StepConfig {
   // Form step config
   submitButtonText?: string;
   fields?: { id: string; label: string; type: string }[];
+  
+  // AI system prompt for processing steps
+  systemPrompt?: string;
   
   // Processing step config
   targetDuration?: number;
@@ -121,6 +125,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Upload Links",
         type: "form",
         description: "Enter URLs for content",
+        editable: false,
         config: {
           submitButtonText: "Continue",
           fields: [
@@ -134,7 +139,9 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         type: "processing",
         description: "AI script generation",
         processorType: "scrape_and_generate_script",
+        editable: true,
         config: {
+          systemPrompt: "You are a professional video script writer. Analyze the provided URLs and create an engaging, concise video script. Focus on key insights, maintain a conversational tone, and structure the script with clear segments for visual storytelling.",
           targetDuration: 120,
           maxScriptLength: 4500,
           autoExecute: true,
@@ -148,6 +155,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Approve Script",
         type: "approval",
         description: "Review generated script",
+        editable: true,
         config: {
           approvalMessage: "Script approved",
           rejectionMessage: "Script rejected"
@@ -168,6 +176,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         type: "processing",
         description: "Generate audio",
         processorType: "text_to_speech",
+        editable: true,
         config: {
           voiceId: "default",
           stability: 0.5,
@@ -181,6 +190,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         type: "processing",
         description: "Create video scenes",
         processorType: "content_to_video_generate_scenes",
+        editable: true,
         config: {
           minScenes: 3,
           maxScenes: 10,
@@ -192,6 +202,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Approve Scenes",
         type: "approval",
         description: "Review scenes",
+        editable: true,
         config: {}
       },
       {
@@ -200,6 +211,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         type: "processing",
         description: "Final video render",
         processorType: "json_to_video",
+        editable: false,
         config: {
           useCaptions: true,
           useSubtitles: false,
@@ -211,6 +223,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Download",
         type: "output",
         description: "Get final video",
+        editable: false,
         config: {
           outputType: "download"
         }
@@ -234,6 +247,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         id: "upload",
         title: "Upload Document",
         type: "form",
+        editable: false,
         config: { fields: [{ id: "file", label: "Document", type: "file" }] }
       },
       {
@@ -241,12 +255,18 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Extract Text",
         type: "processing",
         processorType: "extract_text_and_generate_script",
-        config: { minScriptLength: 500, maxScriptLength: 3000 }
+        editable: true,
+        config: {
+          systemPrompt: "Extract the main content from the uploaded document and generate a clear, structured video script. Preserve key messages and data points while making the language suitable for video narration.",
+          minScriptLength: 500,
+          maxScriptLength: 3000
+        }
       },
       {
         id: "approval1",
         title: "Script Review",
         type: "approval",
+        editable: true,
         config: {},
         collaboration: {
           enabled: true,
@@ -270,12 +290,14 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Generate Scenes",
         type: "processing",
         processorType: "content_to_video_generate_scenes",
+        editable: true,
         config: { minScenes: 5, maxScenes: 15 }
       },
       {
         id: "approval2",
         title: "Scene Review",
         type: "approval",
+        editable: true,
         config: {}
       },
       {
@@ -283,6 +305,7 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Generate Bullets",
         type: "processing",
         processorType: "generate_titles_and_bullets",
+        editable: true,
         config: { maxBullets: 5 }
       },
       {
@@ -290,12 +313,14 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Generate Images",
         type: "processing",
         processorType: "generate_background_images",
+        editable: false,
         config: {}
       },
       {
         id: "approval3",
         title: "Final Review",
         type: "approval",
+        editable: true,
         config: {}
       },
       {
@@ -303,12 +328,14 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
         title: "Render",
         type: "processing",
         processorType: "json_to_video",
+        editable: false,
         config: { useCaptions: true }
       },
       {
         id: "output",
         title: "Download",
         type: "output",
+        editable: false,
         config: { outputType: "download" }
       }
     ]
@@ -326,20 +353,20 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
       notifications: { email: true, push: true }
     },
     steps: [
-      { id: "upload", title: "Upload Content", type: "form", config: {} },
-      { id: "extract", title: "Extract Script", type: "processing", processorType: "extract_text_and_generate_script", config: { minScriptLength: 300, maxScriptLength: 2000 } },
-      { id: "approval1", title: "Script Approval", type: "approval", config: {}, collaboration: { enabled: true, type: "approval", assigneeType: "team", assigneeIds: ["2"], timeoutHours: 24, requireComments: false, allowReassignment: true } },
-      { id: "scenes", title: "Scenes", type: "processing", processorType: "content_to_video_generate_scenes", config: { minScenes: 3, maxScenes: 8 } },
-      { id: "approval2", title: "Scene Approval", type: "approval", config: {} },
-      { id: "bullets", title: "Bullets", type: "processing", processorType: "generate_titles_and_bullets", config: { maxBullets: 4 } },
-      { id: "approval3", title: "Bullet Review", type: "approval", config: {} },
-      { id: "images", title: "Images", type: "processing", processorType: "generate_background_images", config: {} },
-      { id: "approval4", title: "Image Review", type: "approval", config: {} },
-      { id: "quiz", title: "Generate Quiz", type: "processing", processorType: "generate_mcq_from_script", config: { numQuestions: 5 } },
-      { id: "approval5", title: "Quiz Review", type: "approval", config: {} },
-      { id: "render", title: "Render", type: "processing", processorType: "json_to_video", config: { useCaptions: true, useSubtitles: true } },
-      { id: "approval6", title: "Final Approval", type: "approval", config: {} },
-      { id: "output", title: "Download", type: "output", config: { outputType: "download" } }
+      { id: "upload", title: "Upload Content", type: "form", editable: false, config: {} },
+      { id: "extract", title: "Extract Script", type: "processing", processorType: "extract_text_and_generate_script", editable: true, config: { systemPrompt: "Create an engaging educational script from the uploaded content. Include clear explanations and maintain an approachable tone suitable for avatar-presented videos.", minScriptLength: 300, maxScriptLength: 2000 } },
+      { id: "approval1", title: "Script Approval", type: "approval", editable: true, config: {}, collaboration: { enabled: true, type: "approval", assigneeType: "team", assigneeIds: ["2"], timeoutHours: 24, requireComments: false, allowReassignment: true } },
+      { id: "scenes", title: "Scenes", type: "processing", processorType: "content_to_video_generate_scenes", editable: true, config: { minScenes: 3, maxScenes: 8 } },
+      { id: "approval2", title: "Scene Approval", type: "approval", editable: true, config: {} },
+      { id: "bullets", title: "Bullets", type: "processing", processorType: "generate_titles_and_bullets", editable: true, config: { maxBullets: 4 } },
+      { id: "approval3", title: "Bullet Review", type: "approval", editable: true, config: {} },
+      { id: "images", title: "Images", type: "processing", processorType: "generate_background_images", editable: false, config: {} },
+      { id: "approval4", title: "Image Review", type: "approval", editable: true, config: {} },
+      { id: "quiz", title: "Generate Quiz", type: "processing", processorType: "generate_mcq_from_script", editable: true, config: { numQuestions: 5 } },
+      { id: "approval5", title: "Quiz Review", type: "approval", editable: true, config: {} },
+      { id: "render", title: "Render", type: "processing", processorType: "json_to_video", editable: false, config: { useCaptions: true, useSubtitles: true } },
+      { id: "approval6", title: "Final Approval", type: "approval", editable: true, config: {} },
+      { id: "output", title: "Download", type: "output", editable: false, config: { outputType: "download" } }
     ]
   },
   {
@@ -355,11 +382,11 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
       notifications: { email: true, push: false }
     },
     steps: [
-      { id: "select", title: "Select Content", type: "form", config: {} },
-      { id: "branch", title: "Category", type: "branch", config: { branchField: "category", routeMapping: [{ value: "news", targetStep: "news_process" }, { value: "sports", targetStep: "sports_process" }] } },
-      { id: "process", title: "Process", type: "processing", processorType: "ftp_distribution", config: {} },
-      { id: "upload", title: "FTP Upload", type: "processing", processorType: "ftp_distribution", config: {} },
-      { id: "output", title: "Complete", type: "output", config: { outputType: "completion" } }
+      { id: "select", title: "Select Content", type: "form", editable: false, config: {} },
+      { id: "branch", title: "Category", type: "branch", editable: true, config: { branchField: "category", routeMapping: [{ value: "news", targetStep: "news_process" }, { value: "sports", targetStep: "sports_process" }] } },
+      { id: "process", title: "Process", type: "processing", processorType: "ftp_distribution", editable: false, config: {} },
+      { id: "upload", title: "FTP Upload", type: "processing", processorType: "ftp_distribution", editable: false, config: {} },
+      { id: "output", title: "Complete", type: "output", editable: false, config: { outputType: "completion" } }
     ]
   },
   {
@@ -375,12 +402,12 @@ export const mockWorkflows: WorkflowAdminConfig[] = [
       notifications: { email: true, push: false }
     },
     steps: [
-      { id: "sources", title: "RSS Sources", type: "form", config: {} },
-      { id: "fetch", title: "Fetch Content", type: "processing", config: {} },
-      { id: "generate", title: "Generate Newsletter", type: "processing", config: {} },
-      { id: "approval", title: "Review", type: "approval", config: {} },
-      { id: "send", title: "Send", type: "processing", config: {} },
-      { id: "output", title: "Complete", type: "output", config: { outputType: "completion" } }
+      { id: "sources", title: "RSS Sources", type: "form", editable: false, config: {} },
+      { id: "fetch", title: "Fetch Content", type: "processing", editable: false, config: {} },
+      { id: "generate", title: "Generate Newsletter", type: "processing", editable: true, config: { systemPrompt: "Generate a professional newsletter from the fetched RSS content. Summarize key articles, maintain brand voice, and structure content for email readability." } },
+      { id: "approval", title: "Review", type: "approval", editable: true, config: {} },
+      { id: "send", title: "Send", type: "processing", editable: false, config: {} },
+      { id: "output", title: "Complete", type: "output", editable: false, config: { outputType: "completion" } }
     ]
   }
 ];

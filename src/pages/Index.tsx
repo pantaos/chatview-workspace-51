@@ -369,70 +369,77 @@ const Index = () => {
         />
       ) : (
         <MainLayout>
-          <div className="p-8 max-w-5xl mx-auto">
-            {/* Page Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-              <p className="text-muted-foreground mt-1">How can I help you today?</p>
-            </div>
-            
-            {/* Search */}
-            <section className="mb-6">
-              <SearchChat 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onSubmit={handleSearchSubmit}
-                disableNavigation={true}
-                title=""
-                placeholder="Start a conversation..."
-              />
-            </section>
-
-            {/* Tag Filter Section */}
-            <section className="mb-8">
-              <h3 className="text-sm font-medium text-foreground mb-3">Filter by Tags</h3>
-              <div className="flex flex-wrap gap-2 items-center">
-                {defaultTags.map((tag) => {
-                  const isSelected = selectedTags.includes(tag.id);
-                  return (
-                    <Badge
-                      key={tag.id}
-                      variant={isSelected ? "default" : "secondary"}
-                      className={`cursor-pointer transition-all ${
-                        isSelected 
-                          ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      }`}
-                      onClick={() => 
-                        isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
-                      }
-                    >
-                      <div 
-                        className="w-2 h-2 rounded-full mr-2"
-                        style={{ backgroundColor: isSelected ? 'currentColor' : tag.color }}
-                      />
-                      {tag.name}
-                    </Badge>
-                  );
-                })}
-                <Badge
-                  variant="outline"
-                  className="cursor-pointer transition-colors hover:bg-muted"
-                  onClick={() => setShowManageTagsDialog(true)}
-                >
-                  <Plus className="h-3 w-3 mr-1" />
-                  New Tag
-                </Badge>
-                {selectedTags.length > 0 && (
-                  <button 
-                    onClick={handleClearAllTags}
-                    className="text-xs text-muted-foreground hover:text-foreground ml-2"
-                  >
-                    Clear all
-                  </button>
-                )}
+          <div className="max-w-5xl mx-auto">
+            {/* Dashboard Hero Gradient */}
+            <div 
+              className="rounded-b-3xl px-8 pt-10 pb-8 mb-8 -mx-0"
+              style={{
+                background: `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`,
+              }}
+            >
+              <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+              <p className="text-white/70 mt-1 mb-6">How can I help you today?</p>
+              
+              {/* Search */}
+              <div className="mb-6">
+                <SearchChat 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onSubmit={handleSearchSubmit}
+                  disableNavigation={true}
+                  title=""
+                  placeholder="Start a conversation..."
+                />
               </div>
-            </section>
+
+              {/* Tag Filter Section */}
+              <div>
+                <h3 className="text-sm font-medium text-white/80 mb-3">Filter by Tags</h3>
+                <div className="flex flex-wrap gap-2 items-center">
+                  {defaultTags.map((tag) => {
+                    const isSelected = selectedTags.includes(tag.id);
+                    return (
+                      <Badge
+                        key={tag.id}
+                        variant={isSelected ? "default" : "secondary"}
+                        className={`cursor-pointer transition-all ${
+                          isSelected 
+                            ? "bg-white text-primary hover:bg-white/90" 
+                            : "bg-white/20 text-white border-white/30 hover:bg-white/30"
+                        }`}
+                        onClick={() => 
+                          isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
+                        }
+                      >
+                        <div 
+                          className="w-2 h-2 rounded-full mr-2"
+                          style={{ backgroundColor: isSelected ? theme.primaryColor : tag.color }}
+                        />
+                        {tag.name}
+                      </Badge>
+                    );
+                  })}
+                  <Badge
+                    variant="outline"
+                    className="cursor-pointer transition-colors bg-white/10 text-white border-white/30 hover:bg-white/20"
+                    onClick={() => setShowManageTagsDialog(true)}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    New Tag
+                  </Badge>
+                  {selectedTags.length > 0 && (
+                    <button 
+                      onClick={handleClearAllTags}
+                      className="text-xs text-white/60 hover:text-white ml-2"
+                    >
+                      Clear all
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="px-8">
             
             {/* Workflows & Assistants */}
             <section>
@@ -562,6 +569,7 @@ const Index = () => {
               onCreateTag={handleCreateTag}
               onDeleteTag={handleDeleteTag}
             />
+            </div>
           </div>
         </MainLayout>
       )}

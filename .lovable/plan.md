@@ -1,60 +1,122 @@
 
 
-# Plan: Subtiler Theme-Hintergrund statt reinem Weiss
+# Plan: Experience PANTA Flows — Interaktive Produkt-Demo-Seite
 
-## Idee
+## Übersicht
 
-Statt auf jeder Seite einzeln etwas zu ändern, passen wir einfach die **CSS-Variable `--background`** an. Aktuell ist die `0 0% 100%` (reines Weiss). Wir ändern sie zu einem ganz leichten Blau-Ton, der den Hue der Primary-Farbe (229 = Blau) übernimmt:
+Eine neue, eigenständige Seite (`/experience`) die als interaktive Produkt-Demo funktioniert. Man kann sich durchklicken und versteht was PANTA Flows ist, welche Bausteine es gibt (Chat, Assistenten, Apps) und sieht am HDI Content-Workflow ein konkretes Beispiel Schritt für Schritt.
 
-**Vorher:** `--background: 0 0% 100%` (reines Weiss #FFFFFF)
-**Nachher:** `--background: 225 30% 98%` (ganz zartes Blau, ca. #F8F9FD)
+Die Seite wird als externer Link aus den Settings heraus geöffnet (neuer Tab) und hat **kein Sidebar-Layout** — sie steht komplett für sich, clean und präsentationstauglich.
 
-Das ist so subtil, dass man es kaum bemerkt — aber im Vergleich zu purem Weiss fühlt sich die UI sofort wärmer und gebrandeter an. Jede Stelle, die `bg-background` nutzt (MainLayout, Cards, Popover, etc.) bekommt automatisch diesen Ton.
+---
 
-## Was sich ändert
+## Aufbau der Seite
 
-### 1. CSS-Variable `--background` (Light Mode)
+### Section 1: Hero
 
-Nur eine Zeile in `src/index.css`:
+Voller Gradient-Header (wie Dashboard, aber grösser) mit:
+- PANTA Logo
+- "Die Enterprise-KI-Plattform" Headline
+- Subline: "Strukturiert. Skalierbar. DSGVO-konform."
+- CTA-Button: "Workflow-Demo starten" (scrollt zu Section 3)
 
+### Section 2: Drei Bausteine
+
+Drei schlanke Karten nebeneinander (responsive: untereinander auf Mobile):
+
+| Chat | Assistenten | Apps |
+|------|------------|------|
+| Flexible, sichere KI | Rollen- & aufgabenspezifische KI | End-to-End Business Engines |
+| Multi-Model, Websuche | Team-Sharing | Review-Schritte & Ubergaben |
+
+Minimales Design — Icon, Titel, 2-3 Bullet Points. Keine schweren Cards, eher wie die Integrations-Kacheln.
+
+### Section 3: HDI Workflow Demo (Interaktiv)
+
+Das Herzstück. Ein interaktiver Stepper der die 7 Schritte des HDI Content-Workflows zeigt:
+
+```text
+Step 1: Choose Insurance Topic
+Step 2: Find Content Ideas (AI/RSS)
+Step 3: Create First Article Draft
+Step 4: Tips zur Anpassung
+Step 5: Final Preview & Approval
+Step 6: Vorteile der neuen Bestimmungen
+Step 7: Ausblick & Handlungsempfehlungen
 ```
---background: 0 0% 100%;
+
+**UI-Pattern:**
+- Links: Vertikale Step-Liste mit Nummern und Titeln (aktiver Step hervorgehoben)
+- Rechts: Content-Preview des aktiven Steps mit dem echten Inhalt aus dem PDF
+- "Weiter" / "Zurück" Buttons zum Durchklicken
+- Approval-Steps haben ein spezielles Badge/Icon
+
+Auf Mobile: Steps als horizontaler Dot-Indicator oben, Content darunter.
+
+### Section 4: Footer
+
+- Integrationen als kleine Icon-Reihe (Microsoft, Google, Notion, OpenAI, ElevenLabs, etc.)
+- "Kontakt: hello@pantaos.com"
+- Link zurück zur App
+
+---
+
+## Verlinkung aus Settings
+
+In der Settings-Seite unter dem "General" Tab wird ein neuer Eintrag hinzugefügt:
+
+```text
+[Rocket Icon]  Experience PANTA Flows
+               Interaktive Produkt-Demo ansehen
+                                          [External Link →]
 ```
-wird zu:
-```
---background: 225 30% 98%;
-```
 
-Das ergibt einen Farbton wie `#F8F9FD` — fast weiss, aber mit einem ganz leichten blauen Unterton.
+Öffnet `/experience` in einem neuen Tab.
 
-### 2. Card-Hintergrund leicht anpassen
+---
 
-Die `--card` Variable ebenfalls minimal anpassen, damit Cards nicht auf dem gleichen Hintergrund "verschwinden", sondern sich leicht abheben:
+## Technische Details
 
-```
---card: 0 0% 100%;
-```
-bleibt bei `0 0% 100%` (reines Weiss) — so entsteht ein natürlicher Kontrast: leicht blauer Hintergrund mit weissen Cards darauf.
+### Neue Dateien
 
-### 3. Dashboard Gradient-Hero
+| Datei | Zweck |
+|-------|-------|
+| `src/pages/Experience.tsx` | Die komplette Demo-Seite (kein MainLayout, standalone) |
+| `src/data/hdiWorkflowDemo.ts` | HDI Workflow Steps mit Content aus dem PDF |
 
-Zusätzlich bekommt der Dashboard-Header (Greeting + Suchfeld + Tags) den farbigen Gradient wie im Screenshot:
-- Gradient von Primary-Blau zu einem helleren Blau/Teal
-- Weisser Text für Greeting
-- Abgerundete untere Ecken für weichen Übergang
-- Suchfeld und Tags visuell angepasst
-
-## Dateien
+### Geänderte Dateien
 
 | Datei | Änderung |
 |-------|----------|
-| `src/index.css` | `--background` auf `225 30% 98%` setzen, `--popover` ebenfalls leicht anpassen |
-| `src/pages/Index.tsx` | Dashboard-Header mit Gradient-Container wrappen |
+| `src/App.tsx` | Route `/experience` hinzufügen |
+| `src/pages/Settings.tsx` | Link zur Experience-Seite im General Tab |
 
-## Warum dieser Ansatz
+### Seiten-Design
 
-- **Eine Zeile CSS** ändert den gesamten App-Hintergrund — kein manuelles Styling pro Seite nötig
-- Cards bleiben weiss und heben sich natürlich vom leicht blauen Hintergrund ab
-- Wenn der Client-Theme wechselt (z.B. zu Pink), muss nur die CSS-Variable angepasst werden
-- Login-Seite ist nicht betroffen (hat eigenen Gradient-Hintergrund)
-- Dark Mode bleibt unverändert (hat eigene `--background` Variable)
+- **Kein MainLayout/Sidebar** — die Seite steht für sich
+- Nutzt den gleichen Theme-Gradient wie das Dashboard
+- Background: `bg-background` (das dezente Blau)
+- Cards: `bg-card` (reines Weiss)
+- Smooth Scroll zwischen Sections
+- Animierte Transitions beim Step-Wechsel
+
+### HDI Demo Daten
+
+Die 7 Steps aus dem PDF werden als strukturierte Daten abgelegt:
+
+```typescript
+interface DemoStep {
+  id: number;
+  title: string;        // z.B. "Choose the Insurance Topic"
+  type: 'input' | 'ai-processing' | 'preview' | 'approval';
+  content: string;      // Der echte Content aus dem PDF
+  isApproval?: boolean;
+}
+```
+
+### Responsive
+
+- Desktop: 2-Column Layout bei der Workflow-Demo (Steps links, Content rechts)
+- Tablet: Gleich aber kompakter
+- Mobile: Single Column, Steps als Dots oben
+

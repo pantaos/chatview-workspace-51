@@ -32,6 +32,7 @@ import WorkflowEditor from "./pages/WorkflowEditor";
 import TemplateLibrary from "./pages/TemplateLibrary";
 import Library from "./pages/Library";
 import Actions from "./pages/Actions";
+import Experience from "./pages/Experience";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -122,6 +123,9 @@ const App = () => {
                       }}
                     />
                   } />
+                  
+                  {/* Experience Page */}
+                  <Route path="/experience" element={<Experience />} />
                   
                   {/* Image Cropper Tool */}
                   <Route path="/image-cropper" element={<ImageCropper />} />

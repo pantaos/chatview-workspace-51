@@ -1,0 +1,151 @@
+import { Tenant, AssistantWorkflow, PlatformPost } from "@/types/pantaFlows";
+
+export const mockTenants: Tenant[] = [
+  {
+    id: "1",
+    name: "HDI Versicherung",
+    description: "Versicherungskonzern mit Fokus auf Content-Automatisierung",
+    logoUrl: "",
+    primaryColor: "#1E40AF",
+    accentColor: "#3B82F6",
+    totalUsers: 48,
+    activeUsers: 32,
+    tokensUsed: 18500,
+    tokensLimit: 50000,
+    admins: [
+      { id: "a1", name: "Thomas Müller", email: "t.mueller@hdi.de", role: "Super Admin" },
+      { id: "a2", name: "Sandra Weber", email: "s.weber@hdi.de", role: "Admin" },
+    ],
+    createdAt: "2025-09-15",
+    status: "active",
+  },
+  {
+    id: "2",
+    name: "Green Stone School",
+    description: "Internationale Schule mit KI-gestützter Berichterstellung",
+    logoUrl: "",
+    primaryColor: "#059669",
+    accentColor: "#10B981",
+    totalUsers: 22,
+    activeUsers: 15,
+    tokensUsed: 7200,
+    tokensLimit: 20000,
+    admins: [
+      { id: "a3", name: "Emily Carter", email: "e.carter@greenstone.edu", role: "Admin" },
+    ],
+    createdAt: "2025-11-02",
+    status: "active",
+  },
+  {
+    id: "3",
+    name: "panta Ingenieure",
+    description: "Ingenieurgesellschaft für Wiki- und Tender-Workflows",
+    logoUrl: "",
+    primaryColor: "#7C3AED",
+    accentColor: "#8B5CF6",
+    totalUsers: 14,
+    activeUsers: 9,
+    tokensUsed: 4300,
+    tokensLimit: 15000,
+    admins: [
+      { id: "a4", name: "Jörg Salamon", email: "j.salamon@panta-ing.de", role: "Super Admin" },
+    ],
+    createdAt: "2025-08-20",
+    status: "active",
+  },
+  {
+    id: "4",
+    name: "MediCare Plus",
+    description: "Gesundheitsdienstleister — Pilotphase",
+    logoUrl: "",
+    primaryColor: "#DC2626",
+    accentColor: "#EF4444",
+    totalUsers: 5,
+    activeUsers: 2,
+    tokensUsed: 800,
+    tokensLimit: 10000,
+    admins: [],
+    createdAt: "2026-01-10",
+    status: "inactive",
+  },
+];
+
+export const mockAssistantsWorkflows: AssistantWorkflow[] = [
+  {
+    id: "aw1",
+    name: "TonalitätsGPT",
+    type: "assistant",
+    description: "Markenkonformer Schreibassistent mit Tonalitätssteuerung",
+    assignments: [
+      { tenantId: "1", tenantName: "HDI Versicherung", visibility: "organization" },
+    ],
+  },
+  {
+    id: "aw2",
+    name: "HDI Content Workflow",
+    type: "workflow",
+    description: "End-to-End Content-Erstellung für Versicherungsthemen",
+    assignments: [
+      { tenantId: "1", tenantName: "HDI Versicherung", visibility: "admin-only" },
+    ],
+  },
+  {
+    id: "aw3",
+    name: "Report Card Generator",
+    type: "workflow",
+    description: "Automatisierte Zeugniserstellung für Schulen",
+    assignments: [
+      { tenantId: "2", tenantName: "Green Stone School", visibility: "organization" },
+    ],
+  },
+  {
+    id: "aw4",
+    name: "Trendcast",
+    type: "workflow",
+    description: "KI-basierte Trendanalyse mit Audio- und Video-Output",
+    assignments: [],
+  },
+  {
+    id: "aw5",
+    name: "ArianGPT",
+    type: "assistant",
+    description: "Allgemeiner KI-Assistent mit Websuche und Dokumentenanalyse",
+    assignments: [
+      { tenantId: "1", tenantName: "HDI Versicherung", visibility: "organization" },
+      { tenantId: "3", tenantName: "panta Ingenieure", visibility: "organization" },
+    ],
+  },
+];
+
+export const mockPlatformPosts: PlatformPost[] = [
+  {
+    id: "p1",
+    title: "Neue Funktion: Workflow-Templates",
+    content: "Ab sofort stehen vorgefertigte Workflow-Templates zur Verfügung, die schnell an individuelle Anforderungen angepasst werden können.",
+    type: "Feature Update",
+    targetType: "all",
+    targetTenants: [],
+    createdAt: "2026-02-05",
+    author: "PANTA Team",
+  },
+  {
+    id: "p2",
+    title: "Wartungsfenster am 15.02.",
+    content: "Am 15.02.2026 zwischen 02:00–04:00 Uhr findet eine geplante Wartung statt. Die Plattform ist in dieser Zeit eingeschränkt verfügbar.",
+    type: "Maintenance",
+    targetType: "all",
+    targetTenants: [],
+    createdAt: "2026-02-08",
+    author: "PANTA Ops",
+  },
+  {
+    id: "p3",
+    title: "HDI: Token-Limit erhöht",
+    content: "Das Token-Limit für HDI Versicherung wurde auf 50.000 Tokens pro Monat erhöht.",
+    type: "Account Update",
+    targetType: "specific",
+    targetTenants: ["1"],
+    createdAt: "2026-01-28",
+    author: "PANTA Team",
+  },
+];

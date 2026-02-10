@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tenant } from "@/types/pantaFlows";
 import { toast } from "@/hooks/use-toast";
-import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X } from "lucide-react";
+import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X, Download } from "lucide-react";
+import { toast as sonnerToast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -182,6 +183,34 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
               ))}
             </div>
           </Card>
+
+          <div className="flex justify-end">
+            <Button size="sm" variant="outline" onClick={() => {
+              const headers = ["Metric", "Value"];
+              const rows = [
+                ["Tenant", tenant.name],
+                ["Status", tenant.status],
+                ["Active Users", tenant.activeUsers.toString()],
+                ["Total Users", tenant.totalUsers.toString()],
+                ["Tokens Used", tenant.tokensUsed.toString()],
+                ["Tokens Limit", tenant.tokensLimit.toString()],
+                ["Queries", Math.round(tenant.tokensUsed / 3.2).toString()],
+                ["Hours Saved", Math.round(tenant.tokensUsed / 12).toString()],
+              ];
+              const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `${tenant.name.replace(/\s+/g, "-")}-analytics-${new Date().toISOString().split("T")[0]}.csv`;
+              a.click();
+              URL.revokeObjectURL(url);
+              sonnerToast.success("CSV heruntergeladen");
+            }}>
+              <Download className="h-4 w-4 mr-1" />
+              CSV Export
+            </Button>
+          </div>
         </div>
       );
     }

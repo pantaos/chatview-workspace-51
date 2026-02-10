@@ -50,6 +50,8 @@ interface WorkflowConfigDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onWorkflowUpdate: (workflow: WorkflowAdminConfig) => void;
+  hideTenants?: boolean;
+  hideCollaboration?: boolean;
 }
 
 type ScreenType = "overview" | "tenants" | string | `${string}-teams` | `${string}-users` | `${string}-roles`;
@@ -85,6 +87,8 @@ export const WorkflowConfigDialog = ({
   open,
   onOpenChange,
   onWorkflowUpdate,
+  hideTenants = false,
+  hideCollaboration = false,
 }: WorkflowConfigDialogProps) => {
   const [activeScreen, setActiveScreen] = useState<ScreenType>("overview");
   const [searchTerm, setSearchTerm] = useState("");
@@ -228,20 +232,22 @@ export const WorkflowConfigDialog = ({
         >
           Overview
         </button>
-        <button
-          onClick={() => setActiveScreen("tenants")}
-          className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 ${
-            activeScreen === "tenants"
-              ? "bg-background text-foreground font-medium shadow-sm"
-              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-          }`}
-        >
-          <Building2 className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">Tenants</span>
-          {tenantAssignments.length > 0 && (
-            <Badge variant="secondary" className="text-[9px] px-1.5 py-0 ml-auto">{tenantAssignments.length}</Badge>
-          )}
-        </button>
+        {!hideTenants && (
+          <button
+            onClick={() => setActiveScreen("tenants")}
+            className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 ${
+              activeScreen === "tenants"
+                ? "bg-background text-foreground font-medium shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            }`}
+          >
+            <Building2 className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Tenants</span>
+            {tenantAssignments.length > 0 && (
+              <Badge variant="secondary" className="text-[9px] px-1.5 py-0 ml-auto">{tenantAssignments.length}</Badge>
+            )}
+          </button>
+        )}
         {workflow.steps.map((step, idx) => {
           const isLocked = step.editable === false;
           const dotColor = stepTypeColors[step.type] || "bg-muted";
@@ -284,19 +290,21 @@ export const WorkflowConfigDialog = ({
           >
             Overview
           </button>
-          <button
-            onClick={() => setActiveScreen("tenants")}
-            className={`px-3 py-2 text-sm rounded-lg whitespace-nowrap transition-colors min-h-[44px] flex items-center gap-1.5 ${
-              activeScreen === "tenants"
-                ? "bg-primary text-primary-foreground font-medium"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
-          >
-            Tenants
-            {tenantAssignments.length > 0 && (
-              <Badge variant="secondary" className="text-[9px] px-1.5 py-0">{tenantAssignments.length}</Badge>
-            )}
-          </button>
+          {!hideTenants && (
+            <button
+              onClick={() => setActiveScreen("tenants")}
+              className={`px-3 py-2 text-sm rounded-lg whitespace-nowrap transition-colors min-h-[44px] flex items-center gap-1.5 ${
+                activeScreen === "tenants"
+                  ? "bg-primary text-primary-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              }`}
+            >
+              Tenants
+              {tenantAssignments.length > 0 && (
+                <Badge variant="secondary" className="text-[9px] px-1.5 py-0">{tenantAssignments.length}</Badge>
+              )}
+            </button>
+          )}
           {workflow.steps.map((step, idx) => {
             const isLocked = step.editable === false;
             return (
@@ -821,7 +829,7 @@ export const WorkflowConfigDialog = ({
         <div className="h-px bg-border/30" />
 
         {/* Collaboration Section - ALWAYS enabled even on locked steps */}
-        {renderCollaborationSection(step)}
+        {!hideCollaboration && renderCollaborationSection(step)}
       </div>
     );
   };

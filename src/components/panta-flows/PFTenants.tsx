@@ -8,6 +8,20 @@ import { Tenant } from "@/types/pantaFlows";
 import PFCreateTenantDialog from "./PFCreateTenantDialog";
 import PFTenantDetailDialog from "./PFTenantDetailDialog";
 
+const TenantLogo = ({ tenant }: { tenant: Tenant }) => {
+  if (tenant.logoUrl) {
+    return <img src={tenant.logoUrl} alt={tenant.name} className="w-8 h-8 rounded-full object-cover border" />;
+  }
+  return (
+    <div
+      className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+      style={{ backgroundColor: tenant.primaryColor }}
+    >
+      {tenant.name.charAt(0)}
+    </div>
+  );
+};
+
 const PFTenants = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
@@ -32,8 +46,8 @@ const PFTenants = () => {
             onClick={() => setSelectedTenant(tenant)}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: tenant.primaryColor }} />
+              <div className="flex items-center gap-2.5">
+                <TenantLogo tenant={tenant} />
                 <h4 className="font-semibold">{tenant.name}</h4>
               </div>
               <Badge variant={tenant.status === "active" ? "default" : "secondary"}>

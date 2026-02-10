@@ -12,6 +12,7 @@ export interface Tenant {
   logoUrl?: string;
   primaryColor: string;
   accentColor: string;
+  backgroundColor: string;
   totalUsers: number;
   activeUsers: number;
   tokensUsed: number;

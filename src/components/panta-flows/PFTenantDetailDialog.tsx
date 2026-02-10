@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tenant } from "@/types/pantaFlows";
+import { Tenant, PendingInvite } from "@/types/pantaFlows";
 import { toast } from "@/hooks/use-toast";
-import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X, Download } from "lucide-react";
+import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X, Download, Trash2, Send, Pencil } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -42,6 +42,11 @@ const mockTopAssistants = [
   { name: "Content Workflow", requests: 156, tokens: 3800 },
 ];
 
+const mockPendingInvites: PendingInvite[] = [
+  { id: "inv1", email: "m.schmidt@hdi.de", role: "Admin", invitedOn: "2025-08-19" },
+  { id: "inv2", email: "k.braun@hdi.de", role: "Admin", invitedOn: "2025-12-09" },
+];
+
 const chartConfig = {
   tokens: { label: "Tokens", color: "hsl(var(--primary))" },
 };
@@ -54,6 +59,7 @@ const dialogTabs = [
 
 const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDialogProps) => {
   const [activeTab, setActiveTab] = useState("analytics");
+  const [adminSubTab, setAdminSubTab] = useState("active");
   const [addAdminOpen, setAddAdminOpen] = useState(false);
   const [newAdminName, setNewAdminName] = useState("");
   const [newAdminEmail, setNewAdminEmail] = useState("");
@@ -272,53 +278,104 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
     // Admins tab
     return (
       <div className="space-y-4">
-        {tenant.admins.length > 0 ? (
-          <div className="space-y-2">
-            {tenant.admins.map((admin) => (
-              <div key={admin.id} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-                <div>
-                  <div className="font-medium">{admin.name}</div>
-                  <div className="text-sm text-muted-foreground">{admin.email}</div>
-                </div>
-                <Badge variant="secondary">{admin.role}</Badge>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">Noch keine Admins zugewiesen.</p>
-        )}
+        <Tabs value={adminSubTab} onValueChange={setAdminSubTab}>
+          <TabsList className="w-full">
+            <TabsTrigger value="active" className="flex-1">Active Users</TabsTrigger>
+            <TabsTrigger value="pending" className="flex-1">Pending Invites</TabsTrigger>
+          </TabsList>
 
-        {!addAdminOpen ? (
-          <Button variant="outline" size="sm" onClick={() => setAddAdminOpen(true)}>
-            <Plus className="h-4 w-4 mr-1" /> Admin hinzufügen
-          </Button>
-        ) : (
-          <Card className="p-4 space-y-3">
-            <div>
-              <Label>Name</Label>
-              <Input value={newAdminName} onChange={(e) => setNewAdminName(e.target.value)} placeholder="Name" />
-            </div>
-            <div>
-              <Label>E-Mail</Label>
-              <Input value={newAdminEmail} onChange={(e) => setNewAdminEmail(e.target.value)} placeholder="email@example.com" />
-            </div>
-            <div>
-              <Label>Rolle</Label>
-              <select
-                value={newAdminRole}
-                onChange={(e) => setNewAdminRole(e.target.value as "Admin" | "Super Admin")}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-              >
-                <option value="Admin">Admin</option>
-                <option value="Super Admin">Super Admin</option>
-              </select>
-            </div>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleAddAdmin} disabled={!newAdminName.trim() || !newAdminEmail.trim()}>Hinzufügen</Button>
-              <Button size="sm" variant="outline" onClick={() => setAddAdminOpen(false)}>Abbrechen</Button>
-            </div>
-          </Card>
-        )}
+          <TabsContent value="active" className="mt-4 space-y-4">
+            {tenant.admins.length > 0 ? (
+              <div className="space-y-2">
+                {tenant.admins.map((admin) => (
+                  <div key={admin.id} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                    <div>
+                      <div className="font-medium">{admin.name}</div>
+                      <div className="text-sm text-muted-foreground">{admin.email}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary">{admin.role}</Badge>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
+                        sonnerToast.success(`${admin.name} bearbeiten`);
+                      }}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => {
+                        sonnerToast.success(`${admin.name} wurde entfernt.`);
+                      }}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Noch keine Admins zugewiesen.</p>
+            )}
+
+            {!addAdminOpen ? (
+              <Button variant="outline" size="sm" onClick={() => setAddAdminOpen(true)}>
+                <Plus className="h-4 w-4 mr-1" /> Admin hinzufügen
+              </Button>
+            ) : (
+              <Card className="p-4 space-y-3">
+                <div>
+                  <Label>Name</Label>
+                  <Input value={newAdminName} onChange={(e) => setNewAdminName(e.target.value)} placeholder="Name" />
+                </div>
+                <div>
+                  <Label>E-Mail</Label>
+                  <Input value={newAdminEmail} onChange={(e) => setNewAdminEmail(e.target.value)} placeholder="email@example.com" />
+                </div>
+                <div>
+                  <Label>Rolle</Label>
+                  <select
+                    value={newAdminRole}
+                    onChange={(e) => setNewAdminRole(e.target.value as "Admin" | "Super Admin")}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                  >
+                    <option value="Admin">Admin</option>
+                    <option value="Super Admin">Super Admin</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={handleAddAdmin} disabled={!newAdminName.trim() || !newAdminEmail.trim()}>Hinzufügen</Button>
+                  <Button size="sm" variant="outline" onClick={() => setAddAdminOpen(false)}>Abbrechen</Button>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="pending" className="mt-4 space-y-2">
+            {mockPendingInvites.length > 0 ? (
+              <div className="space-y-2">
+                {mockPendingInvites.map((invite) => (
+                  <div key={invite.id} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                    <div>
+                      <div className="font-medium">{invite.email}</div>
+                      <div className="text-xs text-muted-foreground">Eingeladen am {new Date(invite.invitedOn).toLocaleDateString("de-DE")}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary">{invite.role}</Badge>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:text-primary" onClick={() => {
+                        sonnerToast.success(`Erinnerung an ${invite.email} gesendet.`);
+                      }}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => {
+                        sonnerToast.success(`Einladung für ${invite.email} gelöscht.`);
+                      }}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Keine ausstehenden Einladungen.</p>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     );
   };

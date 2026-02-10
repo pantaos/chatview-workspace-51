@@ -20,6 +20,9 @@ import {
   Lock,
   Info,
   ArrowRight,
+  X,
+  Plus,
+  Building2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -39,6 +42,8 @@ import {
   CollaborationConfig,
   stepTypeBadgeColors,
 } from "@/types/workflowAdmin";
+import { mockTenants } from "@/data/pantaFlowsData";
+import { TenantAssignment } from "@/types/pantaFlows";
 
 interface WorkflowConfigDialogProps {
   workflow: WorkflowAdminConfig;
@@ -47,7 +52,7 @@ interface WorkflowConfigDialogProps {
   onWorkflowUpdate: (workflow: WorkflowAdminConfig) => void;
 }
 
-type ScreenType = "overview" | string | `${string}-teams` | `${string}-users` | `${string}-roles`;
+type ScreenType = "overview" | "tenants" | string | `${string}-teams` | `${string}-users` | `${string}-roles`;
 
 const mockTeams = [
   { id: "1", name: "Content Team", memberCount: 12 },
@@ -87,6 +92,9 @@ export const WorkflowConfigDialog = ({
   const [currentStepId, setCurrentStepId] = useState<string | null>(null);
   const [collaborationOpen, setCollaborationOpen] = useState<Record<string, boolean>>({});
   const [escalationOpen, setEscalationOpen] = useState<Record<string, boolean>>({});
+  const [tenantAssignments, setTenantAssignments] = useState<TenantAssignment[]>([]);
+  const [selectedTenantId, setSelectedTenantId] = useState("");
+  const [tenantVisibility, setTenantVisibility] = useState<"organization" | "admin-only">("organization");
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -104,6 +112,27 @@ export const WorkflowConfigDialog = ({
     activeScreen.includes("-teams") ||
     activeScreen.includes("-users") ||
     activeScreen.includes("-roles");
+
+  const availableTenants = mockTenants.filter(
+    (t) => !tenantAssignments.some((a) => a.tenantId === t.id)
+  );
+
+  const handleAssignTenant = () => {
+    if (!selectedTenantId) return;
+    const tenant = mockTenants.find((t) => t.id === selectedTenantId);
+    if (!tenant) return;
+    setTenantAssignments((prev) => [
+      ...prev,
+      { tenantId: tenant.id, tenantName: tenant.name, visibility: tenantVisibility },
+    ]);
+    setSelectedTenantId("");
+    toast.success(`${tenant.name} zugeordnet`);
+  };
+
+  const handleRemoveTenant = (tenantId: string) => {
+    setTenantAssignments((prev) => prev.filter((a) => a.tenantId !== tenantId));
+    toast.success("Tenant entfernt");
+  };
 
   const handleBack = () => {
     if (currentStepId) {
@@ -199,6 +228,20 @@ export const WorkflowConfigDialog = ({
         >
           Overview
         </button>
+        <button
+          onClick={() => setActiveScreen("tenants")}
+          className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-2 ${
+            activeScreen === "tenants"
+              ? "bg-background text-foreground font-medium shadow-sm"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          <Building2 className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate">Tenants</span>
+          {tenantAssignments.length > 0 && (
+            <Badge variant="secondary" className="text-[9px] px-1.5 py-0 ml-auto">{tenantAssignments.length}</Badge>
+          )}
+        </button>
         {workflow.steps.map((step, idx) => {
           const isLocked = step.editable === false;
           const dotColor = stepTypeColors[step.type] || "bg-muted";
@@ -240,6 +283,19 @@ export const WorkflowConfigDialog = ({
             }`}
           >
             Overview
+          </button>
+          <button
+            onClick={() => setActiveScreen("tenants")}
+            className={`px-3 py-2 text-sm rounded-lg whitespace-nowrap transition-colors min-h-[44px] flex items-center gap-1.5 ${
+              activeScreen === "tenants"
+                ? "bg-primary text-primary-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            }`}
+          >
+            Tenants
+            {tenantAssignments.length > 0 && (
+              <Badge variant="secondary" className="text-[9px] px-1.5 py-0">{tenantAssignments.length}</Badge>
+            )}
           </button>
           {workflow.steps.map((step, idx) => {
             const isLocked = step.editable === false;
@@ -849,6 +905,91 @@ export const WorkflowConfigDialog = ({
               </Button>
             </div>
           </div>
+        </div>
+      );
+    }
+
+    // Tenants
+    if (activeScreen === "tenants") {
+      return (
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-medium mb-3">Zugeordnete Tenants</h3>
+            {tenantAssignments.length > 0 ? (
+              <div className="space-y-2">
+                {tenantAssignments.map((a) => {
+                  const tenant = mockTenants.find((t) => t.id === a.tenantId);
+                  return (
+                    <div key={a.tenantId} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                          style={{ backgroundColor: tenant?.primaryColor || "#888" }}
+                        >
+                          {a.tenantName.charAt(0)}
+                        </div>
+                        <span className="text-sm font-medium">{a.tenantName}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {a.visibility === "organization" ? "Alle" : "Nur Admin"}
+                        </Badge>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveTenant(a.tenantId)}
+                        className="p-1.5 text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 rounded-md transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Noch keinem Tenant zugeordnet.</p>
+            )}
+          </div>
+
+          {availableTenants.length > 0 && (
+            <div className="border-t border-border/40 pt-4 space-y-3">
+              <h3 className="text-sm font-medium">Tenant hinzufügen</h3>
+              <select
+                value={selectedTenantId}
+                onChange={(e) => setSelectedTenantId(e.target.value)}
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+              >
+                <option value="">Tenant auswählen…</option>
+                {availableTenants.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </select>
+
+              <div className="flex gap-3">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="wf-visibility"
+                    checked={tenantVisibility === "organization"}
+                    onChange={() => setTenantVisibility("organization")}
+                    className="accent-primary"
+                  />
+                  <span className="text-sm">Gesamte Organisation</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="wf-visibility"
+                    checked={tenantVisibility === "admin-only"}
+                    onChange={() => setTenantVisibility("admin-only")}
+                    className="accent-primary"
+                  />
+                  <span className="text-sm">Nur Admin</span>
+                </label>
+              </div>
+
+              <Button size="sm" onClick={handleAssignTenant} disabled={!selectedTenantId} className="w-full min-h-[44px]">
+                <Plus className="h-4 w-4 mr-1" /> Zuordnen
+              </Button>
+            </div>
+          )}
         </div>
       );
     }

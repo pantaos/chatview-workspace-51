@@ -1,79 +1,43 @@
 
 
-# Plan: Experience PANTA Flows — Interaktive Produkt-Demo-Seite
+# Plan: PANTA Flows — Plattform-Management Dashboard
 
-## Übersicht
+## Uebersicht
 
-Eine neue, eigenständige Seite (`/experience`) die als interaktive Produkt-Demo funktioniert. Man kann sich durchklicken und versteht was PANTA Flows ist, welche Bausteine es gibt (Chat, Assistenten, Apps) und sieht am HDI Content-Workflow ein konkretes Beispiel Schritt für Schritt.
+Eine neue Seite `/panta-flows` als uebergeordnetes Plattform-Management-Dashboard. Du als Plattform-Betreiber kannst hier Tenants (Kunden-Organisationen) verwalten, ihnen Assistenten/Workflows zuweisen und plattformweite Community-Posts verschicken. Die Seite wird in der Sidebar unter Admin und Settings als dritter Eintrag angezeigt.
 
-Die Seite wird als externer Link aus den Settings heraus geöffnet (neuer Tab) und hat **kein Sidebar-Layout** — sie steht komplett für sich, clean und präsentationstauglich.
+## Aufbau
 
----
+Die Seite nutzt das gleiche Tab-Pattern wie Admin und Settings (MainLayout + Tabs).
 
-## Aufbau der Seite
+### Tab 1: Dashboard (Uebersicht)
+Mini-Analytics mit Stat-Cards:
+- Anzahl Tenants
+- Aktive User ueber alle Tenants
+- Gesamte Token-Nutzung
+- Neue Tenants diesen Monat
 
-### Section 1: Hero
+### Tab 2: Tenants
+- Liste aller Tenants als Karten (Name, User-Anzahl, Status)
+- Button "Neuen Tenant anlegen" oeffnet Dialog mit Name, Beschreibung, Logo-URL, Theme-Farbe
+- Klick auf Tenant oeffnet einen Detail-Dialog mit Sub-Tabs:
+  - **Analytics**: Token-Nutzung, aktive User, Queries des Tenants
+  - **Theme**: Primaerfarbe, Akzentfarbe, Logo-URL konfigurieren
+  - **Admins**: Liste der Admins, Button zum Hinzufuegen eines neuen Admins (Name, E-Mail, Rolle)
 
-Voller Gradient-Header (wie Dashboard, aber grösser) mit:
-- PANTA Logo
-- "Die Enterprise-KI-Plattform" Headline
-- Subline: "Strukturiert. Skalierbar. DSGVO-konform."
-- CTA-Button: "Workflow-Demo starten" (scrollt zu Section 3)
+### Tab 3: Assistenten & Workflows
+- Liste aller verfuegbaren Assistenten und Workflows aus dem Pool
+- Jeder Eintrag hat einen "Zuordnen"-Button der einen Dialog oeffnet:
+  - Tenant(s) auswaehlen (Multi-Select)
+  - Sichtbarkeit: "Nur Admin" oder "Gesamte Organisation"
+- Bereits zugeordnete Tenants werden als Badges angezeigt
 
-### Section 2: Drei Bausteine
-
-Drei schlanke Karten nebeneinander (responsive: untereinander auf Mobile):
-
-| Chat | Assistenten | Apps |
-|------|------------|------|
-| Flexible, sichere KI | Rollen- & aufgabenspezifische KI | End-to-End Business Engines |
-| Multi-Model, Websuche | Team-Sharing | Review-Schritte & Ubergaben |
-
-Minimales Design — Icon, Titel, 2-3 Bullet Points. Keine schweren Cards, eher wie die Integrations-Kacheln.
-
-### Section 3: HDI Workflow Demo (Interaktiv)
-
-Das Herzstück. Ein interaktiver Stepper der die 7 Schritte des HDI Content-Workflows zeigt:
-
-```text
-Step 1: Choose Insurance Topic
-Step 2: Find Content Ideas (AI/RSS)
-Step 3: Create First Article Draft
-Step 4: Tips zur Anpassung
-Step 5: Final Preview & Approval
-Step 6: Vorteile der neuen Bestimmungen
-Step 7: Ausblick & Handlungsempfehlungen
-```
-
-**UI-Pattern:**
-- Links: Vertikale Step-Liste mit Nummern und Titeln (aktiver Step hervorgehoben)
-- Rechts: Content-Preview des aktiven Steps mit dem echten Inhalt aus dem PDF
-- "Weiter" / "Zurück" Buttons zum Durchklicken
-- Approval-Steps haben ein spezielles Badge/Icon
-
-Auf Mobile: Steps als horizontaler Dot-Indicator oben, Content darunter.
-
-### Section 4: Footer
-
-- Integrationen als kleine Icon-Reihe (Microsoft, Google, Notion, OpenAI, ElevenLabs, etc.)
-- "Kontakt: hello@pantaos.com"
-- Link zurück zur App
-
----
-
-## Verlinkung aus Settings
-
-In der Settings-Seite unter dem "General" Tab wird ein neuer Eintrag hinzugefügt:
-
-```text
-[Rocket Icon]  Experience PANTA Flows
-               Interaktive Produkt-Demo ansehen
-                                          [External Link →]
-```
-
-Öffnet `/experience` in einem neuen Tab.
-
----
+### Tab 4: Community Posts
+- Liste existierender plattformweiter Posts
+- Button "Neuen Post erstellen" oeffnet Dialog mit:
+  - Titel, Inhalt, Typ
+  - Zielgruppe: "Alle Tenants" oder spezifische Tenants auswaehlen (Multi-Select)
+- Bestehende Posts zeigen ihre Zielgruppe als Badges
 
 ## Technische Details
 
@@ -81,42 +45,89 @@ In der Settings-Seite unter dem "General" Tab wird ein neuer Eintrag hinzugefüg
 
 | Datei | Zweck |
 |-------|-------|
-| `src/pages/Experience.tsx` | Die komplette Demo-Seite (kein MainLayout, standalone) |
-| `src/data/hdiWorkflowDemo.ts` | HDI Workflow Steps mit Content aus dem PDF |
+| `src/pages/PantaFlows.tsx` | Hauptseite mit Tabs |
+| `src/components/panta-flows/PFDashboard.tsx` | Dashboard/Analytics Tab |
+| `src/components/panta-flows/PFTenants.tsx` | Tenants-Liste und Verwaltung |
+| `src/components/panta-flows/PFTenantDetailDialog.tsx` | Tenant-Detail mit Sub-Tabs (Analytics, Theme, Admins) |
+| `src/components/panta-flows/PFCreateTenantDialog.tsx` | Dialog zum Anlegen eines neuen Tenants |
+| `src/components/panta-flows/PFAssistantsWorkflows.tsx` | Assistenten/Workflows Pool mit Zuordnung |
+| `src/components/panta-flows/PFAssignDialog.tsx` | Dialog zur Tenant-Zuordnung (Tenant-Auswahl + Sichtbarkeit) |
+| `src/components/panta-flows/PFCommunityPosts.tsx` | Plattformweite Community Posts |
+| `src/components/panta-flows/PFCreatePostDialog.tsx` | Post erstellen mit Tenant-Targeting |
+| `src/types/pantaFlows.ts` | TypeScript-Typen (Tenant, PlatformPost, Assignment, etc.) |
 
-### Geänderte Dateien
+### Geaenderte Dateien
 
-| Datei | Änderung |
+| Datei | Aenderung |
 |-------|----------|
-| `src/App.tsx` | Route `/experience` hinzufügen |
-| `src/pages/Settings.tsx` | Link zur Experience-Seite im General Tab |
+| `src/App.tsx` | Route `/panta-flows` registrieren |
+| `src/components/AppSidebar.tsx` | Neuer Eintrag "PANTA Flows" mit Layers-Icon zwischen Admin und Settings (sowohl collapsed als auch expanded Sidebar) |
 
-### Seiten-Design
-
-- **Kein MainLayout/Sidebar** — die Seite steht für sich
-- Nutzt den gleichen Theme-Gradient wie das Dashboard
-- Background: `bg-background` (das dezente Blau)
-- Cards: `bg-card` (reines Weiss)
-- Smooth Scroll zwischen Sections
-- Animierte Transitions beim Step-Wechsel
-
-### HDI Demo Daten
-
-Die 7 Steps aus dem PDF werden als strukturierte Daten abgelegt:
+### Datenstruktur (Mock-Daten, kein Backend)
 
 ```typescript
-interface DemoStep {
-  id: number;
-  title: string;        // z.B. "Choose the Insurance Topic"
-  type: 'input' | 'ai-processing' | 'preview' | 'approval';
-  content: string;      // Der echte Content aus dem PDF
-  isApproval?: boolean;
+interface Tenant {
+  id: string;
+  name: string;
+  description: string;
+  logoUrl?: string;
+  primaryColor: string;
+  accentColor: string;
+  totalUsers: number;
+  activeUsers: number;
+  tokensUsed: number;
+  tokensLimit: number;
+  admins: TenantAdmin[];
+  createdAt: string;
+  status: 'active' | 'inactive';
+}
+
+interface TenantAdmin {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Admin' | 'Super Admin';
+}
+
+interface AssistantWorkflow {
+  id: string;
+  name: string;
+  type: 'assistant' | 'workflow';
+  description: string;
+  assignments: TenantAssignment[];
+}
+
+interface TenantAssignment {
+  tenantId: string;
+  tenantName: string;
+  visibility: 'admin-only' | 'organization';
+}
+
+interface PlatformPost {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  targetType: 'all' | 'specific';
+  targetTenants: string[];
+  createdAt: string;
+  author: string;
 }
 ```
 
-### Responsive
+### Sidebar-Integration
 
-- Desktop: 2-Column Layout bei der Workflow-Demo (Steps links, Content rechts)
-- Tablet: Gleich aber kompakter
-- Mobile: Single Column, Steps als Dots oben
+Im Bottom-Bereich der Sidebar wird zwischen "Admin" und "Settings" ein neuer Eintrag eingefuegt:
+- Icon: `Layers` (von lucide-react)
+- Label: "PANTA Flows"
+- Route: `/panta-flows`
+- Sowohl in der collapsed als auch expanded Sidebar
+
+### Design-Pattern
+
+- Gleiche Tab-Styles wie AdminSettings und Settings (border-bottom active indicator)
+- Cards nutzen `bg-card` (weiss) auf `bg-background` (dezentes Blau)
+- Dialoge nutzen das bestehende Dialog-Pattern mit fixed Close-Button (z-20, backdrop-blur)
+- Stat-Cards im Dashboard-Tab folgen dem gleichen Layout wie AdminDashboard
+- Responsive: Tabs horizontal scrollbar auf Mobile, Karten-Grid passt sich an
 

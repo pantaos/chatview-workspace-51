@@ -18,8 +18,9 @@ const PFCommunityPosts = () => {
           <h3 className="text-lg font-semibold">Community Posts</h3>
           <p className="text-sm text-muted-foreground">Plattformweite Nachrichten an Tenants</p>
         </div>
-        <Button size="sm" onClick={() => setCreateOpen(true)}>
-          <Plus className="h-4 w-4 mr-1" /> Neuen Post erstellen
+        <Button size="sm" onClick={() => setCreateOpen(true)} className="min-h-[44px]">
+          <Plus className="h-4 w-4 sm:mr-1" />
+          <span className="hidden sm:inline">Neuen Post erstellen</span>
         </Button>
       </div>
 

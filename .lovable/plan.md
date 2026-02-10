@@ -1,53 +1,73 @@
 
 
-# Tenant-Based Workflow Configuration
+# Konfiguration: Add Workflows to Tenant + Approvals & Handovers Tab in Admin
 
 ## Overview
 
-Restructure the workflow management approach: keep "Assistenten & Workflows" as a simple resource pool (assistants and workflows with tenant assignment badges), and add a new **"Konfiguration"** tab to PANTA Flows where workflow configuration is organized by tenant.
-
-## UX Flow
-
-1. **"Assistenten & Workflows" tab** -- reverts to showing assistants and workflows as simple list cards (like the original), each showing which tenants they're assigned to. Clicking opens the detail dialog for tenant assignment only (no workflow step editing here).
-
-2. **New "Konfiguration" tab** -- shows tenant cards in a grid. Clicking a tenant expands/opens a view showing the workflows assigned to that tenant as the square icon grid. Clicking a workflow icon opens the existing `WorkflowConfigDialog` for step-level configuration.
+Three changes:
+1. **Konfiguration**: Add ability to assign new workflows to a tenant directly from the tenant detail view
+2. **WorkflowConfigDialog**: Hide the "Tenants" sidebar tab when opened from the Konfiguration context (since we're already in a specific tenant)
+3. **Remove approval/handover config from WorkflowConfigDialog** and create a new **"Approvals & Handovers"** tab in the Admin Panel with a simplified, tenant-based view for adding gates to workflow steps
 
 ## Changes
 
-### 1. Revert PFAssistantsWorkflows to resource pool only
+### 1. Add workflow assignment in PFKonfiguration
 
-**`src/components/panta-flows/PFAssistantsWorkflows.tsx`**
-- Remove the workflow icon grid, `WorkflowConfigDialog` import, and all workflow config state (`selectedWorkflow`, `workflowDialogOpen`, etc.)
-- Show workflows as simple card items (same style as assistants) filtered from `mockAssistantsWorkflows` where `type === "workflow"`
-- Each workflow card shows name, description, and tenant assignment badges
-- Clicking a workflow opens `PFAssistantDetailDialog` (which already handles both types with General + Tenants tabs)
+**`src/components/panta-flows/PFKonfiguration.tsx`**
 
-### 2. Create new PFKonfiguration component
+When viewing a tenant's workflows, add an "Add Workflow" section below the assigned workflows grid:
+- Show a dropdown/select of workflows not yet assigned to this tenant
+- "Hinzufuegen" button to assign
+- When assigned, the workflow appears in the grid above
+- This replaces the current text "Workflows koennen im Tab Assistenten & Workflows zugeordnet werden"
 
-**`src/components/panta-flows/PFKonfiguration.tsx`** (new file)
-- Lists all tenants as clickable cards (reusing the same card style from PFTenants)
-- Clicking a tenant shows the workflows assigned to that tenant in the square icon grid
-- Unassigned workflows appear in a separate "Nicht zugeordnet" section at the bottom
-- Clicking a workflow icon opens `WorkflowConfigDialog` for full step-level editing
-- Back button to return to tenant list view
+Track assignments in local state so newly added workflows appear in the grid immediately.
 
-### 3. Add tab to PantaFlows page
-
-**`src/pages/PantaFlows.tsx`**
-- Add a new tab entry: `{ id: "config", label: "Konfiguration", shortLabel: "Konfig." }`
-- Add `TabsContent` rendering `PFKonfiguration`
-- Import the new component
-
-### 4. Clean up WorkflowConfigDialog
+### 2. Hide Tenants tab when opened from Konfiguration
 
 **`src/components/admin/WorkflowConfigDialog.tsx`**
-- Keep the Tenants tab since it's useful for managing assignments from within the config dialog too
-- No other changes needed
+
+- Add an optional prop `hideTenants?: boolean` to `WorkflowConfigDialogProps`
+- When `hideTenants` is true, skip rendering the "Tenants" sidebar button and mobile tab
+- Also remove the approval/handover collaboration section from step configs entirely (moved to Admin)
+
+**`src/components/panta-flows/PFKonfiguration.tsx`**
+
+- Pass `hideTenants={true}` when opening WorkflowConfigDialog
+
+### 3. Remove Approval/Handover from WorkflowConfigDialog
+
+**`src/components/admin/WorkflowConfigDialog.tsx`**
+
+- Add an optional prop `hideCollaboration?: boolean`
+- When true, skip rendering the `renderCollaborationSection(step)` call in `renderStepConfig`
+- PFKonfiguration passes `hideCollaboration={true}`
+
+### 4. New "Approvals & Handovers" tab in Admin Panel
+
+**`src/components/admin/AdminApprovals.tsx`** (new file)
+
+A simplified, tenant-based approval management view:
+- **Step 1 - Tenant Grid**: Shows tenant cards (same style as PFKonfiguration)
+- **Step 2 - Workflow Grid**: Click a tenant to see its assigned workflows as an icon grid
+- **Step 3 - Workflow Steps**: Click a workflow to see a simplified step list showing:
+  - Step name and type badge (colored dot)
+  - Whether the step has an approval/handover gate (badge indicator)
+  - NO detailed config (no system prompts, no processing settings, no editable title/description)
+  - Only the "Add Approval/Handover" collapsible section per step (reuses the same collaboration config pattern: type, assignee, timeout, escalation)
+- Back navigation between views
+
+**`src/pages/AdminSettings.tsx`**
+
+- Add new tab: `{ id: "approvals", label: "Approvals & Handovers", shortLabel: "Approvals", icon: Shield }`
+- Import and render `AdminApprovals` component
+- Place it between "Teams" and "Community Feed" tabs
 
 ## Technical Details
 
-- The tenant-to-workflow mapping uses `mockAssistantsWorkflows` entries with `type === "workflow"` and their `assignments` array to determine which workflows belong to which tenant
-- The workflow icon grid rendering reuses `mockWorkflows` from `workflowAdmin.ts` for the actual config data (icon, steps, etc.)
-- A lookup maps `mockAssistantsWorkflows` workflow names to `mockWorkflows` entries for opening the config dialog
-- The new component manages two states: tenant list view and single-tenant detail view with workflow grid
+- The `AdminApprovals` component will import `mockWorkflows`, `mockTenants`, `mockAssistantsWorkflows` and reuse the same collaboration config types (`CollaborationConfig`, `EscalationConfig`)
+- The collaboration section rendering logic (type radio, assignee picker, timeout, escalation) will be extracted or duplicated from `WorkflowConfigDialog` into `AdminApprovals` -- keeping it self-contained
+- The team/user/role picker sub-screens will be replicated in AdminApprovals for assignee selection
+- State management: 3-level drill-down (tenants -> workflows -> steps) with back buttons
+- The workflow icon grid and tenant cards reuse the same visual patterns already established
 

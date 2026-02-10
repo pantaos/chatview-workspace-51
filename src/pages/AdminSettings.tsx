@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare } from "lucide-react";
+import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare, Shield } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,6 +8,7 @@ import MainLayout from "@/components/MainLayout";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminUsers from "@/components/admin/AdminUsers";
 import AdminTeams from "@/components/admin/AdminTeams";
+import AdminApprovals from "@/components/admin/AdminApprovals";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
 
@@ -51,6 +52,13 @@ const AdminSettings = () => {
       shortLabel: "Teams",
       icon: UsersIcon,
       description: "Team Organization"
+    },
+    { 
+      id: "approvals",
+      label: "Approvals & Handovers", 
+      shortLabel: "Approvals",
+      icon: Shield,
+      description: "Approval & Handover Gates"
     },
     { 
       id: "community",
@@ -133,6 +141,9 @@ const AdminSettings = () => {
           </TabsContent>
           <TabsContent value="teams" className="mt-0">
             <AdminTeams />
+          </TabsContent>
+          <TabsContent value="approvals" className="mt-0">
+            <AdminApprovals />
           </TabsContent>
           <TabsContent value="community" className="mt-0">
             <CommunityFeed />

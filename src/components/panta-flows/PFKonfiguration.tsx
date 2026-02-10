@@ -4,9 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Users, Video, FileVideo, UserCircle, Upload, Mail, Plus } from "lucide-react";
 import { mockTenants, mockAssistantsWorkflows } from "@/data/pantaFlowsData";
-import { Tenant } from "@/types/pantaFlows";
+import { Tenant, AssistantWorkflow } from "@/types/pantaFlows";
 import { WorkflowAdminConfig, mockWorkflows } from "@/types/workflowAdmin";
 import { WorkflowConfigDialog } from "@/components/admin/WorkflowConfigDialog";
+import { toast } from "sonner";
 
 const iconMap: Record<string, React.ReactNode> = {
   Video: <Video className="w-5 h-5 text-white" />,
@@ -35,11 +36,16 @@ const PFKonfiguration = () => {
   const [workflows, setWorkflows] = useState<WorkflowAdminConfig[]>(mockWorkflows);
   const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowAdminConfig | null>(null);
   const [workflowDialogOpen, setWorkflowDialogOpen] = useState(false);
+  // Track local assignments (copy from mock so we can mutate)
+  const [localAssignments, setLocalAssignments] = useState<AssistantWorkflow[]>(
+    mockAssistantsWorkflows.filter(aw => aw.type === "workflow")
+  );
+  const [selectedNewWorkflow, setSelectedNewWorkflow] = useState("");
 
   // Get workflow names assigned to a tenant
   const getWorkflowsForTenant = (tenantId: string) => {
-    const assignedWorkflowNames = mockAssistantsWorkflows
-      .filter((aw) => aw.type === "workflow" && aw.assignments.some((a) => a.tenantId === tenantId))
+    const assignedWorkflowNames = localAssignments
+      .filter((aw) => aw.assignments.some((a) => a.tenantId === tenantId))
       .map((aw) => aw.name);
 
     return workflows.filter((w) =>
@@ -47,15 +53,46 @@ const PFKonfiguration = () => {
     );
   };
 
-  // Get unassigned workflows
-  const getUnassignedWorkflows = () => {
-    const allAssignedNames = mockAssistantsWorkflows
-      .filter((aw) => aw.type === "workflow" && aw.assignments.length > 0)
+  // Get workflows NOT assigned to the selected tenant
+  const getUnassignedForTenant = (tenantId: string) => {
+    const assignedWorkflowNames = localAssignments
+      .filter((aw) => aw.assignments.some((a) => a.tenantId === tenantId))
       .map((aw) => aw.name);
 
     return workflows.filter((w) =>
-      !allAssignedNames.some((name) => w.name.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(w.name.toLowerCase()))
+      !assignedWorkflowNames.some((name) => w.name.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(w.name.toLowerCase()))
     );
+  };
+
+  const handleAddWorkflowToTenant = (tenantId: string) => {
+    if (!selectedNewWorkflow) return;
+    const wf = workflows.find(w => w.id === selectedNewWorkflow);
+    const tenant = mockTenants.find(t => t.id === tenantId);
+    if (!wf || !tenant) return;
+
+    // Find or create the assignment entry
+    const existingAssignment = localAssignments.find(
+      (aw) => aw.name.toLowerCase().includes(wf.name.toLowerCase()) || wf.name.toLowerCase().includes(aw.name.toLowerCase())
+    );
+
+    if (existingAssignment) {
+      setLocalAssignments(prev => prev.map(aw =>
+        aw.id === existingAssignment.id
+          ? { ...aw, assignments: [...aw.assignments, { tenantId, tenantName: tenant.name, visibility: "organization" as const }] }
+          : aw
+      ));
+    } else {
+      setLocalAssignments(prev => [...prev, {
+        id: `aw-new-${Date.now()}`,
+        name: wf.name,
+        type: "workflow" as const,
+        description: wf.description,
+        assignments: [{ tenantId, tenantName: tenant.name, visibility: "organization" as const }],
+      }]);
+    }
+
+    setSelectedNewWorkflow("");
+    toast.success(`${wf.name} wurde ${tenant.name} zugeordnet`);
   };
 
   const handleWorkflowClick = (workflow: WorkflowAdminConfig) => {
@@ -110,7 +147,6 @@ const PFKonfiguration = () => {
   // Tenant detail view with workflow grid
   if (selectedTenant) {
     const tenantWorkflows = getWorkflowsForTenant(selectedTenant.id);
-    const unassigned = getUnassignedWorkflows();
 
     return (
       <div className="space-y-6">
@@ -135,16 +171,35 @@ const PFKonfiguration = () => {
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <p className="text-sm">Keine Workflows zugeordnet</p>
-            <p className="text-xs mt-1">Workflows können im Tab „Assistenten & Workflows" zugeordnet werden</p>
+            <p className="text-xs mt-1">Füge unten einen Workflow hinzu</p>
           </div>
         )}
 
-        {unassigned.length > 0 && (
-          <div className="space-y-4 pt-4 border-t border-border/40">
-            <h4 className="text-sm font-medium text-muted-foreground">Nicht zugeordnet</h4>
-            {renderWorkflowGrid(unassigned)}
-          </div>
-        )}
+        {/* Add workflow to tenant */}
+        {(() => {
+          const unassignedForTenant = getUnassignedForTenant(selectedTenant.id);
+          if (unassignedForTenant.length === 0) return null;
+          return (
+            <div className="space-y-3 pt-4 border-t border-border/40">
+              <h4 className="text-sm font-medium text-muted-foreground">Workflow hinzufügen</h4>
+              <div className="flex gap-2">
+                <select
+                  value={selectedNewWorkflow}
+                  onChange={(e) => setSelectedNewWorkflow(e.target.value)}
+                  className="flex-1 h-10 px-3 rounded-md border border-input bg-background text-sm"
+                >
+                  <option value="">Workflow auswählen…</option>
+                  {unassignedForTenant.map((w) => (
+                    <option key={w.id} value={w.id}>{w.name}</option>
+                  ))}
+                </select>
+                <Button size="sm" onClick={() => handleAddWorkflowToTenant(selectedTenant.id)} disabled={!selectedNewWorkflow} className="min-h-[40px]">
+                  <Plus className="h-4 w-4 mr-1" /> Hinzufügen
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
 
         {selectedWorkflow && (
           <WorkflowConfigDialog
@@ -152,6 +207,8 @@ const PFKonfiguration = () => {
             open={workflowDialogOpen}
             onOpenChange={setWorkflowDialogOpen}
             onWorkflowUpdate={handleWorkflowUpdate}
+            hideTenants
+            hideCollaboration
           />
         )}
       </div>
@@ -220,6 +277,8 @@ const PFKonfiguration = () => {
           open={workflowDialogOpen}
           onOpenChange={setWorkflowDialogOpen}
           onWorkflowUpdate={handleWorkflowUpdate}
+          hideTenants
+          hideCollaboration
         />
       )}
     </div>

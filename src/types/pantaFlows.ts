@@ -5,6 +5,13 @@ export interface TenantAdmin {
   role: 'Admin' | 'Super Admin';
 }
 
+export interface PendingInvite {
+  id: string;
+  email: string;
+  role: 'Admin' | 'Super Admin';
+  invitedOn: string;
+}
+
 export interface Tenant {
   id: string;
   name: string;

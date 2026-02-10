@@ -1,54 +1,53 @@
 
 
-# Move Workflow Configuration to PANTA Flows
+# Tenant-Based Workflow Configuration
 
 ## Overview
 
-Move the workflow customization feature from the Admin Panel into the PANTA Flows "Assistenten & Workflows" tab. The key idea: merge the resource pool (assistants + workflows) with the workflow configuration, so you can manage tenant assignments AND configure workflow internals from one place.
+Restructure the workflow management approach: keep "Assistenten & Workflows" as a simple resource pool (assistants and workflows with tenant assignment badges), and add a new **"Konfiguration"** tab to PANTA Flows where workflow configuration is organized by tenant.
 
-## UX Concept
+## UX Flow
 
-The "Assistenten & Workflows" tab will show two sections:
+1. **"Assistenten & Workflows" tab** -- reverts to showing assistants and workflows as simple list cards (like the original), each showing which tenants they're assigned to. Clicking opens the detail dialog for tenant assignment only (no workflow step editing here).
 
-1. **Assistenten** -- listed as cards (like today), clicking opens the existing detail dialog with General + Tenants tabs
-2. **Workflows** -- displayed as the square icon grid (migrated from Admin), clicking opens the WorkflowConfigDialog but enhanced with a new **"Tenants"** tab for per-tenant assignment and per-tenant configuration overrides
-
-This gives a clear visual distinction between assistants (list cards) and workflows (icon grid), while keeping everything in one place. The workflow detail dialog gets a "Tenants" tab where you can assign tenants and set visibility -- just like the assistant dialog already does.
+2. **New "Konfiguration" tab** -- shows tenant cards in a grid. Clicking a tenant expands/opens a view showing the workflows assigned to that tenant as the square icon grid. Clicking a workflow icon opens the existing `WorkflowConfigDialog` for step-level configuration.
 
 ## Changes
 
-### 1. Remove Workflows tab from Admin Panel
-- **`src/pages/AdminSettings.tsx`**: Remove the "workflows" tab entry and its `TabsContent`. Remove the `AdminWorkflowsTab` import.
+### 1. Revert PFAssistantsWorkflows to resource pool only
 
-### 2. Enhance PFAssistantsWorkflows component
-- **`src/components/panta-flows/PFAssistantsWorkflows.tsx`**: Split into two sections:
-  - **Assistenten section**: Keep the current card-based list, filtered to `type === "assistant"`
-  - **Workflows section**: Add the square icon grid from `AdminWorkflowsTab`, using `mockWorkflows` from `workflowAdmin.ts`. Clicking a workflow opens the `WorkflowConfigDialog`.
-  - Import and integrate `WorkflowConfigDialog` and `WorkflowAdminConfig` types.
+**`src/components/panta-flows/PFAssistantsWorkflows.tsx`**
+- Remove the workflow icon grid, `WorkflowConfigDialog` import, and all workflow config state (`selectedWorkflow`, `workflowDialogOpen`, etc.)
+- Show workflows as simple card items (same style as assistants) filtered from `mockAssistantsWorkflows` where `type === "workflow"`
+- Each workflow card shows name, description, and tenant assignment badges
+- Clicking a workflow opens `PFAssistantDetailDialog` (which already handles both types with General + Tenants tabs)
 
-### 3. Add Tenants tab to WorkflowConfigDialog
-- **`src/components/admin/WorkflowConfigDialog.tsx`**: Add a "Tenants" sidebar entry (after Overview, before steps). The Tenants screen shows:
-  - Currently assigned tenants with colored avatar, name, visibility badge, and remove button
-  - "Add tenant" section with tenant selector and visibility radio (same pattern as `PFAssistantDetailDialog`)
-  - This reuses `mockTenants` from `pantaFlowsData` and `TenantAssignment` type
+### 2. Create new PFKonfiguration component
 
-### 4. Link workflow assignments to AssistantWorkflow data
-- **`src/types/pantaFlows.ts`**: No changes needed -- `AssistantWorkflow` already supports `type: 'workflow'` with assignments
-- **`src/data/pantaFlowsData.ts`**: Optionally link `mockAssistantsWorkflows` workflow entries to `mockWorkflows` via a `configId` field, or keep them as separate data sets that coexist in the UI
+**`src/components/panta-flows/PFKonfiguration.tsx`** (new file)
+- Lists all tenants as clickable cards (reusing the same card style from PFTenants)
+- Clicking a tenant shows the workflows assigned to that tenant in the square icon grid
+- Unassigned workflows appear in a separate "Nicht zugeordnet" section at the bottom
+- Clicking a workflow icon opens `WorkflowConfigDialog` for full step-level editing
+- Back button to return to tenant list view
+
+### 3. Add tab to PantaFlows page
+
+**`src/pages/PantaFlows.tsx`**
+- Add a new tab entry: `{ id: "config", label: "Konfiguration", shortLabel: "Konfig." }`
+- Add `TabsContent` rendering `PFKonfiguration`
+- Import the new component
+
+### 4. Clean up WorkflowConfigDialog
+
+**`src/components/admin/WorkflowConfigDialog.tsx`**
+- Keep the Tenants tab since it's useful for managing assignments from within the config dialog too
+- No other changes needed
 
 ## Technical Details
 
-- The `WorkflowConfigDialog` stays in `src/components/admin/` (or could be moved to a shared location) since it's a standalone dialog component
-- The icon grid rendering logic from `AdminWorkflowsTab` will be extracted into `PFAssistantsWorkflows` directly
-- The "Add Workflow" dashed button in the grid remains as a placeholder
-- `AdminWorkflowsTab.tsx` can be deleted or kept as unused -- deleting is cleaner
-- The assistant detail dialog (`PFAssistantDetailDialog`) remains unchanged since it already handles tenant assignments well
-
-## Result
-
-One unified hub under PANTA Flows where platform admins can:
-- See all assistants (cards) and workflows (icon grid) at a glance
-- Configure workflow steps, prompts, and approval gates (existing WorkflowConfigDialog)
-- Assign workflows and assistants to tenants with visibility control
-- No more switching between Admin Panel and PANTA Flows for workflow management
+- The tenant-to-workflow mapping uses `mockAssistantsWorkflows` entries with `type === "workflow"` and their `assignments` array to determine which workflows belong to which tenant
+- The workflow icon grid rendering reuses `mockWorkflows` from `workflowAdmin.ts` for the actual config data (icon, steps, etc.)
+- A lookup maps `mockAssistantsWorkflows` workflow names to `mockWorkflows` entries for opening the config dialog
+- The new component manages two states: tenant list view and single-tenant detail view with workflow grid
 

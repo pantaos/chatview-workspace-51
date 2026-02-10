@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { mockTenants } from "@/data/pantaFlowsData";
 import { Tenant } from "@/types/pantaFlows";
 import PFCreateTenantDialog from "./PFCreateTenantDialog";
@@ -25,6 +26,7 @@ const TenantLogo = ({ tenant }: { tenant: Tenant }) => {
 const PFTenants = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
+  const isMobile = useIsMobile();
 
   return (
     <div className="space-y-6">
@@ -33,9 +35,15 @@ const PFTenants = () => {
           <h3 className="text-lg font-semibold">Tenants</h3>
           <p className="text-sm text-muted-foreground">{mockTenants.length} Organisationen verwaltet</p>
         </div>
-        <Button size="sm" onClick={() => setCreateOpen(true)}>
-          <Plus className="h-4 w-4 mr-1" /> Neuen Tenant anlegen
-        </Button>
+        {isMobile ? (
+          <Button size="icon" onClick={() => setCreateOpen(true)} className="min-w-[44px] min-h-[44px]">
+            <Plus className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4 mr-1" /> Neuen Tenant anlegen
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

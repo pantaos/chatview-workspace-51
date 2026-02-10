@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Building2, Users, Coins, CalendarPlus } from "lucide-react";
+import { Building2, Users, Coins, CalendarPlus, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { mockTenants } from "@/data/pantaFlowsData";
 
 const PFDashboard = () => {
@@ -14,10 +14,10 @@ const PFDashboard = () => {
   }).length;
 
   const stats = [
-    { title: "Tenants", value: totalTenants.toString(), description: `${activeTenants} aktiv`, icon: Building2 },
-    { title: "Aktive User", value: totalActiveUsers.toString(), description: "Über alle Tenants", icon: Users },
-    { title: "Token-Nutzung", value: totalTokens.toLocaleString(), description: "Gesamt verbraucht", icon: Coins },
-    { title: "Neue Tenants", value: newThisMonth.toString(), description: "Diesen Monat", icon: CalendarPlus },
+    { title: "Tenants", value: totalTenants.toString(), description: `${activeTenants} aktiv`, icon: Building2, trend: 8.3 },
+    { title: "Aktive User", value: totalActiveUsers.toString(), description: "Über alle Tenants", icon: Users, trend: 12.5 },
+    { title: "Token-Nutzung", value: totalTokens.toLocaleString(), description: "Gesamt verbraucht", icon: Coins, trend: -3.2 },
+    { title: "Neue Tenants", value: newThisMonth.toString(), description: "Diesen Monat", icon: CalendarPlus, trend: 0 },
   ];
 
   return (
@@ -32,7 +32,13 @@ const PFDashboard = () => {
                 <Icon className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="text-3xl font-bold">{stat.value}</div>
-              <div className="text-sm text-muted-foreground mt-1">{stat.description}</div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-sm text-muted-foreground">{stat.description}</span>
+                <span className={`flex items-center gap-0.5 text-xs font-medium ${stat.trend > 0 ? 'text-emerald-600 dark:text-emerald-400' : stat.trend < 0 ? 'text-red-500 dark:text-red-400' : 'text-muted-foreground'}`}>
+                  {stat.trend > 0 ? <TrendingUp className="h-3 w-3" /> : stat.trend < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
+                  {stat.trend > 0 ? '+' : ''}{stat.trend}%
+                </span>
+              </div>
             </Card>
           );
         })}

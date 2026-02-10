@@ -107,7 +107,29 @@ export const mockAssistantsWorkflows: AssistantWorkflow[] = [
     name: "Trendcast",
     type: "workflow",
     description: "KI-basierte Trendanalyse mit Audio- und Video-Output",
-    assignments: [],
+    assignments: [
+      { tenantId: "1", tenantName: "HDI Versicherung", visibility: "organization" },
+      { tenantId: "3", tenantName: "panta Ingenieure", visibility: "organization" },
+    ],
+  },
+  {
+    id: "aw6",
+    name: "ASB AI Avatar",
+    type: "workflow",
+    description: "Interaktive Avatar-Videos mit Quiz-Elementen",
+    assignments: [
+      { tenantId: "1", tenantName: "HDI Versicherung", visibility: "organization" },
+      { tenantId: "2", tenantName: "Green Stone School", visibility: "admin-only" },
+    ],
+  },
+  {
+    id: "aw7",
+    name: "BitProject Newsletter",
+    type: "workflow",
+    description: "Automatisierte Newsletter-Generierung aus RSS-Feeds",
+    assignments: [
+      { tenantId: "3", tenantName: "panta Ingenieure", visibility: "organization" },
+    ],
   },
   {
     id: "aw5",

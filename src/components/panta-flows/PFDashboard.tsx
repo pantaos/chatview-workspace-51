@@ -61,12 +61,6 @@ const PFDashboard = () => {
           );
         })}
       </div>
-      <div className="flex justify-end">
-        <Button size="sm" variant="outline" onClick={handleDownloadCSV}>
-          <Download className="h-4 w-4 mr-1" />
-          <span className="hidden sm:inline">CSV Export</span>
-        </Button>
-      </div>
 
       {/* Top Tenants by usage */}
       <Card className="p-6">
@@ -89,6 +83,12 @@ const PFDashboard = () => {
             ))}
         </div>
       </Card>
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" onClick={handleDownloadCSV}>
+          <Download className="h-4 w-4 mr-1" />
+          <span className="hidden sm:inline">CSV Export</span>
+        </Button>
+      </div>
     </div>
   );
 };

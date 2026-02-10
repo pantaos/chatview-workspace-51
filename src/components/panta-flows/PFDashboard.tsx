@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
-import { Building2, Users, Coins, CalendarPlus, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building2, Users, Coins, CalendarPlus, TrendingUp, TrendingDown, Minus, Download } from "lucide-react";
 import { mockTenants } from "@/data/pantaFlowsData";
+import { toast } from "sonner";
 
 const PFDashboard = () => {
   const totalTenants = mockTenants.length;
@@ -20,8 +22,30 @@ const PFDashboard = () => {
     { title: "Neue Tenants", value: newThisMonth.toString(), description: "Diesen Monat", icon: CalendarPlus, trend: 0 },
   ];
 
+  const handleDownloadCSV = () => {
+    const headers = ["Tenant", "Status", "Total Users", "Active Users", "Tokens Used", "Tokens Limit", "Created At"];
+    const rows = mockTenants.map(t => [
+      t.name, t.status, t.totalUsers, t.activeUsers, t.tokensUsed, t.tokensLimit, t.createdAt
+    ].join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `panta-flows-metrics-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV heruntergeladen");
+  };
+
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" onClick={handleDownloadCSV}>
+          <Download className="h-4 w-4 mr-1" />
+          <span className="hidden sm:inline">CSV Export</span>
+        </Button>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;

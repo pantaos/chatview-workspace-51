@@ -1,10 +1,13 @@
 import { useState, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Upload, X } from "lucide-react";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+} from "@/components/ui/responsive-dialog";
 
 interface PFCreateTenantDialogProps {
   open: boolean;
@@ -40,11 +43,8 @@ const PFCreateTenantDialog = ({ open, onOpenChange, onCreated }: PFCreateTenantD
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Neuen Tenant anlegen</DialogTitle>
-        </DialogHeader>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange} title="Neuen Tenant anlegen">
+      <ResponsiveDialogContent>
         <div className="space-y-4 mt-2">
           <div>
             <Label>Name *</Label>
@@ -101,10 +101,10 @@ const PFCreateTenantDialog = ({ open, onOpenChange, onCreated }: PFCreateTenantD
             </div>
           </div>
 
-          <Button onClick={handleCreate} disabled={!name.trim()} className="w-full">Erstellen</Button>
+          <Button onClick={handleCreate} disabled={!name.trim()} className="w-full min-h-[44px]">Erstellen</Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 };
 

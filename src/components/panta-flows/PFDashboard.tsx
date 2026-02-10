@@ -40,12 +40,6 @@ const PFDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
-        <Button size="sm" variant="outline" onClick={handleDownloadCSV}>
-          <Download className="h-4 w-4 mr-1" />
-          <span className="hidden sm:inline">CSV Export</span>
-        </Button>
-      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -66,6 +60,12 @@ const PFDashboard = () => {
             </Card>
           );
         })}
+      </div>
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" onClick={handleDownloadCSV}>
+          <Download className="h-4 w-4 mr-1" />
+          <span className="hidden sm:inline">CSV Export</span>
+        </Button>
       </div>
 
       {/* Top Tenants by usage */}

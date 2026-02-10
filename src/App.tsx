@@ -33,6 +33,7 @@ import TemplateLibrary from "./pages/TemplateLibrary";
 import Library from "./pages/Library";
 import Actions from "./pages/Actions";
 import Experience from "./pages/Experience";
+import PantaFlows from "./pages/PantaFlows";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -72,6 +73,7 @@ const App = () => {
                   <Route path="/templates" element={<TemplateLibrary />} />
                   <Route path="/library" element={<Library />} />
                   <Route path="/actions" element={<Actions />} />
+                  <Route path="/panta-flows" element={<PantaFlows />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   
                   {/* Trendcast Workflow Routes */}

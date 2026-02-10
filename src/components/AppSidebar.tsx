@@ -21,6 +21,7 @@ import {
   FolderOpen,
   ListTodo,
   ArrowRight,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -446,6 +447,18 @@ const AppSidebar = ({
             <Shield className="h-4 w-4" />
           </button>
           <button
+            onClick={() => navigate("/panta-flows")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/panta-flows")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="PANTA Flows"
+          >
+            <Layers className="h-4 w-4" />
+          </button>
+          <button
             onClick={() => navigate("/settings")}
             className={cn(
               "p-2 rounded-lg transition-colors",
@@ -786,6 +799,18 @@ const AppSidebar = ({
         >
           <Shield className="h-4 w-4" />
           <span>Admin</span>
+        </button>
+        <button
+          onClick={() => handleNavigate("/panta-flows")}
+          className={cn(
+            "w-full flex items-center gap-3 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
+            isActive("/panta-flows")
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Layers className="h-4 w-4" />
+          <span>PANTA Flows</span>
         </button>
         <button
           onClick={() => handleNavigate("/settings")}

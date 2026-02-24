@@ -23,6 +23,7 @@ import {
   Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ScheduleDialog from "@/components/ScheduleDialog";
 
 // Use case definitions with their step configurations
 const useCaseDefinitions: Record<string, UseCaseDefinition> = {
@@ -548,6 +549,7 @@ const UseCaseRun = () => {
   const [completedExecSteps, setCompletedExecSteps] = useState<number>(-1);
   const [activeExecStep, setActiveExecStep] = useState(0);
   const [customInputs, setCustomInputs] = useState<Record<string, string>>({});
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   // Execution simulation
   useEffect(() => {
@@ -757,7 +759,7 @@ const UseCaseRun = () => {
                   </Button>
                 ) : (
                   <>
-                    <Button size="sm" variant="outline" className="gap-1">
+                    <Button size="sm" variant="outline" className="gap-1" onClick={() => setScheduleOpen(true)}>
                       <Calendar className="h-3.5 w-3.5" /> Save as recurring
                     </Button>
                     <Button size="sm" onClick={handleExecute} className="gap-1">
@@ -874,7 +876,7 @@ const UseCaseRun = () => {
                 <RefreshCw className="h-3.5 w-3.5" />
                 Run Again
               </Button>
-              <Button size="sm" variant="outline" className="gap-1.5">
+              <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setScheduleOpen(true)}>
                 <Calendar className="h-3.5 w-3.5" />
                 Schedule Weekly
               </Button>
@@ -889,6 +891,11 @@ const UseCaseRun = () => {
           </div>
         )}
       </div>
+      <ScheduleDialog
+        open={scheduleOpen}
+        onOpenChange={setScheduleOpen}
+        useCaseName={useCase.name}
+      />
     </MainLayout>
   );
 };

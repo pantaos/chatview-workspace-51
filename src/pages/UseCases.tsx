@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import ScheduleDialog from "@/components/ScheduleDialog";
 
 const teams = ["All Teams", "Engineering", "Sales", "HR", "Finance", "Marketing"];
 
@@ -106,6 +107,7 @@ const UseCases = () => {
   const [selectedTeam, setSelectedTeam] = useState("All Teams");
   const [activeTeamFilter, setActiveTeamFilter] = useState<string | null>(null);
   const [activeTaskFilter, setActiveTaskFilter] = useState<string | null>(null);
+  const [scheduleTarget, setScheduleTarget] = useState<UseCase | null>(null);
 
   const filteredUseCases = useMemo(() => {
     let results = allUseCases;
@@ -253,7 +255,7 @@ const UseCases = () => {
                         <Play className="h-3 w-3 mr-1" />
                         Run Now
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1 h-8 text-xs">
+                      <Button size="sm" variant="outline" className="flex-1 h-8 text-xs" onClick={() => setScheduleTarget(uc)}>
                         <Clock className="h-3 w-3 mr-1" />
                         Schedule
                       </Button>
@@ -362,6 +364,11 @@ const UseCases = () => {
           </section>
         </div>
       </div>
+      <ScheduleDialog
+        open={!!scheduleTarget}
+        onOpenChange={(open) => !open && setScheduleTarget(null)}
+        useCaseName={scheduleTarget?.name || ""}
+      />
     </MainLayout>
   );
 };

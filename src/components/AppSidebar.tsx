@@ -22,6 +22,7 @@ import {
   ListTodo,
   ArrowRight,
   Layers,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -428,6 +429,18 @@ const AppSidebar = ({
           >
             <LayoutGrid className="h-5 w-5" />
           </button>
+          <button
+            onClick={() => navigate("/use-cases")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/use-cases")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Use Cases"
+          >
+            <ShoppingBag className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex-1" />
@@ -647,6 +660,18 @@ const AppSidebar = ({
               >
                 <LayoutGrid className="h-4 w-4 flex-shrink-0" />
                 <span>Templates</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/use-cases")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/use-cases")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <ShoppingBag className="h-4 w-4 flex-shrink-0" />
+                <span>Use Cases</span>
               </button>
             </nav>
 

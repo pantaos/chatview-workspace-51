@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/MainLayout";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
@@ -101,6 +102,7 @@ const taskTypes = [
 const UseCases = () => {
   const isMobile = useIsMobile();
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("All Teams");
 
@@ -185,7 +187,7 @@ const UseCases = () => {
                     </Badge>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" className="flex-1 h-8 text-xs">
+                    <Button size="sm" className="flex-1 h-8 text-xs" onClick={() => navigate(`/use-cases/run/${uc.id}`)}>
                       <Play className="h-3 w-3 mr-1" />
                       Run Now
                     </Button>

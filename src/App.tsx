@@ -35,6 +35,7 @@ import Actions from "./pages/Actions";
 import Experience from "./pages/Experience";
 import PantaFlows from "./pages/PantaFlows";
 import UseCases from "./pages/UseCases";
+import UseCaseRun from "./pages/UseCaseRun";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -76,6 +77,7 @@ const App = () => {
                   <Route path="/actions" element={<Actions />} />
                   <Route path="/panta-flows" element={<PantaFlows />} />
                   <Route path="/use-cases" element={<UseCases />} />
+                  <Route path="/use-cases/run/:id" element={<UseCaseRun />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   
                   {/* Trendcast Workflow Routes */}

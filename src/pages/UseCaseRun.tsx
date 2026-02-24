@@ -1,0 +1,596 @@
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import MainLayout from "@/components/MainLayout";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Circle,
+  Loader2,
+  Play,
+  BarChart3,
+  Bell,
+  Users,
+  ExternalLink,
+  RefreshCw,
+  Calendar,
+  Settings2,
+  Clock,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Use case definitions with their step configurations
+const useCaseDefinitions: Record<string, UseCaseDefinition> = {
+  "1": {
+    id: "1",
+    name: "Weekly Summary",
+    icon: BarChart3,
+    description: "Generate and post a weekly engineering summary to Slack",
+    integrations: ["GitHub", "Slack"],
+    configSteps: [
+      {
+        id: "repos",
+        title: "Select Repositories",
+        description: "Which GitHub repositories should I include?",
+        type: "radio",
+        options: [
+          { id: "all", label: "All repos I have access to" },
+          { id: "specific", label: "Let me specify", hasInput: true, inputPlaceholder: "e.g. frontend, backend, infra" },
+        ],
+      },
+      {
+        id: "channel",
+        title: "Slack Channel",
+        description: "Which Slack channel should the summary be posted to?",
+        type: "radio",
+        options: [
+          { id: "engineering", label: "#engineering" },
+          { id: "engineering-updates", label: "#engineering-updates" },
+          { id: "other", label: "Other", hasInput: true, inputPlaceholder: "#channel-name" },
+        ],
+      },
+      {
+        id: "content",
+        title: "Summary Content",
+        description: "What should the summary include?",
+        type: "checkbox",
+        options: [
+          { id: "commits", label: "Commits and PRs", defaultChecked: true },
+          { id: "issues", label: "Issues opened/closed", defaultChecked: true },
+          { id: "reviews", label: "Code review activity" },
+          { id: "deployments", label: "Deployment status" },
+        ],
+      },
+    ],
+    executionSteps: [
+      { id: "connect", label: "Connected to GitHub (3 repositories)", duration: 1200 },
+      { id: "commits", label: "Fetched commits from last 7 days (47 commits)", duration: 1800 },
+      { id: "prs", label: "Fetched pull requests (12 merged, 3 open)", duration: 1500 },
+      { id: "issues", label: "Fetched issues (8 closed, 5 opened)", duration: 1400 },
+      { id: "summary", label: "Generating summary with AI...", duration: 2500 },
+      { id: "post", label: "Posting to #engineering-updates", duration: 800 },
+    ],
+    result: {
+      title: "📊 Weekly Engineering Summary (Feb 17–24)",
+      destination: "Summary posted to #engineering-updates",
+      content: [
+        "Commits: 47 across 3 repos",
+        "PRs: 12 merged, 3 in review",
+        "Issues: 8 closed, 5 new",
+      ],
+      highlights: [
+        "Payment service refactor completed (PR #234)",
+        "New user onboarding flow deployed",
+        "3 critical bugs fixed in auth module",
+      ],
+      viewLink: "View in Slack",
+    },
+  },
+  "2": {
+    id: "2",
+    name: "PR Review Alert",
+    icon: Bell,
+    description: "Get notified about pending pull requests that need your review",
+    integrations: ["GitHub", "Jira"],
+    configSteps: [
+      {
+        id: "repos",
+        title: "Repositories",
+        description: "Which repositories should I monitor?",
+        type: "radio",
+        options: [
+          { id: "all", label: "All assigned repos" },
+          { id: "specific", label: "Let me choose", hasInput: true, inputPlaceholder: "e.g. api, web-app" },
+        ],
+      },
+      {
+        id: "frequency",
+        title: "Alert Frequency",
+        description: "How often should I check for pending reviews?",
+        type: "radio",
+        options: [
+          { id: "realtime", label: "Real-time (instant)" },
+          { id: "hourly", label: "Every hour" },
+          { id: "daily", label: "Once a day (morning)" },
+        ],
+      },
+    ],
+    executionSteps: [
+      { id: "connect", label: "Connected to GitHub", duration: 1000 },
+      { id: "scan", label: "Scanning assigned PRs (5 pending)", duration: 2000 },
+      { id: "jira", label: "Cross-referencing with Jira tickets", duration: 1500 },
+      { id: "alert", label: "Sending alert digest", duration: 800 },
+    ],
+    result: {
+      title: "🔔 PR Review Alert Configured",
+      destination: "5 PRs need your attention",
+      content: [
+        "High priority: 2 PRs (linked to P1 Jira tickets)",
+        "Normal: 3 PRs waiting > 24 hours",
+      ],
+      highlights: [
+        "PR #312: Auth token refresh logic",
+        "PR #298: Database migration v2.4",
+      ],
+      viewLink: "View PRs",
+    },
+  },
+  "3": {
+    id: "3",
+    name: "Standup Bot",
+    icon: Users,
+    description: "Automate daily standup collection and summary for your team",
+    integrations: ["Slack"],
+    configSteps: [
+      {
+        id: "channel",
+        title: "Standup Channel",
+        description: "Where should standups be collected?",
+        type: "radio",
+        options: [
+          { id: "standup", label: "#daily-standup" },
+          { id: "team", label: "#team-updates" },
+          { id: "other", label: "Other", hasInput: true, inputPlaceholder: "#channel-name" },
+        ],
+      },
+      {
+        id: "time",
+        title: "Schedule",
+        description: "When should the standup prompt be sent?",
+        type: "radio",
+        options: [
+          { id: "9am", label: "9:00 AM" },
+          { id: "930am", label: "9:30 AM" },
+          { id: "10am", label: "10:00 AM" },
+        ],
+      },
+    ],
+    executionSteps: [
+      { id: "connect", label: "Connected to Slack workspace", duration: 1000 },
+      { id: "channel", label: "Configured #daily-standup channel", duration: 800 },
+      { id: "schedule", label: "Scheduled daily prompt at 9:00 AM", duration: 1200 },
+      { id: "test", label: "Sending test standup message...", duration: 1500 },
+    ],
+    result: {
+      title: "🤖 Standup Bot Active",
+      destination: "Bot configured in #daily-standup",
+      content: [
+        "Daily prompt at 9:00 AM",
+        "Auto-summary posted at 10:30 AM",
+        "6 team members will be pinged",
+      ],
+      highlights: [
+        "Standup format: Yesterday / Today / Blockers",
+        "Summary includes participation rate",
+      ],
+      viewLink: "View in Slack",
+    },
+  },
+};
+
+// Types
+interface ConfigOption {
+  id: string;
+  label: string;
+  hasInput?: boolean;
+  inputPlaceholder?: string;
+  defaultChecked?: boolean;
+}
+
+interface ConfigStep {
+  id: string;
+  title: string;
+  description: string;
+  type: "radio" | "checkbox";
+  options: ConfigOption[];
+}
+
+interface ExecutionStep {
+  id: string;
+  label: string;
+  duration: number;
+}
+
+interface UseCaseResult {
+  title: string;
+  destination: string;
+  content: string[];
+  highlights: string[];
+  viewLink: string;
+}
+
+interface UseCaseDefinition {
+  id: string;
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  integrations: string[];
+  configSteps: ConfigStep[];
+  executionSteps: ExecutionStep[];
+  result: UseCaseResult;
+}
+
+type Phase = "configure" | "executing" | "done";
+
+const UseCaseRun = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const useCase = useCaseDefinitions[id || "1"];
+
+  const [phase, setPhase] = useState<Phase>("configure");
+  const [currentConfigStep, setCurrentConfigStep] = useState(0);
+  const [configData, setConfigData] = useState<Record<string, any>>({});
+  const [completedExecSteps, setCompletedExecSteps] = useState<number>(-1);
+  const [activeExecStep, setActiveExecStep] = useState(0);
+  const [customInputs, setCustomInputs] = useState<Record<string, string>>({});
+
+  // Execution simulation
+  useEffect(() => {
+    if (phase !== "executing") return;
+    if (activeExecStep >= useCase.executionSteps.length) {
+      setPhase("done");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCompletedExecSteps(activeExecStep);
+      setActiveExecStep((s) => s + 1);
+    }, useCase.executionSteps[activeExecStep].duration);
+
+    return () => clearTimeout(timer);
+  }, [phase, activeExecStep, useCase]);
+
+  const handleRadioSelect = useCallback((stepId: string, optionId: string) => {
+    setConfigData((prev) => ({ ...prev, [stepId]: optionId }));
+  }, []);
+
+  const handleCheckboxToggle = useCallback((stepId: string, optionId: string, checked: boolean) => {
+    setConfigData((prev) => {
+      const current = (prev[stepId] as string[]) || [];
+      return {
+        ...prev,
+        [stepId]: checked ? [...current, optionId] : current.filter((i: string) => i !== optionId),
+      };
+    });
+  }, []);
+
+  const handleNextStep = useCallback(() => {
+    if (currentConfigStep < useCase.configSteps.length - 1) {
+      setCurrentConfigStep((s) => s + 1);
+    }
+  }, [currentConfigStep, useCase]);
+
+  const handlePrevStep = useCallback(() => {
+    if (currentConfigStep > 0) {
+      setCurrentConfigStep((s) => s - 1);
+    }
+  }, [currentConfigStep]);
+
+  const handleExecute = useCallback(() => {
+    setPhase("executing");
+    setActiveExecStep(0);
+    setCompletedExecSteps(-1);
+  }, []);
+
+  if (!useCase) {
+    return (
+      <MainLayout>
+        <div className="p-8 text-center">
+          <p className="text-muted-foreground">Use case not found.</p>
+          <Button variant="outline" className="mt-4" onClick={() => navigate("/use-cases")}>
+            Back to Marketplace
+          </Button>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  const Icon = useCase.icon;
+  const totalSteps = useCase.configSteps.length;
+  const progressPercent =
+    phase === "configure"
+      ? ((currentConfigStep + 1) / (totalSteps + 2)) * 100
+      : phase === "executing"
+      ? (((completedExecSteps + 1) / useCase.executionSteps.length) * 50 + 50)
+      : 100;
+
+  return (
+    <MainLayout>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-2">
+          <button onClick={() => navigate("/use-cases")} className="text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Icon className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-foreground">{useCase.name}</h1>
+            <p className="text-xs text-muted-foreground">{useCase.description}</p>
+          </div>
+        </div>
+
+        {/* Phase tabs / progress */}
+        <div className="flex items-center gap-1 my-6">
+          {["Configure", "Execute", "Result"].map((label, i) => {
+            const phaseMap: Phase[] = ["configure", "executing", "done"];
+            const isActive = phase === phaseMap[i];
+            const isDone = phaseMap.indexOf(phase) > i;
+            return (
+              <div key={label} className="flex items-center gap-1 flex-1">
+                <div className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all flex-1",
+                  isActive && "bg-primary/10 text-primary ring-1 ring-primary/20",
+                  isDone && "bg-primary/5 text-primary",
+                  !isActive && !isDone && "text-muted-foreground"
+                )}>
+                  {isDone ? (
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  ) : isActive ? (
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-primary" />
+                  ) : (
+                    <Circle className="h-3.5 w-3.5" />
+                  )}
+                  {label}
+                </div>
+                {i < 2 && <div className={cn("h-px w-4 shrink-0", isDone ? "bg-primary/30" : "bg-border")} />}
+              </div>
+            );
+          })}
+        </div>
+
+        <Progress value={progressPercent} className="h-1 mb-8" />
+
+        {/* ── CONFIGURE PHASE ── */}
+        {phase === "configure" && (
+          <div className="space-y-6">
+            {/* Step indicator */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Step {currentConfigStep + 1} of {totalSteps}</span>
+              <span>·</span>
+              <span>{useCase.configSteps[currentConfigStep].title}</span>
+            </div>
+
+            {/* Agent message */}
+            <div className="border border-border/60 rounded-xl bg-card p-5">
+              <p className="text-sm font-medium text-foreground mb-1">
+                {currentConfigStep === 0 ? "I'll help you with that. A few quick questions:" : useCase.configSteps[currentConfigStep].title}
+              </p>
+              <p className="text-sm text-muted-foreground mb-5">
+                {useCase.configSteps[currentConfigStep].description}
+              </p>
+
+              <div className="space-y-3">
+                {useCase.configSteps[currentConfigStep].options.map((opt) => {
+                  const step = useCase.configSteps[currentConfigStep];
+                  const isRadio = step.type === "radio";
+                  const isSelected = isRadio
+                    ? configData[step.id] === opt.id
+                    : ((configData[step.id] as string[]) || []).includes(opt.id);
+
+                  return (
+                    <label
+                      key={opt.id}
+                      className={cn(
+                        "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all",
+                        isSelected
+                          ? "border-primary/40 bg-primary/5"
+                          : "border-border/60 hover:border-border hover:bg-muted/30"
+                      )}
+                    >
+                      {isRadio ? (
+                        <input
+                          type="radio"
+                          name={step.id}
+                          checked={isSelected}
+                          onChange={() => handleRadioSelect(step.id, opt.id)}
+                          className="mt-0.5 accent-[hsl(var(--primary))]"
+                        />
+                      ) : (
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(c) => handleCheckboxToggle(step.id, opt.id, !!c)}
+                          className="mt-0.5"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-foreground">{opt.label}</span>
+                        {opt.hasInput && isSelected && (
+                          <Input
+                            placeholder={opt.inputPlaceholder}
+                            value={customInputs[`${step.id}-${opt.id}`] || ""}
+                            onChange={(e) =>
+                              setCustomInputs((p) => ({ ...p, [`${step.id}-${opt.id}`]: e.target.value }))
+                            }
+                            className="mt-2 h-8 text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        )}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrevStep}
+                disabled={currentConfigStep === 0}
+                className="gap-1"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" /> Back
+              </Button>
+              <div className="flex gap-2">
+                {currentConfigStep < totalSteps - 1 ? (
+                  <Button size="sm" onClick={handleNextStep} className="gap-1">
+                    Next <ArrowRight className="h-3.5 w-3.5" />
+                  </Button>
+                ) : (
+                  <>
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Calendar className="h-3.5 w-3.5" /> Save as recurring
+                    </Button>
+                    <Button size="sm" onClick={handleExecute} className="gap-1">
+                      <Play className="h-3.5 w-3.5" /> Execute
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── EXECUTING PHASE ── */}
+        {phase === "executing" && (
+          <div className="space-y-6">
+            <div className="border border-border/60 rounded-xl bg-card p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-sm font-semibold text-foreground">Executing...</span>
+              </div>
+
+              <div className="space-y-3">
+                {useCase.executionSteps.map((step, i) => {
+                  const isComplete = i <= completedExecSteps;
+                  const isActive = i === activeExecStep;
+                  const isPending = i > activeExecStep;
+
+                  return (
+                    <div key={step.id} className="flex items-center gap-3">
+                      {isComplete ? (
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                      ) : isActive ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
+                      ) : (
+                        <Circle className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+                      )}
+                      <span className={cn(
+                        "text-sm",
+                        isComplete && "text-foreground",
+                        isActive && "text-foreground font-medium",
+                        isPending && "text-muted-foreground/50"
+                      )}>
+                        {step.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-border/40">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  <span>
+                    Estimated completion: ~{Math.ceil(
+                      useCase.executionSteps
+                        .slice(activeExecStep)
+                        .reduce((sum, s) => sum + s.duration, 0) / 1000
+                    )}s remaining
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── DONE PHASE ── */}
+        {phase === "done" && (
+          <div className="space-y-6">
+            {/* Status banner */}
+            <div className="border border-primary/20 rounded-xl bg-primary/5 p-6">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+                <span className="text-sm font-bold text-foreground">DONE</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">{useCase.result.destination}</p>
+
+              {/* Result card */}
+              <div className="border border-border/60 rounded-lg bg-card p-5 space-y-4">
+                <h3 className="text-sm font-semibold text-foreground">{useCase.result.title}</h3>
+
+                <div className="space-y-1">
+                  {useCase.result.content.map((line, i) => (
+                    <p key={i} className="text-sm text-muted-foreground">{line}</p>
+                  ))}
+                </div>
+
+                {useCase.result.highlights.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-foreground mb-1.5">Highlights:</p>
+                    <ul className="space-y-1">
+                      {useCase.result.highlights.map((h, i) => (
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" className="gap-1.5">
+                <ExternalLink className="h-3.5 w-3.5" />
+                {useCase.result.viewLink}
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5" onClick={() => {
+                setPhase("executing");
+                setActiveExecStep(0);
+                setCompletedExecSteps(-1);
+              }}>
+                <RefreshCw className="h-3.5 w-3.5" />
+                Run Again
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5">
+                <Calendar className="h-3.5 w-3.5" />
+                Schedule Weekly
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5" onClick={() => {
+                setPhase("configure");
+                setCurrentConfigStep(0);
+              }}>
+                <Settings2 className="h-3.5 w-3.5" />
+                Modify & Re-run
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </MainLayout>
+  );
+};
+
+export default UseCaseRun;

@@ -77,6 +77,8 @@ const allUseCases: UseCase[] = [
   // Finance
   { id: "40", name: "Expense Report Summary", icon: DollarSign, saves: "2 hr/week", status: "ready", integrations: ["QuickBooks", "Slack"], team: "Finance", taskType: "Reporting" },
   { id: "41", name: "Invoice Reminder", icon: Bell, saves: "1 hr/week", status: "ready", integrations: ["QuickBooks", "Email"], team: "Finance", taskType: "Notifications" },
+  // Cross-functional
+  { id: "50", name: "Proposal Process", icon: FileText, saves: "4 hr/proposal", status: "ready", integrations: ["CRM", "Email", "PDF"], team: "Sales", taskType: "Reporting" },
 ];
 
 const setupUseCases = [

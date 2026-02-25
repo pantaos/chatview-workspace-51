@@ -492,6 +492,88 @@ const useCaseDefinitions: Record<string, UseCaseDefinition> = {
       viewLink: "View in QuickBooks",
     },
   },
+  "50": {
+    id: "50",
+    name: "Proposal Process",
+    icon: BarChart3,
+    description: "Turn an incoming customer request into a finalized, approved proposal — including CRM documentation",
+    integrations: ["CRM", "Email", "PDF"],
+    configSteps: [
+      {
+        id: "source",
+        title: "Request Source",
+        description: "How does the customer request come in?",
+        type: "radio",
+        options: [
+          { id: "email", label: "Email inbox" },
+          { id: "form", label: "Web form / landing page" },
+          { id: "crm", label: "CRM lead (auto-detected)" },
+        ],
+      },
+      {
+        id: "template",
+        title: "Proposal Template",
+        description: "Which template base should PANTA use?",
+        type: "radio",
+        options: [
+          { id: "standard", label: "Standard service proposal" },
+          { id: "enterprise", label: "Enterprise / custom proposal" },
+          { id: "auto", label: "Auto-detect based on request size" },
+        ],
+      },
+      {
+        id: "approval",
+        title: "Approval Routing",
+        description: "Who should approve the final proposal?",
+        type: "radio",
+        options: [
+          { id: "sales-lead", label: "Sales Lead" },
+          { id: "management", label: "Management" },
+          { id: "auto-threshold", label: "Auto-route by deal size (>€50k → Management)" },
+        ],
+      },
+      {
+        id: "extras",
+        title: "Additional Options",
+        description: "Select any extras for this process",
+        type: "checkbox",
+        options: [
+          { id: "dept-review", label: "Route to specialist department for technical input", defaultChecked: true },
+          { id: "risk-flag", label: "Include risk assessment in approval summary" },
+          { id: "followup", label: "Auto-create follow-up task after sending", defaultChecked: true },
+        ],
+      },
+    ],
+    executionSteps: [
+      { id: "capture", label: "Capturing & structuring customer request (company, scope, requirements)", duration: 2000 },
+      { id: "enrich", label: "Identifying missing information — flagging gaps", duration: 1500 },
+      { id: "draft", label: "Generating proposal draft (service description, pricing model, terms)", duration: 2500 },
+      { id: "dept", label: "Routing to specialist department for technical input (effort, timeline, special reqs)", duration: 2000 },
+      { id: "approve", label: "Submitting for internal approval — summary + risks + pricing attached", duration: 1800 },
+      { id: "approved", label: "✅ Approval received — generating proposal PDF & cover email", duration: 1500 },
+      { id: "send", label: "Sending proposal to customer", duration: 1000 },
+      { id: "crm", label: "Documenting in CRM — deal updated, follow-up task created", duration: 1200 },
+    ],
+    result: {
+      title: "📄 Proposal Sent & Documented",
+      destination: "Proposal delivered to customer, CRM updated",
+      content: [
+        "Customer: Acme Corp — Digital Transformation Project",
+        "Proposal value: €87,500",
+        "Scope: 3 service modules, 14-week timeline",
+        "Technical review: Consulting + Engineering signed off",
+        "Approval: Sales Lead approved in 12 min",
+        "PDF generated & sent via email",
+      ],
+      highlights: [
+        "Zero manual copy-paste — proposal built from templates + live data",
+        "Cross-department input collected without email ping-pong",
+        "CRM deal stage moved to 'Proposal Sent'",
+        "Follow-up task auto-created for Day 5",
+      ],
+      viewLink: "View in CRM",
+    },
+  },
 };
 
 // Types

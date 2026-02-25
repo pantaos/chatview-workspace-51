@@ -241,19 +241,16 @@ const UseCases = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                    <div className="flex items-center text-xs text-muted-foreground mb-3">
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         Saves: {uc.saves}
                       </span>
-                      <Badge variant="outline" className="text-[10px] border-primary/20 bg-primary/5 text-primary">
-                        ✓ Ready to run
-                      </Badge>
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" className="flex-1 h-8 text-xs" onClick={() => navigate(`/use-cases/run/${uc.id}`)}>
                         <Play className="h-3 w-3 mr-1" />
-                        Run Now
+                        Run
                       </Button>
                       <Button size="sm" variant="outline" className="flex-1 h-8 text-xs" onClick={() => setScheduleTarget(uc)}>
                         <Clock className="h-3 w-3 mr-1" />

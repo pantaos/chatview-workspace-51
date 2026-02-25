@@ -494,84 +494,89 @@ const useCaseDefinitions: Record<string, UseCaseDefinition> = {
   },
   "50": {
     id: "50",
-    name: "Proposal Process",
+    name: "Angebotsprozess",
     icon: BarChart3,
-    description: "Turn an incoming customer request into a finalized, approved proposal — including CRM documentation",
-    integrations: ["CRM", "Email", "PDF"],
+    description: "Eingehende Kundenanfragen werden automatisiert zu freigegebenen Angeboten — inkl. CRM-Dokumentation",
+    integrations: ["CRM", "E-Mail", "PDF"],
+    scanStep: {
+      title: "Quellen werden gescannt",
+      description: "PANTA durchsucht verbundene Quellen nach neuen Anfragen, die ein Angebot erfordern.",
+      scanSources: [
+        { id: "email", label: "E-Mail-Postfach", duration: 1500 },
+        { id: "crm", label: "CRM-Leads", duration: 2000 },
+        { id: "forms", label: "Webformulare", duration: 1200 },
+      ],
+      results: [
+        { id: "r1", source: "E-Mail", company: "Acme Corp", subject: "Anfrage: Digitalisierungsprojekt Q3", date: "Heute, 09:14", priority: "Hoch" },
+        { id: "r2", source: "CRM-Lead", company: "TechVision GmbH", subject: "Beratungsleistung IT-Infrastruktur", date: "Heute, 08:30", priority: "Mittel" },
+        { id: "r3", source: "Webformular", company: "MedSolutions AG", subject: "Angebot Cloud-Migration", date: "Gestern, 16:45", priority: "Hoch" },
+        { id: "r4", source: "E-Mail", company: "LogiPlan KG", subject: "Preisanfrage Wartungsvertrag", date: "Gestern, 14:20", priority: "Niedrig" },
+        { id: "r5", source: "CRM-Lead", company: "FinanceHub SE", subject: "Compliance-Beratung Scope Erweiterung", date: "Gestern, 11:05", priority: "Mittel" },
+      ],
+    },
     configSteps: [
       {
-        id: "source",
-        title: "Request Source",
-        description: "How does the customer request come in?",
-        type: "radio",
-        options: [
-          { id: "email", label: "Email inbox" },
-          { id: "form", label: "Web form / landing page" },
-          { id: "crm", label: "CRM lead (auto-detected)" },
-        ],
-      },
-      {
         id: "template",
-        title: "Proposal Template",
-        description: "Which template base should PANTA use?",
+        title: "Angebotsvorlage",
+        description: "Welche Vorlage soll PANTA verwenden?",
         type: "radio",
         options: [
-          { id: "standard", label: "Standard service proposal" },
-          { id: "enterprise", label: "Enterprise / custom proposal" },
-          { id: "auto", label: "Auto-detect based on request size" },
+          { id: "standard", label: "Standard-Dienstleistungsangebot" },
+          { id: "enterprise", label: "Enterprise / individuelles Angebot" },
+          { id: "auto", label: "Automatisch anhand Anfragevolumen erkennen" },
         ],
       },
       {
         id: "approval",
-        title: "Approval Routing",
-        description: "Who should approve the final proposal?",
+        title: "Freigabe-Routing",
+        description: "Wer soll das finale Angebot freigeben?",
         type: "radio",
         options: [
           { id: "sales-lead", label: "Sales Lead" },
           { id: "management", label: "Management" },
-          { id: "auto-threshold", label: "Auto-route by deal size (>€50k → Management)" },
+          { id: "auto-threshold", label: "Automatisch nach Dealgroesse (ab 50.000 EUR an Management)" },
         ],
       },
       {
         id: "extras",
-        title: "Additional Options",
-        description: "Select any extras for this process",
+        title: "Zusaetzliche Optionen",
+        description: "Optionale Erweiterungen fuer diesen Durchlauf",
         type: "checkbox",
         options: [
-          { id: "dept-review", label: "Route to specialist department for technical input", defaultChecked: true },
-          { id: "risk-flag", label: "Include risk assessment in approval summary" },
-          { id: "followup", label: "Auto-create follow-up task after sending", defaultChecked: true },
+          { id: "dept-review", label: "An Fachabteilung zur technischen Ergaenzung weiterleiten", defaultChecked: true },
+          { id: "risk-flag", label: "Risikobewertung in Freigabe-Zusammenfassung aufnehmen" },
+          { id: "followup", label: "Follow-up-Aufgabe nach Versand automatisch erstellen", defaultChecked: true },
         ],
       },
     ],
     executionSteps: [
-      { id: "capture", label: "Capturing & structuring customer request (company, scope, requirements)", duration: 2000 },
-      { id: "enrich", label: "Identifying missing information — flagging gaps", duration: 1500 },
-      { id: "draft", label: "Generating proposal draft (service description, pricing model, terms)", duration: 2500 },
-      { id: "dept", label: "Routing to specialist department for technical input (effort, timeline, special reqs)", duration: 2000 },
-      { id: "approve", label: "Submitting for internal approval — summary + risks + pricing attached", duration: 1800 },
-      { id: "approved", label: "✅ Approval received — generating proposal PDF & cover email", duration: 1500 },
-      { id: "send", label: "Sending proposal to customer", duration: 1000 },
-      { id: "crm", label: "Documenting in CRM — deal updated, follow-up task created", duration: 1200 },
+      { id: "capture", label: "Kundenanfrage wird erfasst und strukturiert (Firma, Bedarf, Umfang)", duration: 2000 },
+      { id: "enrich", label: "Fehlende Informationen werden identifiziert und markiert", duration: 1500 },
+      { id: "draft", label: "Angebotsentwurf wird erstellt (Leistungsbeschreibung, Preismodell, Konditionen)", duration: 2500 },
+      { id: "dept", label: "Weiterleitung an Fachabteilung (Aufwand, Lieferzeit, Sonderanforderungen)", duration: 2000 },
+      { id: "approve", label: "Interne Freigabe wird angefragt — Zusammenfassung, Risiken und Preis angehaengt", duration: 1800 },
+      { id: "approved", label: "Freigabe erteilt — Angebots-PDF und Begleitmail werden erzeugt", duration: 1500 },
+      { id: "send", label: "Angebot wird an den Kunden versendet", duration: 1000 },
+      { id: "crm", label: "CRM-Dokumentation — Deal aktualisiert, Follow-up-Aufgabe erstellt", duration: 1200 },
     ],
     result: {
-      title: "📄 Proposal Sent & Documented",
-      destination: "Proposal delivered to customer, CRM updated",
+      title: "Angebot versendet und dokumentiert",
+      destination: "Angebot wurde an den Kunden zugestellt, CRM ist aktualisiert",
       content: [
-        "Customer: Acme Corp — Digital Transformation Project",
-        "Proposal value: €87,500",
-        "Scope: 3 service modules, 14-week timeline",
-        "Technical review: Consulting + Engineering signed off",
-        "Approval: Sales Lead approved in 12 min",
-        "PDF generated & sent via email",
+        "Kunde: Acme Corp — Digitalisierungsprojekt Q3",
+        "Angebotswert: 87.500 EUR",
+        "Umfang: 3 Leistungsmodule, 14 Wochen Laufzeit",
+        "Fachliche Pruefung: Consulting + Engineering freigegeben",
+        "Freigabe: Sales Lead hat in 12 Min. freigegeben",
+        "PDF erzeugt und per E-Mail versendet",
       ],
       highlights: [
-        "Zero manual copy-paste — proposal built from templates + live data",
-        "Cross-department input collected without email ping-pong",
-        "CRM deal stage moved to 'Proposal Sent'",
-        "Follow-up task auto-created for Day 5",
+        "Kein manuelles Copy-Paste — Angebot aus Vorlagen und Live-Daten erstellt",
+        "Fachabteilungs-Input ohne E-Mail-Pingpong eingeholt",
+        "CRM-Deal-Status auf 'Angebot versendet' gesetzt",
+        "Follow-up-Aufgabe automatisch fuer Tag 5 erstellt",
       ],
-      viewLink: "View in CRM",
+      viewLink: "Im CRM anzeigen",
     },
   },
 };
@@ -607,31 +612,72 @@ interface UseCaseResult {
   viewLink: string;
 }
 
+interface ScanSource {
+  id: string;
+  label: string;
+  duration: number;
+}
+
+interface ScanResult {
+  id: string;
+  source: string;
+  company: string;
+  subject: string;
+  date: string;
+  priority: string;
+}
+
+interface ScanStep {
+  title: string;
+  description: string;
+  scanSources: ScanSource[];
+  results: ScanResult[];
+}
+
 interface UseCaseDefinition {
   id: string;
   name: string;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
   integrations: string[];
+  scanStep?: ScanStep;
   configSteps: ConfigStep[];
   executionSteps: ExecutionStep[];
   result: UseCaseResult;
 }
 
-type Phase = "configure" | "executing" | "done";
+type Phase = "scanning" | "configure" | "executing" | "done";
 
 const UseCaseRun = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const useCase = useCaseDefinitions[id || "1"];
 
-  const [phase, setPhase] = useState<Phase>("configure");
+  const [phase, setPhase] = useState<Phase>(useCase?.scanStep ? "scanning" : "configure");
   const [currentConfigStep, setCurrentConfigStep] = useState(0);
   const [configData, setConfigData] = useState<Record<string, any>>({});
   const [completedExecSteps, setCompletedExecSteps] = useState<number>(-1);
   const [activeExecStep, setActiveExecStep] = useState(0);
   const [customInputs, setCustomInputs] = useState<Record<string, string>>({});
   const [scheduleOpen, setScheduleOpen] = useState(false);
+
+  // Scan state
+  const [scanningSourceIndex, setScanningSourceIndex] = useState(0);
+  const [scanComplete, setScanComplete] = useState(false);
+  const [selectedScanResult, setSelectedScanResult] = useState<string | null>(null);
+
+  // Scan simulation
+  useEffect(() => {
+    if (phase !== "scanning" || !useCase?.scanStep || scanComplete) return;
+    if (scanningSourceIndex >= useCase.scanStep.scanSources.length) {
+      setScanComplete(true);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setScanningSourceIndex((s) => s + 1);
+    }, useCase.scanStep.scanSources[scanningSourceIndex].duration);
+    return () => clearTimeout(timer);
+  }, [phase, scanningSourceIndex, scanComplete, useCase]);
 
   // Execution simulation
   useEffect(() => {
@@ -696,11 +742,16 @@ const UseCaseRun = () => {
 
   const Icon = useCase.icon;
   const totalSteps = useCase.configSteps.length;
+  const hasScan = !!useCase.scanStep;
+  const phaseLabels = hasScan ? ["Scan", "Konfiguration", "Ausfuehrung", "Ergebnis"] : ["Configure", "Execute", "Result"];
+  const phaseKeys: Phase[] = hasScan ? ["scanning", "configure", "executing", "done"] : ["configure", "executing", "done"];
   const progressPercent =
-    phase === "configure"
-      ? ((currentConfigStep + 1) / (totalSteps + 2)) * 100
+    phase === "scanning"
+      ? scanComplete ? 15 : ((scanningSourceIndex / (useCase.scanStep?.scanSources.length || 1)) * 15)
+      : phase === "configure"
+      ? 20 + ((currentConfigStep + 1) / (totalSteps + 1)) * 30
       : phase === "executing"
-      ? (((completedExecSteps + 1) / useCase.executionSteps.length) * 50 + 50)
+      ? 50 + (((completedExecSteps + 1) / useCase.executionSteps.length) * 50)
       : 100;
 
   return (
@@ -722,10 +773,9 @@ const UseCaseRun = () => {
 
         {/* Phase tabs / progress */}
         <div className="flex items-center gap-1 my-6">
-          {["Configure", "Execute", "Result"].map((label, i) => {
-            const phaseMap: Phase[] = ["configure", "executing", "done"];
-            const isActive = phase === phaseMap[i];
-            const isDone = phaseMap.indexOf(phase) > i;
+          {phaseLabels.map((label, i) => {
+            const isActive = phase === phaseKeys[i];
+            const isDone = phaseKeys.indexOf(phase) > i;
             return (
               <div key={label} className="flex items-center gap-1 flex-1">
                 <div className={cn(
@@ -743,13 +793,118 @@ const UseCaseRun = () => {
                   )}
                   {label}
                 </div>
-                {i < 2 && <div className={cn("h-px w-4 shrink-0", isDone ? "bg-primary/30" : "bg-border")} />}
+                {i < phaseLabels.length - 1 && <div className={cn("h-px w-4 shrink-0", isDone ? "bg-primary/30" : "bg-border")} />}
               </div>
             );
           })}
         </div>
 
         <Progress value={progressPercent} className="h-1 mb-8" />
+
+        {/* ── SCANNING PHASE ── */}
+        {phase === "scanning" && useCase.scanStep && (
+          <div className="space-y-6">
+            <div className="border border-border/60 rounded-xl bg-card p-6">
+              <p className="text-sm font-medium text-foreground mb-1">{useCase.scanStep.title}</p>
+              <p className="text-sm text-muted-foreground mb-5">{useCase.scanStep.description}</p>
+
+              {/* Scan sources progress */}
+              <div className="space-y-3 mb-6">
+                {useCase.scanStep.scanSources.map((src, i) => {
+                  const isDone = i < scanningSourceIndex;
+                  const isActive = i === scanningSourceIndex && !scanComplete;
+                  return (
+                    <div key={src.id} className="flex items-center gap-3">
+                      {isDone ? (
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                      ) : isActive ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
+                      ) : (
+                        <Circle className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+                      )}
+                      <span className={cn(
+                        "text-sm",
+                        isDone && "text-foreground",
+                        isActive && "text-foreground font-medium",
+                        !isDone && !isActive && "text-muted-foreground/50"
+                      )}>
+                        {src.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Results list */}
+              {scanComplete && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-foreground">
+                      {useCase.scanStep.results.length} offene Anfragen gefunden
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    {useCase.scanStep.results.map((result) => (
+                      <label
+                        key={result.id}
+                        className={cn(
+                          "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all",
+                          selectedScanResult === result.id
+                            ? "border-primary/40 bg-primary/5"
+                            : "border-border/60 hover:border-border hover:bg-muted/30"
+                        )}
+                        onClick={() => setSelectedScanResult(result.id)}
+                      >
+                        <input
+                          type="radio"
+                          name="scan-result"
+                          checked={selectedScanResult === result.id}
+                          onChange={() => setSelectedScanResult(result.id)}
+                          className="mt-1 accent-[hsl(var(--primary))]"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-sm font-medium text-foreground">{result.company}</span>
+                            <span className={cn(
+                              "text-[10px] px-1.5 py-0.5 rounded font-medium",
+                              result.priority === "Hoch" && "bg-destructive/10 text-destructive",
+                              result.priority === "Mittel" && "bg-yellow-500/10 text-yellow-600",
+                              result.priority === "Niedrig" && "bg-muted text-muted-foreground"
+                            )}>
+                              {result.priority}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{result.subject}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[11px] text-muted-foreground/70">{result.source}</span>
+                            <span className="text-[11px] text-muted-foreground/50">{result.date}</span>
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Navigation */}
+            {scanComplete && (
+              <div className="flex items-center justify-between">
+                <Button variant="outline" size="sm" onClick={() => navigate("/use-cases")} className="gap-1">
+                  <ArrowLeft className="h-3.5 w-3.5" /> Zurueck
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setPhase("configure")}
+                  disabled={!selectedScanResult}
+                  className="gap-1"
+                >
+                  Weiter <ArrowRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ── CONFIGURE PHASE ── */}
         {phase === "configure" && (

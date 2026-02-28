@@ -9,6 +9,7 @@ export interface ThemeConfig {
   clientName: string;
   tagline?: string;
   isDarkMode: boolean;
+  backgroundImage?: string;
 }
 
 interface ThemeContextType {

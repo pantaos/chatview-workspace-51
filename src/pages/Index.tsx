@@ -31,6 +31,7 @@ import MainLayout from "@/components/MainLayout";
 import { WorkflowItem, Assistant, Workflow, WorkflowTag, ConversationalWorkflow } from "@/types/workflow";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
+import CalendarPreview from "@/components/CalendarPreview";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -372,11 +373,24 @@ const Index = () => {
           <div className="max-w-5xl mx-auto">
             {/* Dashboard Hero Gradient */}
             <div 
-              className="rounded-b-3xl px-8 pt-10 pb-8 mb-8 -mx-0"
+              className="rounded-b-3xl px-8 pt-10 pb-8 mb-8 -mx-0 relative overflow-hidden"
               style={{
-                background: `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`,
+                background: theme.backgroundImage
+                  ? undefined
+                  : `linear-gradient(135deg, ${theme.primaryColor} 0%, ${theme.accentColor} 100%)`,
               }}
             >
+              {theme.backgroundImage && (
+                <>
+                  <img
+                    src={theme.backgroundImage}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+                </>
+              )}
+              <div className="relative z-10">
               <h1 className="text-3xl font-bold text-white">Dashboard</h1>
               <p className="text-white/70 mt-1 mb-6">How can I help you today?</p>
               
@@ -391,6 +405,9 @@ const Index = () => {
                   placeholder="Start a conversation..."
                 />
               </div>
+
+              {/* Calendar Preview */}
+              <CalendarPreview />
 
               {/* Tag Filter Section */}
               <div>
@@ -436,6 +453,7 @@ const Index = () => {
                     </button>
                   )}
                 </div>
+              </div>
               </div>
             </div>
 

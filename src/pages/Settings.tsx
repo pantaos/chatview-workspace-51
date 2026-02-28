@@ -10,7 +10,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MainLayout from "@/components/MainLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Mail, Globe, User, Puzzle, MessageSquare, Image, Sun, Moon, HelpCircle, ExternalLink, Rocket } from "lucide-react";
+import { Mail, Globe, User, Puzzle, MessageSquare, Image, Sun, Moon, HelpCircle, ExternalLink, Rocket, Palette, Upload, RotateCcw, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { MicrosoftIntegrationDialog } from "@/components/integrations/MicrosoftIntegrationDialog";
@@ -18,7 +18,8 @@ import { GoogleIntegrationDialog } from "@/components/integrations/GoogleIntegra
 import { NotionIntegrationDialog } from "@/components/integrations/NotionIntegrationDialog";
 
 const Settings = () => {
-  const { theme, toggleDarkMode } = useTheme();
+  const { theme, updateTheme, toggleDarkMode } = useTheme();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { language, changeLanguage } = useLanguage();
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -228,7 +229,7 @@ const Settings = () => {
                 </Button>
               </div>
 
-              <div className="flex items-center justify-between py-3">
+              <div className="flex items-center justify-between py-3 border-b border-border">
                 <div className="flex items-center gap-3">
                   <HelpCircle className="w-5 h-5 text-muted-foreground" />
                   <div>
@@ -240,6 +241,118 @@ const Settings = () => {
                   <a href="https://help.pantaflows.com" target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="w-4 h-4" />
                   </a>
+                </Button>
+              </div>
+            </div>
+
+            {/* Appearance Section */}
+            <div className="space-y-4 mt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Palette className="w-5 h-5 text-muted-foreground" />
+                <h3 className="font-semibold text-sm">Erscheinungsbild</h3>
+              </div>
+
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div>
+                  <p className="font-medium text-sm">Primaerfarbe</p>
+                  <p className="text-xs text-muted-foreground">Hauptfarbe der Oberflaeche</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={theme.primaryColor}
+                    onChange={(e) => updateTheme({ primaryColor: e.target.value })}
+                    className="w-8 h-8 rounded-md border border-border cursor-pointer bg-transparent"
+                  />
+                  <span className="text-xs text-muted-foreground font-mono">{theme.primaryColor}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div>
+                  <p className="font-medium text-sm">Akzentfarbe</p>
+                  <p className="text-xs text-muted-foreground">Sekundaere Hervorhebung</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={theme.accentColor}
+                    onChange={(e) => updateTheme({ accentColor: e.target.value })}
+                    className="w-8 h-8 rounded-md border border-border cursor-pointer bg-transparent"
+                  />
+                  <span className="text-xs text-muted-foreground font-mono">{theme.accentColor}</span>
+                </div>
+              </div>
+
+              <div className="py-3 border-b border-border">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <p className="font-medium text-sm">Hintergrundbild</p>
+                    <p className="text-xs text-muted-foreground">Eigenes Bild fuer das Dashboard</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="gap-1.5"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    Hochladen
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        updateTheme({ backgroundImage: ev.target?.result as string });
+                        toast.success("Hintergrundbild gesetzt");
+                      };
+                      reader.readAsDataURL(file);
+                      e.target.value = "";
+                    }}
+                  />
+                </div>
+                {theme.backgroundImage && (
+                  <div className="relative rounded-lg overflow-hidden h-24 group">
+                    <img
+                      src={theme.backgroundImage}
+                      alt="Hintergrund"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => {
+                        updateTheme({ backgroundImage: undefined });
+                        toast.success("Hintergrundbild entfernt");
+                      }}
+                      className="absolute top-1.5 right-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="py-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 text-muted-foreground"
+                  onClick={() => {
+                    updateTheme({
+                      primaryColor: "#5673eb",
+                      accentColor: "#26A69A",
+                      backgroundImage: undefined,
+                    });
+                    toast.success("Auf Standard zurueckgesetzt");
+                  }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Auf Standard zuruecksetzen
                 </Button>
               </div>
             </div>

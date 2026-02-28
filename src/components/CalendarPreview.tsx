@@ -70,7 +70,7 @@ const CalendarPreview = () => {
   const dateString = `${dayNames[now.getDay()]}, ${now.getDate()}. ${monthNames[now.getMonth()]}`;
 
   return (
-    <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-5 mt-4">
+    <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-5">
       <div className="flex items-center gap-2 mb-4">
         <Calendar className="w-4 h-4 text-white/70" />
         <h3 className="text-sm font-semibold text-white">{dateString}</h3>

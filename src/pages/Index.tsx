@@ -391,69 +391,80 @@ const Index = () => {
                 </>
               )}
               <div className="relative z-10">
-              <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-              <p className="text-white/70 mt-1 mb-6">How can I help you today?</p>
-              
-              {/* Search */}
-              <div className="mb-6">
-                <SearchChat 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onSubmit={handleSearchSubmit}
-                  disableNavigation={true}
-                  title=""
-                  placeholder="Start a conversation..."
-                />
-              </div>
+                <div className={`flex ${isMobile ? 'flex-col' : 'gap-8'}`}>
+                  {/* Left: Greeting + Search + Tags */}
+                  <div className="flex-1">
+                    <h1 className="text-3xl font-bold text-white text-center mb-2">Wie kann ich dir helfen, Arian?</h1>
+                    
+                    {/* Search */}
+                    <div className="mb-6 mt-6">
+                      <SearchChat 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onSubmit={handleSearchSubmit}
+                        disableNavigation={true}
+                        title=""
+                        placeholder="Fasse die..."
+                      />
+                    </div>
 
-              {/* Calendar Preview */}
-              <CalendarPreview />
+                    {/* Tag Filter Section */}
+                    <div>
+                      <h3 className="text-sm font-medium text-white/80 mb-3">Nach Tags filtern</h3>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {defaultTags.map((tag) => {
+                          const isSelected = selectedTags.includes(tag.id);
+                          return (
+                            <Badge
+                              key={tag.id}
+                              variant={isSelected ? "default" : "secondary"}
+                              className={`cursor-pointer transition-all ${
+                                isSelected 
+                                  ? "bg-white text-primary hover:bg-white/90" 
+                                  : "bg-white/20 text-white border-white/30 hover:bg-white/30"
+                              }`}
+                              onClick={() => 
+                                isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
+                              }
+                            >
+                              <div 
+                                className="w-2 h-2 rounded-full mr-2"
+                                style={{ backgroundColor: isSelected ? theme.primaryColor : tag.color }}
+                              />
+                              {tag.name}
+                            </Badge>
+                          );
+                        })}
+                        <Badge
+                          variant="outline"
+                          className="cursor-pointer transition-colors bg-white/10 text-white border-white/30 hover:bg-white/20"
+                          onClick={() => setShowManageTagsDialog(true)}
+                        >
+                          <Plus className="h-3 w-3 mr-1" />
+                          + Tag hinzufuegen
+                        </Badge>
+                        {selectedTags.length > 0 && (
+                          <button 
+                            onClick={handleClearAllTags}
+                            className="text-xs text-white/60 hover:text-white ml-2"
+                          >
+                            Alle entfernen
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-              {/* Tag Filter Section */}
-              <div>
-                <h3 className="text-sm font-medium text-white/80 mb-3">Filter by Tags</h3>
-                <div className="flex flex-wrap gap-2 items-center">
-                  {defaultTags.map((tag) => {
-                    const isSelected = selectedTags.includes(tag.id);
-                    return (
-                      <Badge
-                        key={tag.id}
-                        variant={isSelected ? "default" : "secondary"}
-                        className={`cursor-pointer transition-all ${
-                          isSelected 
-                            ? "bg-white text-primary hover:bg-white/90" 
-                            : "bg-white/20 text-white border-white/30 hover:bg-white/30"
-                        }`}
-                        onClick={() => 
-                          isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
-                        }
-                      >
-                        <div 
-                          className="w-2 h-2 rounded-full mr-2"
-                          style={{ backgroundColor: isSelected ? theme.primaryColor : tag.color }}
-                        />
-                        {tag.name}
-                      </Badge>
-                    );
-                  })}
-                  <Badge
-                    variant="outline"
-                    className="cursor-pointer transition-colors bg-white/10 text-white border-white/30 hover:bg-white/20"
-                    onClick={() => setShowManageTagsDialog(true)}
-                  >
-                    <Plus className="h-3 w-3 mr-1" />
-                    New Tag
-                  </Badge>
-                  {selectedTags.length > 0 && (
-                    <button 
-                      onClick={handleClearAllTags}
-                      className="text-xs text-white/60 hover:text-white ml-2"
-                    >
-                      Clear all
-                    </button>
+                  {/* Right: Calendar Preview */}
+                  {!isMobile && (
+                    <div className="w-[340px] flex-shrink-0">
+                      <CalendarPreview />
+                    </div>
                   )}
                 </div>
-              </div>
+
+                {/* Calendar below on mobile */}
+                {isMobile && <CalendarPreview />}
               </div>
             </div>
 
@@ -463,30 +474,33 @@ const Index = () => {
             <section>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-foreground">
-                  Workflows & Assistants
+                  Workflows & Assistenten
                 </h2>
                 <button 
                   onClick={() => setShowNewWorkflowDialog(true)}
                   className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
                 >
                   <Plus className="h-4 w-4" />
-                  Create New
+                  + Neu erstellen
                 </button>
               </div>
               
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-6">
                   <TabsTrigger value="all" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
-                    All
+                    Alle
                   </TabsTrigger>
                   <TabsTrigger value="assistants" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
-                    Assistants
+                    Assistenten
                   </TabsTrigger>
                   <TabsTrigger value="workflows" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
                     Workflows
                   </TabsTrigger>
+                  <TabsTrigger value="tools" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
+                    Tools
+                  </TabsTrigger>
                   <TabsTrigger value="favorites" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary">
-                    Favorites
+                    Favoriten
                   </TabsTrigger>
                 </TabsList>
                 

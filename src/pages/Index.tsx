@@ -12,7 +12,8 @@ import {
   LucideIcon,
   Rss,
   Crop,
-  GraduationCap
+  GraduationCap,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,6 +33,7 @@ import { WorkflowItem, Assistant, Workflow, WorkflowTag, ConversationalWorkflow 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import CalendarPreview from "@/components/CalendarPreview";
+import AssistantCreatorWizard from "@/components/AssistantCreatorWizard";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -90,6 +92,7 @@ const Index = () => {
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
   const [showManageTagsDialog, setShowManageTagsDialog] = useState(false);
+  const [showAssistantWizard, setShowAssistantWizard] = useState(false);
   const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>([
     {
       id: "chat",
@@ -476,13 +479,23 @@ const Index = () => {
                 <h2 className="text-lg font-semibold text-foreground">
                   Workflows & Assistenten
                 </h2>
-                <button 
-                  onClick={() => setShowNewWorkflowDialog(true)}
-                  className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  + Neu erstellen
-                </button>
+                <div className="flex items-center gap-3">
+                  <Button
+                    size="sm"
+                    onClick={() => setShowAssistantWizard(true)}
+                    className="gap-1.5"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Assistent erstellen
+                  </Button>
+                  <button 
+                    onClick={() => setShowNewWorkflowDialog(true)}
+                    className="text-sm text-muted-foreground hover:text-foreground font-medium flex items-center gap-1"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Manuell
+                  </button>
+                </div>
               </div>
               
               <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -600,6 +613,25 @@ const Index = () => {
               tags={defaultTags}
               onCreateTag={handleCreateTag}
               onDeleteTag={handleDeleteTag}
+            />
+
+            <AssistantCreatorWizard
+              open={showAssistantWizard}
+              onClose={() => setShowAssistantWizard(false)}
+              onCreateAssistant={(data) => {
+                const newAssistant = {
+                  id: `assistant-${Date.now()}`,
+                  title: data.title,
+                  description: data.description,
+                  icon: data.icon,
+                  tags: data.tags,
+                  type: "assistant" as const,
+                  systemPrompt: data.systemPrompt,
+                  starters: data.starters,
+                  isFavorite: false,
+                };
+                setAvailableAssistants(prev => [...prev, newAssistant]);
+              }}
             />
             </div>
           </div>

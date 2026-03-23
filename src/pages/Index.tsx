@@ -91,6 +91,7 @@ const Index = () => {
   const [sliderValue, setSliderValue] = useState([50]);
   const [showNewWorkflowDialog, setShowNewWorkflowDialog] = useState(false);
   const [showManageTagsDialog, setShowManageTagsDialog] = useState(false);
+  const [showAssistantWizard, setShowAssistantWizard] = useState(false);
   const [availableAssistants, setAvailableAssistants] = useState<Assistant[]>([
     {
       id: "chat",

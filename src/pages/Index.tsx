@@ -32,6 +32,7 @@ import { WorkflowItem, Assistant, Workflow, WorkflowTag, ConversationalWorkflow 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import CalendarPreview from "@/components/CalendarPreview";
+import AssistantCreatorWizard from "@/components/AssistantCreatorWizard";
 
 const Index = () => {
   const navigate = useNavigate();

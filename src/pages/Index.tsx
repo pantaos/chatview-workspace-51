@@ -478,13 +478,23 @@ const Index = () => {
                 <h2 className="text-lg font-semibold text-foreground">
                   Workflows & Assistenten
                 </h2>
-                <button 
-                  onClick={() => setShowNewWorkflowDialog(true)}
-                  className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  + Neu erstellen
-                </button>
+                <div className="flex items-center gap-3">
+                  <Button
+                    size="sm"
+                    onClick={() => setShowAssistantWizard(true)}
+                    className="gap-1.5"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Assistent erstellen
+                  </Button>
+                  <button 
+                    onClick={() => setShowNewWorkflowDialog(true)}
+                    className="text-sm text-muted-foreground hover:text-foreground font-medium flex items-center gap-1"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Manuell
+                  </button>
+                </div>
               </div>
               
               <Tabs value={activeTab} onValueChange={setActiveTab}>

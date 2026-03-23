@@ -614,6 +614,25 @@ const Index = () => {
               onCreateTag={handleCreateTag}
               onDeleteTag={handleDeleteTag}
             />
+
+            <AssistantCreatorWizard
+              open={showAssistantWizard}
+              onClose={() => setShowAssistantWizard(false)}
+              onCreateAssistant={(data) => {
+                const newAssistant = {
+                  id: `assistant-${Date.now()}`,
+                  title: data.title,
+                  description: data.description,
+                  icon: data.icon,
+                  tags: data.tags,
+                  type: "assistant" as const,
+                  systemPrompt: data.systemPrompt,
+                  starters: data.starters,
+                  isFavorite: false,
+                };
+                setAvailableAssistants(prev => [...prev, newAssistant]);
+              }}
+            />
             </div>
           </div>
         </MainLayout>

@@ -339,8 +339,6 @@ const getConcretizationSuggestions = (
   return suggestions;
 };
 
-// Fix: CheckSquare isn't imported, use Check instead
-const CheckSquare = ClipboardList;
 
 // ---- Config generation ----
 

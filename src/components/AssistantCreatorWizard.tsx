@@ -199,7 +199,7 @@ const painPointsByTask: Record<string, WizardOption[]> = {
   "meeting-support": [
     { id: "no-agenda", label: "Meetings haben oft keine klare Agenda", description: "Ohne Struktur werden Meetings ineffizient", icon: <ClipboardList className="w-6 h-6" /> },
     { id: "protocol-forgotten", label: "Protokolle werden selten geschrieben", description: "Ergebnisse und Aufgaben gehen nach dem Meeting verloren", icon: <FileText className="w-6 h-6" /> },
-    { id: "action-items-lost", label: "Action Items werden nicht nachverfolgt", description: "Vereinbarte Aufgaben geraten in Vergessenheit", icon: <CheckSquare className="w-6 h-6" /> },
+    { id: "action-items-lost", label: "Action Items werden nicht nachverfolgt", description: "Vereinbarte Aufgaben geraten in Vergessenheit", icon: <ClipboardList className="w-6 h-6" /> },
   ],
   "document-creation": [
     { id: "blank-page", label: "Der Anfang faellt mir immer schwer", description: "Vor dem leeren Dokument sitzen und nicht wissen, wie anfangen", icon: <PenTool className="w-6 h-6" /> },

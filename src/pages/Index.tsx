@@ -18,6 +18,7 @@ import {
   Settings2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SearchChat from "@/components/SearchChat";
 import WorkflowCard from "@/components/WorkflowCard";

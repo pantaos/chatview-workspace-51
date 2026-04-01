@@ -628,7 +628,7 @@ const Index = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground text-sm">Magic Assistant Creation</h3>
-                      <p className="text-xs text-muted-foreground mt-1">Guided setup that helps you identify the best use case based on your role, tasks, and pain points — your assistant is built automatically.</p>
+                      <p className="text-xs text-muted-foreground mt-1">We help you find the perfect use case — your assistant is built automatically.</p>
                     </div>
                   </button>
                   <button

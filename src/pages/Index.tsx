@@ -612,6 +612,44 @@ const Index = () => {
               onDeleteTag={handleDeleteTag}
             />
 
+            <Dialog open={showCreateAssistantChooser} onOpenChange={setShowCreateAssistantChooser}>
+              <DialogContent className="sm:max-w-lg p-6">
+                <h2 className="text-lg font-semibold text-foreground mb-4">Create Assistant</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => {
+                      setShowCreateAssistantChooser(false);
+                      setShowAssistantWizard(true);
+                    }}
+                    className="flex flex-col items-center text-center gap-3 p-6 rounded-lg border border-border bg-card hover:border-primary hover:bg-accent/50 transition-all cursor-pointer"
+                  >
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Wand2 className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Magic Assistant Creation</h3>
+                      <p className="text-xs text-muted-foreground mt-1">Guided setup that helps you identify the best use case based on your role, tasks, and pain points — your assistant is built automatically.</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowCreateAssistantChooser(false);
+                      setShowNewWorkflowDialog(true);
+                    }}
+                    className="flex flex-col items-center text-center gap-3 p-6 rounded-lg border border-border bg-card hover:border-primary hover:bg-accent/50 transition-all cursor-pointer"
+                  >
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                      <Settings2 className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm">Manual Assistant Creation</h3>
+                      <p className="text-xs text-muted-foreground mt-1">Full control over your assistant — define the system prompt, conversation starters, and settings yourself, like building a custom GPT.</p>
+                    </div>
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <AssistantCreatorWizard
               open={showAssistantWizard}
               onClose={() => setShowAssistantWizard(false)}

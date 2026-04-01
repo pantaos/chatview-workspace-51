@@ -8,6 +8,7 @@ import {
   UserCheck, Megaphone, Briefcase, HelpCircle, FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";

@@ -485,19 +485,12 @@ const Index = () => {
                 <div className="flex items-center gap-3">
                   <Button
                     size="sm"
-                    onClick={() => setShowAssistantWizard(true)}
+                    onClick={() => setShowCreateAssistantChooser(true)}
                     className="gap-1.5"
                   >
-                    <Sparkles className="h-4 w-4" />
-                    Assistent erstellen
-                  </Button>
-                  <button 
-                    onClick={() => setShowNewWorkflowDialog(true)}
-                    className="text-sm text-muted-foreground hover:text-foreground font-medium flex items-center gap-1"
-                  >
                     <Plus className="h-4 w-4" />
-                    Manuell
-                  </button>
+                    Create Assistant
+                  </Button>
                 </div>
               </div>
               

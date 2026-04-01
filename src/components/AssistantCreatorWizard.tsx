@@ -502,7 +502,7 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
 
   if (!open) return null;
 
-  const dialogContent = (() => {
+  const stepId = STEPS[currentStep];
 
   const stepId = STEPS[currentStep];
   const totalSteps = STEPS.length;

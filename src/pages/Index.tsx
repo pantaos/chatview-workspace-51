@@ -13,7 +13,9 @@ import {
   Rss,
   Crop,
   GraduationCap,
-  Sparkles
+  Sparkles,
+  Wand2,
+  Settings2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

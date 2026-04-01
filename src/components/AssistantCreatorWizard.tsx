@@ -500,10 +500,6 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
   const [showFreeText, setShowFreeText] = useState(false);
   const [showFreeTextPain, setShowFreeTextPain] = useState(false);
 
-  if (!open) return null;
-
-  const stepId = STEPS[currentStep];
-
   const stepId = STEPS[currentStep];
   const totalSteps = STEPS.length;
   const progress = ((currentStep + 1) / (totalSteps + 1)) * 100;
@@ -522,19 +518,11 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
 
   const handleTaskSelect = (id: string) => {
     setTask(id);
-    setShowFreeText(false);
     setPainPoints([]);
     setFreeTextPain("");
     setConcretizations([]);
     setShowFreeTextPain(false);
     setTimeout(() => setCurrentStep(2), 300);
-  };
-
-  const handleTaskFreeText = () => {
-    if (freeTextTask.trim()) {
-      setTask("custom");
-      setTimeout(() => setCurrentStep(2), 300);
-    }
   };
 
   const handlePainPointToggle = (id: string) => {
@@ -544,35 +532,25 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
   };
 
   const handleConcretizationToggle = (id: string) => {
-    if (id === "no-extras") {
-      setConcretizations(["no-extras"]);
-    } else {
-      setConcretizations(prev => {
-        const filtered = prev.filter(c => c !== "no-extras");
-        return filtered.includes(id) ? filtered.filter(c => c !== id) : [...filtered, id];
-      });
-    }
+    setConcretizations(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
   };
 
-  const canProceedPainPoints = painPoints.length > 0 || freeTextPain.trim().length > 0;
-  const canProceedConcretization = concretizations.length > 0;
-
-  const handleCreate = async () => {
-    setIsCreating(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const config = generateAssistantConfig(department, task, painPoints, concretizations, freeTextTask, freeTextPain);
-    setGeneratedConfig(config);
+  const handleClose = () => {
+    setCurrentStep(0);
+    setDepartment("");
+    setTask("");
+    setFreeTextTask("");
+    setPainPoints([]);
+    setFreeTextPain("");
+    setConcretizations([]);
     setIsCreating(false);
-    setCreationComplete(true);
-  };
-
-  const handleConfirm = () => {
-    if (generatedConfig) {
-      onCreateAssistant(generatedConfig);
-      toast.success(`"${generatedConfig.title}" was created successfully`);
-      handleReset();
-      onClose();
-    }
+    setCreationComplete(false);
+    setGeneratedConfig(null);
+    setShowFreeText(false);
+    setShowFreeTextPain(false);
+    onClose();
   };
 
   const handleReset = () => {
@@ -590,9 +568,36 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
     setShowFreeTextPain(false);
   };
 
-  const handleClose = () => {
-    handleReset();
-    onClose();
+  const handleCreate = () => {
+    const finalTask = showFreeText ? freeTextTask : task;
+    const finalPainPoints = showFreeTextPain ? [freeTextPain] : painPoints;
+    if (!department || (!finalTask && !freeTextTask)) return;
+
+    setIsCreating(true);
+    const config = generateAssistantConfig(department, finalTask, finalPainPoints, concretizations, freeTextTask, freeTextPain);
+    setTimeout(() => {
+      setGeneratedConfig(config);
+      setIsCreating(false);
+      setCreationComplete(true);
+    }, 2000);
+  };
+
+  const handleConfirm = () => {
+    if (generatedConfig) {
+      onCreateAssistant(generatedConfig);
+      toast.success("Assistant created!", {
+        description: `"${generatedConfig.title}" is now available.`,
+      });
+      handleClose();
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep === 2 && (painPoints.length > 0 || freeTextPain)) {
+      setCurrentStep(3);
+    } else if (currentStep === 3) {
+      handleCreate();
+    }
   };
 
   const handleBack = () => {
@@ -601,11 +606,278 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
     }
   };
 
-  // Creating screen
+  const getConcretizationSuggestions = (selectedPainPoints: string[]): { id: string; label: string; description: string; icon: React.ReactNode; category: "integration" | "knowledge" }[] => {
+    const suggestions: { id: string; label: string; description: string; icon: React.ReactNode; category: "integration" | "knowledge" }[] = [];
+
+    const integrationTriggers: Record<string, { id: string; label: string; description: string; icon: React.ReactNode }[]> = {
+      "manual-assembly": [
+        { id: "outlook", label: "Outlook", description: "Connect email for automatic data retrieval", icon: <Mail className="w-5 h-5" /> },
+        { id: "sharepoint", label: "SharePoint", description: "Access documents and files directly", icon: <FolderOpen className="w-5 h-5" /> },
+      ],
+      "scattered-info": [
+        { id: "crm", label: "CRM System", description: "Centralized access to customer data", icon: <Database className="w-5 h-5" /> },
+        { id: "sharepoint", label: "SharePoint", description: "Central document access", icon: <FolderOpen className="w-5 h-5" /> },
+      ],
+      "writers-block": [
+        { id: "templates", label: "Templates", description: "Upload your templates as knowledge base", icon: <FileText className="w-5 h-5" /> },
+      ],
+      "scheduling": [
+        { id: "calendar", label: "Calendar", description: "Connect your calendar for scheduling", icon: <Calendar className="w-5 h-5" /> },
+        { id: "teams", label: "Teams", description: "Integration with Microsoft Teams", icon: <MessageSquare className="w-5 h-5" /> },
+      ],
+      "quality-inconsistency": [
+        { id: "guidelines", label: "Brand guidelines", description: "Upload style guides and templates", icon: <BookOpen className="w-5 h-5" /> },
+      ],
+      "manual-entry": [
+        { id: "crm", label: "CRM System", description: "Automated data entry", icon: <Database className="w-5 h-5" /> },
+      ],
+      "losing-overview": [
+        { id: "teams", label: "Teams", description: "Stay updated on team communication", icon: <MessageSquare className="w-5 h-5" /> },
+      ],
+    };
+
+    const knowledgeTriggers: Record<string, { id: string; label: string; description: string; icon: React.ReactNode }[]> = {
+      "writers-block": [
+        { id: "templates", label: "Text templates", description: "Upload example texts and templates", icon: <FileText className="w-5 h-5" /> },
+      ],
+      "quality-inconsistency": [
+        { id: "guidelines", label: "Quality standards", description: "Deposit checklists and standards", icon: <ClipboardList className="w-5 h-5" /> },
+      ],
+      "next-step-unclear": [
+        { id: "knowledge-general", label: "Process documentation", description: "Upload process descriptions", icon: <BookOpen className="w-5 h-5" /> },
+      ],
+    };
+
+    const seenIds = new Set<string>();
+    selectedPainPoints.forEach(pp => {
+      (integrationTriggers[pp] || []).forEach(s => {
+        if (!seenIds.has(s.id)) { seenIds.add(s.id); suggestions.push({ ...s, category: "integration" }); }
+      });
+      (knowledgeTriggers[pp] || []).forEach(s => {
+        if (!seenIds.has(s.id)) { seenIds.add(s.id); suggestions.push({ ...s, category: "knowledge" }); }
+      });
+    });
+
+    if (suggestions.length === 0) {
+      suggestions.push({ id: "no-extras", label: "No additional integrations", description: "Your assistant works well without additional connections", icon: <Check className="w-5 h-5" />, category: "integration" });
+    }
+    return suggestions;
+  };
+
+  const renderStepContent = () => {
+    switch (stepId) {
+      case "department":
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {departments.map(dept => (
+              <button
+                key={dept.id}
+                onClick={() => handleDepartmentSelect(dept.id)}
+                className={`flex items-start gap-3 p-4 rounded-lg border transition-all text-left hover:border-primary hover:bg-accent/50 ${department === dept.id ? "border-primary bg-accent/50" : "border-border"}`}
+              >
+                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                  {dept.icon}
+                </div>
+                <div>
+                  <p className="font-medium text-foreground text-sm">{dept.label}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{dept.description}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        );
+
+      case "task": {
+        const tasks = tasksByDepartment[department] || [];
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {tasks.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => handleTaskSelect(t.id)}
+                  className={`flex items-start gap-3 p-4 rounded-lg border transition-all text-left hover:border-primary hover:bg-accent/50 ${task === t.id && !showFreeText ? "border-primary bg-accent/50" : "border-border"}`}
+                >
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    {t.icon}
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground text-sm">{t.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t.description}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                onClick={() => setShowFreeText(!showFreeText)}
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+              >
+                <PenTool className="w-3.5 h-3.5" />
+                {showFreeText ? "Choose from suggestions" : "Describe your own task"}
+              </button>
+              {showFreeText && (
+                <div className="mt-3 space-y-3">
+                  <Textarea
+                    value={freeTextTask}
+                    onChange={(e) => setFreeTextTask(e.target.value)}
+                    placeholder="Describe in your own words what task the assistant should support..."
+                    className="min-h-[80px] resize-none"
+                  />
+                  <Button
+                    size="sm"
+                    disabled={!freeTextTask.trim()}
+                    onClick={() => {
+                      setTask("custom");
+                      setTimeout(() => setCurrentStep(2), 300);
+                    }}
+                  >
+                    Continue
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      case "painpoints": {
+        const taskKey = showFreeText ? "custom" : task;
+        const painPointOptions = painPointsByTask[taskKey] || painPointsByTask["custom"] || [];
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-3">
+              {painPointOptions.map(pp => (
+                <button
+                  key={pp.id}
+                  onClick={() => handlePainPointToggle(pp.id)}
+                  className={`flex items-start gap-3 p-4 rounded-lg border transition-all text-left hover:border-primary hover:bg-accent/50 ${painPoints.includes(pp.id) && !showFreeTextPain ? "border-primary bg-accent/50" : "border-border"}`}
+                >
+                  <div className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${painPoints.includes(pp.id) ? "bg-primary border-primary" : "border-muted-foreground/30"}`}>
+                    {painPoints.includes(pp.id) && <Check className="w-4 h-4 text-primary-foreground" />}
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground text-sm">{pp.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{pp.description}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="pt-2 border-t border-border">
+              <button
+                onClick={() => setShowFreeTextPain(!showFreeTextPain)}
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+              >
+                <PenTool className="w-3.5 h-3.5" />
+                {showFreeTextPain ? "Choose from suggestions" : "Describe your own challenge"}
+              </button>
+              {showFreeTextPain && (
+                <div className="mt-3">
+                  <Textarea
+                    value={freeTextPain}
+                    onChange={(e) => setFreeTextPain(e.target.value)}
+                    placeholder="Describe in your own words what's most challenging about this task..."
+                    className="min-h-[80px] resize-none"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end pt-2">
+              <Button
+                onClick={handleNext}
+                disabled={painPoints.length === 0 && !freeTextPain.trim()}
+              >
+                Continue
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        );
+      }
+
+      case "concretization": {
+        const activePainPoints = showFreeTextPain ? ["custom"] : painPoints;
+        const suggestions = getConcretizationSuggestions(activePainPoints);
+        const integrations = suggestions.filter(s => s.category === "integration");
+        const knowledge = suggestions.filter(s => s.category === "knowledge");
+
+        return (
+          <div className="space-y-6">
+            {integrations.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-primary" />
+                  Suggested integrations
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {integrations.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => handleConcretizationToggle(s.id)}
+                      className={`flex items-start gap-3 p-4 rounded-lg border transition-all text-left hover:border-primary hover:bg-accent/50 ${concretizations.includes(s.id) ? "border-primary bg-accent/50" : "border-border"}`}
+                    >
+                      <div className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${concretizations.includes(s.id) ? "bg-primary border-primary" : "border-muted-foreground/30"}`}>
+                        {concretizations.includes(s.id) && <Check className="w-4 h-4 text-primary-foreground" />}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{s.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{s.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {knowledge.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-primary" />
+                  Knowledge base suggestions
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {knowledge.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => handleConcretizationToggle(s.id)}
+                      className={`flex items-start gap-3 p-4 rounded-lg border transition-all text-left hover:border-primary hover:bg-accent/50 ${concretizations.includes(s.id) ? "border-primary bg-accent/50" : "border-border"}`}
+                    >
+                      <div className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${concretizations.includes(s.id) ? "bg-primary border-primary" : "border-muted-foreground/30"}`}>
+                        {concretizations.includes(s.id) && <Check className="w-4 h-4 text-primary-foreground" />}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{s.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{s.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="flex justify-end pt-2">
+              <Button onClick={handleNext}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Create assistant
+              </Button>
+            </div>
+          </div>
+        );
+      }
+
+      default:
+        return null;
+    }
+  };
+
+  const { title, subtitle } = stepTitles[stepId];
+
+  // Determine inner content based on state
+  let innerContent: React.ReactNode;
+
   if (isCreating) {
-    return (
-      <div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
-        <div className="text-center space-y-6 max-w-md px-6">
+    innerContent = (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-6 max-w-md">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
             <Loader2 className="w-10 h-10 text-primary animate-spin" />
           </div>
@@ -617,371 +889,80 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
         </div>
       </div>
     );
-  }
+  } else if (creationComplete && generatedConfig) {
+    innerContent = (
+      <div className="overflow-auto max-h-[70vh] px-1">
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-6">
+            <Check className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Your assistant is ready</h2>
+          <p className="text-muted-foreground">Here's a preview of your new assistant.</p>
+        </div>
 
-  // Success screen
-  if (creationComplete && generatedConfig) {
-    return (
-      <div className="fixed inset-0 z-50 bg-background overflow-auto">
-        <div className="max-w-2xl mx-auto px-6 py-12">
-          <button onClick={handleClose} className="absolute top-6 right-6 p-2 hover:bg-accent rounded-lg transition-colors">
-            <X className="w-5 h-5 text-muted-foreground" />
-          </button>
-
-          <div className="text-center mb-10">
-            <div className="w-20 h-20 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-green-600 dark:text-green-400" />
+        <Card className="p-6 mb-6 border-2 border-primary/20">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-6 h-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Your assistant is ready</h2>
-            <p className="text-muted-foreground">Here's a preview of your new assistant.</p>
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">{generatedConfig.title}</h3>
+              <p className="text-sm text-muted-foreground">{generatedConfig.description}</p>
+            </div>
           </div>
 
-          <Card className="p-6 mb-6 border-2 border-primary/20">
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">{generatedConfig.title}</h3>
-                <p className="text-sm text-muted-foreground">{generatedConfig.description}</p>
-              </div>
-            </div>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {generatedConfig.tags.map(tag => (
+              <Badge key={tag.id} variant="secondary" className="text-xs">
+                {tag.name}
+              </Badge>
+            ))}
+            {concretizations.filter(c => !["no-extras", "templates", "guidelines", "knowledge-general"].includes(c)).map(c => (
+              <Badge key={c} variant="outline" className="text-xs">
+                {c === "outlook" ? "Outlook" : c === "sharepoint" ? "SharePoint" : c === "calendar" ? "Calendar" : c === "teams" ? "Teams" : c === "crm" ? "CRM" : c}
+              </Badge>
+            ))}
+            {concretizations.some(c => ["templates", "guidelines", "knowledge-general"].includes(c)) && (
+              <Badge variant="outline" className="text-xs">Knowledge Base</Badge>
+            )}
+          </div>
 
-            <div className="flex flex-wrap gap-2 mb-6">
-              {generatedConfig.tags.map(tag => (
-                <Badge key={tag.id} variant="secondary" className="text-xs">
-                  {tag.name}
-                </Badge>
-              ))}
-              {concretizations.filter(c => !["no-extras", "templates", "guidelines", "knowledge-general"].includes(c)).map(c => (
-                <Badge key={c} variant="outline" className="text-xs">
-                  {c === "outlook" ? "Outlook" : c === "sharepoint" ? "SharePoint" : c === "calendar" ? "Calendar" : c === "teams" ? "Teams" : c === "crm" ? "CRM" : c}
-                </Badge>
-              ))}
-              {concretizations.some(c => ["templates", "guidelines", "knowledge-general"].includes(c)) && (
-                <Badge variant="outline" className="text-xs">Knowledge Base</Badge>
-              )}
-            </div>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-foreground">Quick-start actions:</p>
+            {generatedConfig.starters.map((starter, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors cursor-pointer">
+                <ArrowRight className="w-4 h-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-foreground">{starter.displayText}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
 
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-foreground">Quick-start actions:</p>
-              {generatedConfig.starters.map((starter, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors cursor-pointer">
-                  <ArrowRight className="w-4 h-4 text-primary flex-shrink-0" />
-                  <span className="text-sm text-foreground">{starter.displayText}</span>
-                </div>
-              ))}
-            </div>
+        <details className="mb-8">
+          <summary className="text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+            Show system prompt
+          </summary>
+          <Card className="mt-3 p-4">
+            <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed">
+              {generatedConfig.systemPrompt}
+            </pre>
           </Card>
+        </details>
 
-          <details className="mb-8">
-            <summary className="text-sm font-medium text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-              Show system prompt
-            </summary>
-            <Card className="mt-3 p-4">
-              <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed">
-                {generatedConfig.systemPrompt}
-              </pre>
-            </Card>
-          </details>
-
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={handleReset} className="flex-1">
-              Start over
-            </Button>
-            <Button onClick={handleConfirm} className="flex-1">
-              <Check className="w-4 h-4 mr-2" />
-              Create assistant
-            </Button>
-          </div>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={handleReset} className="flex-1">
+            Start over
+          </Button>
+          <Button onClick={handleConfirm} className="flex-1">
+            <Check className="w-4 h-4 mr-2" />
+            Create assistant
+          </Button>
         </div>
       </div>
     );
-  }
-
-  // Render options for current step
-  const renderStepContent = () => {
-    switch (stepId) {
-      case "department":
-        return (
-          <div className="space-y-3">
-            {departments.map(option => (
-              <button
-                key={option.id}
-                onClick={() => handleDepartmentSelect(option.id)}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                  department === option.id
-                    ? "border-primary bg-primary/5 shadow-sm"
-                    : "border-border hover:border-primary/40 hover:bg-accent/50"
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  department === option.id ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                }`}>
-                  {option.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground">{option.label}</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">{option.description}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        );
-
-      case "task": {
-        const tasks = tasksByDepartment[department] || [];
-        return (
-          <div className="space-y-3">
-            {tasks.map(option => (
-              <button
-                key={option.id}
-                onClick={() => handleTaskSelect(option.id)}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                  task === option.id
-                    ? "border-primary bg-primary/5 shadow-sm"
-                    : "border-border hover:border-primary/40 hover:bg-accent/50"
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  task === option.id ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                }`}>
-                  {option.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground">{option.label}</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">{option.description}</div>
-                </div>
-              </button>
-            ))}
-
-            {/* Free text option */}
-            {!showFreeText ? (
-              <button
-                onClick={() => setShowFreeText(true)}
-                className="w-full text-left p-5 rounded-xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/50 transition-all duration-200 flex items-start gap-4"
-              >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-accent text-muted-foreground">
-                  <PenTool className="w-6 h-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground">Describe a different task</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">Your task isn't listed? Describe it in your own words.</div>
-                </div>
-              </button>
-            ) : (
-              <div className="p-5 rounded-xl border-2 border-primary/40 bg-primary/5 space-y-3">
-                <Textarea
-                  value={freeTextTask}
-                  onChange={(e) => setFreeTextTask(e.target.value)}
-                  placeholder="Describe the task you want the assistant to help with..."
-                  className="min-h-[80px] bg-background"
-                  autoFocus
-                />
-                <Button onClick={handleTaskFreeText} disabled={!freeTextTask.trim()} size="sm">
-                  Continue <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            )}
-          </div>
-        );
-      }
-
-      case "painpoints": {
-        const painOptions = task !== "custom" ? (painPointsByTask[task] || []) : [];
-        return (
-          <div className="space-y-3">
-            {painOptions.map(option => (
-              <button
-                key={option.id}
-                onClick={() => handlePainPointToggle(option.id)}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                  painPoints.includes(option.id)
-                    ? "border-primary bg-primary/5 shadow-sm"
-                    : "border-border hover:border-primary/40 hover:bg-accent/50"
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  painPoints.includes(option.id) ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                }`}>
-                  {option.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground">{option.label}</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">{option.description}</div>
-                </div>
-                {painPoints.includes(option.id) && (
-                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
-                    <Check className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                )}
-              </button>
-            ))}
-
-            {/* Free text pain */}
-            {!showFreeTextPain ? (
-              <button
-                onClick={() => setShowFreeTextPain(true)}
-                className="w-full text-left p-5 rounded-xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/50 transition-all duration-200 flex items-start gap-4"
-              >
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-accent text-muted-foreground">
-                  <PenTool className="w-6 h-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground">Describe your own challenge</div>
-                  <div className="text-sm text-muted-foreground mt-0.5">Your problem isn't listed? Describe it in your own words.</div>
-                </div>
-              </button>
-            ) : (
-              <div className="p-5 rounded-xl border-2 border-primary/40 bg-primary/5 space-y-3">
-                <Textarea
-                  value={freeTextPain}
-                  onChange={(e) => setFreeTextPain(e.target.value)}
-                  placeholder="What exactly makes this task difficult for you?"
-                  className="min-h-[80px] bg-background"
-                  autoFocus
-                />
-              </div>
-            )}
-
-            <div className="mt-8 flex justify-end">
-              <Button
-                onClick={() => setCurrentStep(3)}
-                disabled={!canProceedPainPoints}
-              >
-                Continue
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-        );
-      }
-
-      case "concretization": {
-        const suggestions = getConcretizationSuggestions(department, task, painPoints);
-        const integrationSuggestions = suggestions.filter(s => s.type === "integration");
-        const knowledgeSuggestions = suggestions.filter(s => s.type === "knowledge");
-        const otherSuggestions = suggestions.filter(s => s.type === "feature");
-
-        return (
-          <div className="space-y-6">
-            {integrationSuggestions.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-3">Recommended Integrations</p>
-                <div className="space-y-3">
-                  {integrationSuggestions.map(s => (
-                    <button
-                      key={s.id}
-                      onClick={() => handleConcretizationToggle(s.id)}
-                      className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                        concretizations.includes(s.id)
-                          ? "border-primary bg-primary/5 shadow-sm"
-                          : "border-border hover:border-primary/40 hover:bg-accent/50"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        concretizations.includes(s.id) ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                      }`}>
-                        {s.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-foreground">{s.label}</div>
-                        <div className="text-sm text-muted-foreground mt-0.5">{s.description}</div>
-                      </div>
-                      {concretizations.includes(s.id) && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
-                          <Check className="w-4 h-4 text-primary-foreground" />
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {knowledgeSuggestions.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-3">Knowledge Base</p>
-                <div className="space-y-3">
-                  {knowledgeSuggestions.map(s => (
-                    <button
-                      key={s.id}
-                      onClick={() => handleConcretizationToggle(s.id)}
-                      className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                        concretizations.includes(s.id)
-                          ? "border-primary bg-primary/5 shadow-sm"
-                          : "border-border hover:border-primary/40 hover:bg-accent/50"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        concretizations.includes(s.id) ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                      }`}>
-                        {s.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-foreground">{s.label}</div>
-                        <div className="text-sm text-muted-foreground mt-0.5">{s.description}</div>
-                      </div>
-                      {concretizations.includes(s.id) && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
-                          <Check className="w-4 h-4 text-primary-foreground" />
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-3">
-              {otherSuggestions.map(s => (
-                <button
-                  key={s.id}
-                  onClick={() => handleConcretizationToggle(s.id)}
-                  className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 flex items-start gap-4 ${
-                    concretizations.includes(s.id)
-                      ? "border-primary bg-primary/5 shadow-sm"
-                      : "border-border hover:border-primary/40 hover:bg-accent/50"
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    concretizations.includes(s.id) ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"
-                  }`}>
-                    {s.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-foreground">{s.label}</div>
-                    <div className="text-sm text-muted-foreground mt-0.5">{s.description}</div>
-                  </div>
-                  {concretizations.includes(s.id) && (
-                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
-                      <Check className="w-4 h-4 text-primary-foreground" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-8 flex justify-end">
-              <Button
-                onClick={handleCreate}
-                disabled={!canProceedConcretization}
-              >
-                Create assistant
-                <Sparkles className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-        );
-      }
-    }
-  };
-
-  const { title, subtitle } = stepTitles[stepId];
-
-  return (
-    <div className="fixed inset-0 z-50 bg-background overflow-auto">
-      <div className="max-w-2xl mx-auto px-6 py-8">
+  } else {
+    innerContent = (
+      <div>
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             {currentStep > 0 && (
@@ -991,21 +972,26 @@ const AssistantCreatorWizard = ({ open, onClose, onCreateAssistant }: AssistantC
             )}
             <span className="text-sm text-muted-foreground">Step {currentStep + 1} of {totalSteps}</span>
           </div>
-          <button onClick={handleClose} className="p-2 hover:bg-accent rounded-lg transition-colors">
-            <X className="w-5 h-5 text-muted-foreground" />
-          </button>
         </div>
 
-        <Progress value={progress} className="mb-10 h-1" />
+        <Progress value={progress} className="mb-8 h-1" />
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">{title}</h2>
-          <p className="text-muted-foreground">{subtitle}</p>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-foreground mb-1">{title}</h2>
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
 
         {renderStepContent()}
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose(); }}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-auto">
+        {innerContent}
+      </DialogContent>
+    </Dialog>
   );
 };
 

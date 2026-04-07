@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { MicrosoftIntegrationDialog } from "@/components/integrations/MicrosoftIntegrationDialog";
 import { GoogleIntegrationDialog } from "@/components/integrations/GoogleIntegrationDialog";
 import { NotionIntegrationDialog } from "@/components/integrations/NotionIntegrationDialog";
+import SkillsTab from "@/components/settings/SkillsTab";
 
 const Settings = () => {
   const { theme, updateTheme, toggleDarkMode } = useTheme();

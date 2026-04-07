@@ -21,6 +21,7 @@ import {
   Calendar,
   Settings2,
   Clock,
+  GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ScheduleDialog from "@/components/ScheduleDialog";

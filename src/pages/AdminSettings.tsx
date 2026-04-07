@@ -69,6 +69,13 @@ const AdminSettings = () => {
       description: "Community Posts & Updates"
     },
     { 
+      id: "skills",
+      label: "Skills", 
+      shortLabel: "Skills",
+      icon: Puzzle,
+      description: "Skill Management"
+    },
+    { 
       id: "integrations", 
       label: "Integrations", 
       shortLabel: "Integr.",

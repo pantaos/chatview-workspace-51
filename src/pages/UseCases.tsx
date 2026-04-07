@@ -30,6 +30,7 @@ import {
   UserCheck,
   ClipboardList,
   PieChart,
+  GraduationCap,
 } from "lucide-react";
 import {
   Select,

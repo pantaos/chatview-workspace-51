@@ -21,7 +21,7 @@ interface ActionItem {
   id: string;
   title: string;
   description: string;
-  type: "approval" | "handoff" | "review" | "task";
+  type: "approval" | "handoff" | "review" | "task" | "skill";
   priority: "high" | "medium" | "low";
   status: "pending" | "completed";
   workflow: string;
@@ -32,6 +32,7 @@ interface ActionItem {
   };
   createdAt: Date;
   dueDate?: Date;
+  skillId?: string;
 }
 
 const mockPendingActions: ActionItem[] = [

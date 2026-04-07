@@ -21,6 +21,7 @@ import {
   Calendar,
   Settings2,
   Clock,
+  GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ScheduleDialog from "@/components/ScheduleDialog";
@@ -577,6 +578,86 @@ const useCaseDefinitions: Record<string, UseCaseDefinition> = {
         "Follow-up-Aufgabe automatisch fuer Tag 5 erstellt",
       ],
       viewLink: "Im CRM anzeigen",
+    },
+  },
+  "60": {
+    id: "60",
+    name: "Report Card Generator",
+    icon: GraduationCap,
+    description: "Generate professional student report cards from templates with custom data, then export as PDF",
+    integrations: ["PDF", "Templates"],
+    configSteps: [
+      {
+        id: "template",
+        title: "Report Card Template",
+        description: "What type of report card do you need?",
+        type: "radio",
+        options: [
+          { id: "primary", label: "Primary School (Grades 1–4)" },
+          { id: "secondary", label: "Secondary School (Grades 5–10)" },
+          { id: "gymnasium", label: "Gymnasium (Grades 11–13)" },
+          { id: "custom", label: "Custom template", hasInput: true, inputPlaceholder: "Describe your template requirements..." },
+        ],
+      },
+      {
+        id: "content-sections",
+        title: "Report Sections",
+        description: "Which sections should the report card include?",
+        type: "checkbox",
+        options: [
+          { id: "grades", label: "Subject Grades & Scores", defaultChecked: true },
+          { id: "behavior", label: "Social Behavior & Conduct", defaultChecked: true },
+          { id: "comments", label: "Teacher Comments & Observations" },
+          { id: "attendance", label: "Attendance Summary" },
+          { id: "recommendations", label: "Recommendations & Next Steps" },
+        ],
+      },
+      {
+        id: "student-info",
+        title: "Student Information",
+        description: "How would you like to provide student data?",
+        type: "radio",
+        options: [
+          { id: "manual", label: "Enter manually for one student" },
+          { id: "csv", label: "Upload a CSV with multiple students", hasInput: true, inputPlaceholder: "Upload or paste CSV path..." },
+          { id: "reference", label: "Reference existing documents", hasInput: true, inputPlaceholder: "Paste links or describe documents..." },
+        ],
+      },
+      {
+        id: "output-format",
+        title: "Output & Export",
+        description: "How should the final report card look?",
+        type: "radio",
+        options: [
+          { id: "formal", label: "Formal (school letterhead style)" },
+          { id: "modern", label: "Modern (clean, color-accented)" },
+          { id: "minimal", label: "Minimal (text-focused, no decoration)" },
+        ],
+      },
+    ],
+    executionSteps: [
+      { id: "load-template", label: "Loading report card template...", duration: 1200 },
+      { id: "parse-data", label: "Processing student information...", duration: 1500 },
+      { id: "generate-grades", label: "Compiling grades and assessments...", duration: 2000 },
+      { id: "generate-comments", label: "Generating teacher comments with AI...", duration: 2500 },
+      { id: "layout", label: "Applying layout and formatting...", duration: 1800 },
+      { id: "export-pdf", label: "Exporting as PDF...", duration: 1000 },
+    ],
+    result: {
+      title: "📄 Report Card Generated Successfully",
+      destination: "Report card ready for download",
+      content: [
+        "Template: Secondary School format applied",
+        "Sections: Grades, Behavior, Comments, Recommendations",
+        "Student: Data processed and validated",
+      ],
+      highlights: [
+        "AI-generated teacher comments based on grade patterns",
+        "Professional PDF layout with school branding",
+        "All required sections populated and formatted",
+        "Ready for review, editing, or batch export",
+      ],
+      viewLink: "Download PDF",
     },
   },
 };

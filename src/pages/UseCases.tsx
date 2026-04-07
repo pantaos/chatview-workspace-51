@@ -30,6 +30,7 @@ import {
   UserCheck,
   ClipboardList,
   PieChart,
+  GraduationCap,
 } from "lucide-react";
 import {
   Select,
@@ -42,7 +43,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import ScheduleDialog from "@/components/ScheduleDialog";
 
-const teams = ["All Teams", "Engineering", "Sales", "HR", "Finance", "Marketing"];
+const teams = ["All Teams", "Engineering", "Sales", "HR", "Finance", "Marketing", "Education"];
 
 interface UseCase {
   id: string;
@@ -79,6 +80,8 @@ const allUseCases: UseCase[] = [
   { id: "41", name: "Invoice Reminder", icon: Bell, saves: "1 hr/week", status: "ready", integrations: ["QuickBooks", "Email"], team: "Finance", taskType: "Notifications" },
   // Cross-functional
   { id: "50", name: "Angebotsprozess", icon: FileText, saves: "4 Std./Angebot", status: "ready", integrations: ["CRM", "E-Mail", "PDF"], team: "Sales", taskType: "Reporting" },
+  // Education
+  { id: "60", name: "Report Card Generator", icon: GraduationCap, saves: "2 hr/student", status: "ready", integrations: ["PDF", "Templates"], team: "Education", taskType: "Reporting" },
 ];
 
 const setupUseCases = [
@@ -92,6 +95,7 @@ const teamBrowse = [
   { name: "HR", count: 3, icon: Users },
   { name: "Finance", count: 2, icon: DollarSign },
   { name: "Marketing", count: 4, icon: Megaphone },
+  { name: "Education", count: 1, icon: GraduationCap },
 ];
 
 const taskTypes = [

@@ -11,6 +11,7 @@ import AdminTeams from "@/components/admin/AdminTeams";
 import AdminApprovals from "@/components/admin/AdminApprovals";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
+import AdminSkills from "@/components/admin/AdminSkills";
 
 const AdminSettings = () => {
   const navigate = useNavigate();

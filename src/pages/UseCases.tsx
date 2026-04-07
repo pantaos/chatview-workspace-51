@@ -80,6 +80,8 @@ const allUseCases: UseCase[] = [
   { id: "41", name: "Invoice Reminder", icon: Bell, saves: "1 hr/week", status: "ready", integrations: ["QuickBooks", "Email"], team: "Finance", taskType: "Notifications" },
   // Cross-functional
   { id: "50", name: "Angebotsprozess", icon: FileText, saves: "4 Std./Angebot", status: "ready", integrations: ["CRM", "E-Mail", "PDF"], team: "Sales", taskType: "Reporting" },
+  // Education
+  { id: "60", name: "Report Card Generator", icon: GraduationCap, saves: "2 hr/student", status: "ready", integrations: ["PDF", "Templates"], team: "Education", taskType: "Reporting" },
 ];
 
 const setupUseCases = [

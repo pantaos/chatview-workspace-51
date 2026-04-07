@@ -102,6 +102,7 @@ export default function Actions() {
       case "approval": return CheckCircle2;
       case "handoff": return ChevronRight;
       case "review": return FileText;
+      case "skill": return Clock;
       case "task": return Clock;
     }
   };

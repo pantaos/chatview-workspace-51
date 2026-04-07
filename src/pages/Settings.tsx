@@ -387,6 +387,11 @@ const Settings = () => {
             </div>
           </TabsContent>
 
+          {/* Skills Tab */}
+          <TabsContent value="skills" className="mt-0">
+            <SkillsTab />
+          </TabsContent>
+
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="mt-0">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

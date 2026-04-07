@@ -156,6 +156,9 @@ const AdminSettings = () => {
           <TabsContent value="community" className="mt-0">
             <CommunityFeed />
           </TabsContent>
+          <TabsContent value="skills" className="mt-0">
+            <AdminSkills />
+          </TabsContent>
           <TabsContent value="integrations" className="mt-0">
             <AdminIntegrations />
           </TabsContent>

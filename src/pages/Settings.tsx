@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { MicrosoftIntegrationDialog } from "@/components/integrations/MicrosoftIntegrationDialog";
 import { GoogleIntegrationDialog } from "@/components/integrations/GoogleIntegrationDialog";
 import { NotionIntegrationDialog } from "@/components/integrations/NotionIntegrationDialog";
+import SkillsTab from "@/components/settings/SkillsTab";
 
 const Settings = () => {
   const { theme, updateTheme, toggleDarkMode } = useTheme();
@@ -25,8 +26,9 @@ const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabFromUrl = searchParams.get("tab");
   
+  const validTabs = ["general", "profile", "skills", "integrations"];
   const [activeTab, setActiveTab] = useState(
-    tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)
+    tabFromUrl && validTabs.includes(tabFromUrl)
       ? tabFromUrl
       : "general"
   );
@@ -35,7 +37,7 @@ const Settings = () => {
   
   // Sync tab with URL
   useEffect(() => {
-    if (tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)) {
+    if (tabFromUrl && validTabs.includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
     }
   }, [tabFromUrl]);
@@ -161,6 +163,12 @@ const Settings = () => {
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
             >
               Profil
+            </TabsTrigger>
+            <TabsTrigger 
+              value="skills" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
+            >
+              Skills
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
@@ -377,6 +385,11 @@ const Settings = () => {
                 <Badge variant="secondary">{currentUser.userType}</Badge>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Skills Tab */}
+          <TabsContent value="skills" className="mt-0">
+            <SkillsTab />
           </TabsContent>
 
           {/* Integrations Tab */}

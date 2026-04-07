@@ -21,7 +21,7 @@ interface ActionItem {
   id: string;
   title: string;
   description: string;
-  type: "approval" | "handoff" | "review" | "task";
+  type: "approval" | "handoff" | "review" | "task" | "skill";
   priority: "high" | "medium" | "low";
   status: "pending" | "completed";
   workflow: string;
@@ -32,10 +32,34 @@ interface ActionItem {
   };
   createdAt: Date;
   dueDate?: Date;
+  skillId?: string;
 }
 
 const mockPendingActions: ActionItem[] = [
-  // Empty for now - shows empty state
+  {
+    id: "sk1",
+    title: "Wöchentliche Zusammenfassung",
+    description: "Dein geplanter Skill ist bereit zur Ausführung. Klicke hier, um die Zusammenfassung im Chat zu starten.",
+    type: "skill",
+    priority: "medium",
+    status: "pending",
+    workflow: "Skill: Wöchentliche Zusammenfassung",
+    assignedBy: { name: "PANTA OS", initials: "PA" },
+    createdAt: new Date(),
+    skillId: "ps-1",
+  },
+  {
+    id: "sk2",
+    title: "Standup Bot",
+    description: "Täglicher Standup steht an. Starte den Skill im Chat, um Updates zu sammeln.",
+    type: "skill",
+    priority: "low",
+    status: "pending",
+    workflow: "Skill: Standup Bot",
+    assignedBy: { name: "PANTA OS", initials: "PA" },
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    skillId: "ts-2",
+  },
 ];
 
 const mockCompletedActions: ActionItem[] = [
@@ -78,6 +102,7 @@ export default function Actions() {
       case "approval": return CheckCircle2;
       case "handoff": return ChevronRight;
       case "review": return FileText;
+      case "skill": return Clock;
       case "task": return Clock;
     }
   };

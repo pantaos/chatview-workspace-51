@@ -11,6 +11,7 @@ import AdminTeams from "@/components/admin/AdminTeams";
 import AdminApprovals from "@/components/admin/AdminApprovals";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
+import AdminSkills from "@/components/admin/AdminSkills";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
@@ -66,6 +67,13 @@ const AdminSettings = () => {
       shortLabel: "Community",
       icon: MessageSquare,
       description: "Community Posts & Updates"
+    },
+    { 
+      id: "skills",
+      label: "Skills", 
+      shortLabel: "Skills",
+      icon: Puzzle,
+      description: "Skill Management"
     },
     { 
       id: "integrations", 
@@ -147,6 +155,9 @@ const AdminSettings = () => {
           </TabsContent>
           <TabsContent value="community" className="mt-0">
             <CommunityFeed />
+          </TabsContent>
+          <TabsContent value="skills" className="mt-0">
+            <AdminSkills />
           </TabsContent>
           <TabsContent value="integrations" className="mt-0">
             <AdminIntegrations />

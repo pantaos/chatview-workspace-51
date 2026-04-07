@@ -95,6 +95,7 @@ const teamBrowse = [
   { name: "HR", count: 3, icon: Users },
   { name: "Finance", count: 2, icon: DollarSign },
   { name: "Marketing", count: 4, icon: Megaphone },
+  { name: "Education", count: 1, icon: GraduationCap },
 ];
 
 const taskTypes = [

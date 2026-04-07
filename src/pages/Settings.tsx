@@ -26,8 +26,9 @@ const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabFromUrl = searchParams.get("tab");
   
+  const validTabs = ["general", "profile", "skills", "integrations"];
   const [activeTab, setActiveTab] = useState(
-    tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)
+    tabFromUrl && validTabs.includes(tabFromUrl)
       ? tabFromUrl
       : "general"
   );
@@ -36,7 +37,7 @@ const Settings = () => {
   
   // Sync tab with URL
   useEffect(() => {
-    if (tabFromUrl && ["general", "profile", "integrations"].includes(tabFromUrl)) {
+    if (tabFromUrl && validTabs.includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
     }
   }, [tabFromUrl]);

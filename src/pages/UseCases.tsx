@@ -43,7 +43,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import ScheduleDialog from "@/components/ScheduleDialog";
 
-const teams = ["All Teams", "Engineering", "Sales", "HR", "Finance", "Marketing"];
+const teams = ["All Teams", "Engineering", "Sales", "HR", "Finance", "Marketing", "Education"];
 
 interface UseCase {
   id: string;

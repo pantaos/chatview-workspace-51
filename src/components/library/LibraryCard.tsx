@@ -211,24 +211,9 @@ export function LibraryCard({ item, onPreview, onDownload, onDelete }: LibraryCa
         
         {/* Hover Overlay with Preview */}
         <div className={cn(
-          "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-200",
+          "absolute inset-0 bg-black/20 transition-opacity duration-200 pointer-events-none",
           isHovered ? "opacity-100" : "opacity-0"
-        )}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPreview(item);
-                }}
-                className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
-              >
-                <Eye className="h-4 w-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Preview</TooltipContent>
-          </Tooltip>
-        </div>
+        )} />
       </AspectRatio>
 
       {/* Content Info */}

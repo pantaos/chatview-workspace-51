@@ -2,6 +2,7 @@ import { WorkflowTag } from "@/types/workflow";
 import { TemplateVisibility } from "@/data/templates";
 
 export type CommunityAppStatus = "pending" | "approved" | "rejected";
+export type DemoAppType = "dashboard" | "tracker" | "notes" | "calculator";
 
 export interface CommunityAppReviewSummary {
   framework: string;
@@ -23,7 +24,15 @@ export interface CommunityApp {
   fileName: string;
   reviewSummary: CommunityAppReviewSummary;
   visibility?: TemplateVisibility;
+  demoType?: DemoAppType;
 }
+
+export const DEMO_TEMPLATES: { type: DemoAppType; title: string; description: string; icon: string; tagId: string }[] = [
+  { type: "dashboard", title: "Revenue Pulse", description: "Real-time revenue dashboard with weekly trends and top customers.", icon: "BarChart3", tagId: "analysis" },
+  { type: "tracker", title: "Habit Tracker", description: "Track daily habits with streaks and a weekly heatmap.", icon: "CheckCircle2", tagId: "productivity" },
+  { type: "notes", title: "Quick Notes", description: "Lightweight note-taking with tags and instant search.", icon: "Notebook", tagId: "productivity" },
+  { type: "calculator", title: "Tip Splitter", description: "Split bills with custom tip percentages and per-person totals.", icon: "Calculator", tagId: "productivity" },
+];
 
 export const seedCommunityApps: CommunityApp[] = [
   {
@@ -42,6 +51,7 @@ export const seedCommunityApps: CommunityApp[] = [
       detectedColors: ["#5673eb", "#F97316"],
       standardized: true,
     },
+    demoType: "tracker",
   },
   {
     id: "ca-meeting-recap",
@@ -60,6 +70,7 @@ export const seedCommunityApps: CommunityApp[] = [
       standardized: true,
     },
     visibility: { scope: "public", tenantIds: [] },
+    demoType: "notes",
   },
   {
     id: "ca-color-stealer",
@@ -78,5 +89,6 @@ export const seedCommunityApps: CommunityApp[] = [
       detectedColors: ["#111111", "#FACC15"],
       standardized: false,
     },
+    demoType: "dashboard",
   },
 ];

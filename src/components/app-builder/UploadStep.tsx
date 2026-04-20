@@ -7,9 +7,11 @@ import { useTheme } from "@/contexts/ThemeContext";
 interface UploadStepProps {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  onUseDemo: () => void;
+  demoActive: boolean;
 }
 
-export function UploadStep({ file, onFileChange }: UploadStepProps) {
+export function UploadStep({ file, onFileChange, onUseDemo, demoActive }: UploadStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const { theme } = useTheme();

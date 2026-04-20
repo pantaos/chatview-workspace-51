@@ -400,7 +400,7 @@ const Index = () => {
           <div className="max-w-5xl mx-auto">
             {/* Dashboard Hero Gradient — kompakt, zentriert */}
             <div 
-              className="rounded-b-3xl px-8 pt-12 pb-10 mb-8 relative overflow-hidden"
+              className="rounded-b-3xl px-8 pt-12 pb-10 mb-8 relative"
               style={{
                 background: theme.backgroundImage
                   ? undefined
@@ -408,14 +408,14 @@ const Index = () => {
               }}
             >
               {theme.backgroundImage && (
-                <>
+                <div className="absolute inset-0 rounded-b-3xl overflow-hidden">
                   <img
                     src={theme.backgroundImage}
                     alt=""
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-                </>
+                </div>
               )}
               <div className="relative z-10 max-w-3xl mx-auto">
                 <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">

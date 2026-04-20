@@ -9,7 +9,7 @@ import { DetailsStep } from "@/components/app-builder/DetailsStep";
 import { ReviewStep } from "@/components/app-builder/ReviewStep";
 import { PreviewStep } from "@/components/app-builder/PreviewStep";
 import { templateTags } from "@/data/templates";
-import { DEMO_TEMPLATES, DemoAppType } from "@/data/communityApps";
+import { DEMO_TEMPLATES, DemoAppType, CommunityAppLink } from "@/data/communityApps";
 import { toast } from "sonner";
 
 const STEPS = ["Upload", "Details", "AI Review", "Preview"] as const;
@@ -23,6 +23,9 @@ export default function AppBuilder() {
   const [demoType, setDemoType] = useState<DemoAppType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [longDescription, setLongDescription] = useState("");
+  const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [links, setLinks] = useState<CommunityAppLink[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [icon, setIcon] = useState("Sparkles");
   const [reviewDone, setReviewDone] = useState(false);
@@ -46,10 +49,14 @@ export default function AppBuilder() {
 
   const handleSubmit = () => {
     const tags = templateTags.filter((t) => selectedTagIds.includes(t.id));
+    const cleanLinks = links.filter((l) => l.url.trim().length > 0);
     const submission = {
       id: `ca-${Date.now()}`,
       title: title.trim(),
       description: description.trim(),
+      longDescription: longDescription.trim() || undefined,
+      screenshots: screenshots.length ? screenshots : undefined,
+      links: cleanLinks.length ? cleanLinks : undefined,
       icon,
       tags,
       submittedBy: "You",
@@ -107,11 +114,17 @@ export default function AppBuilder() {
               <DetailsStep
                 title={title}
                 description={description}
+                longDescription={longDescription}
+                screenshots={screenshots}
+                links={links}
                 selectedTagIds={selectedTagIds}
                 icon={icon}
                 onChange={(patch) => {
                   if (patch.title !== undefined) setTitle(patch.title);
                   if (patch.description !== undefined) setDescription(patch.description);
+                  if (patch.longDescription !== undefined) setLongDescription(patch.longDescription);
+                  if (patch.screenshots !== undefined) setScreenshots(patch.screenshots);
+                  if (patch.links !== undefined) setLinks(patch.links);
                   if (patch.selectedTagIds !== undefined) setSelectedTagIds(patch.selectedTagIds);
                   if (patch.icon !== undefined) setIcon(patch.icon);
                 }}

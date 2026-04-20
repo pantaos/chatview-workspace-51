@@ -1,11 +1,14 @@
+import { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { templateTags } from "@/data/templates";
 import { WorkflowTag } from "@/types/workflow";
+import { CommunityAppLink } from "@/data/communityApps";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ImagePlus, X, Plus, Link2, Trash2 } from "lucide-react";
 
 const ICON_CHOICES = [
   "Sparkles", "Bot", "Wand2", "Zap", "Rocket", "Code2",
@@ -16,12 +19,34 @@ const ICON_CHOICES = [
 interface DetailsStepProps {
   title: string;
   description: string;
+  longDescription: string;
+  screenshots: string[];
+  links: CommunityAppLink[];
   selectedTagIds: string[];
   icon: string;
-  onChange: (patch: { title?: string; description?: string; selectedTagIds?: string[]; icon?: string }) => void;
+  onChange: (patch: {
+    title?: string;
+    description?: string;
+    longDescription?: string;
+    screenshots?: string[];
+    links?: CommunityAppLink[];
+    selectedTagIds?: string[];
+    icon?: string;
+  }) => void;
 }
 
-export function DetailsStep({ title, description, selectedTagIds, icon, onChange }: DetailsStepProps) {
+export function DetailsStep({
+  title,
+  description,
+  longDescription,
+  screenshots,
+  links,
+  selectedTagIds,
+  icon,
+  onChange,
+}: DetailsStepProps) {
+  const fileRef = useRef<HTMLInputElement>(null);
+
   const toggleTag = (id: string) => {
     onChange({
       selectedTagIds: selectedTagIds.includes(id)
@@ -29,6 +54,31 @@ export function DetailsStep({ title, description, selectedTagIds, icon, onChange
         : [...selectedTagIds, id],
     });
   };
+
+  const handleScreenshots = async (files: FileList | null) => {
+    if (!files) return;
+    const arr = Array.from(files).slice(0, 6 - screenshots.length);
+    const dataUrls = await Promise.all(
+      arr.map(
+        (f) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(f);
+          })
+      )
+    );
+    onChange({ screenshots: [...screenshots, ...dataUrls] });
+  };
+
+  const removeScreenshot = (i: number) =>
+    onChange({ screenshots: screenshots.filter((_, idx) => idx !== i) });
+
+  const addLink = () => onChange({ links: [...links, { label: "", url: "" }] });
+  const updateLink = (i: number, patch: Partial<CommunityAppLink>) =>
+    onChange({ links: links.map((l, idx) => (idx === i ? { ...l, ...patch } : l)) });
+  const removeLink = (i: number) => onChange({ links: links.filter((_, idx) => idx !== i) });
 
   return (
     <div className="space-y-5">

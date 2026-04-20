@@ -38,6 +38,7 @@ import UseCases from "./pages/UseCases";
 import UseCaseRun from "./pages/UseCaseRun";
 import AppBuilder from "./pages/AppBuilder";
 import MyApps from "./pages/MyApps";
+import MyAppRun from "./pages/MyAppRun";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -83,6 +84,7 @@ const App = () => {
                   <Route path="/chat" element={<ChatInterface />} />
                   <Route path="/app-builder" element={<AppBuilder />} />
                   <Route path="/my-apps" element={<MyApps />} />
+                  <Route path="/my-apps/:id" element={<MyAppRun />} />
                   
                   {/* Trendcast Workflow Routes */}
                   <Route path="/trendcast" element={<TrendcastUploadLinks />} />

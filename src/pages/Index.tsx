@@ -37,6 +37,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import CalendarPreview from "@/components/CalendarPreview";
 import AssistantCreatorWizard from "@/components/AssistantCreatorWizard";
+import SearchSuggestions, { type SuggestionItem } from "@/components/SearchSuggestions";
+import { allSkills } from "@/data/skillsData";
 
 const Index = () => {
   const navigate = useNavigate();

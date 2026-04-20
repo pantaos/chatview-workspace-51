@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { UploadCloud, FileArchive, X, CheckCircle2 } from "lucide-react";
+import { UploadCloud, FileArchive, X, CheckCircle2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -96,6 +96,25 @@ export function UploadStep({ file, onFileChange, onUseDemo, demoActive }: Upload
           </div>
         </div>
       )}
+
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-border/60" />
+        <span className="text-[11px] uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="flex-1 h-px bg-border/60" />
+      </div>
+
+      <Button
+        type="button"
+        variant={demoActive ? "default" : "outline"}
+        onClick={onUseDemo}
+        className="w-full justify-center"
+      >
+        <Sparkles className="h-4 w-4 mr-2" />
+        {demoActive ? "Demo data loaded — continue" : "Use demo data (no upload needed)"}
+      </Button>
+      <p className="text-xs text-muted-foreground text-center -mt-2">
+        Click through the whole flow with a sample app — perfect for demos.
+      </p>
     </div>
   );
 }

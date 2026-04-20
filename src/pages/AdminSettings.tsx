@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare, Shield } from "lucide-react";
+import { Users, TrendingUp, UsersIcon, Puzzle, MessageSquare, Shield, Gauge } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -12,6 +12,7 @@ import AdminApprovals from "@/components/admin/AdminApprovals";
 import CommunityFeed from "@/components/admin/CommunityFeed";
 import AdminIntegrations from "@/components/admin/AdminIntegrations";
 import AdminSkills from "@/components/admin/AdminSkills";
+import AdminTokenLimits from "@/components/admin/AdminTokenLimits";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
@@ -81,6 +82,13 @@ const AdminSettings = () => {
       shortLabel: "Integr.",
       icon: Puzzle,
       description: "Connected Services"
+    },
+    {
+      id: "token-limits",
+      label: "Token Limits",
+      shortLabel: "Tokens",
+      icon: Gauge,
+      description: "Token Usage & Limits"
     }
   ], []);
 
@@ -161,6 +169,9 @@ const AdminSettings = () => {
           </TabsContent>
           <TabsContent value="integrations" className="mt-0">
             <AdminIntegrations />
+          </TabsContent>
+          <TabsContent value="token-limits" className="mt-0">
+            <AdminTokenLimits />
           </TabsContent>
         </Tabs>
       </div>

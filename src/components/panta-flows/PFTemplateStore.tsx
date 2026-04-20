@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/responsive-dialog";
 import { templates as seedTemplates, TemplateItem, TemplateVisibility } from "@/data/templates";
 import { mockTenants } from "@/data/pantaFlowsData";
-import { Globe, Users, Search, Sparkles, Pencil } from "lucide-react";
+import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
+import { Globe, Users, Search, Sparkles, Pencil, Clock, Check, X } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 const defaultVisibility = (): TemplateVisibility => ({ scope: "public", tenantIds: [] });
 
@@ -30,6 +32,47 @@ const PFTemplateStore = () => {
   const [editing, setEditing] = useState<TemplateItem | null>(null);
   const [editScope, setEditScope] = useState<TemplateVisibility["scope"]>("public");
   const [editTenantIds, setEditTenantIds] = useState<string[]>([]);
+
+  // Pending community apps awaiting review
+  const [pendingApps, setPendingApps] = useState<CommunityApp[]>(() =>
+    seedCommunityApps.filter((a) => a.status === "pending")
+  );
+  const [reviewing, setReviewing] = useState<CommunityApp | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rejectMode, setRejectMode] = useState(false);
+
+  const approveApp = (app: CommunityApp) => {
+    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
+    const asTemplate: TemplateItem = {
+      id: app.id,
+      title: app.title,
+      description: app.description,
+      icon: app.icon,
+      tags: app.tags,
+      category: "app",
+      screenshots: [],
+      useCases: [],
+      features: ["Community-built app"],
+      customizable: [],
+      systemPrompt: "",
+      suggestedIntegrations: [],
+      starters: [],
+      visibility: defaultVisibility(),
+    };
+    setItems((prev) => [asTemplate, ...prev]);
+    toast.success(`Approved "${app.title}"`);
+    setReviewing(null);
+    setRejectMode(false);
+    setRejectReason("");
+  };
+
+  const rejectApp = (app: CommunityApp, reason: string) => {
+    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
+    toast.success(`Rejected "${app.title}"`, { description: reason });
+    setReviewing(null);
+    setRejectMode(false);
+    setRejectReason("");
+  };
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();

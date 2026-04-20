@@ -3,164 +3,137 @@ import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/MainLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplateCard } from "@/components/TemplateCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
 import { templates, templateTags, TemplateItem } from "@/data/templates";
-import { Search, LayoutGrid } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedCategory("all");
-    setSelectedTag("all");
-  };
+  // Assistants only
+  const assistants = useMemo(
+    () => templates.filter((t) => t.category === "assistant"),
+    []
+  );
 
-  const filteredTemplates = useMemo(() => {
-    return templates.filter((template) => {
-      const matchesSearch =
-        searchQuery === "" ||
-        template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.useCases.some((uc) =>
-          uc.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-
-      const matchesCategory =
-        selectedCategory === "all" || template.category === selectedCategory;
-
-      const matchesTag =
-        selectedTag === "all" ||
-        template.tags.some((t) => t.id === selectedTag);
-
-      return matchesSearch && matchesCategory && matchesTag;
+  const filtered = useMemo(() => {
+    return assistants.filter((t) => {
+      const q = searchQuery.toLowerCase();
+      const matchSearch =
+        q === "" ||
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        t.useCases.some((u) => u.toLowerCase().includes(q));
+      const matchTag = selectedTag === "all" || t.tags.some((tag) => tag.id === selectedTag);
+      return matchSearch && matchTag;
     });
-  }, [searchQuery, selectedCategory, selectedTag]);
+  }, [assistants, searchQuery, selectedTag]);
 
-  const featuredTemplates = useMemo(() => {
-    return templates.filter((t) => t.isFeatured);
-  }, []);
+  const featured = useMemo(() => assistants.filter((t) => t.isFeatured), [assistants]);
 
-  const handleTemplateClick = (template: TemplateItem) => {
-    setSelectedTemplate(template);
+  const handleClick = (t: TemplateItem) => {
+    setSelectedTemplate(t);
     setPreviewOpen(true);
   };
 
-  const handleAddTemplate = (template: TemplateItem) => {
+  const handleAdd = (t: TemplateItem) => {
     setPreviewOpen(false);
-    toast.success(`"${template.title}" wird hinzugefügt...`);
-    sessionStorage.setItem("addTemplate", JSON.stringify(template));
+    toast.success(`"${t.title}" wird hinzugefügt...`);
+    sessionStorage.setItem("addTemplate", JSON.stringify(t));
     navigate("/");
   };
 
-  const hasActiveFilters = searchQuery !== "" || selectedCategory !== "all" || selectedTag !== "all";
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedTag("all");
+  };
+
+  // Visible tags = only ones used by at least one assistant
+  const usedTagIds = new Set(assistants.flatMap((a) => a.tags.map((t) => t.id)));
+  const visibleTags = templateTags.filter((t) => usedTagIds.has(t.id));
 
   return (
     <MainLayout>
       <div className="flex-1 overflow-auto">
-        <div className="container max-w-6xl mx-auto py-6 px-4 md:px-6">
+        <div className="container max-w-6xl mx-auto py-8 px-4 md:px-6">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">Template Library</h1>
-            <p className="text-muted-foreground mt-2">
-              Entdecke und füge vorgefertigte Assistenten und Apps hinzu
-            </p>
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-3">
+                <Sparkles className="h-3 w-3" />
+                Assistant Library
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                Discover assistants
+              </h1>
+              <p className="text-muted-foreground mt-2 max-w-xl">
+                Curated, ready-to-use AI assistants. Pick one, personalize it, ship it.
+              </p>
+            </div>
           </div>
 
-          {/* Featured Hero Section */}
-          {featuredTemplates.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-4">Empfohlen</h2>
-              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 pr-16 md:pr-4 scrollbar-hide snap-x snap-mandatory">
-                {featuredTemplates.map((template) => (
+          {/* Featured rail */}
+          {featured.length > 0 && (
+            <div className="mb-10">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Featured
+                </h2>
+              </div>
+              <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
+                {featured.map((t) => (
                   <FeaturedTemplateCard
-                    key={template.id}
-                    template={template}
-                    onClick={() => handleTemplateClick(template)}
+                    key={t.id}
+                    template={t}
+                    onClick={() => handleClick(t)}
                   />
                 ))}
               </div>
             </div>
           )}
 
-          {/* Search and Filters */}
+          {/* Search + tag filter */}
           <div className="space-y-4 mb-6">
-            {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Suche nach Templates..."
+                placeholder="Search assistants..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-background"
+                className="pl-10 h-11 rounded-xl bg-background border-border/60"
               />
             </div>
 
-            {/* Category Tabs - Settings style */}
-            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-              <div className="flex items-center justify-between">
-                <TabsList className="flex justify-start overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto w-full">
-                  <TabsTrigger 
-                    value="all"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
-                  >
-                    Alle
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="assistant"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
-                  >
-                    Assistenten
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="workflow"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
-                  >
-                    Workflows
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="app"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap"
-                  >
-                    Apps
-                  </TabsTrigger>
-                </TabsList>
-              </div>
-            </Tabs>
-
-            {/* Tag Filter Tabs */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
               <button
                 onClick={() => setSelectedTag("all")}
                 className={cn(
-                  "px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors",
-                  selectedTag === "all" 
-                    ? "bg-primary text-primary-foreground" 
-                    : "bg-muted text-muted-foreground hover:text-foreground"
+                  "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border",
+                  selectedTag === "all"
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
                 )}
               >
-                Alle
+                All
               </button>
-              {templateTags.map((tag) => (
+              {visibleTags.map((tag) => (
                 <button
                   key={tag.id}
                   onClick={() => setSelectedTag(tag.id)}
                   className={cn(
-                    "px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors",
-                    selectedTag === tag.id 
-                      ? "bg-primary text-primary-foreground" 
-                      : "bg-muted text-muted-foreground hover:text-foreground"
+                    "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border",
+                    selectedTag === tag.id
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
                   )}
                 >
                   {tag.name}
@@ -169,29 +142,26 @@ export default function TemplateLibrary() {
             </div>
           </div>
 
-          {/* All Templates */}
+          {/* Grid */}
           <div>
-            <h2 className="text-lg font-semibold mb-4">Alle Templates</h2>
-            {filteredTemplates.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredTemplates.map((template) => (
-                  <TemplateCard
-                    key={template.id}
-                    template={template}
-                    onClick={() => handleTemplateClick(template)}
-                  />
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                All assistants
+              </h2>
+              <span className="text-xs text-muted-foreground">{filtered.length} results</span>
+            </div>
+            {filtered.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map((t) => (
+                  <TemplateCard key={t.id} template={t} onClick={() => handleClick(t)} />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                <LayoutGrid className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Keine Templates gefunden</p>
-                <Button
-                  variant="link"
-                  onClick={clearFilters}
-                  className="mt-2"
-                >
-                  Filter zurücksetzen
+              <div className="rounded-2xl border border-dashed border-border bg-muted/20 py-16 text-center text-muted-foreground">
+                <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-50" />
+                <p className="text-sm">No assistants match your filters.</p>
+                <Button variant="link" onClick={clearFilters} className="mt-1">
+                  Clear filters
                 </Button>
               </div>
             )}
@@ -199,12 +169,11 @@ export default function TemplateLibrary() {
         </div>
       </div>
 
-      {/* Preview Dialog */}
       <TemplatePreviewDialog
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
         template={selectedTemplate}
-        onAdd={handleAddTemplate}
+        onAdd={handleAdd}
       />
     </MainLayout>
   );

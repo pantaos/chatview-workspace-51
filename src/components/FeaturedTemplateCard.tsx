@@ -1,6 +1,5 @@
-import { Card } from "@/components/ui/card";
 import { TemplateItem } from "@/data/templates";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, ArrowUpRight } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
 interface FeaturedTemplateCardProps {
@@ -8,51 +7,63 @@ interface FeaturedTemplateCardProps {
   onClick: () => void;
 }
 
-const categoryGradients: Record<string, string> = {
-  assistant: "from-blue-500 to-blue-600",
-  workflow: "from-purple-500 to-purple-600",
-  app: "from-emerald-500 to-emerald-600",
-};
+const accentGradients = [
+  "from-indigo-500 via-blue-500 to-cyan-500",
+  "from-fuchsia-500 via-purple-500 to-indigo-500",
+  "from-amber-500 via-orange-500 to-rose-500",
+  "from-emerald-500 via-teal-500 to-cyan-500",
+];
 
-const categoryLabels: Record<string, string> = {
-  assistant: "Assistent",
-  workflow: "Workflow",
-  app: "App",
-};
+function pickGradient(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return accentGradients[hash % accentGradients.length];
+}
 
 export function FeaturedTemplateCard({ template, onClick }: FeaturedTemplateCardProps) {
-  const IconComponent = (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) || LucideIcons.Sparkles;
-  const gradient = categoryGradients[template.category] || categoryGradients.assistant;
+  const IconComponent =
+    (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) ||
+    LucideIcons.Sparkles;
+  const gradient = pickGradient(template.id);
 
   return (
-    <Card
-      className={`group relative min-w-[75vw] md:min-w-[280px] max-w-[320px] flex-shrink-0 snap-start cursor-pointer overflow-hidden rounded-2xl border-0 bg-gradient-to-br ${gradient} p-5 md:p-6 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl`}
+    <button
       onClick={onClick}
+      className="group relative min-w-[78vw] md:min-w-[320px] max-w-[360px] flex-shrink-0 snap-start overflow-hidden rounded-3xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
     >
-      {/* Icon */}
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-        <IconComponent className="h-6 w-6 text-white" />
+      {/* Gradient base */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
+      {/* Soft noise / depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_0%,rgba(255,255,255,0.25),transparent_60%)]" />
+      <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+
+      <div className="relative p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md ring-1 ring-white/30">
+            <IconComponent className="h-5 w-5 text-white" />
+          </div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <ArrowUpRight className="h-4 w-4" />
+          </div>
+        </div>
+
+        <h3 className="mt-6 text-xl font-semibold leading-tight text-white">
+          {template.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-sm text-white/85">
+          {template.description}
+        </p>
+
+        <div className="mt-6 flex items-center gap-2 text-[11px] uppercase tracking-wider text-white/70">
+          <span>Assistant</span>
+          {template.tags[0] && (
+            <>
+              <span>·</span>
+              <span>{template.tags[0].name}</span>
+            </>
+          )}
+        </div>
       </div>
-
-      {/* Category Badge */}
-      <div className="mb-2">
-        <span className="inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur-sm">
-          {categoryLabels[template.category]}
-        </span>
-      </div>
-
-      {/* Title */}
-      <h3 className="mb-2 text-lg font-semibold text-white">
-        {template.title}
-      </h3>
-
-      {/* Description */}
-      <p className="mb-4 line-clamp-2 text-sm text-white/80">
-        {template.description}
-      </p>
-
-      {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-white/0 transition-colors group-hover:bg-white/5" />
-    </Card>
+    </button>
   );
 }

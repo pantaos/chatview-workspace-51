@@ -8,6 +8,13 @@ export interface CustomizableField {
   type: 'knowledge' | 'tone' | 'language' | 'integrations' | 'custom';
 }
 
+export interface TemplateVisibility {
+  scope: 'public' | 'tenants';
+  // When scope='public', tenants here are additionally force-allowed/highlighted.
+  // When scope='tenants', only these tenants can see the template.
+  tenantIds: string[];
+}
+
 export interface TemplateItem {
   id: string;
   title: string;
@@ -34,6 +41,9 @@ export interface TemplateItem {
   usageCount?: number;
   isNew?: boolean;
   isFeatured?: boolean;
+
+  // Super Admin distribution
+  visibility?: TemplateVisibility;
 }
 
 export const templateTags: WorkflowTag[] = [

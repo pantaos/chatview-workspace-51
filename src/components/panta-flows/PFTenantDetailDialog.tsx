@@ -250,21 +250,21 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
 
     if (activeTab === "billing") {
       const spentEur = (tenant.tokensUsed / 1000) * EUR_PER_1K_TOKENS;
-      const totalAllowedEur = planBudgetEur + (overageEnabled ? overageCapEur : 0);
+      const totalAllowedEur = planBudgetNum + (overageEnabled ? overageCapNum : 0);
       const spendPct = totalAllowedEur > 0 ? Math.min((spentEur / totalAllowedEur) * 100, 100) : 0;
       let statusText: string;
       let statusTone: "ok" | "warn" | "crit";
       if (spentEur >= totalAllowedEur && totalAllowedEur > 0) {
         statusText = "Hard limit reached — requests blocked";
         statusTone = "crit";
-      } else if (spentEur >= planBudgetEur && overageEnabled) {
-        statusText = `Using overage budget · ${formatEur(spentEur - planBudgetEur)} of ${formatEur(overageCapEur)} overage used`;
+      } else if (spentEur >= planBudgetNum && overageEnabled) {
+        statusText = `Using overage budget · ${formatEur(spentEur - planBudgetNum)} of ${formatEur(overageCapNum)} overage used`;
         statusTone = "warn";
-      } else if (spentEur >= planBudgetEur) {
+      } else if (spentEur >= planBudgetNum) {
         statusText = "Plan budget exceeded — enable overage to continue";
         statusTone = "crit";
       } else {
-        statusText = `Within plan budget · ${formatEur(planBudgetEur - spentEur)} remaining`;
+        statusText = `Within plan budget · ${formatEur(planBudgetNum - spentEur)} remaining`;
         statusTone = "ok";
       }
 
@@ -274,16 +274,16 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
             <Card className="p-4">
               <div className="text-xs text-muted-foreground mb-1">Spent this cycle</div>
               <div className="text-2xl font-semibold">{formatEur(spentEur)}</div>
-              <div className="text-xs text-muted-foreground mt-1">of {formatEur(planBudgetEur)} included</div>
+              <div className="text-xs text-muted-foreground mt-1">of {formatEur(planBudgetNum)} included</div>
             </Card>
             <Card className="p-4">
               <div className="text-xs text-muted-foreground mb-1">Plan budget</div>
-              <div className="text-2xl font-semibold">{formatEur(planBudgetEur)}</div>
+              <div className="text-2xl font-semibold">{formatEur(planBudgetNum)}</div>
               <div className="text-xs text-muted-foreground mt-1">{planName} plan</div>
             </Card>
             <Card className="p-4">
               <div className="text-xs text-muted-foreground mb-1">Overage cap</div>
-              <div className="text-2xl font-semibold">{overageEnabled ? formatEur(overageCapEur) : "—"}</div>
+              <div className="text-2xl font-semibold">{overageEnabled ? formatEur(overageCapNum) : "—"}</div>
               <div className="text-xs text-muted-foreground mt-1">{overageEnabled ? "extra allowed" : "disabled"}</div>
             </Card>
           </div>
@@ -316,7 +316,7 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end">
               <div>
                 <Label className="text-xs text-muted-foreground">Included budget (€)</Label>
-                <Input type="number" value={planBudgetEur} onChange={(e) => setPlanBudgetEur(Number(e.target.value))} className="mt-1" />
+                <Input type="number" min={0} value={planBudgetEur} onChange={(e) => setPlanBudgetEur(e.target.value === "" ? "" : Number(e.target.value))} className="mt-1" />
               </div>
               <Button onClick={() => sonnerToast.success("Plan saved")}>Save</Button>
             </div>
@@ -340,13 +340,13 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
             <div className={cn("grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end", !overageEnabled && "opacity-50 pointer-events-none")}>
               <div>
                 <Label className="text-xs text-muted-foreground">Max additional spend (€)</Label>
-                <Input type="number" value={overageCapEur} onChange={(e) => setOverageCapEur(Number(e.target.value))} className="mt-1" />
+                <Input type="number" min={0} value={overageCapEur} onChange={(e) => setOverageCapEur(e.target.value === "" ? "" : Number(e.target.value))} className="mt-1" />
               </div>
               <Button onClick={() => sonnerToast.success("Overage settings saved")}>Save</Button>
             </div>
             {overageEnabled && (
               <div className="text-xs text-muted-foreground">
-                Hard stop at {formatEur(planBudgetEur + overageCapEur)} total. Requests rejected after.
+                Hard stop at {formatEur(planBudgetNum + overageCapNum)} total. Requests rejected after.
               </div>
             )}
           </Card>

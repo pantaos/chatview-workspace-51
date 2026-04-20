@@ -191,11 +191,8 @@ const SearchSuggestions = ({
   return (
     <div
       ref={containerRef}
-      className="absolute left-0 right-0 top-full mt-2 z-50 bg-background border border-border/50 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+      className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-background/95 backdrop-blur-xl border border-border/40 rounded-xl shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
     >
-      <div className="px-3 py-2 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-border/50">
-        Vorschläge
-      </div>
       <ul className="py-1">
         {suggestions.map((item, idx) => {
           const isActive = idx === activeIndex;
@@ -206,19 +203,16 @@ const SearchSuggestions = ({
                 onMouseEnter={() => setActiveIndex(idx)}
                 onClick={() => onSelect(item)}
                 className={cn(
-                  "w-full flex items-center justify-between gap-3 px-3 py-2 text-left transition-colors",
-                  isActive ? "bg-muted" : "hover:bg-muted/60",
+                  "w-full flex items-center justify-between gap-3 px-3 py-1.5 text-left transition-colors",
+                  isActive ? "bg-muted/70" : "hover:bg-muted/40",
                 )}
               >
-                <span className="text-sm font-medium text-foreground truncate">
+                <span className="text-sm font-normal text-foreground truncate">
                   {item.title}
                 </span>
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] font-medium flex-shrink-0"
-                >
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground flex-shrink-0">
                   {typeLabel[item.type]}
-                </Badge>
+                </span>
               </button>
             </li>
           );

@@ -13,13 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
 import { toast } from "sonner";
-import { MiniApp, MiniAppPreview } from "@/components/app-builder/MiniApp";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { MiniAppPreview } from "@/components/app-builder/MiniApp";
 
 const STATUS_META: Record<CommunityApp["status"], { label: string; icon: typeof Clock; className: string }> = {
   pending: { label: "Pending review", icon: Clock, className: "bg-amber-500/10 text-amber-700 dark:text-amber-400" },
@@ -30,7 +24,6 @@ const STATUS_META: Record<CommunityApp["status"], { label: string; icon: typeof 
 export default function MyApps() {
   const navigate = useNavigate();
   const [apps, setApps] = useState<CommunityApp[]>([]);
-  const [openApp, setOpenApp] = useState<CommunityApp | null>(null);
 
   useEffect(() => {
     let stored: CommunityApp[] = [];

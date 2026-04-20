@@ -19,6 +19,10 @@ export const mockTenants: Tenant[] = [
     ],
     createdAt: "2025-09-15",
     status: "active",
+    planName: "Enterprise",
+    planBudgetEur: 250,
+    overageEnabled: true,
+    overageCapEur: 200,
   },
   {
     id: "2",
@@ -37,6 +41,10 @@ export const mockTenants: Tenant[] = [
     ],
     createdAt: "2025-11-02",
     status: "active",
+    planName: "Pro",
+    planBudgetEur: 50,
+    overageEnabled: true,
+    overageCapEur: 100,
   },
   {
     id: "3",
@@ -55,6 +63,10 @@ export const mockTenants: Tenant[] = [
     ],
     createdAt: "2025-08-20",
     status: "active",
+    planName: "Pro",
+    planBudgetEur: 50,
+    overageEnabled: false,
+    overageCapEur: 50,
   },
   {
     id: "4",
@@ -71,6 +83,10 @@ export const mockTenants: Tenant[] = [
     admins: [],
     createdAt: "2026-01-10",
     status: "inactive",
+    planName: "Starter",
+    planBudgetEur: 25,
+    overageEnabled: false,
+    overageCapEur: 0,
   },
 ];
 

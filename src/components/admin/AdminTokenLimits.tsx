@@ -116,47 +116,13 @@ const AdminTokenLimits = () => {
             Status: {status.text}
           </div>
 
-          <div className="pt-2 border-t border-border/40 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium text-sm">Allow spending beyond plan budget</div>
-                <div className="text-xs text-muted-foreground">
-                  When enabled, requests can continue past your included budget up to the overage cap
-                </div>
-              </div>
-              <Switch
-                checked={billing.overageEnabled}
-                onCheckedChange={v => {
-                  setBilling({ ...billing, overageEnabled: v });
-                  toast.success(`Overage ${v ? "enabled" : "disabled"}`);
-                }}
-              />
-            </div>
-
-            <div
-              className={cn(
-                "grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end",
-                !billing.overageEnabled && "opacity-50 pointer-events-none",
+          <div className="pt-2 border-t border-border/40">
+            <div className="text-xs text-muted-foreground">
+              Plan budget and overage cap are managed by your platform administrator.
+              {overageActive && (
+                <> Hard stop at {formatEur(billing.planBudgetEur + billing.overageCapEur)} total.</>
               )}
-            >
-              <div>
-                <Label className="text-xs text-muted-foreground">Max additional spend (€)</Label>
-                <Input
-                  type="number"
-                  value={billing.overageCapEur}
-                  onChange={e => setBilling({ ...billing, overageCapEur: Number(e.target.value) })}
-                  className="mt-1"
-                />
-              </div>
-              <Button onClick={saveOverage}>Save</Button>
             </div>
-
-            {billing.overageEnabled && (
-              <div className="text-xs text-muted-foreground">
-                Hard stop at {formatEur(billing.planBudgetEur + billing.overageCapEur)} total. Requests
-                rejected after.
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>

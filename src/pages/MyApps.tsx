@@ -85,7 +85,7 @@ export default function MyApps() {
                     className="group relative rounded-2xl border border-border/60 bg-card overflow-hidden hover:border-primary/40 hover:shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.25)] transition-all"
                   >
                     <button
-                      onClick={() => setOpenApp(app)}
+                      onClick={() => navigate(`/my-apps/${app.id}`)}
                       className="block w-full text-left p-4"
                     >
                       <div className="flex items-start gap-3 mb-3">
@@ -116,7 +116,7 @@ export default function MyApps() {
                         </span>
                       </div>
                       {app.status === "rejected" && app.rejectionReason && (
-                        <div className="text-xs text-red-600 dark:text-red-400 mt-2 line-clamp-2">
+                        <div className="text-xs text-destructive mt-2 line-clamp-2">
                           {app.rejectionReason}
                         </div>
                       )}
@@ -129,9 +129,9 @@ export default function MyApps() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setOpenApp(app)}>Open</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate(`/my-apps/${app.id}`)}>Open</DropdownMenuItem>
                           <DropdownMenuItem onClick={() => navigate("/app-builder")}>Resubmit</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(app.id)} className="text-red-600">
+                          <DropdownMenuItem onClick={() => handleDelete(app.id)} className="text-destructive">
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -145,31 +145,6 @@ export default function MyApps() {
         </div>
       </div>
 
-      <Dialog open={!!openApp} onOpenChange={(o) => !o && setOpenApp(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              {openApp && (() => {
-                const Icon =
-                  (LucideIcons[openApp.icon as keyof typeof LucideIcons] as React.ComponentType<{ className?: string }>) ||
-                  Sparkles;
-                return (
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-4 w-4" />
-                  </span>
-                );
-              })()}
-              {openApp?.title}
-            </DialogTitle>
-          </DialogHeader>
-          {openApp && (
-            <>
-              <p className="text-sm text-muted-foreground">{openApp.description}</p>
-              <MiniApp app={openApp} />
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </MainLayout>
   );
 }

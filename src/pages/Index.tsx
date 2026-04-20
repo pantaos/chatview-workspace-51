@@ -440,7 +440,7 @@ const Index = () => {
                       assistants={availableAssistants}
                       workflows={availableWorkflows}
                       conversational={availableConversationalWorkflows}
-                      skills={allSkills}
+                      skills={[]}
                       onSelect={handleSuggestionSelect}
                       onClose={() => setShowSuggestions(false)}
                     />

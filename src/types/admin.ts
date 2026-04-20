@@ -103,3 +103,39 @@ export interface NewTeamData {
   color: string;
   description?: string;
 }
+
+export type ModelCategory = 'text' | 'image';
+
+export interface ModelLimit {
+  id: string;
+  name: string;
+  category: ModelCategory;
+  enabled: boolean;
+  limit: number;
+  used: number;
+}
+
+export interface TeamModelAccess {
+  teamId: string;
+  teamName: string;
+  teamColor: string;
+  modelIds: string[];
+}
+
+export interface UserDailyLimit {
+  userId: string;
+  userName: string;
+  email: string;
+  limit: number;
+  usedToday: number;
+  isOverride: boolean;
+}
+
+export interface OrgTokenLimits {
+  globalLimit: number;
+  globalUsed: number;
+  totalRequests: number;
+  resetCycle: 'monthly' | 'custom';
+  userDailyLimitsEnabled: boolean;
+  defaultUserDailyLimit: number;
+}

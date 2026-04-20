@@ -132,6 +132,43 @@ const PFTemplateStore = () => {
         </div>
       </div>
 
+      {/* Pending Community Apps */}
+      {pendingApps.length > 0 && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Clock className="h-4 w-4 text-amber-600" />
+              Pending Apps
+              <Badge variant="outline" className="ml-1">{pendingApps.length}</Badge>
+            </h3>
+          </div>
+          <ul className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card overflow-hidden">
+            {pendingApps.map((app) => {
+              const AppIcon =
+                (LucideIcons[app.icon as keyof typeof LucideIcons] as React.ComponentType<{
+                  className?: string;
+                }>) || Sparkles;
+              return (
+                <li key={app.id} className="flex items-center gap-3 p-3">
+                  <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 text-primary flex items-center justify-center ring-1 ring-primary/10 shrink-0">
+                    <AppIcon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{app.title}</div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      by {app.submittedBy} · {new Date(app.submittedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" onClick={() => setReviewing(app)}>
+                    Review
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((t) => {
           const Icon =

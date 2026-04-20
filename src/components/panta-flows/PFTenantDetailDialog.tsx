@@ -236,6 +236,112 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
       );
     }
 
+    if (activeTab === "billing") {
+      const spentEur = (tenant.tokensUsed / 1000) * EUR_PER_1K_TOKENS;
+      const totalAllowedEur = planBudgetEur + (overageEnabled ? overageCapEur : 0);
+      const spendPct = totalAllowedEur > 0 ? Math.min((spentEur / totalAllowedEur) * 100, 100) : 0;
+      let statusText: string;
+      let statusTone: "ok" | "warn" | "crit";
+      if (spentEur >= totalAllowedEur && totalAllowedEur > 0) {
+        statusText = "Hard limit reached — requests blocked";
+        statusTone = "crit";
+      } else if (spentEur >= planBudgetEur && overageEnabled) {
+        statusText = `Using overage budget · ${formatEur(spentEur - planBudgetEur)} of ${formatEur(overageCapEur)} overage used`;
+        statusTone = "warn";
+      } else if (spentEur >= planBudgetEur) {
+        statusText = "Plan budget exceeded — enable overage to continue";
+        statusTone = "crit";
+      } else {
+        statusText = `Within plan budget · ${formatEur(planBudgetEur - spentEur)} remaining`;
+        statusTone = "ok";
+      }
+
+      return (
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground mb-1">Spent this cycle</div>
+              <div className="text-2xl font-semibold">{formatEur(spentEur)}</div>
+              <div className="text-xs text-muted-foreground mt-1">of {formatEur(planBudgetEur)} included</div>
+            </Card>
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground mb-1">Plan budget</div>
+              <div className="text-2xl font-semibold">{formatEur(planBudgetEur)}</div>
+              <div className="text-xs text-muted-foreground mt-1">{planName} plan</div>
+            </Card>
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground mb-1">Overage cap</div>
+              <div className="text-2xl font-semibold">{overageEnabled ? formatEur(overageCapEur) : "—"}</div>
+              <div className="text-xs text-muted-foreground mt-1">{overageEnabled ? "extra allowed" : "disabled"}</div>
+            </Card>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>{formatEur(spentEur)} of {formatEur(totalAllowedEur)} total allowed</span>
+              <span>{spendPct.toFixed(0)}%</span>
+            </div>
+            <Progress value={spendPct} className="h-2" indicatorClassName={usageColor(spendPct)} />
+          </div>
+
+          <div
+            className={cn(
+              "text-sm rounded-md px-3 py-2 border",
+              statusTone === "ok" && "bg-muted/30 border-border/40 text-foreground",
+              statusTone === "warn" && "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400",
+              statusTone === "crit" && "bg-destructive/10 border-destructive/30 text-destructive",
+            )}
+          >
+            Status: {statusText}
+          </div>
+
+          <Card className="p-4 space-y-3">
+            <h4 className="text-sm font-semibold">Plan</h4>
+            <div>
+              <Label className="text-xs text-muted-foreground">Plan name</Label>
+              <Input value={planName} onChange={(e) => setPlanName(e.target.value)} className="mt-1" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end">
+              <div>
+                <Label className="text-xs text-muted-foreground">Included budget (€)</Label>
+                <Input type="number" value={planBudgetEur} onChange={(e) => setPlanBudgetEur(Number(e.target.value))} className="mt-1" />
+              </div>
+              <Button onClick={() => sonnerToast.success("Plan saved")}>Save</Button>
+            </div>
+          </Card>
+
+          <Card className="p-4 space-y-3">
+            <h4 className="text-sm font-semibold">Overage</h4>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium text-sm">Allow spend beyond plan budget</div>
+                <div className="text-xs text-muted-foreground">When enabled, requests can continue past the plan budget up to the overage cap</div>
+              </div>
+              <Switch
+                checked={overageEnabled}
+                onCheckedChange={(v) => {
+                  setOverageEnabled(v);
+                  sonnerToast.success(`Overage ${v ? "enabled" : "disabled"}`);
+                }}
+              />
+            </div>
+            <div className={cn("grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end", !overageEnabled && "opacity-50 pointer-events-none")}>
+              <div>
+                <Label className="text-xs text-muted-foreground">Max additional spend (€)</Label>
+                <Input type="number" value={overageCapEur} onChange={(e) => setOverageCapEur(Number(e.target.value))} className="mt-1" />
+              </div>
+              <Button onClick={() => sonnerToast.success("Overage settings saved")}>Save</Button>
+            </div>
+            {overageEnabled && (
+              <div className="text-xs text-muted-foreground">
+                Hard stop at {formatEur(planBudgetEur + overageCapEur)} total. Requests rejected after.
+              </div>
+            )}
+          </Card>
+        </div>
+      );
+    }
+
     if (activeTab === "theme") {
       return (
         <div className="space-y-4">

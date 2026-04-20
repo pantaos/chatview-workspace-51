@@ -131,6 +131,15 @@ export interface UserDailyLimit {
   isOverride: boolean;
 }
 
+export interface OrgBilling {
+  planName: string;
+  planBudgetEur: number;
+  overageEnabled: boolean;
+  overageCapEur: number;
+  cycleStart: string;
+  cycleEnd: string;
+}
+
 export interface OrgTokenLimits {
   globalLimit: number;
   globalUsed: number;

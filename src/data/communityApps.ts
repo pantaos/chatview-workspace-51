@@ -52,6 +52,9 @@ export const seedCommunityApps: CommunityApp[] = [
       standardized: true,
     },
     demoType: "tracker",
+  },
+  {
+    id: "ca-meeting-recap",
     title: "Meeting Recap Composer",
     description: "Turns raw meeting notes into a clean recap with action items.",
     icon: "Notebook",

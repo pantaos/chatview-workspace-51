@@ -87,3 +87,5 @@ export const seedCommunityApps: CommunityApp[] = [
       standardized: false,
     },
     demoType: "dashboard",
+  },
+];

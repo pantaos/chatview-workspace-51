@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -82,11 +82,23 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   const [planName, setPlanName] = useState(tenant?.planName ?? "Pro");
-  const [planBudgetEur, setPlanBudgetEur] = useState(tenant?.planBudgetEur ?? 50);
+  const [planBudgetEur, setPlanBudgetEur] = useState<number | string>(tenant?.planBudgetEur ?? 50);
   const [overageEnabled, setOverageEnabled] = useState(tenant?.overageEnabled ?? false);
-  const [overageCapEur, setOverageCapEur] = useState(tenant?.overageCapEur ?? 0);
+  const [overageCapEur, setOverageCapEur] = useState<number | string>(tenant?.overageCapEur ?? 0);
+
+  useEffect(() => {
+    if (tenant) {
+      setPlanName(tenant.planName ?? "Pro");
+      setPlanBudgetEur(tenant.planBudgetEur ?? 50);
+      setOverageEnabled(tenant.overageEnabled ?? false);
+      setOverageCapEur(tenant.overageCapEur ?? 0);
+    }
+  }, [tenant?.id]);
 
   if (!tenant) return null;
+
+  const planBudgetNum = Number(planBudgetEur) || 0;
+  const overageCapNum = Number(overageCapEur) || 0;
 
   const pc = primaryColor || tenant.primaryColor;
   const ac = accentColor || tenant.accentColor;

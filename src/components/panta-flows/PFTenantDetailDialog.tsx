@@ -7,11 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tenant, PendingInvite } from "@/types/pantaFlows";
 import { toast } from "@/hooks/use-toast";
-import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X, Download, Trash2, Send, Pencil } from "lucide-react";
+import { Users, Coins, Activity, Plus, MessageSquare, Clock, Bot, Upload, X, Download, Trash2, Send, Pencil, Wallet } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
+import { EUR_PER_1K_TOKENS } from "@/data/billingData";
+import { cn } from "@/lib/utils";
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -53,9 +57,16 @@ const chartConfig = {
 
 const dialogTabs = [
   { id: "analytics", label: "Analytics" },
+  { id: "billing", label: "Billing" },
   { id: "theme", label: "Theme" },
   { id: "admins", label: "Admins" },
 ];
+
+const formatEur = (n: number) =>
+  new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" }).format(n);
+
+const usageColor = (pct: number) =>
+  pct >= 90 ? "bg-destructive" : pct >= 75 ? "bg-amber-500" : "bg-primary";
 
 const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDialogProps) => {
   const [activeTab, setActiveTab] = useState("analytics");
@@ -70,6 +81,10 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
+  const [planName, setPlanName] = useState(tenant?.planName ?? "Pro");
+  const [planBudgetEur, setPlanBudgetEur] = useState(tenant?.planBudgetEur ?? 50);
+  const [overageEnabled, setOverageEnabled] = useState(tenant?.overageEnabled ?? false);
+  const [overageCapEur, setOverageCapEur] = useState(tenant?.overageCapEur ?? 0);
 
   if (!tenant) return null;
 

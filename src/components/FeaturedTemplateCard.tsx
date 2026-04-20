@@ -1,41 +1,30 @@
 import { TemplateItem } from "@/data/templates";
 import { LucideIcon, ArrowUpRight } from "lucide-react";
 import * as LucideIcons from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface FeaturedTemplateCardProps {
   template: TemplateItem;
   onClick: () => void;
 }
 
-const accentGradients = [
-  "from-indigo-500 via-blue-500 to-cyan-500",
-  "from-fuchsia-500 via-purple-500 to-indigo-500",
-  "from-amber-500 via-orange-500 to-rose-500",
-  "from-emerald-500 via-teal-500 to-cyan-500",
-];
-
-function pickGradient(id: string) {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
-  return accentGradients[hash % accentGradients.length];
-}
-
 export function FeaturedTemplateCard({ template, onClick }: FeaturedTemplateCardProps) {
+  const { theme } = useTheme();
   const IconComponent =
     (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) ||
     LucideIcons.Sparkles;
-  const gradient = pickGradient(template.id);
 
   return (
     <button
       onClick={onClick}
       className="group relative min-w-[78vw] md:min-w-[320px] max-w-[360px] flex-shrink-0 snap-start overflow-hidden rounded-3xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+      style={{
+        background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+      }}
     >
-      {/* Gradient base */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
-      {/* Soft noise / depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_0%,rgba(255,255,255,0.25),transparent_60%)]" />
-      <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+      {/* Soft depth highlights */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_0%,rgba(255,255,255,0.22),transparent_60%)]" />
+      <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
 
       <div className="relative p-6">
         <div className="flex items-center justify-between">

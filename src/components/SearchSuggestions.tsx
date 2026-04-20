@@ -198,8 +198,6 @@ const SearchSuggestions = ({
       </div>
       <ul className="py-1">
         {suggestions.map((item, idx) => {
-          const Icon = item.icon;
-          const TypeIcon = typeIcon[item.type];
           const isActive = idx === activeIndex;
           return (
             <li key={`${item.type}-${item.id}`}>
@@ -208,26 +206,17 @@ const SearchSuggestions = ({
                 onMouseEnter={() => setActiveIndex(idx)}
                 onClick={() => onSelect(item)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors",
+                  "w-full flex items-center justify-between gap-3 px-3 py-2 text-left transition-colors",
                   isActive ? "bg-muted" : "hover:bg-muted/60",
                 )}
               >
-                <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-foreground truncate">
-                    {item.title}
-                  </div>
-                  <div className="text-xs text-muted-foreground truncate">
-                    {item.description}
-                  </div>
-                </div>
+                <span className="text-sm font-medium text-foreground truncate">
+                  {item.title}
+                </span>
                 <Badge
                   variant="secondary"
-                  className="flex items-center gap-1 text-[10px] font-medium flex-shrink-0"
+                  className="text-[10px] font-medium flex-shrink-0"
                 >
-                  <TypeIcon className="h-3 w-3" />
                   {typeLabel[item.type]}
                 </Badge>
               </button>

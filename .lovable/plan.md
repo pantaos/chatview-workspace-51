@@ -1,36 +1,33 @@
 
-## Smart Workflow/Skill-Vorschläge unter dem Dashboard-Chat
+## Sleeker Suggestion Items + Feature Request Note
 
-Wenn der User im Dashboard-Suchfeld tippt, sollen passende Workflows, Assistenten und Skills als sleek Vorschlags-Chips direkt unter dem Eingabefeld erscheinen — ähnlich wie bei einer Spotlight-/Command-K-Suche.
+Make the suggestion rows in `SearchSuggestions.tsx` minimal: just the title and a small type badge. Description is hidden visually but still searched against.
 
-### Verhalten
+### Changes to `src/components/SearchSuggestions.tsx`
 
-- Sobald der User mindestens 2 Zeichen eingibt, erscheint ein Vorschlags-Panel **direkt unter** der Suchleiste (floating, gleiche Breite wie Suchleiste)
-- Fuzzy-Match gegen: `availableWorkflows` (Titel, Beschreibung), `availableAssistants` (Titel), `availableConversationalWorkflows` (Titel) und `allSkills` (Name, Beschreibung, Trigger-Phrasen)
-- Max. 5 Treffer, gruppiert nach Typ (Assistent / Workflow / Skill) mit kleinen Typ-Badges
-- Jeder Vorschlag zeigt: Icon links, Titel, kurze Beschreibung, Typ-Badge rechts
-- Klick auf Vorschlag öffnet das jeweilige Item (Workflow/Assistent: gleiche Logik wie Karten-Klick; Skill: öffnet Chat mit pre-filled Skill)
-- Schließt bei Escape, Klick außerhalb oder leerem Input
-- Tastatur-Navigation: ↑/↓ zum Auswählen, Enter zum Öffnen
-- Modernes Design: weißer Hintergrund, weicher Schatten, abgerundete Ecken (rounded-2xl), subtile Hover-States, gleiche visuelle Sprache wie SearchChat
+- Remove the leading icon block (no `Icon` circle on the left).
+- Remove the description line from the rendered row.
+- Keep matching logic unchanged — title AND description are still fuzzy-matched.
+- Tighten row padding (`py-2` instead of `py-2.5`) and use a single-line layout: title left, type badge right.
+- Keep the small "Vorschläge" header, rounded-2xl panel, hover/active state, keyboard nav.
 
-### Technische Umsetzung
+Resulting row:
+```text
+┌─────────────────────────────────────────────┐
+│  Trendcast Generator              [Workflow]│
+│  Email Draft                      [Skill]   │
+└─────────────────────────────────────────────┘
+```
 
-**Neue Komponente** `src/components/SearchSuggestions.tsx`:
-- Props: `query: string`, `workflows`, `assistants`, `conversational`, `skills`, `onSelect(item, type)`
-- Eigene Match-Funktion (case-insensitive substring + Trigger-Phrase-Match für Skills)
-- Rendert Liste mit Icons aus `lucide-react` (passend zum Item-Typ)
+### Feature Request Note (English)
 
-**Änderung in `src/pages/Index.tsx`**:
-- Wrapper um `SearchChat` mit `relative`-Position
-- `SearchSuggestions` floating darunter wenn `searchInput.length >= 2` und nicht im Chat-Modus
-- `onSelect`-Handler nutzt vorhandene `handleWorkflowClick` bzw. öffnet Chat mit Skill-Trigger
+Append a short feature request to the end of the chat reply (plain English, not in code):
 
-**Keine Änderung an `SearchChat.tsx`** — Vorschläge sind separates Overlay im Parent, damit die bestehende Slash-Command-Autocomplete im Chat unverändert bleibt.
+> **Feature Request — Smart Suggestion Ranking**
+> Right now suggestions match by simple substring on title + description. Next iteration should rank results by: (1) recency of use, (2) match position (title hits beat description hits), (3) user pin/favorite status. Also consider showing a "no matches — create new workflow?" CTA when query length ≥ 3 returns zero results.
 
-### Dateien
+### Files
 
-| Datei | Änderung |
+| File | Change |
 |------|--------|
-| `src/components/SearchSuggestions.tsx` | Neu |
-| `src/pages/Index.tsx` | Suggestions-Overlay unter SearchChat, State für Input + Outside-Click-Handler |
+| `src/components/SearchSuggestions.tsx` | Remove icon + description from row, tighten layout, keep description in match logic |

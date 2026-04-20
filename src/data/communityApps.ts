@@ -11,10 +11,18 @@ export interface CommunityAppReviewSummary {
   standardized: boolean;
 }
 
+export interface CommunityAppLink {
+  label: string;
+  url: string;
+}
+
 export interface CommunityApp {
   id: string;
   title: string;
   description: string;
+  longDescription?: string;
+  screenshots?: string[]; // data URLs or remote URLs
+  links?: CommunityAppLink[];
   icon: string;
   tags: WorkflowTag[];
   submittedBy: string;

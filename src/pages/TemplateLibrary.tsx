@@ -102,7 +102,7 @@ export default function TemplateLibrary() {
       <div className="flex-1 overflow-auto">
         <div className="container max-w-6xl mx-auto py-8 px-4 md:px-6">
           {/* Header */}
-          <div className="mb-8 flex items-end justify-between gap-4">
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-3">
                 <Sparkles className="h-3 w-3" />
@@ -112,9 +112,13 @@ export default function TemplateLibrary() {
                 Discover assistants
               </h1>
               <p className="text-muted-foreground mt-2 max-w-xl">
-                Curated, ready-to-use AI assistants. Pick one, personalize it, ship it.
+                Curated AI assistants and community-built apps. Pick one, personalize it, ship it.
               </p>
             </div>
+            <Button onClick={() => navigate("/app-builder")} variant="outline" className="shrink-0">
+              <Users className="h-4 w-4 mr-2" />
+              Build an app
+            </Button>
           </div>
 
           {/* Featured rail */}
@@ -175,6 +179,20 @@ export default function TemplateLibrary() {
                   {tag.name}
                 </button>
               ))}
+              {community.length > 0 && (
+                <button
+                  onClick={() => setSelectedTag(COMMUNITY_CATEGORY)}
+                  className={cn(
+                    "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border inline-flex items-center gap-1.5",
+                    selectedTag === COMMUNITY_CATEGORY
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
+                  )}
+                >
+                  <Users className="h-3 w-3" />
+                  Community Apps
+                </button>
+              )}
             </div>
           </div>
 
@@ -189,7 +207,12 @@ export default function TemplateLibrary() {
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filtered.map((t) => (
-                  <TemplateCard key={t.id} template={t} onClick={() => handleClick(t)} />
+                  <TemplateCard
+                    key={t.id}
+                    template={t}
+                    onClick={() => handleClick(t)}
+                    isCommunity={(t as any).__community === true}
+                  />
                 ))}
               </div>
             ) : (

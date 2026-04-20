@@ -398,9 +398,9 @@ const Index = () => {
       ) : (
         <MainLayout>
           <div className="max-w-5xl mx-auto">
-            {/* Dashboard Hero Gradient */}
+            {/* Dashboard Hero Gradient — kompakt, zentriert */}
             <div 
-              className="rounded-b-3xl px-8 pt-10 pb-8 mb-8 -mx-0 relative overflow-hidden"
+              className="rounded-b-3xl px-8 pt-12 pb-10 mb-8 relative overflow-hidden"
               style={{
                 background: theme.backgroundImage
                   ? undefined
@@ -417,95 +417,77 @@ const Index = () => {
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
                 </>
               )}
-              <div className="relative z-10">
-                <div className={`flex ${isMobile ? 'flex-col' : 'gap-8'}`}>
-                  {/* Left: Greeting + Search + Tags */}
-                  <div className="flex-1">
-                    <h1 className="text-3xl font-bold text-white text-center mb-2">Wie kann ich dir helfen, Arian?</h1>
-                    
-                    {/* Search */}
-                    <div className="mb-6 mt-6 relative">
-                      <SearchChat 
-                        value={searchQuery}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value);
-                          setShowSuggestions(true);
-                        }}
-                        onSubmit={handleSearchSubmit}
-                        disableNavigation={true}
-                        title=""
-                        placeholder="Fasse die..."
-                      />
-                      {showSuggestions && !searchQuery.startsWith("/") && (
-                        <SearchSuggestions
-                          query={searchQuery}
-                          assistants={availableAssistants}
-                          workflows={availableWorkflows}
-                          conversational={availableConversationalWorkflows}
-                          skills={allSkills}
-                          onSelect={handleSuggestionSelect}
-                          onClose={() => setShowSuggestions(false)}
-                        />
-                      )}
-                    </div>
+              <div className="relative z-10 max-w-3xl mx-auto">
+                <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
+                  Wie kann ich dir helfen, Arian?
+                </h1>
 
-                    {/* Tag Filter Section */}
-                    <div>
-                      <h3 className="text-sm font-medium text-white/80 mb-3">Nach Tags filtern</h3>
-                      <div className="flex flex-wrap gap-2 items-center">
-                        {defaultTags.map((tag) => {
-                          const isSelected = selectedTags.includes(tag.id);
-                          return (
-                            <Badge
-                              key={tag.id}
-                              variant={isSelected ? "default" : "secondary"}
-                              className={`cursor-pointer transition-all ${
-                                isSelected 
-                                  ? "bg-white text-primary hover:bg-white/90" 
-                                  : "bg-white/20 text-white border-white/30 hover:bg-white/30"
-                              }`}
-                              onClick={() => 
-                                isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
-                              }
-                            >
-                              <div 
-                                className="w-2 h-2 rounded-full mr-2"
-                                style={{ backgroundColor: isSelected ? theme.primaryColor : tag.color }}
-                              />
-                              {tag.name}
-                            </Badge>
-                          );
-                        })}
-                        <Badge
-                          variant="outline"
-                          className="cursor-pointer transition-colors bg-white/10 text-white border-white/30 hover:bg-white/20"
-                          onClick={() => setShowManageTagsDialog(true)}
-                        >
-                          <Plus className="h-3 w-3 mr-1" />
-                          + Tag hinzufuegen
-                        </Badge>
-                        {selectedTags.length > 0 && (
-                          <button 
-                            onClick={handleClearAllTags}
-                            className="text-xs text-white/60 hover:text-white ml-2"
-                          >
-                            Alle entfernen
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right: Calendar Preview */}
-                  {!isMobile && (
-                    <div className="w-[340px] flex-shrink-0">
-                      <CalendarPreview />
-                    </div>
+                <div className="relative">
+                  <SearchChat 
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onSubmit={handleSearchSubmit}
+                    disableNavigation={true}
+                    title=""
+                    placeholder="Fasse die..."
+                  />
+                  {showSuggestions && !searchQuery.startsWith("/") && (
+                    <SearchSuggestions
+                      query={searchQuery}
+                      assistants={availableAssistants}
+                      workflows={availableWorkflows}
+                      conversational={availableConversationalWorkflows}
+                      skills={allSkills}
+                      onSelect={handleSuggestionSelect}
+                      onClose={() => setShowSuggestions(false)}
+                    />
                   )}
                 </div>
+              </div>
+            </div>
 
-                {/* Calendar below on mobile */}
-                {isMobile && <CalendarPreview />}
+            {/* Tag Filter — auf Standard-Hintergrund */}
+            <div className="px-8 mb-8">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Nach Tags filtern</h3>
+              <div className="flex flex-wrap gap-2 items-center">
+                {defaultTags.map((tag) => {
+                  const isSelected = selectedTags.includes(tag.id);
+                  return (
+                    <Badge
+                      key={tag.id}
+                      variant={isSelected ? "default" : "secondary"}
+                      className="cursor-pointer transition-all"
+                      onClick={() => 
+                        isSelected ? handleTagRemove(tag.id) : handleTagSelect(tag.id)
+                      }
+                    >
+                      <div 
+                        className="w-2 h-2 rounded-full mr-2"
+                        style={{ backgroundColor: tag.color }}
+                      />
+                      {tag.name}
+                    </Badge>
+                  );
+                })}
+                <Badge
+                  variant="outline"
+                  className="cursor-pointer transition-colors"
+                  onClick={() => setShowManageTagsDialog(true)}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Tag hinzufügen
+                </Badge>
+                {selectedTags.length > 0 && (
+                  <button 
+                    onClick={handleClearAllTags}
+                    className="text-xs text-muted-foreground hover:text-foreground ml-2"
+                  >
+                    Alle entfernen
+                  </button>
+                )}
               </div>
             </div>
 

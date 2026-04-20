@@ -6,6 +6,7 @@ import PFTenants from "@/components/panta-flows/PFTenants";
 import PFAssistantsWorkflows from "@/components/panta-flows/PFAssistantsWorkflows";
 import PFCommunityPosts from "@/components/panta-flows/PFCommunityPosts";
 import PFKonfiguration from "@/components/panta-flows/PFKonfiguration";
+import PFTemplateStore from "@/components/panta-flows/PFTemplateStore";
 
 const PantaFlows = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -14,6 +15,7 @@ const PantaFlows = () => {
     { id: "dashboard", label: "Dashboard", shortLabel: "Dashboard" },
     { id: "tenants", label: "Tenants", shortLabel: "Tenants" },
     { id: "assistants", label: "Assistenten & Workflows", shortLabel: "Apps" },
+    { id: "templates", label: "Template Store", shortLabel: "Templates" },
     { id: "config", label: "Konfiguration", shortLabel: "Konfig." },
     { id: "posts", label: "Community Posts", shortLabel: "Posts" },
   ];
@@ -43,6 +45,7 @@ const PantaFlows = () => {
           <TabsContent value="dashboard" className="mt-0"><PFDashboard /></TabsContent>
           <TabsContent value="tenants" className="mt-0"><PFTenants /></TabsContent>
           <TabsContent value="assistants" className="mt-0"><PFAssistantsWorkflows /></TabsContent>
+          <TabsContent value="templates" className="mt-0"><PFTemplateStore /></TabsContent>
           <TabsContent value="config" className="mt-0"><PFKonfiguration /></TabsContent>
           <TabsContent value="posts" className="mt-0"><PFCommunityPosts /></TabsContent>
         </Tabs>

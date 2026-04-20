@@ -27,6 +27,10 @@ export interface Tenant {
   admins: TenantAdmin[];
   createdAt: string;
   status: 'active' | 'inactive';
+  planName: string;
+  planBudgetEur: number;
+  overageEnabled: boolean;
+  overageCapEur: number;
 }
 
 export interface TenantAssignment {

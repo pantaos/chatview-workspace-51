@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/MainLayout";
 import { Input } from "@/components/ui/input";
@@ -7,9 +7,33 @@ import { TemplateCard } from "@/components/TemplateCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
 import { templates, templateTags, TemplateItem } from "@/data/templates";
-import { Search, Sparkles } from "lucide-react";
+import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
+import { Search, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
+const COMMUNITY_CATEGORY = "__community__";
+
+function communityAppToTemplate(app: CommunityApp): TemplateItem & { __community: true; submittedBy: string } {
+  return {
+    id: app.id,
+    title: app.title,
+    description: app.description,
+    icon: app.icon,
+    tags: app.tags,
+    category: "app",
+    screenshots: [],
+    useCases: [],
+    features: ["Built and submitted by a community member", "Standardized to platform style"],
+    customizable: [],
+    systemPrompt: "",
+    suggestedIntegrations: [],
+    starters: [],
+    visibility: app.visibility,
+    __community: true,
+    submittedBy: app.submittedBy,
+  };
+}
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
@@ -18,25 +42,38 @@ export default function TemplateLibrary() {
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [communityApps, setCommunityApps] = useState<CommunityApp[]>([]);
 
-  // Assistants only
+  useEffect(() => {
+    let stored: CommunityApp[] = [];
+    try {
+      stored = JSON.parse(localStorage.getItem("communityApps") || "[]");
+    } catch {}
+    setCommunityApps([...stored, ...seedCommunityApps].filter((a) => a.status === "approved"));
+  }, []);
+
   const assistants = useMemo(
     () => templates.filter((t) => t.category === "assistant"),
     []
   );
 
+  const community = useMemo(() => communityApps.map(communityAppToTemplate), [communityApps]);
+
+  const all = useMemo(() => [...assistants, ...community], [assistants, community]);
+
   const filtered = useMemo(() => {
-    return assistants.filter((t) => {
+    return all.filter((t) => {
       const q = searchQuery.toLowerCase();
       const matchSearch =
         q === "" ||
         t.title.toLowerCase().includes(q) ||
         t.description.toLowerCase().includes(q) ||
         t.useCases.some((u) => u.toLowerCase().includes(q));
-      const matchTag = selectedTag === "all" || t.tags.some((tag) => tag.id === selectedTag);
-      return matchSearch && matchTag;
+      if (selectedTag === "all") return matchSearch;
+      if (selectedTag === COMMUNITY_CATEGORY) return matchSearch && (t as any).__community === true;
+      return matchSearch && t.tags.some((tag) => tag.id === selectedTag);
     });
-  }, [assistants, searchQuery, selectedTag]);
+  }, [all, searchQuery, selectedTag]);
 
   const featured = useMemo(() => assistants.filter((t) => t.isFeatured), [assistants]);
 
@@ -57,8 +94,7 @@ export default function TemplateLibrary() {
     setSelectedTag("all");
   };
 
-  // Visible tags = only ones used by at least one assistant
-  const usedTagIds = new Set(assistants.flatMap((a) => a.tags.map((t) => t.id)));
+  const usedTagIds = new Set(all.flatMap((a) => a.tags.map((t) => t.id)));
   const visibleTags = templateTags.filter((t) => usedTagIds.has(t.id));
 
   return (

@@ -9,6 +9,7 @@ import { DetailsStep } from "@/components/app-builder/DetailsStep";
 import { ReviewStep } from "@/components/app-builder/ReviewStep";
 import { PreviewStep } from "@/components/app-builder/PreviewStep";
 import { templateTags } from "@/data/templates";
+import { DEMO_TEMPLATES, DemoAppType } from "@/data/communityApps";
 import { toast } from "sonner";
 
 const STEPS = ["Upload", "Details", "AI Review", "Preview"] as const;
@@ -18,14 +19,27 @@ export default function AppBuilder() {
   const [step, setStep] = useState(0);
 
   const [file, setFile] = useState<File | null>(null);
+  const [demoActive, setDemoActive] = useState(false);
+  const [demoType, setDemoType] = useState<DemoAppType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [icon, setIcon] = useState("Sparkles");
   const [reviewDone, setReviewDone] = useState(false);
 
+  const useDemo = () => {
+    const sample = DEMO_TEMPLATES[Math.floor(Math.random() * DEMO_TEMPLATES.length)];
+    setDemoActive(true);
+    setDemoType(sample.type);
+    setTitle(sample.title);
+    setDescription(sample.description);
+    setIcon(sample.icon);
+    setSelectedTagIds([sample.tagId]);
+    toast.success("Demo data loaded", { description: `Sample app "${sample.title}" prefilled.` });
+  };
+
   const canNext =
-    (step === 0 && !!file) ||
+    (step === 0 && (!!file || demoActive)) ||
     (step === 1 && title.trim().length > 1 && description.trim().length > 1) ||
     (step === 2 && reviewDone) ||
     step === 3;
@@ -41,13 +55,14 @@ export default function AppBuilder() {
       submittedBy: "You",
       submittedAt: new Date().toISOString(),
       status: "pending" as const,
-      fileName: file?.name ?? "app.zip",
+      fileName: file?.name ?? (demoActive ? "demo-app.zip" : "app.zip"),
       reviewSummary: {
         framework: "React + Vite",
         hasBackend: true,
         detectedColors: ["#5673eb"],
         standardized: true,
       },
+      ...(demoType ? { demoType } : {}),
     };
     try {
       const existing = JSON.parse(localStorage.getItem("communityApps") || "[]");
@@ -87,7 +102,7 @@ export default function AppBuilder() {
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6">
-            {step === 0 && <UploadStep file={file} onFileChange={setFile} />}
+            {step === 0 && <UploadStep file={file} onFileChange={setFile} onUseDemo={useDemo} demoActive={demoActive} />}
             {step === 1 && (
               <DetailsStep
                 title={title}

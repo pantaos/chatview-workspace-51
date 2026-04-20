@@ -196,24 +196,6 @@ const AdminTokenLimits = () => {
             </div>
             <Button onClick={saveOrg}>Save</Button>
           </div>
-
-          <div>
-            <Label className="text-xs text-muted-foreground mb-2 block">Reset cycle</Label>
-            <RadioGroup
-              value={org.resetCycle}
-              onValueChange={v => setOrg({ ...org, resetCycle: v as 'monthly' | 'custom' })}
-              className="flex gap-6"
-            >
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="monthly" id="monthly" />
-                <Label htmlFor="monthly" className="cursor-pointer">Monthly</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="custom" id="custom" />
-                <Label htmlFor="custom" className="cursor-pointer">Custom</Label>
-              </div>
-            </RadioGroup>
-          </div>
         </CardContent>
       </Card>
 

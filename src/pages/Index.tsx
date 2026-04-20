@@ -37,6 +37,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import CalendarPreview from "@/components/CalendarPreview";
 import AssistantCreatorWizard from "@/components/AssistantCreatorWizard";
+import SearchSuggestions, { type SuggestionItem } from "@/components/SearchSuggestions";
+import { allSkills } from "@/data/skillsData";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -194,9 +196,27 @@ const Index = () => {
   const [currentWorkflow, setCurrentWorkflow] = useState<WorkflowItem | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  const [showSuggestions, setShowSuggestions] = useState(true);
+
   const handleSearchSubmit = (text: string, files: File[]) => {
     setCurrentWorkflow(availableAssistants[0]);
     setShowChat(true);
+  };
+
+  const handleSuggestionSelect = (item: SuggestionItem) => {
+    setShowSuggestions(false);
+    setSearchQuery("");
+    if (item.type === "skill") {
+      const skill = item.raw as typeof allSkills[number];
+      setCurrentWorkflow(availableAssistants[0]);
+      setShowChat(true);
+      // Pre-fill via skill trigger; ChatInterface handles slash commands
+      const trigger = skill.triggers.slashCommand || skill.triggers.phrases[0] || skill.name;
+      // Use a microtask so chat mounts before we surface the trigger
+      setTimeout(() => toast.info(`Skill "${skill.name}" ausgewählt: ${trigger}`), 50);
+      return;
+    }
+    handleWorkflowClick(item.raw as WorkflowItem);
   };
 
   const handleCloseChat = () => {
@@ -404,15 +424,29 @@ const Index = () => {
                     <h1 className="text-3xl font-bold text-white text-center mb-2">Wie kann ich dir helfen, Arian?</h1>
                     
                     {/* Search */}
-                    <div className="mb-6 mt-6">
+                    <div className="mb-6 mt-6 relative">
                       <SearchChat 
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setShowSuggestions(true);
+                        }}
                         onSubmit={handleSearchSubmit}
                         disableNavigation={true}
                         title=""
                         placeholder="Fasse die..."
                       />
+                      {showSuggestions && !searchQuery.startsWith("/") && (
+                        <SearchSuggestions
+                          query={searchQuery}
+                          assistants={availableAssistants}
+                          workflows={availableWorkflows}
+                          conversational={availableConversationalWorkflows}
+                          skills={allSkills}
+                          onSelect={handleSuggestionSelect}
+                          onClose={() => setShowSuggestions(false)}
+                        />
+                      )}
                     </div>
 
                     {/* Tag Filter Section */}

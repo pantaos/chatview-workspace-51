@@ -196,9 +196,27 @@ const Index = () => {
   const [currentWorkflow, setCurrentWorkflow] = useState<WorkflowItem | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  const [showSuggestions, setShowSuggestions] = useState(true);
+
   const handleSearchSubmit = (text: string, files: File[]) => {
     setCurrentWorkflow(availableAssistants[0]);
     setShowChat(true);
+  };
+
+  const handleSuggestionSelect = (item: SuggestionItem) => {
+    setShowSuggestions(false);
+    setSearchQuery("");
+    if (item.type === "skill") {
+      const skill = item.raw as typeof allSkills[number];
+      setCurrentWorkflow(availableAssistants[0]);
+      setShowChat(true);
+      // Pre-fill via skill trigger; ChatInterface handles slash commands
+      const trigger = skill.triggers.slashCommand || skill.triggers.phrases[0] || skill.name;
+      // Use a microtask so chat mounts before we surface the trigger
+      setTimeout(() => toast.info(`Skill "${skill.name}" ausgewählt: ${trigger}`), 50);
+      return;
+    }
+    handleWorkflowClick(item.raw as WorkflowItem);
   };
 
   const handleCloseChat = () => {

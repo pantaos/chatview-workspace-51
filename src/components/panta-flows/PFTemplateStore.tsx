@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/responsive-dialog";
 import { templates as seedTemplates, TemplateItem, TemplateVisibility } from "@/data/templates";
 import { mockTenants } from "@/data/pantaFlowsData";
-import { Globe, Users, Search, Sparkles, Pencil } from "lucide-react";
+import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
+import { Globe, Users, Search, Sparkles, Pencil, Clock, Check, X } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 const defaultVisibility = (): TemplateVisibility => ({ scope: "public", tenantIds: [] });
 
@@ -30,6 +32,47 @@ const PFTemplateStore = () => {
   const [editing, setEditing] = useState<TemplateItem | null>(null);
   const [editScope, setEditScope] = useState<TemplateVisibility["scope"]>("public");
   const [editTenantIds, setEditTenantIds] = useState<string[]>([]);
+
+  // Pending community apps awaiting review
+  const [pendingApps, setPendingApps] = useState<CommunityApp[]>(() =>
+    seedCommunityApps.filter((a) => a.status === "pending")
+  );
+  const [reviewing, setReviewing] = useState<CommunityApp | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rejectMode, setRejectMode] = useState(false);
+
+  const approveApp = (app: CommunityApp) => {
+    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
+    const asTemplate: TemplateItem = {
+      id: app.id,
+      title: app.title,
+      description: app.description,
+      icon: app.icon,
+      tags: app.tags,
+      category: "app",
+      screenshots: [],
+      useCases: [],
+      features: ["Community-built app"],
+      customizable: [],
+      systemPrompt: "",
+      suggestedIntegrations: [],
+      starters: [],
+      visibility: defaultVisibility(),
+    };
+    setItems((prev) => [asTemplate, ...prev]);
+    toast.success(`Approved "${app.title}"`);
+    setReviewing(null);
+    setRejectMode(false);
+    setRejectReason("");
+  };
+
+  const rejectApp = (app: CommunityApp, reason: string) => {
+    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
+    toast.success(`Rejected "${app.title}"`, { description: reason });
+    setReviewing(null);
+    setRejectMode(false);
+    setRejectReason("");
+  };
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
@@ -88,6 +131,43 @@ const PFTemplateStore = () => {
           />
         </div>
       </div>
+
+      {/* Pending Community Apps */}
+      {pendingApps.length > 0 && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Clock className="h-4 w-4 text-amber-600" />
+              Pending Apps
+              <Badge variant="outline" className="ml-1">{pendingApps.length}</Badge>
+            </h3>
+          </div>
+          <ul className="divide-y divide-border/50 rounded-xl border border-border/50 bg-card overflow-hidden">
+            {pendingApps.map((app) => {
+              const AppIcon =
+                (LucideIcons[app.icon as keyof typeof LucideIcons] as React.ComponentType<{
+                  className?: string;
+                }>) || Sparkles;
+              return (
+                <li key={app.id} className="flex items-center gap-3 p-3">
+                  <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 text-primary flex items-center justify-center ring-1 ring-primary/10 shrink-0">
+                    <AppIcon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{app.title}</div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      by {app.submittedBy} · {new Date(app.submittedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" onClick={() => setReviewing(app)}>
+                    Review
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((t) => {
@@ -260,6 +340,108 @@ const PFTemplateStore = () => {
                 </Button>
               </div>
             </div>
+          </ResponsiveDialogContent>
+        </ResponsiveDialogBody>
+      </ResponsiveDialog>
+
+      {/* Review pending app */}
+      <ResponsiveDialog
+        open={!!reviewing}
+        onOpenChange={(o) => {
+          if (!o) {
+            setReviewing(null);
+            setRejectMode(false);
+            setRejectReason("");
+          }
+        }}
+        title={reviewing ? `Review · ${reviewing.title}` : ""}
+      >
+        <ResponsiveDialogBody>
+          <ResponsiveDialogContent>
+            {reviewing && (
+              <div className="space-y-5">
+                <div className="flex items-start gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary flex items-center justify-center ring-1 ring-primary/10 shrink-0">
+                    {(() => {
+                      const Icon =
+                        (LucideIcons[reviewing.icon as keyof typeof LucideIcons] as React.ComponentType<{
+                          className?: string;
+                        }>) || Sparkles;
+                      return <Icon className="h-5 w-5" />;
+                    })()}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-semibold">{reviewing.title}</div>
+                    <div className="text-sm text-muted-foreground">{reviewing.description}</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Submitted by {reviewing.submittedBy} ·{" "}
+                      {new Date(reviewing.submittedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-muted/30 p-4 space-y-2 text-sm">
+                  <div className="flex justify-between"><span className="text-muted-foreground">File</span><span className="font-medium">{reviewing.fileName}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Framework</span><span className="font-medium">{reviewing.reviewSummary.framework}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Backend</span><span className="font-medium">{reviewing.reviewSummary.hasBackend ? "Yes" : "No"}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Standardized</span><span className="font-medium text-emerald-600">{reviewing.reviewSummary.standardized ? "Yes" : "No"}</span></div>
+                </div>
+
+                {/* Mock preview */}
+                <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+                  <div className="flex h-28">
+                    <div className="w-10 bg-primary/10 flex flex-col items-center gap-2 py-2">
+                      <div className="h-5 w-5 rounded-md bg-primary" />
+                      <div className="h-1.5 w-5 rounded-full bg-muted-foreground/30" />
+                      <div className="h-1.5 w-5 rounded-full bg-muted-foreground/30" />
+                    </div>
+                    <div className="flex-1 p-3 space-y-2">
+                      <div className="text-[11px] font-semibold">{reviewing.title}</div>
+                      <div className="h-1.5 w-full rounded-full bg-muted-foreground/15" />
+                      <div className="h-1.5 w-2/3 rounded-full bg-muted-foreground/15" />
+                    </div>
+                  </div>
+                </div>
+
+                {rejectMode ? (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Rejection reason</label>
+                    <Textarea
+                      value={rejectReason}
+                      onChange={(e) => setRejectReason(e.target.value)}
+                      placeholder="Explain why this app can't be approved..."
+                      rows={3}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-border/40">
+                  {rejectMode ? (
+                    <>
+                      <Button variant="outline" onClick={() => { setRejectMode(false); setRejectReason(""); }}>
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        disabled={rejectReason.trim().length < 3}
+                        onClick={() => rejectApp(reviewing, rejectReason.trim())}
+                      >
+                        <X className="h-4 w-4 mr-1" /> Confirm reject
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" onClick={() => setRejectMode(true)}>
+                        Reject
+                      </Button>
+                      <Button onClick={() => approveApp(reviewing)}>
+                        <Check className="h-4 w-4 mr-1" /> Approve
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </ResponsiveDialogContent>
         </ResponsiveDialogBody>
       </ResponsiveDialog>

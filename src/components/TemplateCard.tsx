@@ -1,14 +1,17 @@
 import { TemplateItem } from "@/data/templates";
-import { LucideIcon, Sparkles } from "lucide-react";
+import { LucideIcon, Sparkles, Users } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface TemplateCardProps {
   template: TemplateItem;
   onClick: () => void;
+  isCommunity?: boolean;
 }
 
-export function TemplateCard({ template, onClick }: TemplateCardProps) {
+export function TemplateCard({ template, onClick, isCommunity }: TemplateCardProps) {
+  const { theme } = useTheme();
   const IconComponent =
     (LucideIcons[template.icon as keyof typeof LucideIcons] as LucideIcon) ||
     LucideIcons.Sparkles;
@@ -37,8 +40,17 @@ export function TemplateCard({ template, onClick }: TemplateCardProps) {
                 Neu
               </span>
             )}
-            {template.isFeatured && !template.isNew && (
+            {template.isFeatured && !template.isNew && !isCommunity && (
               <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+            )}
+            {isCommunity && (
+              <span
+                className="shrink-0 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium"
+                style={{ backgroundColor: `${theme.accentColor}1f`, color: theme.accentColor }}
+              >
+                <Users className="h-2.5 w-2.5" />
+                Community
+              </span>
             )}
           </div>
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">

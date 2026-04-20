@@ -424,15 +424,29 @@ const Index = () => {
                     <h1 className="text-3xl font-bold text-white text-center mb-2">Wie kann ich dir helfen, Arian?</h1>
                     
                     {/* Search */}
-                    <div className="mb-6 mt-6">
+                    <div className="mb-6 mt-6 relative">
                       <SearchChat 
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setShowSuggestions(true);
+                        }}
                         onSubmit={handleSearchSubmit}
                         disableNavigation={true}
                         title=""
                         placeholder="Fasse die..."
                       />
+                      {showSuggestions && !searchQuery.startsWith("/") && (
+                        <SearchSuggestions
+                          query={searchQuery}
+                          assistants={availableAssistants}
+                          workflows={availableWorkflows}
+                          conversational={availableConversationalWorkflows}
+                          skills={allSkills}
+                          onSelect={handleSuggestionSelect}
+                          onClose={() => setShowSuggestions(false)}
+                        />
+                      )}
                     </div>
 
                     {/* Tag Filter Section */}

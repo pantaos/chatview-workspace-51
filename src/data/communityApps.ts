@@ -51,9 +51,7 @@ export const seedCommunityApps: CommunityApp[] = [
       detectedColors: ["#5673eb", "#F97316"],
       standardized: true,
     },
-  },
-  {
-    id: "ca-meeting-recap",
+    demoType: "tracker",
     title: "Meeting Recap Composer",
     description: "Turns raw meeting notes into a clean recap with action items.",
     icon: "Notebook",
@@ -69,6 +67,7 @@ export const seedCommunityApps: CommunityApp[] = [
       standardized: true,
     },
     visibility: { scope: "public", tenantIds: [] },
+    demoType: "notes",
   },
   {
     id: "ca-color-stealer",
@@ -87,5 +86,4 @@ export const seedCommunityApps: CommunityApp[] = [
       detectedColors: ["#111111", "#FACC15"],
       standardized: false,
     },
-  },
-];
+    demoType: "dashboard",

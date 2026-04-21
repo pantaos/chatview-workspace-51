@@ -272,10 +272,6 @@ const PFTenantDetailDialog = ({ tenant, open, onOpenChange }: PFTenantDetailDial
         <div className="space-y-3">
           <Card className="p-4 space-y-3">
             <h4 className="text-sm font-semibold">Plan</h4>
-            <div>
-              <Label className="text-xs text-muted-foreground">Plan name</Label>
-              <Input value={planName} onChange={(e) => setPlanName(e.target.value)} className="mt-1" />
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-end">
               <div>
                 <Label className="text-xs text-muted-foreground">Included budget (€)</Label>

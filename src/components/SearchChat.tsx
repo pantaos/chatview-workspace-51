@@ -81,27 +81,27 @@ const SearchChat = ({
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto search-chat-glow relative">
         {/* Slash command autocomplete */}
         {showCommands && (
-          <div className="absolute bottom-full mb-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-50">
-            {filteredCommands.map(cmd => (
-              <button
-                key={cmd.command}
-                type="button"
-                onClick={() => handleCommandSelect(cmd.command)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
-              >
-                <div className="p-1 rounded bg-primary/10">
-                  <Zap className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <code className="text-xs text-primary font-mono">{cmd.command}</code>
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-sm font-medium truncate">{cmd.name}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">{cmd.description}</p>
-                </div>
-              </button>
-            ))}
+          <div className="absolute bottom-full mb-2 left-0 right-0 bg-background/95 backdrop-blur-xl border border-border/40 rounded-xl shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-1 duration-150">
+            <div className="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+              Suggested
+            </div>
+            <ul className="pb-1">
+              {filteredCommands.map(cmd => (
+                <li key={cmd.command}>
+                  <button
+                    type="button"
+                    onClick={() => handleCommandSelect(cmd.command)}
+                    className="w-full flex items-center justify-between gap-3 px-3 py-1.5 text-left hover:bg-muted/60 transition-colors"
+                  >
+                    <span className="flex items-baseline gap-2 min-w-0">
+                      <span className="text-sm font-normal text-foreground truncate">{cmd.name}</span>
+                      <span className="text-xs text-muted-foreground truncate">· {cmd.description}</span>
+                    </span>
+                    <code className="text-[11px] font-mono text-muted-foreground flex-shrink-0">{cmd.command}</code>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 

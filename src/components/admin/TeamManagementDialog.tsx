@@ -189,6 +189,7 @@ const TeamManagementDialog = ({
     { id: "general" as ScreenType, label: "General" },
     { id: "members" as ScreenType, label: "Members" },
     { id: "workflows" as ScreenType, label: "Workflows" },
+    { id: "tokens" as ScreenType, label: "Token Limits" },
     { id: "danger" as ScreenType, label: "Danger Zone" },
   ];
 

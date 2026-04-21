@@ -76,6 +76,22 @@ const TeamManagementDialog = ({
   const [workflowSearchTerm, setWorkflowSearchTerm] = useState("");
   const [selectedWorkflowIds, setSelectedWorkflowIds] = useState<string[]>([]);
 
+  // Token limits state (per-team)
+  const initialTeamAccess = mockTeamAccess.find(t => t.teamName.toLowerCase() === team.name.toLowerCase());
+  const [tokensEnabled, setTokensEnabled] = useState(true);
+  const [teamTokenLimit, setTeamTokenLimit] = useState(1_000_000);
+  const [teamTokenUsed] = useState(412_300);
+  const [teamRequestLimit, setTeamRequestLimit] = useState(5000);
+  const [allowedModelIds, setAllowedModelIds] = useState<string[]>(
+    initialTeamAccess?.modelIds ?? mockModels.filter(m => m.enabled).map(m => m.id)
+  );
+
+  const toggleModel = (id: string) => {
+    setAllowedModelIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const saveTokenLimits = () => toast.success(`Token limits saved for ${team.name}`);
+
   const colors = [
     { name: "Blue", value: "blue" },
     { name: "Green", value: "green" },

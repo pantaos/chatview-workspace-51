@@ -29,7 +29,7 @@ interface TeamManagementDialogProps {
   onTeamDeleted: (teamId: string) => void;
 }
 
-type ScreenType = "general" | "members" | "add-members" | "workflows" | "add-workflows" | "danger";
+type ScreenType = "general" | "members" | "add-members" | "workflows" | "add-workflows" | "tokens" | "danger";
 
 // Mock data
 const allUsers: User[] = [

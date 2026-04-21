@@ -4,9 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, Image as ImageIcon, Type } from "lucide-react";
 import { Team, TeamMember, User } from "@/types/admin";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { mockModels, mockTeamAccess } from "@/data/tokenLimitsData";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ResponsiveDialog,

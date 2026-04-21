@@ -465,6 +465,92 @@ const TeamManagementDialog = ({
           </div>
         );
 
+      case "tokens": {
+        const usagePct = Math.min((teamTokenUsed / teamTokenLimit) * 100, 100);
+        const usageColor = usagePct >= 90 ? "bg-destructive" : usagePct >= 75 ? "bg-amber-500" : "bg-primary";
+        const enabledModels = mockModels.filter(m => m.enabled);
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-lg font-medium text-foreground mb-1">Token Limits</h2>
+              <p className="text-sm text-muted-foreground">Control token usage and model access for {team.name}</p>
+            </div>
+
+            <div className="h-px bg-border/50" />
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-foreground">Enable team token limit</p>
+                <p className="text-xs text-muted-foreground">Cap total token usage across this team</p>
+              </div>
+              <Switch checked={tokensEnabled} onCheckedChange={setTokensEnabled} />
+            </div>
+
+            <div className={cn("space-y-5", !tokensEnabled && "opacity-50 pointer-events-none")}>
+              <div className="p-4 rounded-lg border border-border/40 bg-muted/20">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                  <span>{teamTokenUsed.toLocaleString()} / {teamTokenLimit.toLocaleString()} tokens</span>
+                  <span>{usagePct.toFixed(0)}%</span>
+                </div>
+                <Progress value={usagePct} className="h-2" indicatorClassName={usageColor} />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-foreground">Token limit (per cycle)</Label>
+                  <Input
+                    type="number"
+                    value={teamTokenLimit}
+                    onChange={e => setTeamTokenLimit(Number(e.target.value))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-foreground">Request limit (per cycle)</Label>
+                  <Input
+                    type="number"
+                    value={teamRequestLimit}
+                    onChange={e => setTeamRequestLimit(Number(e.target.value))}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Allowed models</p>
+                  <p className="text-xs text-muted-foreground">Select which AI models this team can use</p>
+                </div>
+                <div className="space-y-1 border border-border/40 rounded-lg divide-y divide-border/40">
+                  {enabledModels.map(m => {
+                    const Icon = m.category === "image" ? ImageIcon : Type;
+                    const checked = allowedModelIds.includes(m.id);
+                    return (
+                      <div
+                        key={m.id}
+                        className="flex items-center justify-between px-3 py-2.5 hover:bg-muted/30 cursor-pointer"
+                        onClick={() => toggleModel(m.id)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Checkbox checked={checked} />
+                          <Icon className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm font-medium">{m.name}</span>
+                          <Badge variant="secondary" className="text-[9px] uppercase tracking-wider px-1.5 py-0 h-4">
+                            {m.category}
+                          </Badge>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Button size="sm" onClick={saveTokenLimits} className="min-h-[44px]">Save Token Limits</Button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
       case "danger":
         return (
           <div className="space-y-6">

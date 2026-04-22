@@ -1,11 +1,11 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Team, NewTeamData } from "@/types/admin";
-import { X, Users } from "lucide-react";
+import { X, Users, Upload } from "lucide-react";
 
 interface AddTeamDialogProps {
   open: boolean;
@@ -19,6 +19,15 @@ const AddTeamDialog = ({ open, onOpenChange, onTeamAdded }: AddTeamDialogProps) 
     color: "blue",
     description: ""
   });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
   const colors = [
     { name: "Blue", value: "blue" },
@@ -49,12 +58,14 @@ const AddTeamDialog = ({ open, onOpenChange, onTeamAdded }: AddTeamDialogProps) 
       name: formData.name,
       color: formData.color,
       description: formData.description,
+      imageUrl: imagePreview || undefined,
       members: [],
       createdAt: new Date().toISOString()
-    };
+    } as Team;
 
     onTeamAdded(newTeam);
     setFormData({ name: "", color: "blue", description: "" });
+    setImagePreview(null);
     onOpenChange(false);
   };
 
@@ -112,6 +123,37 @@ const AddTeamDialog = ({ open, onOpenChange, onTeamAdded }: AddTeamDialogProps) 
                     title={color.name}
                   />
                 ))}
+              </div>
+            </div>
+
+            {/* Team Image */}
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <p className="text-sm font-medium text-foreground">Team Image</p>
+                <p className="text-xs text-muted-foreground">Optional — overrides the color avatar</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {imagePreview ? (
+                  <div className="relative">
+                    <img src={imagePreview} alt="Team" className="w-10 h-10 rounded-full object-cover border" />
+                    <button
+                      type="button"
+                      onClick={() => { setImagePreview(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"
+                    >
+                      <X className="h-2.5 w-2.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-10 h-10 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center hover:border-primary/50 transition-colors"
+                  >
+                    <Upload className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                )}
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
               </div>
             </div>
 

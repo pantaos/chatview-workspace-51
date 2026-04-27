@@ -444,6 +444,18 @@ const AppSidebar = ({
           >
             <ShoppingBag className="h-5 w-5" />
           </button>
+          <button
+            onClick={() => navigate("/editorial")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/editorial")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Editorial"
+          >
+            <Newspaper className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex-1" />
@@ -699,6 +711,18 @@ const AppSidebar = ({
               >
                 <Package className="h-4 w-4 flex-shrink-0" />
                 <span>My Apps</span>
+              </button>
+              <button
+                onClick={() => handleNavigate("/editorial")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/editorial")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <Newspaper className="h-4 w-4 flex-shrink-0" />
+                <span>Editorial</span>
               </button>
             </nav>
 

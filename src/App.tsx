@@ -39,6 +39,7 @@ import UseCaseRun from "./pages/UseCaseRun";
 import AppBuilder from "./pages/AppBuilder";
 import MyApps from "./pages/MyApps";
 import MyAppRun from "./pages/MyAppRun";
+import Editorial from "./pages/Editorial";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -85,6 +86,7 @@ const App = () => {
                   <Route path="/app-builder" element={<AppBuilder />} />
                   <Route path="/my-apps" element={<MyApps />} />
                   <Route path="/my-apps/:id" element={<MyAppRun />} />
+                  <Route path="/editorial" element={<Editorial />} />
                   
                   {/* Trendcast Workflow Routes */}
                   <Route path="/trendcast" element={<TrendcastUploadLinks />} />

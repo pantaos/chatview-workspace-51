@@ -25,6 +25,7 @@ import {
   ShoppingBag,
   Wand2,
   Package,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

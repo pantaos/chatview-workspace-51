@@ -127,28 +127,30 @@ const AdminSettings = () => {
 
   return (
     <MainLayout>
-      <div className="p-4 md:p-8 max-w-6xl">
-        {/* Page Header */}
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Admin Panel</h1>
-          <p className="text-muted-foreground mt-1 text-sm md:text-base">Manage users, teams, workflows, and system settings</p>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Sticky Header */}
+        <div className="sticky top-0 md:top-0 top-14 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="max-w-6xl px-4 md:px-8 pt-4 md:pt-6 pb-0">
+            <div className="mb-3">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">Admin Panel</h1>
+              <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">Manage users, teams, workflows, and system settings</p>
+            </div>
+            <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b-0 rounded-none p-0 h-auto w-full -mb-px">
+              {tabs.map((tab) => (
+                <TabsTrigger 
+                  key={tab.id}
+                  value={tab.id} 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-2.5 pt-1 text-sm text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[40px]"
+                >
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.shortLabel}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 md:mb-8 w-full">
-            {tabs.map((tab) => (
-              <TabsTrigger 
-                key={tab.id}
-                value={tab.id} 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
-              >
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.shortLabel}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
+        <div className="p-4 md:p-8 max-w-6xl">
           <TabsContent value="dashboard" className="mt-0">
             <AdminDashboard onNavigateToUsers={handleNavigateToUsers} />
           </TabsContent>

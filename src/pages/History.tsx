@@ -207,8 +207,8 @@ const History = () => {
               )}
             </div>
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

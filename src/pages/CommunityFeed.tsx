@@ -343,21 +343,25 @@ const CommunityFeed = () => {
 
   return (
     <MainLayout>
-      <div className="p-8 max-w-5xl">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Community Feed</h1>
-          <p className="text-muted-foreground mt-2">Stay updated with the latest platform updates and company news</p>
+      <Tabs defaultValue="latest" className="w-full">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="px-4 md:px-8 pt-4 md:pt-6 max-w-5xl">
+            <div className="mb-3">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">Community Feed</h1>
+              <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">Stay updated with the latest platform updates and company news</p>
+            </div>
+            <TabsList className="bg-transparent rounded-none p-0 h-auto w-full justify-start gap-6 -mb-px">
+              <TabsTrigger value="latest" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary font-medium">Latest</TabsTrigger>
+              <TabsTrigger value="pinned" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary font-medium">Pinned</TabsTrigger>
+              <TabsTrigger value="company" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary font-medium">Company</TabsTrigger>
+              <TabsTrigger value="platform" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary font-medium">Platform</TabsTrigger>
+            </TabsList>
+          </div>
         </div>
 
-        <Tabs defaultValue="latest" className="w-full">
-          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 w-full justify-start gap-6">
-            <TabsTrigger value="latest" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Latest</TabsTrigger>
-            <TabsTrigger value="pinned" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Pinned</TabsTrigger>
-            <TabsTrigger value="company" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Company</TabsTrigger>
-            <TabsTrigger value="platform" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary font-medium">Platform</TabsTrigger>
-          </TabsList>
-            
+        <div className="px-4 md:px-8 py-6 max-w-5xl">
+
             <TabsContent value="latest" className="mt-0">
               {renderPosts(filterPostsByCategory("latest"))}
             </TabsContent>
@@ -425,25 +429,25 @@ const CommunityFeed = () => {
                 )}
               </div>
             </TabsContent>
-          </Tabs>
 
-        <PromptDetailDialog
-          open={promptDetailOpen}
-          onClose={() => setPromptDetailOpen(false)}
-          prompt={selectedPrompt}
-          onCreateAssistant={handleCreateAssistant}
-        />
+          <PromptDetailDialog
+            open={promptDetailOpen}
+            onClose={() => setPromptDetailOpen(false)}
+            prompt={selectedPrompt}
+            onCreateAssistant={handleCreateAssistant}
+          />
 
-        <NewWorkflowDialog
-          open={newWorkflowDialogOpen}
-          onClose={() => {
-            setNewWorkflowDialogOpen(false);
-            setPrefilledPrompt("");
-          }}
-          onCreateWorkflow={handleWorkflowCreate}
-          prefilledPrompt={prefilledPrompt}
-        />
-      </div>
+          <NewWorkflowDialog
+            open={newWorkflowDialogOpen}
+            onClose={() => {
+              setNewWorkflowDialogOpen(false);
+              setPrefilledPrompt("");
+            }}
+            onCreateWorkflow={handleWorkflowCreate}
+            prefilledPrompt={prefilledPrompt}
+          />
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

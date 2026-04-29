@@ -125,28 +125,32 @@ const History = () => {
 
   return (
     <MainLayout>
-      <div className="p-8 max-w-5xl">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Chat History</h1>
-          <p className="text-muted-foreground mt-1">View and manage your conversation history</p>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="px-4 md:px-8 pt-4 md:pt-6 max-w-5xl">
+            <div className="mb-3">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">Chat History</h1>
+              <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">View and manage your conversation history</p>
+            </div>
+            <TabsList className="bg-transparent rounded-none p-0 h-auto -mb-px">
+              <TabsTrigger 
+                value="all" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary"
+              >
+                {translate('dashboard.all') || 'All'}
+              </TabsTrigger>
+              <TabsTrigger 
+                value="favorites"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary"
+              >
+                {translate('dashboard.favorites') || 'Favorites'}
+              </TabsTrigger>
+            </TabsList>
+          </div>
         </div>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-transparent border-b border-border rounded-none p-0 h-auto mb-8">
-            <TabsTrigger 
-              value="all" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
-            >
-              {translate('dashboard.all') || 'All'}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="favorites"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary"
-            >
-              {translate('dashboard.favorites') || 'Favorites'}
-            </TabsTrigger>
-          </TabsList>
+
+        <div className="px-4 md:px-8 py-6 max-w-5xl">
           
           <TabsContent value="all" className="mt-0">
             <div className="bg-card rounded-lg border">
@@ -203,8 +207,8 @@ const History = () => {
               )}
             </div>
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

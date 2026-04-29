@@ -65,39 +65,42 @@ const Editorial = () => {
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-12">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground">Editorial Studio</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Bestehende Beiträge recyceln, Vorschläge generieren, Redaktionsplan erstellen und Übergaben verwalten.
-          </p>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="max-w-6xl mx-auto px-4 md:px-8 pt-4 md:pt-6">
+            <div className="mb-3">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">Editorial Studio</h1>
+              <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
+                Bestehende Beiträge recyceln, Vorschläge generieren, Redaktionsplan erstellen und Übergaben verwalten.
+              </p>
+            </div>
+            <TabsList className="bg-transparent p-0 h-auto gap-6 w-full justify-start rounded-none overflow-x-auto scrollbar-hide -mb-px">
+              {[
+                { v: "library", label: "Content-Bibliothek" },
+                { v: "suggestions", label: "Vorschläge" },
+                { v: "plan", label: "Redaktionsplan" },
+                { v: "convert", label: "Format-Konvertierung" },
+              ].map((t) => (
+                <TabsTrigger
+                  key={t.v}
+                  value={t.v}
+                  className="px-0 pb-2.5 text-sm data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground whitespace-nowrap"
+                >
+                  {t.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-transparent p-0 h-auto gap-6 border-b border-border/40 w-full justify-start rounded-none mb-6 overflow-x-auto scrollbar-hide">
-            {[
-              { v: "library", label: "Content-Bibliothek" },
-              { v: "suggestions", label: "Vorschläge" },
-              { v: "plan", label: "Redaktionsplan" },
-              { v: "convert", label: "Format-Konvertierung" },
-            ].map((t) => (
-              <TabsTrigger
-                key={t.v}
-                value={t.v}
-                className="px-0 pb-2 text-sm data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none text-muted-foreground data-[state=active]:text-foreground whitespace-nowrap"
-              >
-                {t.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-6 pb-12">
           <TabsContent value="library"><LibraryTab /></TabsContent>
           <TabsContent value="suggestions"><SuggestionsTab /></TabsContent>
           <TabsContent value="plan"><PlanTab /></TabsContent>
           <TabsContent value="convert"><ConvertTab /></TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

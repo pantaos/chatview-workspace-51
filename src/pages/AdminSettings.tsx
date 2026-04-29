@@ -175,8 +175,8 @@ const AdminSettings = () => {
           <TabsContent value="token-limits" className="mt-0">
             <AdminTokenLimits />
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

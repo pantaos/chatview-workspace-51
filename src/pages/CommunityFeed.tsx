@@ -429,25 +429,25 @@ const CommunityFeed = () => {
                 )}
               </div>
             </TabsContent>
-          </Tabs>
 
-        <PromptDetailDialog
-          open={promptDetailOpen}
-          onClose={() => setPromptDetailOpen(false)}
-          prompt={selectedPrompt}
-          onCreateAssistant={handleCreateAssistant}
-        />
+          <PromptDetailDialog
+            open={promptDetailOpen}
+            onClose={() => setPromptDetailOpen(false)}
+            prompt={selectedPrompt}
+            onCreateAssistant={handleCreateAssistant}
+          />
 
-        <NewWorkflowDialog
-          open={newWorkflowDialogOpen}
-          onClose={() => {
-            setNewWorkflowDialogOpen(false);
-            setPrefilledPrompt("");
-          }}
-          onCreateWorkflow={handleWorkflowCreate}
-          prefilledPrompt={prefilledPrompt}
-        />
-      </div>
+          <NewWorkflowDialog
+            open={newWorkflowDialogOpen}
+            onClose={() => {
+              setNewWorkflowDialogOpen(false);
+              setPrefilledPrompt("");
+            }}
+            onCreateWorkflow={handleWorkflowCreate}
+            prefilledPrompt={prefilledPrompt}
+          />
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

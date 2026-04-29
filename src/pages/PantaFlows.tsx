@@ -22,34 +22,38 @@ const PantaFlows = () => {
 
   return (
     <MainLayout>
-      <div className="p-4 md:p-8 max-w-6xl">
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">PANTA Flows</h1>
-          <p className="text-muted-foreground mt-1 text-sm md:text-base">Plattform-Management — Tenants, Assistenten & Community</p>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="px-4 md:px-8 pt-4 md:pt-6 max-w-6xl">
+            <div className="mb-3">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">PANTA Flows</h1>
+              <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">Plattform-Management — Tenants, Assistenten & Community</p>
+            </div>
+            <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent rounded-none p-0 h-auto w-full justify-start -mb-px">
+              {tabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-2.5 pt-0 text-sm text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[40px]"
+                >
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.shortLabel}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b border-border rounded-none p-0 h-auto mb-6 md:mb-8 w-full justify-start">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
-              >
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.shortLabel}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
+        <div className="p-4 md:p-8 max-w-6xl">
           <TabsContent value="dashboard" className="mt-0"><PFDashboard /></TabsContent>
           <TabsContent value="tenants" className="mt-0"><PFTenants /></TabsContent>
           <TabsContent value="assistants" className="mt-0"><PFAssistantsWorkflows /></TabsContent>
           <TabsContent value="templates" className="mt-0"><PFTemplateStore /></TabsContent>
           <TabsContent value="config" className="mt-0"><PFKonfiguration /></TabsContent>
           <TabsContent value="posts" className="mt-0"><PFCommunityPosts /></TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </MainLayout>
   );
 };

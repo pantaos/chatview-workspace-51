@@ -135,7 +135,7 @@ const AdminSettings = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-foreground leading-tight">Admin Panel</h1>
               <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">Manage users, teams, workflows, and system settings</p>
             </div>
-            <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b-0 rounded-none p-0 h-auto w-full -mb-px">
+            <TabsList className="flex overflow-x-auto scrollbar-hide bg-transparent border-b-0 rounded-none p-0 h-auto w-full justify-start -mb-px">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.id}

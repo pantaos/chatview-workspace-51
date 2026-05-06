@@ -7,6 +7,7 @@ import { TemplateCard } from "@/components/TemplateCard";
 import { TaskCard } from "@/components/TaskCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
+import { TaskPreviewDialog } from "@/components/TaskPreviewDialog";
 import ScheduleDialog from "@/components/ScheduleDialog";
 import { templates, templateTags, TemplateItem } from "@/data/templates";
 import { CommunityApp, seedCommunityApps } from "@/data/communityApps";

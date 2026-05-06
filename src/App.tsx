@@ -34,7 +34,7 @@ import Library from "./pages/Library";
 import Actions from "./pages/Actions";
 import Experience from "./pages/Experience";
 import PantaFlows from "./pages/PantaFlows";
-import UseCases from "./pages/UseCases";
+
 import UseCaseRun from "./pages/UseCaseRun";
 import AppBuilder from "./pages/AppBuilder";
 import MyApps from "./pages/MyApps";
@@ -80,7 +80,7 @@ const App = () => {
                   <Route path="/library" element={<Library />} />
                   <Route path="/actions" element={<Actions />} />
                   <Route path="/panta-flows" element={<PantaFlows />} />
-                  <Route path="/use-cases" element={<UseCases />} />
+                  <Route path="/use-cases" element={<Navigate to="/templates?view=tasks" replace />} />
                   <Route path="/use-cases/run/:id" element={<UseCaseRun />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   <Route path="/app-builder" element={<AppBuilder />} />

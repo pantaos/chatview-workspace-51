@@ -1,16 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MainLayout from "@/components/MainLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TemplateCard } from "@/components/TemplateCard";
+import { TaskCard } from "@/components/TaskCard";
 import { FeaturedTemplateCard } from "@/components/FeaturedTemplateCard";
 import { TemplatePreviewDialog } from "@/components/TemplatePreviewDialog";
+import ScheduleDialog from "@/components/ScheduleDialog";
 import { templates, templateTags, TemplateItem } from "@/data/templates";
 import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
+import { allUseCases, useCaseTeams, useCaseTaskTypes, UseCase } from "@/data/useCases";
 import { Search, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
+type View = "all" | "assistants" | "tasks";
 
 const COMMUNITY_CATEGORY = "__community__";
 
@@ -37,11 +42,19 @@ function communityAppToTemplate(app: CommunityApp): TemplateItem & { __community
 
 export default function TemplateLibrary() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialView = (searchParams.get("view") as View) || "all";
+  const [view, setView] = useState<View>(initialView);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("all");
+  const [selectedTeam, setSelectedTeam] = useState<string>("all");
+  const [selectedTaskType, setSelectedTaskType] = useState<string>("all");
+
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [scheduleTarget, setScheduleTarget] = useState<UseCase | null>(null);
   const [communityApps, setCommunityApps] = useState<CommunityApp[]>([]);
 
   useEffect(() => {
@@ -52,17 +65,23 @@ export default function TemplateLibrary() {
     setCommunityApps([...stored, ...seedCommunityApps].filter((a) => a.status === "approved"));
   }, []);
 
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    if (view === "all") next.delete("view");
+    else next.set("view", view);
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
+
   const assistants = useMemo(
     () => templates.filter((t) => t.category === "assistant"),
     []
   );
-
   const community = useMemo(() => communityApps.map(communityAppToTemplate), [communityApps]);
+  const allAssistants = useMemo(() => [...assistants, ...community], [assistants, community]);
 
-  const all = useMemo(() => [...assistants, ...community], [assistants, community]);
-
-  const filtered = useMemo(() => {
-    return all.filter((t) => {
+  const filteredAssistants = useMemo(() => {
+    return allAssistants.filter((t) => {
       const q = searchQuery.toLowerCase();
       const matchSearch =
         q === "" ||
@@ -73,9 +92,27 @@ export default function TemplateLibrary() {
       if (selectedTag === COMMUNITY_CATEGORY) return matchSearch && (t as any).__community === true;
       return matchSearch && t.tags.some((tag) => tag.id === selectedTag);
     });
-  }, [all, searchQuery, selectedTag]);
+  }, [allAssistants, searchQuery, selectedTag]);
+
+  const filteredTasks = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    return allUseCases.filter((uc) => {
+      const matchSearch =
+        q === "" ||
+        uc.name.toLowerCase().includes(q) ||
+        uc.team.toLowerCase().includes(q) ||
+        uc.taskType.toLowerCase().includes(q) ||
+        uc.integrations.some((i) => i.toLowerCase().includes(q));
+      const matchTeam = selectedTeam === "all" || uc.team === selectedTeam;
+      const matchType = selectedTaskType === "all" || uc.taskType === selectedTaskType;
+      return matchSearch && matchTeam && matchType;
+    });
+  }, [searchQuery, selectedTeam, selectedTaskType]);
 
   const featured = useMemo(() => assistants.filter((t) => t.isFeatured), [assistants]);
+
+  const showAssistants = view === "all" || view === "assistants";
+  const showTasks = view === "all" || view === "tasks";
 
   const handleClick = (t: TemplateItem) => {
     setSelectedTemplate(t);
@@ -92,38 +129,134 @@ export default function TemplateLibrary() {
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedTag("all");
+    setSelectedTeam("all");
+    setSelectedTaskType("all");
   };
 
-  const usedTagIds = new Set(all.flatMap((a) => a.tags.map((t) => t.id)));
+  const usedTagIds = new Set(allAssistants.flatMap((a) => a.tags.map((t) => t.id)));
   const visibleTags = templateTags.filter((t) => usedTagIds.has(t.id));
 
   return (
     <MainLayout>
       <div className="flex-1 overflow-auto">
-        <div className="container max-w-6xl mx-auto py-8 px-4 md:px-6">
-          {/* Header */}
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-3">
+        {/* Sticky header */}
+        <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-md border-b border-border/60">
+          <div className="container max-w-6xl mx-auto px-4 md:px-6 pt-6 pb-4">
+            <div className="mb-4">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-2">
                 <Sparkles className="h-3 w-3" />
-                Assistant Library
+                Explorer
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-                Discover assistants
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                Discover assistants & tasks
               </h1>
-              <p className="text-muted-foreground mt-2 max-w-xl">
-                Curated AI assistants and community-built apps. Pick one, personalize it, ship it.
+              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                Personalize an assistant or run a ready-made task for your team.
               </p>
             </div>
-            <Button onClick={() => navigate("/app-builder")} variant="outline" className="shrink-0">
-              <Users className="h-4 w-4 mr-2" />
-              Build an app
-            </Button>
-          </div>
 
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Segment toggle */}
+                <div className="inline-flex rounded-lg border border-border bg-muted/40 p-0.5">
+                  {([
+                    { id: "all", label: "All" },
+                    { id: "assistants", label: "Assistants" },
+                    { id: "tasks", label: "Tasks" },
+                  ] as { id: View; label: string }[]).map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setView(opt.id)}
+                      className={cn(
+                        "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                        view === opt.id
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative flex-1 min-w-[200px]">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search assistants and tasks..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 h-9 rounded-lg bg-background border-border/60"
+                  />
+                </div>
+              </div>
+
+              {/* Contextual filter pills */}
+              {showAssistants && (
+                <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+                  <FilterPill
+                    active={selectedTag === "all"}
+                    onClick={() => setSelectedTag("all")}
+                  >
+                    All tags
+                  </FilterPill>
+                  {visibleTags.map((tag) => (
+                    <FilterPill
+                      key={tag.id}
+                      active={selectedTag === tag.id}
+                      onClick={() => setSelectedTag(tag.id)}
+                    >
+                      {tag.name}
+                    </FilterPill>
+                  ))}
+                  {community.length > 0 && (
+                    <FilterPill
+                      active={selectedTag === COMMUNITY_CATEGORY}
+                      onClick={() => setSelectedTag(COMMUNITY_CATEGORY)}
+                    >
+                      <Users className="h-3 w-3 mr-1 inline" />
+                      Community
+                    </FilterPill>
+                  )}
+                </div>
+              )}
+
+              {showTasks && (
+                <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+                  <FilterPill
+                    active={selectedTeam === "all" && selectedTaskType === "all"}
+                    onClick={() => { setSelectedTeam("all"); setSelectedTaskType("all"); }}
+                  >
+                    All teams
+                  </FilterPill>
+                  {useCaseTeams.map((t) => (
+                    <FilterPill
+                      key={t}
+                      active={selectedTeam === t}
+                      onClick={() => setSelectedTeam(selectedTeam === t ? "all" : t)}
+                    >
+                      {t}
+                    </FilterPill>
+                  ))}
+                  <span className="mx-1 self-center text-border">·</span>
+                  {useCaseTaskTypes.map((t) => (
+                    <FilterPill
+                      key={t}
+                      active={selectedTaskType === t}
+                      onClick={() => setSelectedTaskType(selectedTaskType === t ? "all" : t)}
+                    >
+                      {t}
+                    </FilterPill>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="container max-w-6xl mx-auto py-8 px-4 md:px-6 space-y-12">
           {/* Featured rail */}
-          {featured.length > 0 && (
-            <div className="mb-10">
+          {showAssistants && featured.length > 0 && searchQuery === "" && selectedTag === "all" && (
+            <div>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                   Featured
@@ -141,90 +274,56 @@ export default function TemplateLibrary() {
             </div>
           )}
 
-          {/* Search + tag filter */}
-          <div className="space-y-4 mb-6">
-            <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search assistants..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-11 rounded-xl bg-background border-border/60"
-              />
-            </div>
-
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-              <button
-                onClick={() => setSelectedTag("all")}
-                className={cn(
-                  "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border",
-                  selectedTag === "all"
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
-                )}
-              >
-                All
-              </button>
-              {visibleTags.map((tag) => (
-                <button
-                  key={tag.id}
-                  onClick={() => setSelectedTag(tag.id)}
-                  className={cn(
-                    "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border",
-                    selectedTag === tag.id
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
-                  )}
-                >
-                  {tag.name}
-                </button>
-              ))}
-              {community.length > 0 && (
-                <button
-                  onClick={() => setSelectedTag(COMMUNITY_CATEGORY)}
-                  className={cn(
-                    "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors border inline-flex items-center gap-1.5",
-                    selectedTag === COMMUNITY_CATEGORY
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
-                  )}
-                >
-                  <Users className="h-3 w-3" />
-                  Community Apps
-                </button>
+          {/* Assistants */}
+          {showAssistants && (
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Assistants · {filteredAssistants.length}
+                </h2>
+              </div>
+              {filteredAssistants.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredAssistants.map((t) => (
+                    <TemplateCard
+                      key={t.id}
+                      template={t}
+                      onClick={() => handleClick(t)}
+                      isCommunity={(t as any).__community === true}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState onClear={clearFilters} label="assistants" />
               )}
-            </div>
-          </div>
+            </section>
+          )}
 
-          {/* Grid */}
-          <div>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                All assistants
-              </h2>
-              <span className="text-xs text-muted-foreground">{filtered.length} results</span>
-            </div>
-            {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map((t) => (
-                  <TemplateCard
-                    key={t.id}
-                    template={t}
-                    onClick={() => handleClick(t)}
-                    isCommunity={(t as any).__community === true}
-                  />
-                ))}
+          {/* Tasks */}
+          {showTasks && (
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Tasks · {filteredTasks.length}
+                </h2>
+                <span className="text-xs text-muted-foreground">Ready-to-run automations</span>
               </div>
-            ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-muted/20 py-16 text-center text-muted-foreground">
-                <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">No assistants match your filters.</p>
-                <Button variant="link" onClick={clearFilters} className="mt-1">
-                  Clear filters
-                </Button>
-              </div>
-            )}
-          </div>
+              {filteredTasks.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredTasks.map((task) => (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onRun={() => navigate(`/use-cases/run/${task.id}`)}
+                      onSchedule={() => setScheduleTarget(task)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState onClear={clearFilters} label="tasks" />
+              )}
+            </section>
+          )}
         </div>
       </div>
 
@@ -234,6 +333,50 @@ export default function TemplateLibrary() {
         template={selectedTemplate}
         onAdd={handleAdd}
       />
+
+      {scheduleTarget && (
+        <ScheduleDialog
+          open={!!scheduleTarget}
+          onOpenChange={(o) => !o && setScheduleTarget(null)}
+          useCaseName={scheduleTarget.name}
+        />
+      )}
     </MainLayout>
+  );
+}
+
+function FilterPill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "px-3 py-1 text-xs rounded-full whitespace-nowrap transition-colors border",
+        active
+          ? "bg-foreground text-background border-foreground"
+          : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function EmptyState({ onClear, label }: { onClear: () => void; label: string }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-border bg-muted/20 py-12 text-center text-muted-foreground">
+      <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-50" />
+      <p className="text-sm">No {label} match your filters.</p>
+      <Button variant="link" onClick={onClear} className="mt-1">
+        Clear filters
+      </Button>
+    </div>
   );
 }

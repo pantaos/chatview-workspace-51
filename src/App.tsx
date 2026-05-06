@@ -80,7 +80,7 @@ const App = () => {
                   <Route path="/library" element={<Library />} />
                   <Route path="/actions" element={<Actions />} />
                   <Route path="/panta-flows" element={<PantaFlows />} />
-                  <Route path="/use-cases" element={<UseCases />} />
+                  <Route path="/use-cases" element={<Navigate to="/templates?view=tasks" replace />} />
                   <Route path="/use-cases/run/:id" element={<UseCaseRun />} />
                   <Route path="/chat" element={<ChatInterface />} />
                   <Route path="/app-builder" element={<AppBuilder />} />

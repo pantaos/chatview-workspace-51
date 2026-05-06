@@ -315,8 +315,7 @@ export default function TemplateLibrary() {
                     <TaskCard
                       key={task.id}
                       task={task}
-                      onRun={() => navigate(`/use-cases/run/${task.id}`)}
-                      onSchedule={() => setScheduleTarget(task)}
+                      onClick={() => setSelectedTask(task)}
                     />
                   ))}
                 </div>

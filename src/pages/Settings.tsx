@@ -17,6 +17,7 @@ import { MicrosoftIntegrationDialog } from "@/components/integrations/MicrosoftI
 import { GoogleIntegrationDialog } from "@/components/integrations/GoogleIntegrationDialog";
 import { NotionIntegrationDialog } from "@/components/integrations/NotionIntegrationDialog";
 import SkillsTab from "@/components/settings/SkillsTab";
+import MyTasksTab from "@/components/settings/MyTasksTab";
 
 const Settings = () => {
   const { theme, updateTheme, toggleDarkMode } = useTheme();
@@ -26,7 +27,7 @@ const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabFromUrl = searchParams.get("tab");
   
-  const validTabs = ["general", "profile", "skills", "integrations"];
+  const validTabs = ["general", "profile", "skills", "tasks", "integrations"];
   const [activeTab, setActiveTab] = useState(
     tabFromUrl && validTabs.includes(tabFromUrl)
       ? tabFromUrl
@@ -169,6 +170,12 @@ const Settings = () => {
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
             >
               Skills
+            </TabsTrigger>
+            <TabsTrigger 
+              value="tasks" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 md:px-4 pb-3 pt-0 text-muted-foreground data-[state=active]:text-primary whitespace-nowrap min-h-[44px]"
+            >
+              Tasks
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
@@ -390,6 +397,11 @@ const Settings = () => {
           {/* Skills Tab */}
           <TabsContent value="skills" className="mt-0">
             <SkillsTab />
+          </TabsContent>
+
+          {/* Tasks Tab */}
+          <TabsContent value="tasks" className="mt-0">
+            <MyTasksTab />
           </TabsContent>
 
           {/* Integrations Tab */}

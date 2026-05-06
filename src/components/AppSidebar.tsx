@@ -665,18 +665,6 @@ const AppSidebar = ({
                 <span>Templates</span>
               </button>
               <button
-                onClick={() => handleNavigate("/use-cases")}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                  isActive("/use-cases")
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <ShoppingBag className="h-4 w-4 flex-shrink-0" />
-                <span>Use Cases</span>
-              </button>
-              <button
                 onClick={() => handleNavigate("/app-builder")}
                 className={cn(
                   "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",

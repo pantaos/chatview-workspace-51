@@ -433,18 +433,6 @@ const AppSidebar = ({
             <LayoutGrid className="h-5 w-5" />
           </button>
           <button
-            onClick={() => navigate("/use-cases")}
-            className={cn(
-              "p-2 rounded-lg transition-colors",
-              isActive("/use-cases")
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:bg-muted hover:text-foreground"
-            )}
-            title="Use Cases"
-          >
-            <ShoppingBag className="h-5 w-5" />
-          </button>
-          <button
             onClick={() => navigate("/editorial")}
             className={cn(
               "p-2 rounded-lg transition-colors",

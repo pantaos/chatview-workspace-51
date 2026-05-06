@@ -56,6 +56,7 @@ export default function TemplateLibrary() {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [scheduleTarget, setScheduleTarget] = useState<UseCase | null>(null);
+  const [selectedTask, setSelectedTask] = useState<UseCase | null>(null);
   const [communityApps, setCommunityApps] = useState<CommunityApp[]>([]);
 
   useEffect(() => {
@@ -332,6 +333,14 @@ export default function TemplateLibrary() {
         onClose={() => setPreviewOpen(false)}
         template={selectedTemplate}
         onAdd={handleAdd}
+      />
+
+      <TaskPreviewDialog
+        open={!!selectedTask}
+        onClose={() => setSelectedTask(null)}
+        task={selectedTask}
+        onRun={(t) => { setSelectedTask(null); navigate(`/use-cases/run/${t.id}`); }}
+        onSchedule={(t) => { setSelectedTask(null); setScheduleTarget(t); }}
       />
 
       {scheduleTarget && (

@@ -11,9 +11,11 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Calendar, Play, Clock, Users } from "lucide-react";
+import { Calendar, Play, Clock, Users, Bookmark, BookmarkCheck } from "lucide-react";
 import { UseCase } from "@/data/useCases";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMyTasks } from "@/hooks/use-my-tasks";
+import { toast } from "sonner";
 
 interface TaskPreviewDialogProps {
   open: boolean;
@@ -31,8 +33,10 @@ export function TaskPreviewDialog({
   onSchedule,
 }: TaskPreviewDialogProps) {
   const isMobile = useIsMobile();
+  const { has, add, remove } = useMyTasks();
   if (!task) return null;
   const Icon = task.icon;
+  const saved = has(task.id);
 
   const content = (
     <div className="space-y-5 p-1">
@@ -84,6 +88,25 @@ export function TaskPreviewDialog({
 
   const footer = (
     <div className="flex gap-2 pt-4 border-t border-border/50 mt-4">
+      <Button
+        variant="outline"
+        onClick={() => {
+          if (saved) {
+            remove(task.id);
+            toast.success(`"${task.name}" aus Meine Tasks entfernt`);
+          } else {
+            add(task.id);
+            toast.success(`"${task.name}" zu Meine Tasks hinzugefügt`);
+          }
+        }}
+        className="flex-1"
+      >
+        {saved ? (
+          <><BookmarkCheck className="h-4 w-4 mr-2" />Gespeichert</>
+        ) : (
+          <><Bookmark className="h-4 w-4 mr-2" />Speichern</>
+        )}
+      </Button>
       <Button variant="outline" onClick={() => onSchedule(task)} className="flex-1">
         <Calendar className="h-4 w-4 mr-2" />
         Schedule

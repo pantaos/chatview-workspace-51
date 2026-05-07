@@ -15,7 +15,7 @@ const PantaFlows = () => {
     { id: "dashboard", label: "Dashboard", shortLabel: "Dashboard" },
     { id: "tenants", label: "Tenants", shortLabel: "Tenants" },
     { id: "assistants", label: "Assistenten & Workflows", shortLabel: "Apps" },
-    { id: "templates", label: "Template Store", shortLabel: "Templates" },
+    { id: "templates", label: "Discover", shortLabel: "Discover" },
     { id: "config", label: "Konfiguration", shortLabel: "Konfig." },
     { id: "posts", label: "Community Posts", shortLabel: "Posts" },
   ];

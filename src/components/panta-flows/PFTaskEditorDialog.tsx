@@ -88,15 +88,15 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
     <ResponsiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={initial ? `Edit Task · ${initial.name}` : "Neue Task"}
-      className="max-w-3xl h-[640px]"
+      title={initial ? `Use Case bearbeiten · ${initial.name}` : "Neuer Use Case"}
+      className="max-w-2xl h-[640px]"
     >
       <ResponsiveDialogBody>
         <ResponsiveDialogContent>
           <div className="space-y-5">
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-muted-foreground">
-                Tasks haben keinen System Prompt. Stattdessen wird der Anwender-Prompt vorgefüllt.
+                Use Cases haben nur einen vorgefertigten Prompt – kein System Prompt.
               </div>
               <div className="inline-flex rounded-lg border border-border/60 bg-muted/30 p-0.5">
                 {(["de", "en"] as Lang[]).map((l) => (
@@ -118,7 +118,7 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
 
             <div className="rounded-xl border border-border/60 p-4 space-y-4 bg-card">
               <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Store-Inhalte ({lang === "de" ? "Deutsch" : "English"})
+                Inhalte ({lang === "de" ? "Deutsch" : "English"})
               </div>
               <Field label="Name">
                 <Input
@@ -131,28 +131,12 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
                 <Input
                   value={valueFor("description") || ""}
                   onChange={(e) => setField("description", e.target.value)}
-                  placeholder="Ein Satz, was die Task macht"
+                  placeholder="Ein Satz, was der Use Case macht"
                 />
               </Field>
-              <Field label="About this task (im Store-Popup)">
+              <Field label="Vorgefertigter Prompt">
                 <Textarea
-                  rows={3}
-                  value={valueFor("longDescription") || ""}
-                  onChange={(e) => setField("longDescription", e.target.value)}
-                  placeholder="Beschreibe wofür die Task gut ist."
-                />
-              </Field>
-              <Field label="What you need (eine Zeile pro Eingabe)">
-                <Textarea
-                  rows={2}
-                  value={inputsValue()}
-                  onChange={(e) => setInputs(e.target.value)}
-                  placeholder={"Thema\nZielgruppe"}
-                />
-              </Field>
-              <Field label='Vorgefertigter Prompt (erscheint im Textfeld bei „Jetzt ausprobieren")'>
-                <Textarea
-                  rows={5}
+                  rows={8}
                   value={valueFor("prefilledPrompt") || ""}
                   onChange={(e) => setField("prefilledPrompt", e.target.value)}
                   placeholder="Schreibe einen SEO-optimierten Blog Post zum Thema [Thema] für die Zielgruppe [Zielgruppe]..."
@@ -160,44 +144,6 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
               </Field>
             </div>
 
-            <div className="rounded-xl border border-border/60 p-4 space-y-4 bg-card">
-              <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Konfiguration (sprachunabhängig)
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <Field label="Team">
-                  <Input value={task.team} onChange={(e) => setBase("team", e.target.value)} />
-                </Field>
-                <Field label="Task-Typ">
-                  <Input value={task.taskType} onChange={(e) => setBase("taskType", e.target.value)} />
-                </Field>
-                <Field label="Dauer">
-                  <Input
-                    value={task.duration || ""}
-                    onChange={(e) => setBase("duration", e.target.value)}
-                    placeholder="2-3 min"
-                  />
-                </Field>
-                <Field label="Best for">
-                  <Input
-                    value={task.bestFor || ""}
-                    onChange={(e) => setBase("bestFor", e.target.value)}
-                  />
-                </Field>
-                <Field label="Sprachen">
-                  <Input
-                    value={task.language || ""}
-                    onChange={(e) => setBase("language", e.target.value)}
-                  />
-                </Field>
-                <Field label="Created by">
-                  <Input
-                    value={task.createdBy || ""}
-                    onChange={(e) => setBase("createdBy", e.target.value)}
-                  />
-                </Field>
-              </div>
-            </div>
 
             <div className="flex justify-end gap-2 pt-2 border-t border-border/40">
               <Button variant="outline" onClick={() => onOpenChange(false)}>

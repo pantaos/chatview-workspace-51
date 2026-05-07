@@ -145,42 +145,25 @@ export default function TemplateLibrary() {
                   </button>
                 ))}
               </div>
-              <div
-                className={cn(
-                  "relative",
-                  storiesExpanded && "max-h-[520px] overflow-y-auto pr-1"
-                )}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {visibleStories.map((task) => (
-                    <button
-                      key={`story-${task.id}`}
-                      onClick={() => setSelectedTask(task)}
-                      className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-white/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
-                    >
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        <span className="inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-semibold">
-                          {task.team}
-                        </span>
-                        <span className="inline-flex items-center rounded-full bg-muted text-muted-foreground px-2 py-0.5 text-[10px] font-semibold">
-                          {task.taskType}
-                        </span>
-                      </div>
-                      <h3 className="text-sm font-bold text-foreground leading-tight">
-                        {task.name}
-                      </h3>
-                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
-                        {task.description ||
-                          `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
-                      </p>
-                      <div className="mt-4 flex items-center justify-between text-primary text-xs font-semibold">
-                        <span>Learn more</span>
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </div>
-                    </button>
-                  ))}
+              {storiesExpanded ? (
+                <div className="max-h-[520px] overflow-y-auto pr-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    {visibleStories.map((task) => (
+                      <StoryCard key={`story-${task.id}`} task={task} onClick={() => setSelectedTask(task)} />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-4 snap-x snap-mandatory pb-2">
+                    {filteredStories.map((task) => (
+                      <div key={`story-${task.id}`} className="snap-start shrink-0 w-[240px]">
+                        <StoryCard task={task} onClick={() => setSelectedTask(task)} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

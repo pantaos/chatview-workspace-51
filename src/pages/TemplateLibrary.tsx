@@ -151,8 +151,8 @@ export default function TemplateLibrary() {
                   </div>
                 </div>
               ) : (
-                <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto scrollbar-hide">
-                  <div className="flex gap-4 snap-x snap-mandatory pb-2">
+                <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto overflow-y-visible scrollbar-hide">
+                  <div className="flex gap-4 snap-x snap-mandatory py-3">
                     {filteredStories.map((task) => (
                       <div key={`story-${task.id}`} className="snap-start shrink-0 w-[240px]">
                         <StoryCard task={task} onClick={() => setSelectedTask(task)} />
@@ -324,7 +324,7 @@ function StoryCard({ task, onClick }: { task: UseCase; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group relative w-full h-full text-left rounded-2xl bg-card border border-border/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
+      className="group relative w-full h-full text-left rounded-2xl bg-card/90 border border-white/30 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
     >
       <h3 className="text-sm font-bold text-foreground leading-tight">{task.name}</h3>
       <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">

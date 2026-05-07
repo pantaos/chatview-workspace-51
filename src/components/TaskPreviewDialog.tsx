@@ -19,6 +19,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useMyTasks } from "@/hooks/use-my-tasks";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Sparkles } from "lucide-react";
 
 interface TaskPreviewDialogProps {
   open: boolean;

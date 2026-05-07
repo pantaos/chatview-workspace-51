@@ -219,45 +219,26 @@ const PFTemplateStore = () => {
 
         <TabsContent value="tasks" className="mt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredTasks.map((t) => {
-              const Icon = t.icon || Sparkles;
-              return (
-                <Card key={t.id} className="p-4 transition-colors hover:border-primary/40">
-                  <div className="flex items-start gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100 flex items-center justify-center shrink-0">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-semibold truncate">{t.name}</h3>
-                        <button
-                          onClick={() => {
-                            setTaskEditorInitial(t);
-                            setTaskEditorOpen(true);
-                          }}
-                          className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
-                          title="Edit task"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                        {t.description || `${t.team} · ${t.taskType}`}
-                      </p>
-                      <div className="mt-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                        <span className="rounded bg-muted px-1.5 py-0.5">{t.team}</span>
-                        <span className="rounded bg-muted px-1.5 py-0.5">{t.taskType}</span>
-                        {t.prefilledPrompt && (
-                          <span className="rounded bg-primary/10 text-primary px-1.5 py-0.5 font-medium">
-                            Prompt ✓
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
+            {filteredTasks.map((t) => (
+              <Card key={t.id} className="p-4 transition-colors hover:border-primary/40">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="font-semibold truncate">{t.name}</h3>
+                  <button
+                    onClick={() => {
+                      setTaskEditorInitial(t);
+                      setTaskEditorOpen(true);
+                    }}
+                    className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors shrink-0"
+                    title="Edit use case"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground line-clamp-3 mt-1.5">
+                  {t.description || "—"}
+                </p>
+              </Card>
+            ))}
           </div>
         </TabsContent>
       </Tabs>

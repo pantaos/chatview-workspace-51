@@ -34,6 +34,10 @@ const PFTemplateStore = () => {
   const [editScope, setEditScope] = useState<TemplateVisibility["scope"]>("public");
   const [editTenantIds, setEditTenantIds] = useState<string[]>([]);
 
+  // Assistant content editor (create / edit name, prompts, starters, store text)
+  const [assistantEditorOpen, setAssistantEditorOpen] = useState(false);
+  const [assistantEditorInitial, setAssistantEditorInitial] = useState<TemplateItem | null>(null);
+
   // Pending community apps awaiting review
   const [pendingApps, setPendingApps] = useState<CommunityApp[]>(() =>
     seedCommunityApps.filter((a) => a.status === "pending")

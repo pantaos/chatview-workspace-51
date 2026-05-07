@@ -13,14 +13,20 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Calendar, Play, Clock, Users, Languages, User, X, Bookmark, BookmarkCheck } from "lucide-react";
+import {
+  Clock,
+  Sparkles as SparklesIcon,
+  Users,
+  User,
+  X,
+  Play,
+  Copy,
+  Check,
+} from "lucide-react";
 import { UseCase } from "@/data/useCases";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useMyTasks } from "@/hooks/use-my-tasks";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Sparkles } from "lucide-react";
 
 interface TaskPreviewDialogProps {
   open: boolean;
@@ -35,189 +41,136 @@ export function TaskPreviewDialog({
   onClose,
   task,
   onRun,
-  onSchedule,
 }: TaskPreviewDialogProps) {
   const isMobile = useIsMobile();
-  const { has, add, remove } = useMyTasks();
-  const [tab, setTab] = useState<"overview" | "how">("overview");
-  const [tryMode, setTryMode] = useState(false);
-  const [promptDraft, setPromptDraft] = useState("");
+  const [promptDraft, setPromptDraft] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   if (!task) return null;
   const Icon = task.icon;
-  const saved = has(task.id);
 
   const duration = task.duration || task.saves;
+  const result = task.taskType || "Antwortentwurf";
   const bestFor = task.bestFor || `${task.team} Team`;
-  const language = task.language || "Deutsch";
   const createdBy = task.createdBy || "PANTA";
-  const longDescription =
-    task.longDescription ||
-    task.description ||
-    `Diese Aufgabe hilft dir, ${task.name.toLowerCase()} schnell und strukturiert auszuführen – ready-to-run für dein ${task.team} Team.`;
-  const inputs = task.inputs && task.inputs.length > 0
-    ? task.inputs
-    : task.integrations.length > 0
-      ? task.integrations.map((i) => `${i} (optional)`)
-      : ["Thema oder Stichwort"];
+
   const defaultPrompt =
     task.prefilledPrompt ||
     `Bitte führe die Aufgabe "${task.name}" aus. ${task.description ?? ""}`.trim();
+  const promptValue = promptDraft ?? defaultPrompt;
+
+  const steps = (task.inputs && task.inputs.length > 0)
+    ? task.inputs
+    : [
+        `Du verbindest die nötigen Tools mit PANTA.`,
+        `${task.name} analysiert die Eingabe.`,
+        `Der Assistent verarbeitet die Daten und erstellt das Ergebnis.`,
+        `Du prüfst und nutzt das Ergebnis – oder passt es an.`,
+      ];
+
+  const example = task.longDescription || task.description ||
+    `Beispiel: ${task.name} liefert dir in wenigen Sekunden ein nutzbares Ergebnis – ohne manuelle Zwischenschritte.`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(promptValue);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("Kopieren fehlgeschlagen");
+    }
+  };
+
+  const handleRun = () => {
+    toast.success(`"${task.name}" im Chat geöffnet`);
+    onRun({ ...task, prefilledPrompt: promptValue });
+  };
 
   const body = (
     <div className="flex flex-col">
       {/* Header */}
-      <div className="px-6 pt-6 pb-5 border-b border-border/50">
+      <div className="px-7 pt-7 pb-5">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100 shrink-0">
-            <Icon className="h-5 w-5" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0">
+            <Icon className="h-6 w-6" />
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-xl font-semibold leading-tight">{task.name}</h2>
-              <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-foreground/70 uppercase">
-                TASK
-              </span>
-              <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-                {task.taskType}
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground mt-1.5">{task.description || `Ready-to-run automation for your ${task.team} team.`}</p>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <h2 className="text-xl font-semibold leading-tight">{task.name}</h2>
+            <span className="inline-block mt-2 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+              Use Case
+            </span>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Meta icon={<Clock className="h-3.5 w-3.5" />} label="Duration" value={duration} />
-          <Meta icon={<Users className="h-3.5 w-3.5" />} label="Best for" value={bestFor} />
-          <Meta icon={<Languages className="h-3.5 w-3.5" />} label="Language" value={language} />
-          <Meta icon={<User className="h-3.5 w-3.5" />} label="Created by" value={createdBy} />
+        <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+          {task.description || `Ready-to-run task für dein ${task.team} Team.`}
+        </p>
+
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border/50">
+          <Meta icon={<Clock className="h-3.5 w-3.5" />} label="Dauer" value={duration} />
+          <Meta icon={<SparklesIcon className="h-3.5 w-3.5" />} label="Ergebnis" value={result} />
+          <Meta icon={<Users className="h-3.5 w-3.5" />} label="Geeignet für" value={bestFor} />
+          <Meta icon={<User className="h-3.5 w-3.5" />} label="Erstellt von" value={createdBy} />
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="px-6 border-b border-border/50">
-        <div className="flex gap-6">
-          {(["overview", "how"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={cn(
-                "py-3 text-sm font-medium relative transition-colors",
-                tab === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t === "overview" ? "Overview" : "How it works"}
-              {tab === t && (
-                <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-primary rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Body */}
-      <div className="px-6 py-5 max-h-[40vh] overflow-y-auto">
-        {tryMode ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <Sparkles className="h-4 w-4 text-primary" />
-              Jetzt ausprobieren
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Wir haben einen Prompt für dich vorbereitet. Du kannst ihn anpassen und direkt absenden.
-            </p>
-            <Textarea
-              rows={6}
-              value={promptDraft || defaultPrompt}
-              onChange={(e) => setPromptDraft(e.target.value)}
-              className="text-sm resize-none"
-            />
-          </div>
-        ) : tab === "overview" ? (
-          <div className="space-y-5">
-            <div>
-              <h3 className="text-sm font-semibold mb-2">About this task</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{longDescription}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold mb-2">What you need</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {inputs.map((i) => (
-                  <span
-                    key={i}
-                    className="rounded-md border border-border/60 bg-card px-2.5 py-1 text-xs font-medium text-foreground/80"
-                  >
-                    {i}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <ol className="space-y-3 text-sm">
-              {[
-                `Du startest die Task und gibst die benötigten Inputs ein.`,
-                `${task.name} verarbeitet die Daten${task.integrations.length ? ` und verbindet sich mit ${task.integrations.join(", ")}.` : "."}`,
-                `Du erhältst das fertige Ergebnis – ready zum Teilen oder Weiterverarbeiten.`,
-              ].map((step, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary text-[11px] font-semibold shrink-0">
-                    {i + 1}
-                  </span>
-                  <span className="text-foreground/90 leading-relaxed">{step}</span>
+      {/* Two-column body */}
+      <div className="px-7 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left: How it works + example */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-semibold mb-3">So funktioniert's</h3>
+            <ul className="space-y-2">
+              {steps.map((s, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                  <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="leading-snug">{s}</span>
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
-        )}
+
+          <div>
+            <h3 className="text-sm font-semibold mb-2">Beispiel</h3>
+            <div className="rounded-lg bg-primary/5 border border-primary/10 px-3 py-2.5 text-xs text-foreground/80 leading-relaxed">
+              {example}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Try it now with prompt */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">Jetzt ausprobieren</h3>
+          <p className="text-xs text-muted-foreground">
+            Starte mit dem folgenden Prompt im Chat.
+          </p>
+          <div className="relative rounded-xl border border-border/60 bg-muted/30 p-3 pt-9">
+            <button
+              onClick={handleCopy}
+              className="absolute right-2 top-2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
+              title="Prompt kopieren"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            </button>
+            <Textarea
+              rows={7}
+              value={promptValue}
+              onChange={(e) => setPromptDraft(e.target.value)}
+              className="text-xs resize-none border-0 bg-transparent p-0 focus-visible:ring-0 shadow-none leading-relaxed"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-border/50 flex flex-wrap justify-end gap-2 bg-muted/20">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            if (saved) {
-              remove(task.id);
-              toast.success(`"${task.name}" aus Meine Tasks entfernt`);
-            } else {
-              add(task.id);
-              toast.success(`"${task.name}" zu Meine Tasks hinzugefügt`);
-            }
-          }}
-        >
-          {saved ? <BookmarkCheck className="h-4 w-4 mr-2" /> : <Bookmark className="h-4 w-4 mr-2" />}
-          {saved ? "Gespeichert" : "Speichern"}
+      <div className="px-7 py-4 border-t border-border/40 flex justify-end gap-2">
+        <Button variant="outline" onClick={onClose}>
+          Abbrechen
         </Button>
-        {tryMode ? (
-          <>
-            <Button variant="outline" onClick={() => setTryMode(false)}>
-              Zurück
-            </Button>
-            <Button
-              onClick={() => {
-                toast.success(`Prompt gesendet für "${task.name}"`);
-                onRun({ ...task, prefilledPrompt: promptDraft || defaultPrompt });
-              }}
-            >
-              <Send className="h-4 w-4 mr-2" />
-              Absenden
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button variant="outline" onClick={() => onSchedule(task)}>
-              <Calendar className="h-4 w-4 mr-2" />
-              Schedule
-            </Button>
-            <Button onClick={() => { setPromptDraft(defaultPrompt); setTryMode(true); }}>
-              <Play className="h-4 w-4 mr-2" />
-              Jetzt ausprobieren
-            </Button>
-          </>
-        )}
+        <Button onClick={handleRun}>
+          <Play className="h-4 w-4 mr-2" />
+          Im Chat ausprobieren
+        </Button>
       </div>
     </div>
   );
@@ -237,7 +190,7 @@ export function TaskPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-2xl p-0 overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-3xl p-0 overflow-hidden [&>button]:hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>{task.name}</DialogTitle>
         </DialogHeader>

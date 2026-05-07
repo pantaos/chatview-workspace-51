@@ -98,8 +98,8 @@ export default function TemplateLibrary() {
 
           <div className="container max-w-7xl mx-auto px-4 md:px-8 pt-10 pb-12 relative">
             <header className="text-primary-foreground">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Explore</h1>
-              <p className="mt-2 text-primary-foreground/80 max-w-xl">
+              <h1 className="text-3xl font-bold tracking-tight">Explore</h1>
+              <p className="mt-1 text-sm text-primary-foreground/80 max-w-xl">
                 Discover inspiration, assistants and tools to get your work done.
               </p>
             </header>
@@ -107,10 +107,10 @@ export default function TemplateLibrary() {
             <div className="mt-8">
               <div className="mb-6 flex items-end justify-between gap-3">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
-                    <Sparkles className="h-3 w-3" /> Inspiration
+                  <div className="inline-flex items-center rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
+                    Inspiration
                   </div>
-                  <h2 className="text-2xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
+                  <h2 className="text-3xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
                   <p className="mt-1 text-sm text-primary-foreground/80">
                     Discover what PANTA can do for you.
                   </p>
@@ -137,10 +137,18 @@ export default function TemplateLibrary() {
                       onClick={() => setSelectedTask(task)}
                       className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-white/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
                     >
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-semibold">
+                          {task.team}
+                        </span>
+                        <span className="inline-flex items-center rounded-full bg-muted text-muted-foreground px-2 py-0.5 text-[10px] font-semibold">
+                          {task.taskType}
+                        </span>
+                      </div>
                       <h3 className="text-sm font-bold text-foreground leading-tight">
                         {task.name}
                       </h3>
-                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
+                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
                         {task.description ||
                           `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
                       </p>
@@ -177,24 +185,23 @@ export default function TemplateLibrary() {
             {visibleAssistants.length > 0 ? (
               <div className={cn(assistantsExpanded && "max-h-[640px] overflow-y-auto pr-1")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {visibleAssistants.map((t) => {
-                    const Icon =
-                      ((LucideIcons as any)[t.icon] as LucideIcon) || LucideIcons.Sparkles;
-                    return (
-                      <ExplorerCard
-                        key={t.id}
-                        icon={Icon}
-                        title={t.title}
-                        description={t.description}
-                        tone={pickTone(t.id)}
-                        meta={t.tags[0]?.name ?? "Assistant"}
-                        onClick={() => {
-                          setSelectedTemplate(t);
-                          setPreviewOpen(true);
-                        }}
-                      />
-                    );
-                  })}
+                  {visibleAssistants.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setSelectedTemplate(t);
+                        setPreviewOpen(true);
+                      }}
+                      className="group text-left rounded-2xl border border-border/60 bg-card p-5 flex flex-col min-h-[170px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                    >
+                      <h3 className="text-sm font-semibold text-foreground leading-tight">{t.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground leading-relaxed">{t.description}</p>
+                      <div className="mt-auto flex items-center justify-between pt-4">
+                        <span className="text-xs text-muted-foreground">{t.tags[0]?.name ?? "Assistant"}</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             ) : (

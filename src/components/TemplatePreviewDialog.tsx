@@ -13,7 +13,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Check, Eye, Plus, ArrowRight, X, BookOpen, Users, Languages, User } from "lucide-react";
+import { CheckCircle2, ArrowRight, X } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { TemplateItem } from "@/data/templates";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -33,7 +33,7 @@ export function TemplatePreviewDialog({
   onAdd,
 }: TemplatePreviewDialogProps) {
   const isMobile = useIsMobile();
-  const [tab, setTab] = useState<"overview" | "capabilities">("overview");
+  const [tab, setTab] = useState<"overview" | "systemprompt">("overview");
 
   if (!template) return null;
 
@@ -42,61 +42,54 @@ export function TemplatePreviewDialog({
       className?: string;
     }>) || LucideIcons.Sparkles;
 
-  const useCasesShort =
-    template.useCases?.slice(0, 2).join(", ") || template.tags.map((t) => t.name).join(", ");
-  const bestFor = template.bestFor || "Teams & Einzelpersonen";
-  const language = template.language || "Deutsch, Englisch";
-  const createdBy = template.createdBy || "PANTA";
   const longDescription =
     template.longDescription ||
     `${template.title} hilft dir bei deiner Arbeit – schneller, konsistenter und auf deinen Stil abgestimmt.`;
 
+  // Split long description into paragraphs (split on double newline or single newline)
+  const paragraphs = longDescription.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+
+  const useCases = template.useCases ?? [];
+  const features = template.features ?? [];
+
   const body = (
     <div className="flex flex-col">
       {/* Header */}
-      <div className="px-6 pt-6 pb-5 border-b border-border/50">
+      <div className="px-7 pt-7 pb-5">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 ring-1 ring-violet-100 shrink-0">
-            <IconComponent className="h-5 w-5" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0">
+            <IconComponent className="h-6 w-6" />
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-xl font-semibold leading-tight">{template.title}</h2>
-              <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-foreground/70 uppercase">
-                ASSISTANT
+          <div className="min-w-0 flex-1 pt-0.5">
+            <h2 className="text-2xl font-bold leading-tight text-foreground">{template.title}</h2>
+            <div className="flex items-center gap-2 flex-wrap mt-2">
+              <span className="rounded-md bg-primary/10 text-primary px-2.5 py-1 text-[10px] font-bold tracking-[0.12em] uppercase">
+                Assistant
               </span>
               {template.tags[0] && (
-                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+                <span className="rounded-md bg-muted px-2.5 py-1 text-[11px] font-medium text-foreground/70">
                   {template.tags[0].name}
                 </span>
               )}
             </div>
-            <p className="text-sm text-muted-foreground mt-1.5">{template.description}</p>
           </div>
         </div>
-
-        {/* Metadata grid */}
-        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Meta icon={<BookOpen className="h-3.5 w-3.5" />} label="Use cases" value={useCasesShort} />
-          <Meta icon={<Users className="h-3.5 w-3.5" />} label="Best for" value={bestFor} />
-          <Meta icon={<Languages className="h-3.5 w-3.5" />} label="Language" value={language} />
-          <Meta icon={<User className="h-3.5 w-3.5" />} label="Created by" value={createdBy} />
-        </div>
+        <p className="text-sm text-muted-foreground mt-5 leading-relaxed">{template.description}</p>
       </div>
 
       {/* Tabs */}
-      <div className="px-6 border-b border-border/50">
-        <div className="flex gap-6">
-          {(["overview", "capabilities"] as const).map((t) => (
+      <div className="px-7 border-b border-border/60">
+        <div className="flex gap-7">
+          {(["overview", "systemprompt"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={cn(
-                "py-3 text-sm font-medium relative transition-colors",
-                tab === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                "py-2.5 text-sm font-semibold relative transition-colors",
+                tab === t ? "text-primary" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {t === "overview" ? "Overview" : "Capabilities"}
+              {t === "overview" ? "Overview" : "Systemprompt"}
               {tab === t && (
                 <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-primary rounded-full" />
               )}
@@ -106,22 +99,49 @@ export function TemplatePreviewDialog({
       </div>
 
       {/* Body */}
-      <div className="px-6 py-5 max-h-[40vh] overflow-y-auto">
+      <div className="px-7 py-6 max-h-[52vh] overflow-y-auto">
         {tab === "overview" ? (
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
-              <h3 className="text-sm font-semibold mb-2">About this assistant</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{longDescription}</p>
+              <h3 className="text-sm font-bold mb-2.5 text-foreground">About this assistant</h3>
+              <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+                {paragraphs.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+                {useCases.length > 0 && (
+                  <>
+                    <p className="pt-1">It is especially useful for:</p>
+                    <ul className="list-disc pl-5 space-y-1">
+                      {useCases.slice(0, 6).map((u, i) => (
+                        <li key={i}>{u}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
             </div>
 
+            {features.length > 0 && (
+              <div className="border-t border-border/50 pt-5">
+                <ul className="space-y-2.5">
+                  {features.slice(0, 8).map((f, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/90">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" strokeWidth={2} />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {template.starters.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold mb-2">Example prompts</h3>
+              <div className="border-t border-border/50 pt-5">
+                <h3 className="text-sm font-bold mb-3 text-foreground">Example prompts</h3>
                 <div className="space-y-2">
-                  {template.starters.slice(0, 3).map((s, i) => (
+                  {template.starters.slice(0, 4).map((s, i) => (
                     <button
                       key={i}
-                      className="w-full text-left flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-sm hover:border-foreground/20 hover:shadow-sm transition-all"
+                      className="w-full text-left flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-card px-4 py-3 text-sm hover:border-primary/40 hover:bg-primary/[0.03] transition-all"
                     >
                       <span className="truncate text-foreground/90">{s.displayText}</span>
                       <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -132,49 +152,18 @@ export function TemplatePreviewDialog({
             )}
           </div>
         ) : (
-          <div className="space-y-4">
-            {template.features.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold mb-2">What it can do</h3>
-                <ul className="space-y-2">
-                  {[...template.features, ...template.useCases].slice(0, 8).map((c, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm">
-                      <div className="mt-0.5 h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <Check className="h-2.5 w-2.5 text-primary" />
-                      </div>
-                      <span className="text-foreground/90">{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {template.suggestedIntegrations.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold mb-2">Works with</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {template.suggestedIntegrations.map((i) => (
-                    <span
-                      key={i}
-                      className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-foreground/80 capitalize"
-                    >
-                      {i === "microsoft" ? "Microsoft 365" : i}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div>
+            <h3 className="text-sm font-bold mb-2.5 text-foreground">System prompt</h3>
+            <pre className="rounded-xl border border-border/60 bg-muted/40 p-4 text-xs text-foreground/90 leading-relaxed whitespace-pre-wrap font-mono">
+              {template.systemPrompt || "Kein System Prompt hinterlegt."}
+            </pre>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-border/50 flex justify-end gap-2 bg-muted/20">
-        <Button variant="outline">
-          <Eye className="h-4 w-4 mr-2" />
-          Preview
-        </Button>
-        <Button onClick={() => onAdd(template)}>
-          <Plus className="h-4 w-4 mr-2" />
+      <div className="px-7 py-4 border-t border-border/60 flex justify-end">
+        <Button onClick={() => onAdd(template)} className="rounded-xl">
           Use Assistant
         </Button>
       </div>
@@ -206,17 +195,5 @@ export function TemplatePreviewDialog({
         {body}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function Meta({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        {icon}
-        {label}
-      </div>
-      <div className="text-xs font-medium text-foreground mt-1 leading-snug line-clamp-2">{value}</div>
-    </div>
   );
 }

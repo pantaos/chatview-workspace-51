@@ -40,6 +40,8 @@ export function TaskPreviewDialog({
   const isMobile = useIsMobile();
   const { has, add, remove } = useMyTasks();
   const [tab, setTab] = useState<"overview" | "how">("overview");
+  const [tryMode, setTryMode] = useState(false);
+  const [promptDraft, setPromptDraft] = useState("");
 
   if (!task) return null;
   const Icon = task.icon;

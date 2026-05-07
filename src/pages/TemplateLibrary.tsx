@@ -104,60 +104,58 @@ export default function TemplateLibrary() {
               </p>
             </header>
 
-            <div className="mt-8">
-            {/* Decorative blobs */}
-            <div className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-
-            <div className="relative mb-6 flex items-end justify-between gap-3">
-              <div>
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
-                  <Sparkles className="h-3 w-3" /> Inspiration
+              <div className="mb-6 flex items-end justify-between gap-3">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
+                    <Sparkles className="h-3 w-3" /> Inspiration
+                  </div>
+                  <h2 className="text-2xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
+                  <p className="mt-1 text-sm text-primary-foreground/80">
+                    Discover what PANTA can do for you.
+                  </p>
                 </div>
-                <h2 className="text-2xl font-bold text-foreground tracking-tight">Use Case Stories</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Discover what PANTA can do for you.
-                </p>
-              </div>
-              {allStories.length > 5 && (
-                <button
-                  onClick={() => setStoriesExpanded((v) => !v)}
-                  className="inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
-                >
-                  {storiesExpanded ? "Show less" : "View all"} <ArrowRight className="h-3 w-3" />
-                </button>
-              )}
-            </div>
-            <div
-              className={cn(
-                "relative",
-                storiesExpanded && "max-h-[520px] overflow-y-auto pr-1"
-              )}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                {visibleStories.map((task, i) => (
+                {allStories.length > 5 && (
                   <button
-                    key={`story-${task.id}`}
-                    onClick={() => setSelectedTask(task)}
-                    className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-border/60 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_10px_30px_-12px_hsl(var(--primary)/0.35)]"
+                    onClick={() => setStoriesExpanded((v) => !v)}
+                    className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-white transition-colors shrink-0"
                   >
-                    <h3 className="text-sm font-bold text-foreground leading-tight">
-                      {task.name}
-                    </h3>
-                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
-                      {task.description ||
-                        `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
-                    </p>
-                    <div className="mt-4 flex items-center justify-between text-primary text-xs font-semibold">
-                      <span>Learn more</span>
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </div>
+                    {storiesExpanded ? "Show less" : "View all"} <ArrowRight className="h-3 w-3" />
                   </button>
-                ))}
+                )}
+              </div>
+              <div
+                className={cn(
+                  "relative",
+                  storiesExpanded && "max-h-[520px] overflow-y-auto pr-1"
+                )}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                  {visibleStories.map((task) => (
+                    <button
+                      key={`story-${task.id}`}
+                      onClick={() => setSelectedTask(task)}
+                      className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-white/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
+                    >
+                      <h3 className="text-sm font-bold text-foreground leading-tight">
+                        {task.name}
+                      </h3>
+                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
+                        {task.description ||
+                          `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
+                      </p>
+                      <div className="mt-4 flex items-center justify-between text-primary text-xs font-semibold">
+                        <span>Learn more</span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
 
+        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-10">
           {/* Assistants section */}
           <Section
             title="Assistants"

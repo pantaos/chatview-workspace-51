@@ -122,16 +122,50 @@ export default function TemplateLibrary() {
           </div>
         </div>
 
-        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12">
+        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-10">
           {/* Page heading */}
-          <header className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground">Explorer</h1>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                Find the right assistant or task for your work.
-              </p>
-            </div>
+          <header>
+            <h1 className="text-3xl font-bold text-foreground">Explore</h1>
+            <p className="mt-1 text-muted-foreground">
+              Discover inspiration, assistants and tools to get your work done.
+            </p>
           </header>
+
+          {/* Use Case Stories highlighted band */}
+          <section className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-6 md:p-7">
+            <div className="mb-5 flex items-end justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-bold text-foreground">Use Case Stories</h2>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  Discover what PANTA can do for you.
+                </p>
+              </div>
+              <button className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                View all <ArrowRight className="h-3 w-3" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {visibleTasks.slice(0, 5).map((task) => (
+                <button
+                  key={`story-${task.id}`}
+                  onClick={() => setSelectedTask(task)}
+                  className="text-left rounded-xl bg-card border border-border/60 p-5 flex flex-col min-h-[180px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                >
+                  <h3 className="text-sm font-bold text-foreground leading-tight">
+                    {task.name}
+                  </h3>
+                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
+                    {task.description ||
+                      `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between text-primary text-xs font-medium">
+                    <span>Learn more</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
 
           {/* Assistants section */}
           <Section

@@ -64,7 +64,7 @@ export function TaskPreviewDialog({
     task.prefilledPrompt ||
     `Bitte führe die Aufgabe "${task.name}" aus. ${task.description ?? ""}`.trim();
 
-
+  const body = (
     <div className="flex flex-col">
       {/* Header */}
       <div className="px-6 pt-6 pb-5 border-b border-border/50">

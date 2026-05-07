@@ -15,6 +15,17 @@ export interface TemplateVisibility {
   tenantIds: string[];
 }
 
+export type Lang = 'de' | 'en';
+
+export interface TemplateLocalized {
+  title?: string;
+  description?: string;
+  longDescription?: string;
+  useCases?: string[];
+  features?: string[];
+  starters?: { displayText: string; fullPrompt: string }[];
+}
+
 export interface TemplateItem {
   id: string;
   title: string;
@@ -22,20 +33,29 @@ export interface TemplateItem {
   icon: string;
   tags: WorkflowTag[];
   category: 'assistant' | 'workflow' | 'app';
-  
+
   // App Store Details
   screenshots: string[];
   useCases: string[];
   features: string[];
-  
+
   // Personalisierung
   customizable: CustomizableField[];
-  
+
   // Vorkonfiguration
   systemPrompt: string;
   suggestedIntegrations: string[];
   starters: { displayText: string; fullPrompt: string }[];
-  
+
+  // Store metadata (shown in preview)
+  longDescription?: string;
+  bestFor?: string;     // e.g. "Teams & Einzelpersonen"
+  language?: string;    // e.g. "Deutsch, Englisch"
+  createdBy?: string;   // e.g. "PANTA"
+
+  // Super Admin maintained translations (DE / EN)
+  i18n?: Partial<Record<Lang, TemplateLocalized>>;
+
   // Metadaten
   rating?: number;
   usageCount?: number;
@@ -44,6 +64,21 @@ export interface TemplateItem {
 
   // Super Admin distribution
   visibility?: TemplateVisibility;
+}
+
+/** Resolve a localized view of a template for the active UI language. */
+export function localizeTemplate(t: TemplateItem, lang: Lang): TemplateItem {
+  const loc = t.i18n?.[lang];
+  if (!loc) return t;
+  return {
+    ...t,
+    title: loc.title ?? t.title,
+    description: loc.description ?? t.description,
+    longDescription: loc.longDescription ?? t.longDescription,
+    useCases: loc.useCases ?? t.useCases,
+    features: loc.features ?? t.features,
+    starters: loc.starters ?? t.starters,
+  };
 }
 
 export const templateTags: WorkflowTag[] = [
@@ -113,6 +148,34 @@ export const templates: TemplateItem[] = [
     rating: 4.8,
     usageCount: 12400,
     isFeatured: true,
+    longDescription: "Der E-Mail Assistent hilft dir, professionelle E-Mails schnell und in deinem Unternehmensstil zu verfassen. Er berücksichtigt Kontext, Tonalität und Zielgruppe.",
+    bestFor: "Teams & Einzelpersonen",
+    language: "Deutsch, Englisch",
+    createdBy: "PANTA",
+    i18n: {
+      de: {},
+      en: {
+        title: "Email Assistant",
+        description: "Write professional emails in your company tone.",
+        longDescription: "The Email Assistant helps you craft professional emails fast, in your company's tone of voice. It accounts for context, tonality and the target audience.",
+        useCases: [
+          "Write professional emails fast",
+          "Reply to customer enquiries",
+          "Draft follow-up messages",
+          "Translate emails into other languages",
+        ],
+        features: [
+          "Learns your writing style",
+          "Multi-language support",
+          "Outlook / Gmail integration",
+        ],
+        starters: [
+          { displayText: "Friendly reply to a customer", fullPrompt: "Help me draft a friendly reply to a customer enquiry..." },
+          { displayText: "Follow-up after a quote", fullPrompt: "Draft a follow-up email for a quote I sent..." },
+          { displayText: "Internal team announcement", fullPrompt: "Write an internal announcement for the team about..." },
+        ],
+      },
+    },
   },
   {
     id: "faq-bot",

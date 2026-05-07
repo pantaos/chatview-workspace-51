@@ -18,6 +18,15 @@ import {
   GraduationCap,
 } from "lucide-react";
 
+export type Lang = 'de' | 'en';
+
+export interface UseCaseLocalized {
+  name?: string;
+  description?: string;
+  longDescription?: string;
+  inputs?: string[];
+}
+
 export interface UseCase {
   id: string;
   name: string;
@@ -27,6 +36,27 @@ export interface UseCase {
   integrations: string[];
   team: string;
   taskType: string;
+  // Store metadata
+  description?: string;
+  longDescription?: string;
+  duration?: string;     // e.g. "3-5 min"
+  bestFor?: string;      // e.g. "Content Teams, Marketing"
+  language?: string;     // e.g. "Deutsch"
+  createdBy?: string;    // e.g. "PANTA"
+  inputs?: string[];     // "What you need" pills
+  i18n?: Partial<Record<Lang, UseCaseLocalized>>;
+}
+
+export function localizeUseCase(u: UseCase, lang: Lang): UseCase {
+  const loc = u.i18n?.[lang];
+  if (!loc) return u;
+  return {
+    ...u,
+    name: loc.name ?? u.name,
+    description: loc.description ?? u.description,
+    longDescription: loc.longDescription ?? u.longDescription,
+    inputs: loc.inputs ?? u.inputs,
+  };
 }
 
 export const useCaseTeams = [

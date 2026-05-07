@@ -482,6 +482,24 @@ const PFTemplateStore = () => {
           </ResponsiveDialogContent>
         </ResponsiveDialogBody>
       </ResponsiveDialog>
+
+      <PFAssistantEditorDialog
+        open={assistantEditorOpen}
+        onOpenChange={(o) => {
+          setAssistantEditorOpen(o);
+          if (!o) setAssistantEditorInitial(null);
+        }}
+        initial={assistantEditorInitial}
+        onSave={(t) => {
+          setItems((prev) => {
+            const exists = prev.some((p) => p.id === t.id);
+            return exists ? prev.map((p) => (p.id === t.id ? t : p)) : [t, ...prev];
+          });
+          toast.success(
+            assistantEditorInitial ? `"${t.title}" updated` : `"${t.title}" created`
+          );
+        }}
+      />
     </div>
   );
 };

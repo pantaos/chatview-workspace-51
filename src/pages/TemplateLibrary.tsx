@@ -110,9 +110,6 @@ export default function TemplateLibrary() {
             <div className="mt-8">
               <div className="mb-6 flex items-end justify-between gap-3">
                 <div>
-                  <div className="inline-flex items-center rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
-                    Inspiration
-                  </div>
                   <h2 className="text-xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
                   <p className="mt-1 text-sm text-primary-foreground/80">
                     Discover what PANTA can do for you.

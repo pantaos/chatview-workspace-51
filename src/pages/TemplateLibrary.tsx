@@ -100,18 +100,25 @@ export default function TemplateLibrary() {
           </header>
 
           {/* Use Case Stories highlighted band */}
-          <section className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-6 md:p-7">
-            <div className="mb-5 flex items-end justify-between gap-3">
+          <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] via-primary/[0.04] to-transparent p-6 md:p-8">
+            {/* Decorative blobs */}
+            <div className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+
+            <div className="relative mb-6 flex items-end justify-between gap-3">
               <div>
-                <h2 className="text-lg font-bold text-foreground">Use Case Stories</h2>
-                <p className="mt-0.5 text-sm text-muted-foreground">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
+                  <Sparkles className="h-3 w-3" /> Inspiration
+                </div>
+                <h2 className="text-2xl font-bold text-foreground tracking-tight">Use Case Stories</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Discover what PANTA can do for you.
                 </p>
               </div>
               {allStories.length > 5 && (
                 <button
                   onClick={() => setStoriesExpanded((v) => !v)}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  className="inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
                 >
                   {storiesExpanded ? "Show less" : "View all"} <ArrowRight className="h-3 w-3" />
                 </button>
@@ -119,16 +126,21 @@ export default function TemplateLibrary() {
             </div>
             <div
               className={cn(
+                "relative",
                 storiesExpanded && "max-h-[520px] overflow-y-auto pr-1"
               )}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                {visibleStories.map((task) => (
+                {visibleStories.map((task, i) => (
                   <button
                     key={`story-${task.id}`}
                     onClick={() => setSelectedTask(task)}
-                    className="text-left rounded-xl bg-card border border-border/60 p-5 flex flex-col min-h-[180px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                    className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-border/60 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_10px_30px_-12px_hsl(var(--primary)/0.35)]"
                   >
+                    <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-primary/70 via-primary/40 to-primary/10 opacity-70 group-hover:opacity-100 transition-opacity" />
+                    <div className="mb-3 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary text-[11px] font-bold">
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
                     <h3 className="text-sm font-bold text-foreground leading-tight">
                       {task.name}
                     </h3>
@@ -136,9 +148,9 @@ export default function TemplateLibrary() {
                       {task.description ||
                         `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
                     </p>
-                    <div className="mt-4 flex items-center justify-between text-primary text-xs font-medium">
+                    <div className="mt-4 flex items-center justify-between text-primary text-xs font-semibold">
                       <span>Learn more</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </div>
                   </button>
                 ))}

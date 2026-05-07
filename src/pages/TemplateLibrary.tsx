@@ -104,6 +104,7 @@ export default function TemplateLibrary() {
               </p>
             </header>
 
+            <div className="mt-8">
               <div className="mb-6 flex items-end justify-between gap-3">
                 <div>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">

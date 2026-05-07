@@ -143,18 +143,16 @@ export default function TemplateLibrary() {
                 ))}
               </div>
               {storiesExpanded ? (
-                <div className="max-h-[520px] overflow-y-auto pr-1">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    {visibleStories.map((task) => (
-                      <StoryCard key={`story-${task.id}`} task={task} onClick={() => setSelectedTask(task)} />
-                    ))}
-                  </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+                  {visibleStories.map((task) => (
+                    <StoryCard key={`story-${task.id}`} task={task} onClick={() => setSelectedTask(task)} />
+                  ))}
                 </div>
               ) : (
                 <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto overflow-y-visible scrollbar-hide">
-                  <div className="flex gap-4 snap-x snap-mandatory py-3">
+                  <div className="flex gap-3 sm:gap-4 snap-x snap-mandatory py-3">
                     {filteredStories.map((task) => (
-                      <div key={`story-${task.id}`} className="snap-start shrink-0 w-[240px]">
+                      <div key={`story-${task.id}`} className="snap-start shrink-0 w-[180px] sm:w-[220px] md:w-[240px]">
                         <StoryCard task={task} onClick={() => setSelectedTask(task)} />
                       </div>
                     ))}
@@ -184,8 +182,8 @@ export default function TemplateLibrary() {
             viewAllLabel={assistantsExpanded ? "Show less" : "View all"}
           >
             {visibleAssistants.length > 0 ? (
-              <div className={cn(assistantsExpanded && "max-h-[640px] overflow-y-auto pr-1")}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   {visibleAssistants.map((t) => (
                     <button
                       key={t.id}
@@ -324,7 +322,7 @@ function StoryCard({ task, onClick }: { task: UseCase; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group relative w-full h-full text-left rounded-2xl bg-card/90 border border-white/30 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
+      className="group relative w-full h-full text-left rounded-2xl bg-card/90 border border-white/30 p-3 sm:p-5 flex flex-col min-h-[140px] sm:min-h-[200px] transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
     >
       <h3 className="text-sm font-bold text-foreground leading-tight">{task.name}</h3>
       <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">

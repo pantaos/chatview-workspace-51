@@ -36,47 +36,6 @@ const PFTemplateStore = () => {
   const [assistantEditorOpen, setAssistantEditorOpen] = useState(false);
   const [assistantEditorInitial, setAssistantEditorInitial] = useState<TemplateItem | null>(null);
 
-  // Pending community apps awaiting review
-  const [pendingApps, setPendingApps] = useState<CommunityApp[]>(() =>
-    seedCommunityApps.filter((a) => a.status === "pending")
-  );
-  const [reviewing, setReviewing] = useState<CommunityApp | null>(null);
-  const [rejectReason, setRejectReason] = useState("");
-  const [rejectMode, setRejectMode] = useState(false);
-
-  const approveApp = (app: CommunityApp) => {
-    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
-    const asTemplate: TemplateItem = {
-      id: app.id,
-      title: app.title,
-      description: app.description,
-      icon: app.icon,
-      tags: app.tags,
-      category: "app",
-      screenshots: [],
-      useCases: [],
-      features: ["Community-built app"],
-      customizable: [],
-      systemPrompt: "",
-      suggestedIntegrations: [],
-      starters: [],
-      visibility: defaultVisibility(),
-    };
-    setItems((prev) => [asTemplate, ...prev]);
-    toast.success(`Approved "${app.title}"`);
-    setReviewing(null);
-    setRejectMode(false);
-    setRejectReason("");
-  };
-
-  const rejectApp = (app: CommunityApp, reason: string) => {
-    setPendingApps((prev) => prev.filter((a) => a.id !== app.id));
-    toast.success(`Rejected "${app.title}"`, { description: reason });
-    setReviewing(null);
-    setRejectMode(false);
-    setRejectReason("");
-  };
-
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return items.filter(

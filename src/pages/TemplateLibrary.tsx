@@ -137,10 +137,6 @@ export default function TemplateLibrary() {
                     onClick={() => setSelectedTask(task)}
                     className="group relative text-left rounded-2xl bg-card/95 backdrop-blur border border-border/60 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_10px_30px_-12px_hsl(var(--primary)/0.35)]"
                   >
-                    
-                    <div className="mb-3 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary text-[11px] font-bold">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
                     <h3 className="text-sm font-bold text-foreground leading-tight">
                       {task.name}
                     </h3>

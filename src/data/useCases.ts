@@ -58,6 +58,7 @@ export function localizeUseCase(u: UseCase, lang: Lang): UseCase {
     description: loc.description ?? u.description,
     longDescription: loc.longDescription ?? u.longDescription,
     inputs: loc.inputs ?? u.inputs,
+    prefilledPrompt: loc.prefilledPrompt ?? u.prefilledPrompt,
   };
 }
 

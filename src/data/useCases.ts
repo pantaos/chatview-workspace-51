@@ -25,6 +25,7 @@ export interface UseCaseLocalized {
   description?: string;
   longDescription?: string;
   inputs?: string[];
+  prefilledPrompt?: string;
 }
 
 export interface UseCase {
@@ -44,6 +45,7 @@ export interface UseCase {
   language?: string;     // e.g. "Deutsch"
   createdBy?: string;    // e.g. "PANTA"
   inputs?: string[];     // "What you need" pills
+  prefilledPrompt?: string; // Pre-written prompt shown in the "Jetzt ausprobieren" textarea
   i18n?: Partial<Record<Lang, UseCaseLocalized>>;
 }
 
@@ -56,6 +58,7 @@ export function localizeUseCase(u: UseCase, lang: Lang): UseCase {
     description: loc.description ?? u.description,
     longDescription: loc.longDescription ?? u.longDescription,
     inputs: loc.inputs ?? u.inputs,
+    prefilledPrompt: loc.prefilledPrompt ?? u.prefilledPrompt,
   };
 }
 

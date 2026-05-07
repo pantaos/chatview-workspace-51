@@ -19,6 +19,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useMyTasks } from "@/hooks/use-my-tasks";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Sparkles } from "lucide-react";
 
 interface TaskPreviewDialogProps {
   open: boolean;
@@ -38,6 +40,8 @@ export function TaskPreviewDialog({
   const isMobile = useIsMobile();
   const { has, add, remove } = useMyTasks();
   const [tab, setTab] = useState<"overview" | "how">("overview");
+  const [tryMode, setTryMode] = useState(false);
+  const [promptDraft, setPromptDraft] = useState("");
 
   if (!task) return null;
   const Icon = task.icon;
@@ -56,6 +60,9 @@ export function TaskPreviewDialog({
     : task.integrations.length > 0
       ? task.integrations.map((i) => `${i} (optional)`)
       : ["Thema oder Stichwort"];
+  const defaultPrompt =
+    task.prefilledPrompt ||
+    `Bitte führe die Aufgabe "${task.name}" aus. ${task.description ?? ""}`.trim();
 
   const body = (
     <div className="flex flex-col">
@@ -110,7 +117,23 @@ export function TaskPreviewDialog({
 
       {/* Body */}
       <div className="px-6 py-5 max-h-[40vh] overflow-y-auto">
-        {tab === "overview" ? (
+        {tryMode ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Jetzt ausprobieren
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Wir haben einen Prompt für dich vorbereitet. Du kannst ihn anpassen und direkt absenden.
+            </p>
+            <Textarea
+              rows={6}
+              value={promptDraft || defaultPrompt}
+              onChange={(e) => setPromptDraft(e.target.value)}
+              className="text-sm resize-none"
+            />
+          </div>
+        ) : tab === "overview" ? (
           <div className="space-y-5">
             <div>
               <h3 className="text-sm font-semibold mb-2">About this task</h3>
@@ -151,9 +174,10 @@ export function TaskPreviewDialog({
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-border/50 flex justify-end gap-2 bg-muted/20">
+      <div className="px-6 py-4 border-t border-border/50 flex flex-wrap justify-end gap-2 bg-muted/20">
         <Button
-          variant="outline"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             if (saved) {
               remove(task.id);
@@ -167,14 +191,33 @@ export function TaskPreviewDialog({
           {saved ? <BookmarkCheck className="h-4 w-4 mr-2" /> : <Bookmark className="h-4 w-4 mr-2" />}
           {saved ? "Gespeichert" : "Speichern"}
         </Button>
-        <Button variant="outline" onClick={() => onSchedule(task)}>
-          <Calendar className="h-4 w-4 mr-2" />
-          Schedule
-        </Button>
-        <Button onClick={() => onRun(task)}>
-          <Play className="h-4 w-4 mr-2" />
-          Start Task
-        </Button>
+        {tryMode ? (
+          <>
+            <Button variant="outline" onClick={() => setTryMode(false)}>
+              Zurück
+            </Button>
+            <Button
+              onClick={() => {
+                toast.success(`Prompt gesendet für "${task.name}"`);
+                onRun({ ...task, prefilledPrompt: promptDraft || defaultPrompt });
+              }}
+            >
+              <Send className="h-4 w-4 mr-2" />
+              Absenden
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" onClick={() => onSchedule(task)}>
+              <Calendar className="h-4 w-4 mr-2" />
+              Schedule
+            </Button>
+            <Button onClick={() => { setPromptDraft(defaultPrompt); setTryMode(true); }}>
+              <Play className="h-4 w-4 mr-2" />
+              Jetzt ausprobieren
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

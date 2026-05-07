@@ -113,12 +113,12 @@ export default function TemplateLibrary() {
                   <div className="inline-flex items-center rounded-full bg-white/15 backdrop-blur text-primary-foreground px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] uppercase mb-2">
                     Inspiration
                   </div>
-                  <h2 className="text-3xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
+                  <h2 className="text-xl font-bold text-primary-foreground tracking-tight">Use Case Stories</h2>
                   <p className="mt-1 text-sm text-primary-foreground/80">
                     Discover what PANTA can do for you.
                   </p>
                 </div>
-                {allStories.length > 5 && (
+                {filteredStories.length > 5 && (
                   <button
                     onClick={() => setStoriesExpanded((v) => !v)}
                     className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-white transition-colors shrink-0"
@@ -126,6 +126,24 @@ export default function TemplateLibrary() {
                     {storiesExpanded ? "Show less" : "View all"} <ArrowRight className="h-3 w-3" />
                   </button>
                 )}
+              </div>
+
+              {/* Team filter pills */}
+              <div className="mb-4 flex gap-1.5 overflow-x-auto scrollbar-hide">
+                {[{ id: "all", label: "All" }, ...storyTeams.map((t) => ({ id: t, label: t }))].map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setStoryTeam(p.id)}
+                    className={cn(
+                      "px-3 py-1.5 text-xs rounded-full whitespace-nowrap transition-colors border",
+                      storyTeam === p.id
+                        ? "bg-white text-primary border-white"
+                        : "bg-transparent text-primary-foreground/90 border-white/30 hover:border-white/60"
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                ))}
               </div>
               <div
                 className={cn(

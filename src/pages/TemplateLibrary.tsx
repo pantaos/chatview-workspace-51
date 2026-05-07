@@ -323,6 +323,24 @@ function Section({
 }
 
 
+function StoryCard({ task, onClick }: { task: UseCase; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative w-full h-full text-left rounded-2xl bg-card/95 backdrop-blur border border-white/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
+    >
+      <h3 className="text-sm font-bold text-foreground leading-tight">{task.name}</h3>
+      <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+        {task.description || `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
+      </p>
+      <div className="mt-4 flex items-center justify-between text-primary text-xs font-semibold">
+        <span>Learn more</span>
+        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+      </div>
+    </button>
+  );
+}
+
 function Empty({ label }: { label: string }) {
   return (
     <div className="rounded-2xl border border-dashed border-border bg-muted/20 py-10 text-center text-muted-foreground text-sm">

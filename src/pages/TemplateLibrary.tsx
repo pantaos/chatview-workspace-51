@@ -185,24 +185,23 @@ export default function TemplateLibrary() {
             {visibleAssistants.length > 0 ? (
               <div className={cn(assistantsExpanded && "max-h-[640px] overflow-y-auto pr-1")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {visibleAssistants.map((t) => {
-                    const Icon =
-                      ((LucideIcons as any)[t.icon] as LucideIcon) || LucideIcons.Sparkles;
-                    return (
-                      <ExplorerCard
-                        key={t.id}
-                        icon={Icon}
-                        title={t.title}
-                        description={t.description}
-                        tone={pickTone(t.id)}
-                        meta={t.tags[0]?.name ?? "Assistant"}
-                        onClick={() => {
-                          setSelectedTemplate(t);
-                          setPreviewOpen(true);
-                        }}
-                      />
-                    );
-                  })}
+                  {visibleAssistants.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setSelectedTemplate(t);
+                        setPreviewOpen(true);
+                      }}
+                      className="group text-left rounded-2xl border border-border/60 bg-card p-5 flex flex-col min-h-[170px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                    >
+                      <h3 className="text-sm font-semibold text-foreground leading-tight">{t.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground leading-relaxed">{t.description}</p>
+                      <div className="mt-auto flex items-center justify-between pt-4">
+                        <span className="text-xs text-muted-foreground">{t.tags[0]?.name ?? "Assistant"}</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             ) : (

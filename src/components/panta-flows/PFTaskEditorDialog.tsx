@@ -88,15 +88,15 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
     <ResponsiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={initial ? `Edit Task · ${initial.name}` : "Neue Task"}
-      className="max-w-3xl h-[640px]"
+      title={initial ? `Use Case bearbeiten · ${initial.name}` : "Neuer Use Case"}
+      className="max-w-2xl h-[640px]"
     >
       <ResponsiveDialogBody>
         <ResponsiveDialogContent>
           <div className="space-y-5">
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-muted-foreground">
-                Tasks haben keinen System Prompt. Stattdessen wird der Anwender-Prompt vorgefüllt.
+                Use Cases haben nur einen vorgefertigten Prompt – kein System Prompt.
               </div>
               <div className="inline-flex rounded-lg border border-border/60 bg-muted/30 p-0.5">
                 {(["de", "en"] as Lang[]).map((l) => (

@@ -209,7 +209,7 @@ export default function TemplateLibrary() {
           {/* Tasks section */}
           <Section
             icon={ListChecks}
-            title="Tasks"
+            title="Use Cases"
             count={filteredTasks.length}
             pills={[
               { id: "all", label: "All" },

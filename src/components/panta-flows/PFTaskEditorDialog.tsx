@@ -150,7 +150,7 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
                   placeholder={"Thema\nZielgruppe"}
                 />
               </Field>
-              <Field label="Vorgefertigter Prompt (erscheint im Textfeld bei „Jetzt ausprobieren")">
+              <Field label='Vorgefertigter Prompt (erscheint im Textfeld bei „Jetzt ausprobieren")'>
                 <Textarea
                   rows={5}
                   value={valueFor("prefilledPrompt") || ""}

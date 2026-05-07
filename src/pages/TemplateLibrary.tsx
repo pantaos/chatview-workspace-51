@@ -151,8 +151,8 @@ export default function TemplateLibrary() {
                   </div>
                 </div>
               ) : (
-                <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto scrollbar-hide">
-                  <div className="flex gap-4 snap-x snap-mandatory pb-2">
+                <div className="-mx-4 md:-mx-8 px-4 md:px-8 overflow-x-auto overflow-y-visible scrollbar-hide">
+                  <div className="flex gap-4 snap-x snap-mandatory py-3">
                     {filteredStories.map((task) => (
                       <div key={`story-${task.id}`} className="snap-start shrink-0 w-[240px]">
                         <StoryCard task={task} onClick={() => setSelectedTask(task)} />

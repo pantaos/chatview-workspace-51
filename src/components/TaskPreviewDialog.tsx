@@ -90,40 +90,30 @@ export function TaskPreviewDialog({
     <div className="flex flex-col">
       {/* Header */}
       <div className="px-7 pt-7 pb-5">
-        <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0">
-            <Icon className="h-6 w-6" />
-          </div>
-          <div className="min-w-0 flex-1 pt-0.5">
-            <h2 className="text-xl font-semibold leading-tight">{task.name}</h2>
-            <span className="inline-block mt-2 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase">
-              Use Case
-            </span>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold leading-tight text-foreground">{task.name}</h2>
+          <span className="inline-block mt-3 rounded-md bg-primary/10 text-primary px-2.5 py-1 text-[10px] font-bold tracking-[0.12em] uppercase">
+            Use Case
+          </span>
         </div>
 
-        <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+        <p className="text-sm text-muted-foreground mt-5 leading-relaxed">
           {task.description || `Ready-to-run task für dein ${task.team} Team.`}
         </p>
-
-        <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border/50">
-          <Meta icon={<Clock className="h-3.5 w-3.5" />} label="Dauer" value={duration} />
-          <Meta icon={<SparklesIcon className="h-3.5 w-3.5" />} label="Ergebnis" value={result} />
-          <Meta icon={<Users className="h-3.5 w-3.5" />} label="Geeignet für" value={bestFor} />
-          <Meta icon={<User className="h-3.5 w-3.5" />} label="Erstellt von" value={createdBy} />
-        </div>
       </div>
 
       {/* Two-column body */}
-      <div className="px-7 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left: How it works + example */}
-        <div className="space-y-4">
+      <div className="px-7 pb-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left: How it works + Description */}
+        <div className="space-y-7">
           <div>
-            <h3 className="text-sm font-semibold mb-3">So funktioniert's</h3>
-            <ul className="space-y-2">
+            <h3 className="text-base font-bold mb-4 text-foreground">How it works:</h3>
+            <ul className="space-y-3.5">
               {steps.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
-                  <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                <li key={i} className="flex items-start gap-3 text-sm text-foreground/90">
+                  <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 shrink-0">
+                    <Check className="h-3 w-3 text-primary" strokeWidth={3} />
+                  </div>
                   <span className="leading-snug">{s}</span>
                 </li>
               ))}
@@ -131,46 +121,51 @@ export function TaskPreviewDialog({
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold mb-2">Beispiel</h3>
-            <div className="rounded-lg bg-primary/5 border border-primary/10 px-3 py-2.5 text-xs text-foreground/80 leading-relaxed">
-              {example}
-            </div>
+            <h3 className="text-base font-bold mb-2 text-foreground">Description</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">{example}</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/50">
+            <Meta icon={<Clock className="h-3.5 w-3.5" />} label="Dauer" value={duration} />
+            <Meta icon={<SparklesIcon className="h-3.5 w-3.5" />} label="Ergebnis" value={result} />
+            <Meta icon={<Users className="h-3.5 w-3.5" />} label="Geeignet für" value={bestFor} />
+            <Meta icon={<User className="h-3.5 w-3.5" />} label="Erstellt von" value={createdBy} />
           </div>
         </div>
 
-        {/* Right: Try it now with prompt */}
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold">Jetzt ausprobieren</h3>
-          <p className="text-xs text-muted-foreground">
-            Starte mit dem folgenden Prompt im Chat.
+        {/* Right: Try it now */}
+        <div className="space-y-3 flex flex-col">
+          <h3 className="text-base font-bold text-foreground">Try it now:</h3>
+          <p className="text-sm text-muted-foreground">
+            Enter the text you want to turn into a result.
           </p>
-          <div className="relative rounded-xl border border-border/60 bg-muted/30 p-3 pt-9">
+          <div className="relative rounded-2xl border border-border/60 bg-muted/40 p-4 pt-9 flex-1 min-h-[260px]">
             <button
               onClick={handleCopy}
-              className="absolute right-2 top-2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
+              className="absolute right-2.5 top-2.5 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
               title="Prompt kopieren"
             >
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
             <Textarea
-              rows={7}
+              rows={9}
               value={promptValue}
               onChange={(e) => setPromptDraft(e.target.value)}
-              className="text-xs resize-none border-0 bg-transparent p-0 focus-visible:ring-0 shadow-none leading-relaxed"
+              placeholder="Paste your text here..."
+              className="text-sm resize-none border-0 bg-transparent p-0 focus-visible:ring-0 shadow-none leading-relaxed h-full min-h-[200px]"
             />
           </div>
-        </div>
-      </div>
 
-      {/* Footer */}
-      <div className="px-7 py-4 border-t border-border/40 flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
-          Abbrechen
-        </Button>
-        <Button onClick={handleRun}>
-          <Play className="h-4 w-4 mr-2" />
-          Im Chat ausprobieren
-        </Button>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button variant="outline" onClick={onClose} className="rounded-xl">
+              Cancel
+            </Button>
+            <Button onClick={handleRun} className="rounded-xl">
+              <Play className="h-4 w-4 mr-2" />
+              Im Chat ausprobieren
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -190,7 +185,7 @@ export function TaskPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden [&>button]:hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>{task.name}</DialogTitle>
         </DialogHeader>

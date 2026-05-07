@@ -324,7 +324,7 @@ function StoryCard({ task, onClick }: { task: UseCase; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group relative w-full h-full text-left rounded-2xl bg-card border border-border/40 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
+      className="group relative w-full h-full text-left rounded-2xl bg-card/90 border border-white/30 p-5 flex flex-col min-h-[200px] transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)]"
     >
       <h3 className="text-sm font-bold text-foreground leading-tight">{task.name}</h3>
       <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">

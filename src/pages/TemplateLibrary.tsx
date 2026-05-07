@@ -41,6 +41,7 @@ export default function TemplateLibrary() {
   const [searchParams] = useSearchParams();
 
   const [assistantTag, setAssistantTag] = useState<string>("all");
+  const [storyTeam, setStoryTeam] = useState<string>("all");
   const [storiesExpanded, setStoriesExpanded] = useState(false);
   const [assistantsExpanded, setAssistantsExpanded] = useState(false);
 

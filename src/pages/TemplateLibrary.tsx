@@ -90,17 +90,21 @@ export default function TemplateLibrary() {
   return (
     <MainLayout>
       <div className="flex-1 overflow-auto">
-        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-10">
-          {/* Page heading */}
-          <header>
-            <h1 className="text-3xl font-bold text-foreground">Explore</h1>
-            <p className="mt-1 text-muted-foreground">
-              Discover inspiration, assistants and tools to get your work done.
-            </p>
-          </header>
+        {/* Hero band: heading + Use Case Stories on one gradient background */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary/90 via-primary/70 to-primary/40">
+          {/* Decorative blobs */}
+          <div className="pointer-events-none absolute -top-32 -right-20 h-80 w-80 rounded-full bg-white/15 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
 
-          {/* Use Case Stories highlighted band */}
-          <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] via-primary/[0.04] to-transparent p-6 md:p-8">
+          <div className="container max-w-7xl mx-auto px-4 md:px-8 pt-10 pb-12 relative">
+            <header className="text-primary-foreground">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Explore</h1>
+              <p className="mt-2 text-primary-foreground/80 max-w-xl">
+                Discover inspiration, assistants and tools to get your work done.
+              </p>
+            </header>
+
+            <div className="mt-8">
             {/* Decorative blobs */}
             <div className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />

@@ -15,6 +15,17 @@ export interface TemplateVisibility {
   tenantIds: string[];
 }
 
+export type Lang = 'de' | 'en';
+
+export interface TemplateLocalized {
+  title?: string;
+  description?: string;
+  longDescription?: string;
+  useCases?: string[];
+  features?: string[];
+  starters?: { displayText: string; fullPrompt: string }[];
+}
+
 export interface TemplateItem {
   id: string;
   title: string;
@@ -22,20 +33,29 @@ export interface TemplateItem {
   icon: string;
   tags: WorkflowTag[];
   category: 'assistant' | 'workflow' | 'app';
-  
+
   // App Store Details
   screenshots: string[];
   useCases: string[];
   features: string[];
-  
+
   // Personalisierung
   customizable: CustomizableField[];
-  
+
   // Vorkonfiguration
   systemPrompt: string;
   suggestedIntegrations: string[];
   starters: { displayText: string; fullPrompt: string }[];
-  
+
+  // Store metadata (shown in preview)
+  longDescription?: string;
+  bestFor?: string;     // e.g. "Teams & Einzelpersonen"
+  language?: string;    // e.g. "Deutsch, Englisch"
+  createdBy?: string;   // e.g. "PANTA"
+
+  // Super Admin maintained translations (DE / EN)
+  i18n?: Partial<Record<Lang, TemplateLocalized>>;
+
   // Metadaten
   rating?: number;
   usageCount?: number;
@@ -44,6 +64,21 @@ export interface TemplateItem {
 
   // Super Admin distribution
   visibility?: TemplateVisibility;
+}
+
+/** Resolve a localized view of a template for the active UI language. */
+export function localizeTemplate(t: TemplateItem, lang: Lang): TemplateItem {
+  const loc = t.i18n?.[lang];
+  if (!loc) return t;
+  return {
+    ...t,
+    title: loc.title ?? t.title,
+    description: loc.description ?? t.description,
+    longDescription: loc.longDescription ?? t.longDescription,
+    useCases: loc.useCases ?? t.useCases,
+    features: loc.features ?? t.features,
+    starters: loc.starters ?? t.starters,
+  };
 }
 
 export const templateTags: WorkflowTag[] = [

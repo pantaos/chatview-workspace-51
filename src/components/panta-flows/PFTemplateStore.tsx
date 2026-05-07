@@ -96,9 +96,9 @@ const PFTemplateStore = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Template Store</h2>
+          <h2 className="text-xl font-semibold">Discover</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Verwalte Assistenten und Tasks, die deinen Tenants zur Verfügung stehen.
+            Verwalte Assistenten und Use Cases, die deinen Tenants zur Verfügung stehen.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ const PFTemplateStore = () => {
               }}
               className="h-10 shrink-0"
             >
-              <Plus className="h-4 w-4 mr-1.5" /> Neue Task
+              <Plus className="h-4 w-4 mr-1.5" /> Neuer Use Case
             </Button>
           )}
         </div>
@@ -147,7 +147,7 @@ const PFTemplateStore = () => {
             value="tasks"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-1 pb-2 pt-0 text-sm text-muted-foreground data-[state=active]:text-foreground"
           >
-            <ListChecks className="h-3.5 w-3.5 mr-1.5" /> Tasks ({tasks.length})
+            <ListChecks className="h-3.5 w-3.5 mr-1.5" /> Use Cases ({tasks.length})
           </TabsTrigger>
         </TabsList>
 

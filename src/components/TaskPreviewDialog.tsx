@@ -185,7 +185,7 @@ export function TaskPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden [&>button]:hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>{task.name}</DialogTitle>
         </DialogHeader>

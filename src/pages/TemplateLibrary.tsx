@@ -300,68 +300,6 @@ function Section({
   );
 }
 
-function Section({
-  icon: Icon,
-  title,
-  count,
-  pills,
-  activePill,
-  onPill,
-  onViewAll,
-  children,
-}: {
-  icon: LucideIcon;
-  title: string;
-  count: number;
-  pills?: { id: string; label: string }[];
-  activePill?: string;
-  onPill?: (id: string) => void;
-  onViewAll?: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <section>
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-foreground/80" />
-          <h2 className="text-base font-semibold text-foreground">{title}</h2>
-          <span className="rounded-full bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-            {count}
-          </span>
-        </div>
-        {onViewAll && (
-          <button
-            onClick={onViewAll}
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-          >
-            View all <ArrowRight className="h-3 w-3" />
-          </button>
-        )}
-      </div>
-
-      {pills && pills.length > 1 && (
-        <div className="mb-4 flex gap-1.5 overflow-x-auto scrollbar-hide">
-          {pills.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => onPill?.(p.id)}
-              className={cn(
-                "px-3 py-1.5 text-xs rounded-full whitespace-nowrap transition-colors border",
-                activePill === p.id
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {children}
-    </section>
-  );
-}
 
 function Empty({ label }: { label: string }) {
   return (

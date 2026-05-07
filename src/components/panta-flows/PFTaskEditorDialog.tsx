@@ -62,6 +62,12 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
     }
     return task.i18n?.[lang]?.[key] ?? "";
   };
+  const howItWorksValue = (): string => {
+    const v = valueFor("inputs") as string[] | undefined;
+    return (v ?? []).join("\n");
+  };
+  const setHowItWorks = (text: string) =>
+    setField("inputs", text.split("\n").map((l) => l.trim()).filter(Boolean));
 
   const setField = (key: keyof UseCaseLocalized, value: any) => {
     if (lang === "de") {
@@ -127,19 +133,35 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
                   placeholder="z. B. Blog Post erstellen"
                 />
               </Field>
-              <Field label="Kurzbeschreibung (Card)">
+              <Field label="Kurzbeschreibung">
                 <Input
                   value={valueFor("description") || ""}
                   onChange={(e) => setField("description", e.target.value)}
                   placeholder="Ein Satz, was der Use Case macht"
                 />
               </Field>
-              <Field label="Vorgefertigter Prompt">
+              <Field label="Detaillierte Beschreibung">
                 <Textarea
-                  rows={8}
+                  rows={4}
+                  value={valueFor("longDescription") || ""}
+                  onChange={(e) => setField("longDescription", e.target.value)}
+                  placeholder="Beschreibe ausführlich, wofür der Use Case gut ist..."
+                />
+              </Field>
+              <Field label="So funktioniert's (ein Schritt pro Zeile)">
+                <Textarea
+                  rows={4}
+                  value={howItWorksValue()}
+                  onChange={(e) => setHowItWorks(e.target.value)}
+                  placeholder={"Du verbindest die nötigen Tools.\nDer Assistent analysiert die Eingabe.\nDu erhältst das Ergebnis."}
+                />
+              </Field>
+              <Field label="Beispiel-Prompt">
+                <Textarea
+                  rows={6}
                   value={valueFor("prefilledPrompt") || ""}
                   onChange={(e) => setField("prefilledPrompt", e.target.value)}
-                  placeholder="Schreibe einen SEO-optimierten Blog Post zum Thema [Thema] für die Zielgruppe [Zielgruppe]..."
+                  placeholder="Schreibe einen SEO-optimierten Blog Post zum Thema [Thema]..."
                 />
               </Field>
             </div>

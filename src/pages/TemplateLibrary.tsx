@@ -40,9 +40,9 @@ export default function TemplateLibrary() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [assistantTag, setAssistantTag] = useState<string>("all");
-  const [taskTeam, setTaskTeam] = useState<string>("all");
+  const [storiesExpanded, setStoriesExpanded] = useState(false);
+  const [assistantsExpanded, setAssistantsExpanded] = useState(false);
 
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateItem | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -67,29 +67,11 @@ export default function TemplateLibrary() {
   );
 
   const filteredAssistants = useMemo(() => {
-    const q = searchQuery.toLowerCase();
     return assistants.filter((t) => {
-      const matchSearch =
-        q === "" ||
-        t.title.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q);
       const matchTag = assistantTag === "all" || t.tags.some((tag) => tag.id === assistantTag);
-      return matchSearch && matchTag;
+      return matchTag;
     });
-  }, [assistants, searchQuery, assistantTag]);
-
-  const filteredTasks = useMemo(() => {
-    const q = searchQuery.toLowerCase();
-    return allUseCases.filter((uc) => {
-      const matchSearch =
-        q === "" ||
-        uc.name.toLowerCase().includes(q) ||
-        uc.team.toLowerCase().includes(q) ||
-        uc.taskType.toLowerCase().includes(q);
-      const matchTeam = taskTeam === "all" || uc.team === taskTeam;
-      return matchSearch && matchTeam;
-    });
-  }, [searchQuery, taskTeam]);
+  }, [assistants, assistantTag]);
 
   const handleAdd = (t: TemplateItem) => {
     setPreviewOpen(false);
@@ -101,28 +83,14 @@ export default function TemplateLibrary() {
   const usedTagIds = new Set(assistants.flatMap((a) => a.tags.map((t) => t.id)));
   const visibleTags = templateTags.filter((t) => usedTagIds.has(t.id));
 
-  const visibleAssistants = filteredAssistants.slice(0, 8);
-  const visibleTasks = filteredTasks.slice(0, 8);
+  const allStories = allUseCases;
+  const visibleStories = storiesExpanded ? allStories : allStories.slice(0, 5);
+  const visibleAssistants = assistantsExpanded ? filteredAssistants : filteredAssistants.slice(0, 8);
 
   return (
     <MainLayout>
       <div className="flex-1 overflow-auto">
-        {/* Top search bar */}
-        <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-md border-b border-border/60">
-          <div className="container max-w-7xl mx-auto px-4 md:px-8 py-4">
-            <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search templates, assistants and tasks..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-11 h-11 rounded-full bg-muted/40 border-border/40 text-sm"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-10">
+        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-10">
           {/* Page heading */}
           <header>
             <h1 className="text-3xl font-bold text-foreground">Explore</h1>
@@ -140,36 +108,46 @@ export default function TemplateLibrary() {
                   Discover what PANTA can do for you.
                 </p>
               </div>
-              <button className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-                View all <ArrowRight className="h-3 w-3" />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-              {visibleTasks.slice(0, 5).map((task) => (
+              {allStories.length > 5 && (
                 <button
-                  key={`story-${task.id}`}
-                  onClick={() => setSelectedTask(task)}
-                  className="text-left rounded-xl bg-card border border-border/60 p-5 flex flex-col min-h-[180px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                  onClick={() => setStoriesExpanded((v) => !v)}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                 >
-                  <h3 className="text-sm font-bold text-foreground leading-tight">
-                    {task.name}
-                  </h3>
-                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
-                    {task.description ||
-                      `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between text-primary text-xs font-medium">
-                    <span>Learn more</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </div>
+                  {storiesExpanded ? "Show less" : "View all"} <ArrowRight className="h-3 w-3" />
                 </button>
-              ))}
+              )}
+            </div>
+            <div
+              className={cn(
+                storiesExpanded && "max-h-[520px] overflow-y-auto pr-1"
+              )}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {visibleStories.map((task) => (
+                  <button
+                    key={`story-${task.id}`}
+                    onClick={() => setSelectedTask(task)}
+                    className="text-left rounded-xl bg-card border border-border/60 p-5 flex flex-col min-h-[180px] transition-all hover:border-foreground/20 hover:shadow-sm"
+                  >
+                    <h3 className="text-sm font-bold text-foreground leading-tight">
+                      {task.name}
+                    </h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-4 flex-1">
+                      {task.description ||
+                        `Ready-to-run for the ${task.team} team. ${task.taskType}.`}
+                    </p>
+                    <div className="mt-4 flex items-center justify-between text-primary text-xs font-medium">
+                      <span>Learn more</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
 
           {/* Assistants section */}
           <Section
-            icon={Sparkles}
             title="Assistants"
             count={filteredAssistants.length}
             pills={[
@@ -178,87 +156,39 @@ export default function TemplateLibrary() {
             ]}
             activePill={assistantTag}
             onPill={setAssistantTag}
-            onViewAll={() => {}}
+            onViewAll={
+              filteredAssistants.length > 8
+                ? () => setAssistantsExpanded((v) => !v)
+                : undefined
+            }
+            viewAllLabel={assistantsExpanded ? "Show less" : "View all"}
           >
             {visibleAssistants.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {visibleAssistants.map((t) => {
-                  const Icon =
-                    ((LucideIcons as any)[t.icon] as LucideIcon) || LucideIcons.Sparkles;
-                  return (
-                    <ExplorerCard
-                      key={t.id}
-                      icon={Icon}
-                      title={t.title}
-                      description={t.description}
-                      tone={pickTone(t.id)}
-                      meta={t.tags[0]?.name ?? "Assistant"}
-                      onClick={() => {
-                        setSelectedTemplate(t);
-                        setPreviewOpen(true);
-                      }}
-                    />
-                  );
-                })}
+              <div className={cn(assistantsExpanded && "max-h-[640px] overflow-y-auto pr-1")}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {visibleAssistants.map((t) => {
+                    const Icon =
+                      ((LucideIcons as any)[t.icon] as LucideIcon) || LucideIcons.Sparkles;
+                    return (
+                      <ExplorerCard
+                        key={t.id}
+                        icon={Icon}
+                        title={t.title}
+                        description={t.description}
+                        tone={pickTone(t.id)}
+                        meta={t.tags[0]?.name ?? "Assistant"}
+                        onClick={() => {
+                          setSelectedTemplate(t);
+                          setPreviewOpen(true);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <Empty label="assistants" />
             )}
-          </Section>
-
-          {/* Tasks section */}
-          <Section
-            icon={ListChecks}
-            title="Use Cases"
-            count={filteredTasks.length}
-            pills={[
-              { id: "all", label: "All" },
-              ...useCaseTeams.map((t) => ({ id: t, label: t })),
-            ]}
-            activePill={taskTeam}
-            onPill={setTaskTeam}
-            onViewAll={() => {}}
-          >
-            {visibleTasks.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {visibleTasks.map((task) => (
-                  <ExplorerCard
-                    key={task.id}
-                    icon={task.icon as LucideIcon}
-                    title={task.name}
-                    description={`Ready-to-run for the ${task.team} team. ${task.taskType}.`}
-                    tone={pickTone(task.id + task.team)}
-                    meta={`${task.saves}`}
-                    onClick={() => setSelectedTask(task)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <Empty label="tasks" />
-            )}
-          </Section>
-
-          {/* Use cases (themes) */}
-          <Section icon={LayoutGrid} title="Use cases" count={useCaseTeams.length} onViewAll={() => {}}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {useCaseTeams.slice(0, 8).map((team) => {
-                const count = allUseCases.filter((u) => u.team === team).length;
-                return (
-                  <ExplorerCard
-                    key={team}
-                    icon={LucideIcons.Layers}
-                    title={team}
-                    description={`Browse ${count} ready tasks tailored for the ${team} team.`}
-                    tone={pickTone(team)}
-                    meta={`${count} tasks`}
-                    onClick={() => {
-                      setTaskTeam(team);
-                      window.scrollTo({ top: 400, behavior: "smooth" });
-                    }}
-                  />
-                );
-              })}
-            </div>
           </Section>
 
           {/* Footer banner */}
@@ -309,29 +239,28 @@ export default function TemplateLibrary() {
 }
 
 function Section({
-  icon: Icon,
   title,
   count,
   pills,
   activePill,
   onPill,
   onViewAll,
+  viewAllLabel = "View all",
   children,
 }: {
-  icon: LucideIcon;
   title: string;
   count: number;
   pills?: { id: string; label: string }[];
   activePill?: string;
   onPill?: (id: string) => void;
   onViewAll?: () => void;
+  viewAllLabel?: string;
   children: React.ReactNode;
 }) {
   return (
     <section>
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-foreground/80" />
           <h2 className="text-base font-semibold text-foreground">{title}</h2>
           <span className="rounded-full bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
             {count}
@@ -342,7 +271,7 @@ function Section({
             onClick={onViewAll}
             className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
           >
-            View all <ArrowRight className="h-3 w-3" />
+            {viewAllLabel} <ArrowRight className="h-3 w-3" />
           </button>
         )}
       </div>
@@ -370,6 +299,7 @@ function Section({
     </section>
   );
 }
+
 
 function Empty({ label }: { label: string }) {
   return (

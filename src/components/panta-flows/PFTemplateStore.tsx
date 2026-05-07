@@ -126,14 +126,25 @@ const PFTemplateStore = () => {
             Manage which assistant templates are available to which tenants.
           </p>
         </div>
-        <div className="relative md:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search templates..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="pl-9 h-10 rounded-xl"
-          />
+        <div className="flex items-center gap-2">
+          <div className="relative md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search templates..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-9 h-10 rounded-xl"
+            />
+          </div>
+          <Button
+            onClick={() => {
+              setAssistantEditorInitial(null);
+              setAssistantEditorOpen(true);
+            }}
+            className="h-10 shrink-0"
+          >
+            <Plus className="h-4 w-4 mr-1.5" /> New assistant
+          </Button>
         </div>
       </div>
 

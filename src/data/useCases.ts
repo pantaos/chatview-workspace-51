@@ -25,6 +25,7 @@ export interface UseCaseLocalized {
   description?: string;
   longDescription?: string;
   inputs?: string[];
+  prefilledPrompt?: string;
 }
 
 export interface UseCase {

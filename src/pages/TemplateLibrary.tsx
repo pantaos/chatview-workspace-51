@@ -85,7 +85,9 @@ export default function TemplateLibrary() {
   const visibleTags = templateTags.filter((t) => usedTagIds.has(t.id));
 
   const allStories = allUseCases;
-  const visibleStories = storiesExpanded ? allStories : allStories.slice(0, 5);
+  const filteredStories = storyTeam === "all" ? allStories : allStories.filter((s) => s.team === storyTeam);
+  const storyTeams = Array.from(new Set(allStories.map((s) => s.team)));
+  const visibleStories = storiesExpanded ? filteredStories : filteredStories.slice(0, 5);
   const visibleAssistants = assistantsExpanded ? filteredAssistants : filteredAssistants.slice(0, 8);
 
   return (

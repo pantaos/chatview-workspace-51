@@ -14,11 +14,12 @@ import {
 import { templates as seedTemplates, TemplateItem, TemplateVisibility } from "@/data/templates";
 import { mockTenants } from "@/data/pantaFlowsData";
 import { CommunityApp, seedCommunityApps } from "@/data/communityApps";
-import { Globe, Users, Search, Sparkles, Pencil, Clock, Check, X } from "lucide-react";
+import { Globe, Users, Search, Sparkles, Pencil, Clock, Check, X, Plus } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
+import PFAssistantEditorDialog from "./PFAssistantEditorDialog";
 
 const defaultVisibility = (): TemplateVisibility => ({ scope: "public", tenantIds: [] });
 

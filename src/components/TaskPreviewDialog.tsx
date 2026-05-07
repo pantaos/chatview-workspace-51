@@ -124,20 +124,13 @@ export function TaskPreviewDialog({
             <h3 className="text-base font-bold mb-2 text-foreground">Description</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{example}</p>
           </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/50">
-            <Meta icon={<Clock className="h-3.5 w-3.5" />} label="Dauer" value={duration} />
-            <Meta icon={<SparklesIcon className="h-3.5 w-3.5" />} label="Ergebnis" value={result} />
-            <Meta icon={<Users className="h-3.5 w-3.5" />} label="Geeignet für" value={bestFor} />
-            <Meta icon={<User className="h-3.5 w-3.5" />} label="Erstellt von" value={createdBy} />
-          </div>
         </div>
 
-        {/* Right: Try it now */}
+        {/* Right: Try now */}
         <div className="space-y-3 flex flex-col">
-          <h3 className="text-base font-bold text-foreground">Try it now:</h3>
+          <h3 className="text-base font-bold text-foreground">Try now</h3>
           <p className="text-sm text-muted-foreground">
-            Enter the text you want to turn into a result.
+            Start with the following prompt in the chat.
           </p>
           <div className="relative rounded-2xl border border-border/60 bg-muted/40 p-4 pt-9 flex-1 min-h-[260px]">
             <button

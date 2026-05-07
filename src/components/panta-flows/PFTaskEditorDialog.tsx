@@ -144,44 +144,6 @@ export default function PFTaskEditorDialog({ open, onOpenChange, initial, onSave
               </Field>
             </div>
 
-            <div className="rounded-xl border border-border/60 p-4 space-y-4 bg-card">
-              <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Konfiguration (sprachunabhängig)
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <Field label="Team">
-                  <Input value={task.team} onChange={(e) => setBase("team", e.target.value)} />
-                </Field>
-                <Field label="Task-Typ">
-                  <Input value={task.taskType} onChange={(e) => setBase("taskType", e.target.value)} />
-                </Field>
-                <Field label="Dauer">
-                  <Input
-                    value={task.duration || ""}
-                    onChange={(e) => setBase("duration", e.target.value)}
-                    placeholder="2-3 min"
-                  />
-                </Field>
-                <Field label="Best for">
-                  <Input
-                    value={task.bestFor || ""}
-                    onChange={(e) => setBase("bestFor", e.target.value)}
-                  />
-                </Field>
-                <Field label="Sprachen">
-                  <Input
-                    value={task.language || ""}
-                    onChange={(e) => setBase("language", e.target.value)}
-                  />
-                </Field>
-                <Field label="Created by">
-                  <Input
-                    value={task.createdBy || ""}
-                    onChange={(e) => setBase("createdBy", e.target.value)}
-                  />
-                </Field>
-              </div>
-            </div>
 
             <div className="flex justify-end gap-2 pt-2 border-t border-border/40">
               <Button variant="outline" onClick={() => onOpenChange(false)}>

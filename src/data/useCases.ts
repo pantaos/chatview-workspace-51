@@ -45,6 +45,7 @@ export interface UseCase {
   language?: string;     // e.g. "Deutsch"
   createdBy?: string;    // e.g. "PANTA"
   inputs?: string[];     // "What you need" pills
+  prefilledPrompt?: string; // Pre-written prompt shown in the "Jetzt ausprobieren" textarea
   i18n?: Partial<Record<Lang, UseCaseLocalized>>;
 }
 

@@ -1,142 +1,307 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import ELearningLayout from "./ELearningLayout";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import MainLayout from "@/components/MainLayout";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Calendar, ExternalLink, ArrowRight, Megaphone } from "lucide-react";
-import {
-  getModules,
-  getAnnouncements,
-  getProgress,
-  moduleCompletion,
-  Module,
-  Announcement,
-  ProgressState,
-} from "@/data/elearningData";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Calendar, Clock, CheckCircle2, ChevronRight } from "lucide-react";
+import { getModules, Module } from "@/data/elearningData";
+import { cn } from "@/lib/utils";
+
+// Display percentages aligned with the mocked example
+const DISPLAY_PROGRESS: Record<string, number> = {
+  m1: 100,
+  m2: 60,
+  m3: 35,
+  m4: 0,
+  m5: 0,
+};
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("de-DE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function statusBadge(pct: number) {
+  if (pct >= 100)
+    return null;
+  if (pct > 0)
+    return <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-0">In Bearbeitung</Badge>;
+  return <Badge variant="secondary" className="bg-muted text-muted-foreground hover:bg-muted border-0">Nicht gestartet</Badge>;
+}
+
+function ProgressBar({ value }: { value: number }) {
+  const color = value >= 100 ? "bg-emerald-500" : "bg-primary";
+  return (
+    <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+      <div className={cn("h-full rounded-full transition-all", color)} style={{ width: `${value}%` }} />
+    </div>
+  );
+}
+
+function DonutChart({ value }: { value: number }) {
+  const r = 70;
+  const c = 2 * Math.PI * r;
+  const offset = c - (value / 100) * c;
+  return (
+    <div className="relative w-44 h-44">
+      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+        <circle cx="80" cy="80" r={r} fill="none" stroke="hsl(var(--muted))" strokeWidth="14" />
+        <circle
+          cx="80"
+          cy="80"
+          r={r}
+          fill="none"
+          stroke="hsl(var(--primary))"
+          strokeWidth="14"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-3xl font-bold">{value}%</div>
+        <div className="text-xs text-muted-foreground mt-0.5">Gesamtfortschritt</div>
+      </div>
+    </div>
+  );
+}
 
 export default function ELearningDashboard() {
+  const navigate = useNavigate();
   const [modules, setModules] = useState<Module[]>([]);
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [progress, setProgress] = useState<ProgressState>({ materialsOpened: {}, videoProgress: {}, taskStatus: {} });
 
   useEffect(() => {
     setModules(getModules());
-    setAnnouncements(getAnnouncements());
-    setProgress(getProgress());
   }, []);
 
-  const upcoming = modules
-    .filter((m) => new Date(m.scheduledAt).getTime() >= Date.now())
-    .sort((a, b) => +new Date(a.scheduledAt) - +new Date(b.scheduledAt))[0];
+  const overall = useMemo(() => {
+    if (modules.length === 0) return 0;
+    const sum = modules.reduce((acc, m) => acc + (DISPLAY_PROGRESS[m.id] ?? 0), 0);
+    return Math.round(sum / modules.length);
+  }, [modules]);
 
-  const openItems: { moduleTitle: string; moduleId: string; label: string }[] = [];
-  modules.forEach((m) => {
-    m.tasks.forEach((t) => {
-      if (progress.taskStatus[t.id] !== "done") openItems.push({ moduleTitle: m.title, moduleId: m.id, label: `Task · ${t.title}` });
-    });
-    m.materials.forEach((mat) => {
-      if (mat.type === "video") {
-        if ((progress.videoProgress[mat.id] || 0) < 90)
-          openItems.push({ moduleTitle: m.title, moduleId: m.id, label: `Video · ${mat.title}` });
-      } else if (!progress.materialsOpened[mat.id]) {
-        openItems.push({ moduleTitle: m.title, moduleId: m.id, label: `${mat.type === "pdf" ? "PDF" : "Link"} · ${mat.title}` });
-      }
-    });
-  });
+  const upcoming = useMemo(
+    () =>
+      modules
+        .filter((m) => new Date(m.scheduledAt).getTime() >= Date.now())
+        .sort((a, b) => +new Date(a.scheduledAt) - +new Date(b.scheduledAt))[0],
+    [modules]
+  );
 
   return (
-    <ELearningLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-        <p className="text-muted-foreground mt-1.5">Pick up where you left off.</p>
-      </div>
+    <MainLayout mobileTitle="LearnFlow">
+      <div className="container max-w-7xl mx-auto px-4 md:px-8 py-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold tracking-tight">E-Learning Plattform</h1>
+          <p className="text-muted-foreground mt-1.5">
+            Lernen, vertiefen und Fortschritt tracken – alles an einem Ort.
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          {upcoming && (
-            <div className="rounded-2xl bg-white border p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs text-primary font-medium mb-2">
-                    <Calendar className="h-3.5 w-3.5" />
-                    Next session
-                  </div>
-                  <h2 className="text-xl font-semibold">{upcoming.title}</h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {new Date(upcoming.scheduledAt).toLocaleString()}
-                  </p>
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="bg-transparent p-0 h-auto border-b w-full justify-start rounded-none gap-6">
+            <TabsTrigger
+              value="dashboard"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none bg-transparent px-0 pb-3 text-base font-medium"
+            >
+              Dashboard
+            </TabsTrigger>
+            <TabsTrigger
+              value="modules"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none bg-transparent px-0 pb-3 text-base font-medium"
+            >
+              Meine Module
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard" className="mt-6 space-y-6">
+            {/* Top 3 cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              {/* Nächste Session */}
+              <div className="rounded-2xl bg-white border p-6 flex flex-col">
+                <h3 className="font-semibold text-base mb-4">Nächste Session</h3>
+                {upcoming ? (
+                  <>
+                    <div className="font-semibold">
+                      Modul {upcoming.order}: {upcoming.title}
+                    </div>
+                    <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        {formatDate(upcoming.scheduledAt)}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        10:00 – 11:30 Uhr (CET)
+                      </div>
+                    </div>
+                    <div className="mt-auto pt-6">
+                      <Button asChild className="bg-[#5b5fc7] hover:bg-[#4f53b8] text-white">
+                        <a href={upcoming.teamsLink} target="_blank" rel="noreferrer">
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                            <path d="M20.5 9h-9A1.5 1.5 0 0 0 10 10.5v6A1.5 1.5 0 0 0 11.5 18h9a1.5 1.5 0 0 0 1.5-1.5v-6A1.5 1.5 0 0 0 20.5 9zM7 8a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm1.5 1H3.75A1.75 1.75 0 0 0 2 10.75v5.5A1.75 1.75 0 0 0 3.75 18H8.5z" />
+                          </svg>
+                          Microsoft Teams öffnen
+                        </a>
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Keine bevorstehende Session.</p>
+                )}
+              </div>
+
+              {/* Overall Progress */}
+              <div className="rounded-2xl bg-white border p-6 flex flex-col items-center">
+                <h3 className="font-semibold text-base mb-4 self-start">Overall Progress</h3>
+                <div className="flex-1 flex items-center justify-center">
+                  <DonutChart value={overall} />
                 </div>
-                <Button asChild>
-                  <a href={upcoming.teamsLink} target="_blank" rel="noreferrer">
-                    Join <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+              </div>
+
+              {/* Modul Progress */}
+              <div className="rounded-2xl bg-white border p-6">
+                <h3 className="font-semibold text-base mb-4">Modul Progress</h3>
+                <div className="space-y-3">
+                  {modules.map((m) => {
+                    const pct = DISPLAY_PROGRESS[m.id] ?? 0;
+                    return (
+                      <div key={m.id} className="flex items-center gap-3">
+                        <div
+                          className={cn(
+                            "h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-semibold",
+                            pct >= 100
+                              ? "bg-emerald-100 text-emerald-700"
+                              : pct > 0
+                              ? "bg-blue-50 text-primary"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {m.order}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <div className="text-sm font-medium truncate">
+                              Modul {m.order}: {m.title}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <ProgressBar value={pct} />
+                            <span className="text-xs text-muted-foreground w-10 text-right shrink-0">{pct}%</span>
+                          </div>
+                        </div>
+                        <div className="shrink-0">
+                          {pct >= 100 ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                          ) : (
+                            statusBadge(pct)
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          )}
 
-          <div className="rounded-2xl bg-white border p-6">
-            <h3 className="font-semibold mb-4">Module progress</h3>
-            <div className="space-y-4">
-              {modules.map((m) => {
-                const pct = moduleCompletion(m, progress);
-                return (
-                  <Link key={m.id} to={`/elearning/modules/${m.id}`} className="block group">
-                    <div className="flex items-center justify-between text-sm mb-1.5">
-                      <span className="font-medium group-hover:text-primary transition-colors">
-                        {m.order}. {m.title}
-                      </span>
-                      <span className="text-muted-foreground">{pct}%</span>
-                    </div>
-                    <Progress value={pct} className="h-1.5" />
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
+            {/* Meine Module table */}
+            <ModulesTable modules={modules} onOpen={(id) => navigate(`/elearning/modules/${id}`)} />
+          </TabsContent>
 
-          <div className="rounded-2xl bg-white border p-6">
-            <h3 className="font-semibold mb-4">Open items</h3>
-            {openItems.length === 0 ? (
-              <p className="text-sm text-muted-foreground">All caught up.</p>
-            ) : (
-              <ul className="divide-y">
-                {openItems.slice(0, 6).map((i, idx) => (
-                  <li key={idx} className="py-3 flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-sm font-medium truncate">{i.label}</div>
-                      <div className="text-xs text-muted-foreground truncate">{i.moduleTitle}</div>
-                    </div>
-                    <Link to={`/elearning/modules/${i.moduleId}`} className="text-primary text-sm inline-flex items-center gap-1 shrink-0">
-                      Open <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-2xl bg-white border p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold flex items-center gap-2"><Megaphone className="h-4 w-4" /> Announcements</h3>
-              <Link to="/elearning/announcements" className="text-xs text-primary">All</Link>
-            </div>
-            <ul className="space-y-4">
-              {announcements.slice(0, 3).map((a) => (
-                <li key={a.id}>
-                  <div className="text-sm font-medium">{a.title}</div>
-                  <div className="text-xs text-muted-foreground mb-1">
-                    {new Date(a.createdAt).toLocaleDateString()} · {a.author}
-                  </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2">{a.body}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+          <TabsContent value="modules" className="mt-6">
+            <ModulesTable modules={modules} onOpen={(id) => navigate(`/elearning/modules/${id}`)} />
+          </TabsContent>
+        </Tabs>
       </div>
-    </ELearningLayout>
+    </MainLayout>
+  );
+}
+
+function ModulesTable({ modules, onOpen }: { modules: Module[]; onOpen: (id: string) => void }) {
+  return (
+    <div className="rounded-2xl bg-white border overflow-hidden">
+      <div className="p-6 pb-2">
+        <h3 className="font-semibold text-base">Meine Module</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs font-medium text-muted-foreground border-b">
+              <th className="px-6 py-3">Modul</th>
+              <th className="px-4 py-3">Beschreibung</th>
+              <th className="px-4 py-3">Nächste Session</th>
+              <th className="px-4 py-3 w-[220px]">Fortschritt</th>
+              <th className="px-4 py-3 w-[180px]">Aktionen</th>
+              <th className="px-4 py-3 w-[40px]"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {modules.map((m) => {
+              const pct = DISPLAY_PROGRESS[m.id] ?? 0;
+              return (
+                <tr key={m.id} className="border-b last:border-b-0 hover:bg-muted/30 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={cn(
+                          "h-7 w-7 rounded-md flex items-center justify-center text-xs font-semibold",
+                          pct >= 100
+                            ? "bg-emerald-100 text-emerald-700"
+                            : pct > 0
+                            ? "bg-blue-50 text-primary"
+                            : "bg-muted text-muted-foreground"
+                        )}
+                      >
+                        {m.order}
+                      </div>
+                      <span className="font-medium">{m.title}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-muted-foreground max-w-xs">{m.description}</td>
+                  <td className="px-4 py-4 text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {formatDate(m.scheduledAt)}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Clock className="h-3.5 w-3.5" />
+                      10:00 – 11:30 Uhr
+                    </div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center justify-between text-xs mb-1.5">
+                      <span className="font-medium">{pct}%</span>
+                      {pct > 0 && pct < 100 && (
+                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-0 text-[10px]">
+                          In Bearbeitung
+                        </Badge>
+                      )}
+                      {pct === 0 && (
+                        <Badge variant="secondary" className="bg-muted text-muted-foreground hover:bg-muted border-0 text-[10px]">
+                          Nicht gestartet
+                        </Badge>
+                      )}
+                    </div>
+                    <ProgressBar value={pct} />
+                  </td>
+                  <td className="px-4 py-4">
+                    <Button variant="outline" size="sm" onClick={() => onOpen(m.id)}>
+                      Module öffnen
+                    </Button>
+                  </td>
+                  <td className="px-4 py-4 text-muted-foreground">
+                    <ChevronRight className="h-4 w-4" />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

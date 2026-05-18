@@ -140,9 +140,9 @@ const SEED_ANNOUNCEMENTS: Announcement[] = [
 
 const LS = {
   role: "elearning:role",
-  modules: "elearning:modules",
-  announcements: "elearning:announcements",
-  progress: (studentId: string) => `elearning:progress:${studentId}`,
+  modules: "elearning:modules:v2",
+  announcements: "elearning:announcements:v2",
+  progress: (studentId: string) => `elearning:progress:${studentId}:v2`,
 };
 
 // ---------- Role ----------

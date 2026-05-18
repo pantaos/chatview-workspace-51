@@ -41,6 +41,11 @@ import MyApps from "./pages/MyApps";
 import MyAppRun from "./pages/MyAppRun";
 import Editorial from "./pages/Editorial";
 import EditorialCockpit from "./pages/EditorialCockpit";
+import ELearningDashboard from "./pages/elearning/ELearningDashboard";
+import ELearningModules from "./pages/elearning/ELearningModules";
+import ELearningModuleDetail from "./pages/elearning/ELearningModuleDetail";
+import ELearningAnnouncements from "./pages/elearning/ELearningAnnouncements";
+import ELearningManage from "./pages/elearning/ELearningManage";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -89,6 +94,11 @@ const App = () => {
                   <Route path="/my-apps/:id" element={<MyAppRun />} />
                   <Route path="/editorial" element={<Editorial />} />
                   <Route path="/editorial-cockpit" element={<EditorialCockpit />} />
+                  <Route path="/elearning" element={<ELearningDashboard />} />
+                  <Route path="/elearning/modules" element={<ELearningModules />} />
+                  <Route path="/elearning/modules/:id" element={<ELearningModuleDetail />} />
+                  <Route path="/elearning/announcements" element={<ELearningAnnouncements />} />
+                  <Route path="/elearning/manage" element={<ELearningManage />} />
                   
                   {/* Trendcast Workflow Routes */}
                   <Route path="/trendcast" element={<TrendcastUploadLinks />} />

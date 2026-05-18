@@ -173,8 +173,21 @@ const Index = () => {
       steps: [],
       route: "/image-cropper",
       isFavorite: false
+    },
+    {
+      id: "elearning",
+      title: "LearnFlow",
+      description: "E-learning platform with modules, materials, tasks & progress tracking",
+      icon: "GraduationCap",
+      tags: [{ id: "education", name: "Education", color: "#F59E0B" }],
+      translationKey: "elearning",
+      type: "workflow" as const,
+      steps: [],
+      route: "/elearning",
+      isFavorite: false
     }
   ]);
+
 
   // Add conversational workflows state
   const [availableConversationalWorkflows, setAvailableConversationalWorkflows] = useState<ConversationalWorkflow[]>([

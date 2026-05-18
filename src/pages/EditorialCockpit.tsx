@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import MainLayout from "@/components/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -503,8 +503,7 @@ const ClustersView = () => {
 
 const ClusterEditorDialog = ({ cluster, onClose, onSave }: { cluster: TopicCluster | null; onClose: () => void; onSave: (c: TopicCluster) => void }) => {
   const [draft, setDraft] = useState<TopicCluster | null>(cluster);
-  // sync when changes
-  if (draft?.id !== cluster?.id) setDraft(cluster);
+  useEffect(() => { setDraft(cluster); }, [cluster]);
   if (!cluster || !draft) return null;
   return (
     <Dialog open={!!cluster} onOpenChange={(o) => !o && onClose()}>

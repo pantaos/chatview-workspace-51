@@ -185,6 +185,39 @@ const Index = () => {
       steps: [],
       route: "/elearning",
       isFavorite: false
+    },
+    {
+      id: "bid-assistant",
+      title: "Ausschreibungs-Assistent",
+      description: "Ausschreibung hochladen — Anforderungen, ähnliche Projekte & Angebotsentwurf in Minuten",
+      icon: "FileText",
+      tags: [{ id: "sales", name: "Vertrieb", color: "#3B82F6" }, { id: "ai", name: "KI", color: "#8B5CF6" }],
+      type: "workflow" as const,
+      steps: [],
+      route: "/apps/bid-assistant",
+      isFavorite: true
+    },
+    {
+      id: "project-status",
+      title: "Projektstatus 30 Sek.",
+      description: "E-Mails, Notizen & Dokumente → komplette Projektlage auf einer Seite",
+      icon: "Zap",
+      tags: [{ id: "pm", name: "Projektmanagement", color: "#10B981" }, { id: "ai", name: "KI", color: "#8B5CF6" }],
+      type: "workflow" as const,
+      steps: [],
+      route: "/apps/project-status",
+      isFavorite: true
+    },
+    {
+      id: "unified-search",
+      title: "Unternehmenssuche",
+      description: "Eine Suche über ERP, CRM, Dokumente & E-Mails — Antworten statt Treffer",
+      icon: "Database",
+      tags: [{ id: "knowledge", name: "Wissen", color: "#F59E0B" }, { id: "ai", name: "KI", color: "#8B5CF6" }],
+      type: "workflow" as const,
+      steps: [],
+      route: "/apps/unified-search",
+      isFavorite: true
     }
   ]);
 

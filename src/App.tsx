@@ -102,6 +102,9 @@ const App = () => {
                   <Route path="/elearning/modules/:id" element={<ELearningModuleDetail />} />
                   <Route path="/elearning/announcements" element={<ELearningAnnouncements />} />
                   <Route path="/elearning/manage" element={<ELearningManage />} />
+                  <Route path="/apps/bid-assistant" element={<BidAssistant />} />
+                  <Route path="/apps/project-status" element={<ProjectStatus />} />
+                  <Route path="/apps/unified-search" element={<UnifiedSearch />} />
                   
                   {/* Trendcast Workflow Routes */}
                   <Route path="/trendcast" element={<TrendcastUploadLinks />} />

@@ -46,6 +46,9 @@ import ELearningModules from "./pages/elearning/ELearningModules";
 import ELearningModuleDetail from "./pages/elearning/ELearningModuleDetail";
 import ELearningAnnouncements from "./pages/elearning/ELearningAnnouncements";
 import ELearningManage from "./pages/elearning/ELearningManage";
+import BidAssistant from "./pages/apps/BidAssistant";
+import ProjectStatus from "./pages/apps/ProjectStatus";
+import UnifiedSearch from "./pages/apps/UnifiedSearch";
 
 // Theme wrapper to apply colors on mount and theme changes
 const ThemeApplier = ({ children }: { children: React.ReactNode }) => {
@@ -99,6 +102,9 @@ const App = () => {
                   <Route path="/elearning/modules/:id" element={<ELearningModuleDetail />} />
                   <Route path="/elearning/announcements" element={<ELearningAnnouncements />} />
                   <Route path="/elearning/manage" element={<ELearningManage />} />
+                  <Route path="/apps/bid-assistant" element={<BidAssistant />} />
+                  <Route path="/apps/project-status" element={<ProjectStatus />} />
+                  <Route path="/apps/unified-search" element={<UnifiedSearch />} />
                   
                   {/* Trendcast Workflow Routes */}
                   <Route path="/trendcast" element={<TrendcastUploadLinks />} />

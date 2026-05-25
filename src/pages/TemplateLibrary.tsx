@@ -143,7 +143,7 @@ export default function TemplateLibrary() {
                 ))}
               </div>
               {storiesExpanded ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 py-3">
                   {visibleStories.map((task) => (
                     <StoryCard key={`story-${task.id}`} task={task} onClick={() => setSelectedTask(task)} />
                   ))}

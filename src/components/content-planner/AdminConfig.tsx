@@ -47,14 +47,6 @@ export type AdminModuleId =
   | "formats"
   | "governance";
 
-const MODULE_ICON: Record<AdminModuleId, any> = {
-  audiences: Users,
-  topics: Tags,
-  seasonal: CalendarRange,
-  trends: TrendingUp,
-  formats: LayoutTemplate,
-  governance: ShieldCheck,
-};
 
 const Field = ({ label, value, onChange, area }: { label: string; value: string; onChange: (v: string) => void; area?: boolean }) => (
   <div className="space-y-1.5">

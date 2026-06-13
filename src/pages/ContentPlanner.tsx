@@ -254,6 +254,9 @@ const ContentPlanner = () => {
                 <ChipGroup label="Themenfelder" options={TOPIC_FIELDS} selected={fields} onToggle={(v) => toggle(fields, v, setFields)} />
                 <ChipGroup label="Kanäle & Frequenz" options={CHANNELS} selected={channels} onToggle={(v) => toggle(channels, v, setChannels)} />
               </div>
+
+              <CalendarOverview period={period} />
+
               <FooterNav onNext={completeAndNext} nextLabel="Weiter zu Themenlogik" />
             </Card>
           )}

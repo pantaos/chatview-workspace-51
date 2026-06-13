@@ -26,6 +26,7 @@ import {
   Wand2,
   Package,
   Newspaper,
+  CalendarCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -443,6 +444,18 @@ const AppSidebar = ({
             title="Editorial"
           >
             <Newspaper className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => navigate("/content-planner")}
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              isActive("/content-planner")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:bg-muted hover:text-foreground"
+            )}
+            title="Content-Planung"
+          >
+            <CalendarCheck className="h-5 w-5" />
           </button>
         </div>
 

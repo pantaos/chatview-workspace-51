@@ -33,6 +33,8 @@ import {
   Video,
   Loader2,
   Check,
+  Eye,
+  Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";

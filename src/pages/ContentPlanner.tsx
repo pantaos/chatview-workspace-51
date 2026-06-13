@@ -207,6 +207,7 @@ const ContentPlanner = () => {
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
+              <DevDocButton docId="overview" lang={lang} />
               <LangToggle lang={lang} onChange={setLang} label={c.langLabel} />
               <label className={cn(
                 "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",

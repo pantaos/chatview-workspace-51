@@ -41,6 +41,7 @@ import MyApps from "./pages/MyApps";
 import MyAppRun from "./pages/MyAppRun";
 import Editorial from "./pages/Editorial";
 import EditorialCockpit from "./pages/EditorialCockpit";
+import ContentPlanner from "./pages/ContentPlanner";
 import ELearningDashboard from "./pages/elearning/ELearningDashboard";
 import ELearningModules from "./pages/elearning/ELearningModules";
 import ELearningModuleDetail from "./pages/elearning/ELearningModuleDetail";
@@ -95,6 +96,7 @@ const App = () => {
                   <Route path="/app-builder" element={<AppBuilder />} />
                   <Route path="/my-apps" element={<MyApps />} />
                   <Route path="/my-apps/:id" element={<MyAppRun />} />
+                  <Route path="/content-planner" element={<ContentPlanner />} />
                   <Route path="/editorial" element={<Editorial />} />
                   <Route path="/editorial-cockpit" element={<EditorialCockpit />} />
                   <Route path="/elearning" element={<ELearningDashboard />} />

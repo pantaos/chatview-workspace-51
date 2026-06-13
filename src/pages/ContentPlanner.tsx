@@ -100,6 +100,10 @@ const ContentPlanner = () => {
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());
 
+  // Admin mode
+  const [adminMode, setAdminMode] = useState(false);
+  const [adminModule, setAdminModule] = useState<AdminModuleId | "preview">("audiences");
+
   // Step 1 state
   const [period, setPeriod] = useState("Q1 2026");
   const [fields, setFields] = useState<string[]>(["Hausrat", "Haftpflicht", "KFZ"]);

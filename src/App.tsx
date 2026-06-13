@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
-import Login from "./pages/Login";
+
 import NotFound from "./pages/NotFound";
 import History from "./pages/History";
 import Profile from "./pages/Profile";

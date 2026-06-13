@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import AdminConfig, { AdminModuleId, AdminPublishBar } from "@/components/content-planner/AdminConfig";
+import DevDocButton, { DevDocId } from "@/components/content-planner/DevDocs";
 import { CPLang, CPContent, CPSuggestion, CP_CONTENT } from "@/components/content-planner/i18n";
 import {
   Select,

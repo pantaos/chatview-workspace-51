@@ -713,6 +713,18 @@ const AppSidebar = ({
                 <Newspaper className="h-4 w-4 flex-shrink-0" />
                 <span>Editorial</span>
               </button>
+              <button
+                onClick={() => handleNavigate("/content-planner")}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive("/content-planner")
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <CalendarCheck className="h-4 w-4 flex-shrink-0" />
+                <span>Content-Planung</span>
+              </button>
             </nav>
 
             {/* Active Workflow Section (only when in a workflow) - NOW AT TOP */}

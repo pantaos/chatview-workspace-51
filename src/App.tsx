@@ -79,7 +79,6 @@ const App = () => {
               <VersionNumber />
               <BrowserRouter>
                 <Routes>
-                  <Route path="/login" element={<Login />} />
                   <Route path="/dashboard" element={<Index />} />
                   <Route path="/history" element={<History />} />
                   <Route path="/profile" element={<Profile />} />
@@ -167,7 +166,7 @@ const App = () => {
                   {/* Workflow Editor */}
                   <Route path="/workflow-editor/:workflowId" element={<WorkflowEditor />} />
                   
-                  <Route path="/" element={<Navigate to="/login" replace />} />
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

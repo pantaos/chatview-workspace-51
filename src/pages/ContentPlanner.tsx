@@ -267,9 +267,23 @@ const ContentPlanner = () => {
                 <ChipGroup label="Kanäle & Frequenz" options={CHANNELS} selected={channels} onToggle={(v) => toggle(channels, v, setChannels)} />
               </div>
 
-              <CalendarOverview period={period} />
+              <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center">
+                <p className="text-sm text-muted-foreground max-w-md">
+                  Auf Basis deiner Auswahl befüllt die KI den Kalender automatisch mit
+                  Themenvorschlägen aus saisonalen Regeln, Trends und HDI-Prioritäten.
+                </p>
+                <Button onClick={fillCalendar} disabled={filling}>
+                  {filling ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Kalender wird befüllt…</>
+                  ) : (
+                    <><Sparkles className="h-4 w-4" /> {calendarFilled ? "Kalender neu befüllen" : "Kalender automatisch befüllen"}</>
+                  )}
+                </Button>
+              </div>
 
-              <FooterNav onNext={completeAndNext} nextLabel="Weiter zu Themenlogik" />
+              {calendarFilled && !filling && <CalendarOverview period={period} />}
+
+              <FooterNav onNext={completeAndNext} nextLabel="Weiter zu Themenlogik" nextDisabled={!calendarFilled} />
             </Card>
           )}
 

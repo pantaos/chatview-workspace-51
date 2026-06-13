@@ -308,6 +308,9 @@ const ContentPlanner = () => {
         {/* Admin config content */}
         {adminMode && adminModule !== "preview" && (
           <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
+            <div className="flex justify-end mb-3">
+              <DevDocButton docId="admin" lang={lang} />
+            </div>
             <Card className="p-6 bg-white border-border">
               <AdminConfig key={lang} module={adminModule} lang={lang} />
             </Card>

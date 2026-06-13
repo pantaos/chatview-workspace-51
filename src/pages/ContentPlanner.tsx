@@ -587,6 +587,7 @@ const ContentPlanner = () => {
             </p>
           </div>
         </div>
+        )}
       </div>
     </MainLayout>
   );

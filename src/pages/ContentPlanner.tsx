@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import AdminConfig, { AdminModuleId, AdminPublishBar } from "@/components/content-planner/AdminConfig";
+import DevDocButton, { DevDocId } from "@/components/content-planner/DevDocs";
 import { CPLang, CPContent, CPSuggestion, CP_CONTENT } from "@/components/content-planner/i18n";
 import {
   Select,
@@ -206,6 +207,7 @@ const ContentPlanner = () => {
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
+              <DevDocButton docId="overview" lang={lang} />
               <LangToggle lang={lang} onChange={setLang} label={c.langLabel} />
               <label className={cn(
                 "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",
@@ -306,6 +308,9 @@ const ContentPlanner = () => {
         {/* Admin config content */}
         {adminMode && adminModule !== "preview" && (
           <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
+            <div className="flex justify-end mb-3">
+              <DevDocButton docId="admin" lang={lang} />
+            </div>
             <Card className="p-6 bg-white border-border">
               <AdminConfig key={lang} module={adminModule} lang={lang} />
             </Card>
@@ -323,7 +328,7 @@ const ContentPlanner = () => {
           )}
           {activeStep === "calendar" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={CalendarDays} title={c.step1Title} desc={c.step1Desc} />
+              <SectionHead icon={CalendarDays} title={c.step1Title} desc={c.step1Desc} docId="calendar" lang={lang} />
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div>
                   <Label className="text-sm font-medium">{c.periodLabel}</Label>
@@ -363,7 +368,7 @@ const ContentPlanner = () => {
           {/* STEP 2 */}
           {activeStep === "logic" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={Compass} title={c.step2Title} desc={c.step2Desc} />
+              <SectionHead icon={Compass} title={c.step2Title} desc={c.step2Desc} docId="logic" lang={lang} />
               <div className="space-y-3 mt-6">
                 <ToggleRow checked={useSeasonal} onChange={setUseSeasonal} icon={CalendarRange} title={c.seasonalTitle} desc={c.seasonalDesc} />
                 <ToggleRow checked={useTrends} onChange={setUseTrends} icon={TrendingUp} title={c.trendsTitle} desc={c.trendsDesc} />
@@ -377,7 +382,7 @@ const ContentPlanner = () => {
           {activeStep === "suggestions" && (
             <Card className="p-6 bg-white border-border">
               <div className="flex items-start justify-between gap-4 flex-wrap">
-                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} />
+                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} docId="suggestions" lang={lang} />
                 <Button variant="outline" size="sm" onClick={handleGenerate} disabled={generating}>
                   {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                   {c.regenBtn}
@@ -421,7 +426,7 @@ const ContentPlanner = () => {
           {/* STEP 4 */}
           {activeStep === "briefing" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={FileSearch} title={c.step4Title} desc={c.step4Desc} />
+              <SectionHead icon={FileSearch} title={c.step4Title} desc={c.step4Desc} docId="briefing" lang={lang} />
               <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-6">
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{c.pickTopicLabel}</p>
@@ -491,7 +496,7 @@ const ContentPlanner = () => {
           {/* STEP 5 */}
           {activeStep === "package" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={Package} title={c.step5Title} desc={c.step5Desc} />
+              <SectionHead icon={Package} title={c.step5Title} desc={c.step5Desc} docId="package" lang={lang} />
 
               {!packageReady && !building && (
                 <div className="mt-6 text-center py-10 border border-dashed border-border rounded-lg">
@@ -660,15 +665,18 @@ const CalendarOverview = ({ period, c }: { period: string; c: CPContent }) => {
   );
 };
 
-const SectionHead = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="flex items-start gap-3">
-    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-      <Icon className="h-5 w-5 text-primary" />
+const SectionHead = ({ icon: Icon, title, desc, docId, lang }: { icon: any; title: string; desc: string; docId?: DevDocId; lang?: CPLang }) => (
+  <div className="flex items-start justify-between gap-3">
+    <div className="flex items-start gap-3">
+      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+        <Icon className="h-5 w-5 text-primary" />
+      </div>
+      <div>
+        <h2 className="text-lg font-bold text-foreground">{title}</h2>
+        <p className="text-sm text-muted-foreground">{desc}</p>
+      </div>
     </div>
-    <div>
-      <h2 className="text-lg font-bold text-foreground">{title}</h2>
-      <p className="text-sm text-muted-foreground">{desc}</p>
-    </div>
+    {docId && lang && <DevDocButton docId={docId} lang={lang} className="shrink-0" />}
   </div>
 );
 

@@ -325,7 +325,7 @@ const ContentPlanner = () => {
           )}
           {activeStep === "calendar" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={CalendarDays} title={c.step1Title} desc={c.step1Desc} />
+              <SectionHead icon={CalendarDays} title={c.step1Title} desc={c.step1Desc} docId="calendar" lang={lang} />
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div>
                   <Label className="text-sm font-medium">{c.periodLabel}</Label>
@@ -365,7 +365,7 @@ const ContentPlanner = () => {
           {/* STEP 2 */}
           {activeStep === "logic" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={Compass} title={c.step2Title} desc={c.step2Desc} />
+              <SectionHead icon={Compass} title={c.step2Title} desc={c.step2Desc} docId="logic" lang={lang} />
               <div className="space-y-3 mt-6">
                 <ToggleRow checked={useSeasonal} onChange={setUseSeasonal} icon={CalendarRange} title={c.seasonalTitle} desc={c.seasonalDesc} />
                 <ToggleRow checked={useTrends} onChange={setUseTrends} icon={TrendingUp} title={c.trendsTitle} desc={c.trendsDesc} />
@@ -379,7 +379,7 @@ const ContentPlanner = () => {
           {activeStep === "suggestions" && (
             <Card className="p-6 bg-white border-border">
               <div className="flex items-start justify-between gap-4 flex-wrap">
-                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} />
+                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} docId="suggestions" lang={lang} />
                 <Button variant="outline" size="sm" onClick={handleGenerate} disabled={generating}>
                   {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                   {c.regenBtn}
@@ -423,7 +423,7 @@ const ContentPlanner = () => {
           {/* STEP 4 */}
           {activeStep === "briefing" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={FileSearch} title={c.step4Title} desc={c.step4Desc} />
+              <SectionHead icon={FileSearch} title={c.step4Title} desc={c.step4Desc} docId="briefing" lang={lang} />
               <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-6">
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{c.pickTopicLabel}</p>
@@ -493,7 +493,7 @@ const ContentPlanner = () => {
           {/* STEP 5 */}
           {activeStep === "package" && (
             <Card className="p-6 bg-white border-border">
-              <SectionHead icon={Package} title={c.step5Title} desc={c.step5Desc} />
+              <SectionHead icon={Package} title={c.step5Title} desc={c.step5Desc} docId="package" lang={lang} />
 
               {!packageReady && !building && (
                 <div className="mt-6 text-center py-10 border border-dashed border-border rounded-lg">

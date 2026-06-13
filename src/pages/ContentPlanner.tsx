@@ -254,6 +254,9 @@ const ContentPlanner = () => {
                 <ChipGroup label="Themenfelder" options={TOPIC_FIELDS} selected={fields} onToggle={(v) => toggle(fields, v, setFields)} />
                 <ChipGroup label="Kanäle & Frequenz" options={CHANNELS} selected={channels} onToggle={(v) => toggle(channels, v, setChannels)} />
               </div>
+
+              <CalendarOverview period={period} />
+
               <FooterNav onNext={completeAndNext} nextLabel="Weiter zu Themenlogik" />
             </Card>
           )}
@@ -481,6 +484,82 @@ const ContentPlanner = () => {
         </div>
       </div>
     </MainLayout>
+  );
+};
+
+const CAL_ENTRIES: Record<number, { label: string; field: string; color: string }> = {
+  6: { label: "Einbruchschutz", field: "Hausrat", color: "bg-blue-100 text-blue-700 border-blue-200" },
+  9: { label: "Reel: KFZ-Tipp", field: "Instagram", color: "bg-pink-100 text-pink-700 border-pink-200" },
+  13: { label: "Haftpflicht 2026", field: "LinkedIn", color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+  16: { label: "Newsletter", field: "Unfall", color: "bg-amber-100 text-amber-700 border-amber-200" },
+  20: { label: "Winterreifen", field: "KFZ", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+  23: { label: "Story: Hausrat", field: "Instagram", color: "bg-pink-100 text-pink-700 border-pink-200" },
+  27: { label: "Unfall-Familie", field: "Newsletter", color: "bg-amber-100 text-amber-700 border-amber-200" },
+  30: { label: "Blog: Recht", field: "Rechtsschutz", color: "bg-blue-100 text-blue-700 border-blue-200" },
+};
+
+const CalendarOverview = ({ period }: { period: string }) => {
+  // Demo month: Januar (startet Donnerstag, 31 Tage)
+  const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+  const firstWeekday = 3; // 0=Mo → Donnerstag
+  const daysInMonth = 31;
+  const cells: (number | null)[] = [
+    ...Array(firstWeekday).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <CalendarDays className="h-4 w-4 text-primary" />
+          <p className="text-sm font-semibold text-foreground">
+            Vorbefüllter Kalender · Januar 2026
+          </p>
+        </div>
+        <Badge variant="secondary" className="text-[10px]">
+          {Object.keys(CAL_ENTRIES).length} Vorschläge · {period}
+        </Badge>
+      </div>
+      <div className="rounded-xl border border-border bg-white overflow-hidden">
+        <div className="grid grid-cols-7 border-b border-border bg-muted/40">
+          {weekDays.map((d) => (
+            <div key={d} className="px-2 py-2 text-[11px] font-medium text-muted-foreground text-center">
+              {d}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7">
+          {cells.map((day, i) => {
+            const entry = day ? CAL_ENTRIES[day] : null;
+            return (
+              <div
+                key={i}
+                className={cn(
+                  "min-h-[68px] border-b border-r border-border/60 p-1.5 last:border-r-0",
+                  !day && "bg-muted/20"
+                )}
+              >
+                {day && (
+                  <>
+                    <p className="text-[11px] text-muted-foreground mb-1">{day}</p>
+                    {entry && (
+                      <div className={cn("text-[10px] leading-tight rounded-md border px-1.5 py-1", entry.color)}>
+                        <p className="font-medium truncate">{entry.label}</p>
+                        <p className="opacity-70 truncate">{entry.field}</p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <p className="text-xs text-muted-foreground mt-2">
+        Die KI hat den Kalender automatisch mit Vorschlägen aus saisonalen Regeln, Trends und HDI-Prioritäten vorbefüllt.
+      </p>
+    </div>
   );
 };
 

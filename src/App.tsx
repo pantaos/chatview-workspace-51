@@ -167,6 +167,7 @@ const App = () => {
                   <Route path="/workflow-editor/:workflowId" element={<WorkflowEditor />} />
                   
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/login" element={<Navigate to="/dashboard" replace />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

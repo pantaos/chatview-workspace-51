@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import AdminConfig, { ADMIN_MODULES, AdminModuleId, AdminPublishBar } from "@/components/content-planner/AdminConfig";
 import {
   Select,
   SelectContent,
@@ -31,6 +33,8 @@ import {
   Video,
   Loader2,
   Check,
+  Eye,
+  Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -95,6 +99,10 @@ const statusStyles: Record<Suggestion["status"], string> = {
 const ContentPlanner = () => {
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());
+
+  // Admin mode
+  const [adminMode, setAdminMode] = useState(false);
+  const [adminModule, setAdminModule] = useState<AdminModuleId | "preview">("audiences");
 
   // Step 1 state
   const [period, setPeriod] = useState("Q1 2026");
@@ -190,18 +198,73 @@ const ContentPlanner = () => {
       <div className="min-h-full bg-[#F8F9FD]">
         {/* Header */}
         <div className="px-6 md:px-10 pt-8 pb-6 max-w-6xl mx-auto">
-          <div className="flex items-center gap-2 text-sm text-primary font-medium mb-2">
-            <Sparkles className="h-4 w-4" />
-            PANTA OS
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div className="flex items-center gap-2 text-sm text-primary font-medium mb-2">
+                <Sparkles className="h-4 w-4" />
+                PANTA OS
+              </div>
+              <h1 className="text-3xl font-bold text-foreground">
+                {adminMode ? "Content-Planung · Admin" : "KI-gestützte Content-Planung"}
+              </h1>
+              <p className="text-muted-foreground mt-1 max-w-2xl">
+                {adminMode
+                  ? "Pflege die redaktionelle Intelligenz – Zielgruppen, Themen, Regeln & Signale – im Look des echten Kalenders."
+                  : "Von der Kalender-Vorbefüllung bis zum kanalübergreifenden Content-Paket – mit Human-in-the-loop in jedem Schritt."}
+              </p>
+            </div>
+            <label className={cn(
+              "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",
+              adminMode ? "border-primary ring-1 ring-primary" : "border-border"
+            )}>
+              <Settings2 className={cn("h-4 w-4", adminMode ? "text-primary" : "text-muted-foreground")} />
+              <div className="text-left">
+                <p className="text-sm font-semibold text-foreground leading-tight">Admin-Modus</p>
+                <p className="text-[11px] text-muted-foreground leading-tight">Konfiguration & Regeln</p>
+              </div>
+              <Switch checked={adminMode} onCheckedChange={setAdminMode} className="ml-1" />
+            </label>
           </div>
-          <h1 className="text-3xl font-bold text-foreground">KI-gestützte Content-Planung</h1>
-          <p className="text-muted-foreground mt-1 max-w-2xl">
-            Von der Kalender-Vorbefüllung bis zum kanalübergreifenden Content-Paket – mit
-            Human-in-the-loop in jedem Schritt.
-          </p>
         </div>
 
-        {/* Stepper */}
+        {/* Admin module nav */}
+        {adminMode && (
+          <div className="px-6 md:px-10 max-w-6xl mx-auto">
+            <div className="flex items-stretch gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              <button
+                onClick={() => setAdminModule("preview")}
+                className={cn(
+                  "min-w-[140px] text-left rounded-xl border p-3 transition-all bg-white",
+                  adminModule === "preview" ? "border-primary ring-1 ring-primary shadow-sm" : "border-border hover:border-primary/40"
+                )}
+              >
+                <Eye className={cn("h-4 w-4", adminModule === "preview" ? "text-primary" : "text-muted-foreground")} />
+                <p className="text-sm font-semibold text-foreground mt-2 leading-tight">Vorschau als Nutzer</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Echter Output</p>
+              </button>
+              {ADMIN_MODULES.map((m) => {
+                const isActive = adminModule === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setAdminModule(m.id)}
+                    className={cn(
+                      "min-w-[150px] text-left rounded-xl border p-3 transition-all bg-white",
+                      isActive ? "border-primary ring-1 ring-primary shadow-sm" : "border-border hover:border-primary/40"
+                    )}
+                  >
+                    <m.icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
+                    <p className="text-sm font-semibold text-foreground mt-2 leading-tight">{m.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{m.subtitle}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Stepper (user wizard) */}
+        {(!adminMode || adminModule === "preview") && (
         <div className="px-6 md:px-10 max-w-6xl mx-auto">
           <div className="flex items-stretch gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {STEPS.map((s, i) => {
@@ -240,10 +303,26 @@ const ContentPlanner = () => {
             })}
           </div>
         </div>
+        )}
 
-        {/* Content */}
+        {/* Admin config content */}
+        {adminMode && adminModule !== "preview" && (
+          <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
+            <Card className="p-6 bg-white border-border">
+              <AdminConfig module={adminModule} />
+            </Card>
+            <AdminPublishBar />
+          </div>
+        )}
+
+        {/* Content (user wizard) */}
+        {(!adminMode || adminModule === "preview") && (
         <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
-          {/* STEP 1 */}
+          {adminMode && adminModule === "preview" && (
+            <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-primary">
+              <Eye className="h-4 w-4" /> Vorschau als Nutzer – so sieht die Redaktion den konfigurierten Kalender.
+            </div>
+          )}
           {activeStep === "calendar" && (
             <Card className="p-6 bg-white border-border">
               <SectionHead icon={CalendarDays} title="1. Kalender befüllen" desc="Lege Zeitraum, Themenfelder, Kanäle und Zielgruppen fest." />
@@ -508,6 +587,7 @@ const ContentPlanner = () => {
             </p>
           </div>
         </div>
+        )}
       </div>
     </MainLayout>
   );

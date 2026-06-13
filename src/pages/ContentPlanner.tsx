@@ -101,6 +101,18 @@ const ContentPlanner = () => {
   const [fields, setFields] = useState<string[]>(["Hausrat", "Haftpflicht", "KFZ"]);
   const [channels, setChannels] = useState<string[]>(["Blog", "LinkedIn"]);
   const [targets, setTargets] = useState<string[]>(["Privatkunden"]);
+  const [calendarFilled, setCalendarFilled] = useState(false);
+  const [filling, setFilling] = useState(false);
+
+  const fillCalendar = () => {
+    setFilling(true);
+    setCalendarFilled(false);
+    setTimeout(() => {
+      setFilling(false);
+      setCalendarFilled(true);
+      toast.success("Kalender automatisch befüllt");
+    }, 1600);
+  };
 
   // Step 2 state
   const [useSeasonal, setUseSeasonal] = useState(true);

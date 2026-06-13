@@ -662,15 +662,18 @@ const CalendarOverview = ({ period, c }: { period: string; c: CPContent }) => {
   );
 };
 
-const SectionHead = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="flex items-start gap-3">
-    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-      <Icon className="h-5 w-5 text-primary" />
+const SectionHead = ({ icon: Icon, title, desc, docId, lang }: { icon: any; title: string; desc: string; docId?: DevDocId; lang?: CPLang }) => (
+  <div className="flex items-start justify-between gap-3">
+    <div className="flex items-start gap-3">
+      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+        <Icon className="h-5 w-5 text-primary" />
+      </div>
+      <div>
+        <h2 className="text-lg font-bold text-foreground">{title}</h2>
+        <p className="text-sm text-muted-foreground">{desc}</p>
+      </div>
     </div>
-    <div>
-      <h2 className="text-lg font-bold text-foreground">{title}</h2>
-      <p className="text-sm text-muted-foreground">{desc}</p>
-    </div>
+    {docId && lang && <DevDocButton docId={docId} lang={lang} className="shrink-0" />}
   </div>
 );
 

@@ -315,9 +315,14 @@ const ContentPlanner = () => {
           </div>
         )}
 
-        {/* Content */}
+        {/* Content (user wizard) */}
+        {(!adminMode || adminModule === "preview") && (
         <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
-          {/* STEP 1 */}
+          {adminMode && adminModule === "preview" && (
+            <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-primary">
+              <Eye className="h-4 w-4" /> Vorschau als Nutzer – so sieht die Redaktion den konfigurierten Kalender.
+            </div>
+          )}
           {activeStep === "calendar" && (
             <Card className="p-6 bg-white border-border">
               <SectionHead icon={CalendarDays} title="1. Kalender befüllen" desc="Lege Zeitraum, Themenfelder, Kanäle und Zielgruppen fest." />

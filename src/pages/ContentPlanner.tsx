@@ -195,6 +195,30 @@ const ContentPlanner = () => {
   return (
     <MainLayout mobileTitle={c.titleUser}>
       <div className="min-h-full bg-[#F8F9FD]">
+        {/* View switch */}
+        <div className="px-6 md:px-10 max-w-6xl mx-auto pt-6">
+          <div className="inline-flex rounded-xl border border-border bg-white p-1">
+            {([
+              { id: "planner", label: c.titleUser },
+              { id: "calendarApp", label: "Content Calendar App" },
+            ] as const).map((v) => (
+              <button
+                key={v.id}
+                onClick={() => setView(v.id)}
+                className={cn(
+                  "px-4 py-2 text-sm font-semibold rounded-lg transition-colors",
+                  view === v.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {view === "calendarApp" && <CalendarAppMock />}
+
+        {view === "planner" && (<>
         {/* Header */}
         <div className="px-6 md:px-10 pt-8 pb-6 max-w-6xl mx-auto">
           <div className="flex items-start justify-between gap-4 flex-wrap">

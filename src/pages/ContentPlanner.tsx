@@ -608,6 +608,7 @@ const ContentPlanner = () => {
           </div>
         </div>
         )}
+        </>)}
       </div>
     </MainLayout>
   );

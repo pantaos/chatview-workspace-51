@@ -75,6 +75,9 @@ const ContentPlanner = () => {
   const [lang, setLang] = useState<CPLang>("de");
   const c = CP_CONTENT[lang];
 
+  // Top-level view switch
+  const [view, setView] = useState<"planner" | "calendarApp">("planner");
+
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());
 

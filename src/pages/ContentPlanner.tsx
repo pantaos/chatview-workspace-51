@@ -201,7 +201,26 @@ const ContentPlanner = () => {
 
   return (
     <MainLayout mobileTitle={c.titleUser}>
-      <div className="min-h-full bg-[#F8F9FD]">
+      <div
+        className="min-h-full bg-[#F8F9FD]"
+        style={{
+          // HDI brand scope: re-map primary token to HDI Universalgrün
+          ["--primary" as any]: "77 48% 47%",
+          ["--primary-foreground" as any]: "0 0% 100%",
+          ["--ring" as any]: "77 48% 47%",
+        }}
+      >
+        {/* HDI co-branding bar */}
+        <div className="border-b border-border bg-white">
+          <div className="px-6 md:px-10 max-w-6xl mx-auto py-3 flex items-center gap-3">
+            <img src={hdiLogoAsset.url} alt="HDI" className="h-7 w-auto" />
+            <div className="h-6 w-px bg-border" />
+            <p className="text-xs text-muted-foreground">
+              {lang === "de" ? "Content Planung · powered by PANTA Flows" : "Content planning · powered by PANTA Flows"}
+            </p>
+          </div>
+        </div>
+
         {/* View switch */}
         <div className="px-6 md:px-10 max-w-6xl mx-auto pt-6">
           <div className="inline-flex rounded-xl border border-border bg-white p-1">

@@ -1,36 +1,21 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import {
   Sparkles,
   Clock,
   TrendingUp,
   Zap,
   ArrowRight,
-  Linkedin,
-  Instagram,
-  FileText,
-  Loader2,
-  CheckCircle2,
-  ThumbsUp,
-  MessageCircle,
-  Share2,
-  Copy,
-  Wand2,
+  Calculator,
+  Euro,
+  Timer,
+  BarChart3,
 } from "lucide-react";
 import { CPLang } from "./i18n";
 import hdiLogo from "@/assets/hdi-logo.png.asset.json";
-import { toast } from "sonner";
 
 interface Props {
   lang: CPLang;
@@ -40,45 +25,43 @@ interface Props {
 // HDI palette
 const HDI_GREEN = "#8FB03E";
 const HDI_DARK = "#2C6E31";
-const HDI_BLUE = "#003960";
-const HDI_OCKER = "#DB6301";
 
 const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   const de = lang === "de";
 
-  // Live post generator
-  const [topic, setTopic] = useState(
-    de ? "Berufsunfähigkeitsversicherung für junge Berufseinsteiger" : "Disability insurance for young professionals"
-  );
-  const [channel, setChannel] = useState<"linkedin" | "instagram" | "blog">("linkedin");
-  const [tone, setTone] = useState<"informativ" | "emotional" | "aktivierend">("informativ");
-  const [generating, setGenerating] = useState(false);
-  const [generated, setGenerated] = useState<{
-    hook: string;
-    body: string;
-    cta: string;
-    hashtags: string[];
-  } | null>(null);
+  // ROI Calculator inputs
+  const [postsPerMonth, setPostsPerMonth] = useState(40);
+  const [hoursPerPost, setHoursPerPost] = useState(4);
+  const [hourlyRate, setHourlyRate] = useState(85);
 
-  const generatePost = () => {
-    setGenerating(true);
-    setGenerated(null);
-    setTimeout(() => {
-      const samples = getSample(topic, channel, tone, de);
-      setGenerated(samples);
-      setGenerating(false);
-    }, 1500);
-  };
-
-  const copyAll = () => {
-    if (!generated) return;
-    const text = `${generated.hook}\n\n${generated.body}\n\n${generated.cta}\n\n${generated.hashtags.map((h) => `#${h}`).join(" ")}`;
-    navigator.clipboard.writeText(text);
-    toast.success(de ? "In Zwischenablage kopiert" : "Copied to clipboard");
-  };
+  const roi = useMemo(() => {
+    const minutesWithFlows = 4;
+    const hoursWithFlows = (postsPerMonth * minutesWithFlows) / 60;
+    const hoursBefore = postsPerMonth * hoursPerPost;
+    const hoursSavedMonth = hoursBefore - hoursWithFlows;
+    const hoursSavedYear = hoursSavedMonth * 12;
+    const costBefore = hoursBefore * hourlyRate;
+    const costAfter = hoursWithFlows * hourlyRate;
+    const savingsMonth = costBefore - costAfter;
+    const savingsYear = savingsMonth * 12;
+    const fteEquivalent = hoursSavedYear / 1600; // ~1600 productive hrs / FTE / year
+    const percentSaved = (hoursSavedMonth / hoursBefore) * 100;
+    return {
+      hoursBefore,
+      hoursWithFlows,
+      hoursSavedMonth,
+      hoursSavedYear,
+      savingsMonth,
+      savingsYear,
+      fteEquivalent,
+      percentSaved,
+    };
+  }, [postsPerMonth, hoursPerPost, hourlyRate]);
 
   const fmtEuro = (n: number) =>
     n.toLocaleString(de ? "de-DE" : "en-US", { maximumFractionDigits: 0 });
+  const fmtNum = (n: number, d = 0) =>
+    n.toLocaleString(de ? "de-DE" : "en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
 
   return (
     <div className="px-6 md:px-10 max-w-6xl mx-auto py-8 space-y-8">
@@ -121,9 +104,10 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                   {de ? "Zum Live-Workflow" : "Go to live workflow"}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
-                <a href="#demo">
+                <a href="#roi">
                   <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                    {de ? "Live-Demo" : "Live demo"}
+                    <Calculator className="h-4 w-4" />
+                    {de ? "ROI berechnen" : "Calculate ROI"}
                   </Button>
                 </a>
               </div>
@@ -198,155 +182,143 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
         </div>
       </div>
 
-      {/* Live Post Generator */}
-      <Card id="demo" className="p-6 bg-white border-border">
+      {/* ROI Calculator */}
+      <Card id="roi" className="p-6 md:p-8 bg-white border-border">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide" style={{ color: HDI_GREEN }}>
-              <Wand2 className="h-3.5 w-3.5" />
-              {de ? "Live-Demo" : "Live demo"}
+              <Calculator className="h-3.5 w-3.5" />
+              {de ? "ROI-Rechner" : "ROI calculator"}
             </div>
-            <h3 className="text-xl font-bold text-foreground mt-1">
-              {de ? "Post-Generator — live in 4 Sekunden" : "Post generator — live in 4 seconds"}
+            <h3 className="text-xl md:text-2xl font-bold text-foreground mt-1">
+              {de ? "Zeitersparnis & Kostenimpact — live berechnen" : "Time savings & cost impact — live"}
             </h3>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
               {de
-                ? "Wähle Thema, Kanal & Tonalität — HDI-Brand-Guidelines sind schon im System."
-                : "Pick topic, channel & tone — HDI brand guidelines are already built in."}
+                ? "Passe die Parameter an eure Realität an. Alle Zahlen aktualisieren sich sofort."
+                : "Adjust the parameters to your reality. All numbers update instantly."}
             </p>
           </div>
-          <Badge variant="outline" className="bg-white">HDI Brand-safe</Badge>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 mt-6">
-          {/* Inputs */}
-          <div className="space-y-4">
+        <div className="grid lg:grid-cols-5 gap-6 mt-6">
+          {/* Sliders */}
+          <div className="lg:col-span-2 space-y-6">
             <div>
-              <Label className="text-sm font-medium">{de ? "Thema" : "Topic"}</Label>
-              <Input value={topic} onChange={(e) => setTopic(e.target.value)} className="mt-1.5 bg-white" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-sm font-medium">{de ? "Kanal" : "Channel"}</Label>
-                <Select value={channel} onValueChange={(v: any) => setChannel(v)}>
-                  <SelectTrigger className="mt-1.5 bg-white"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="linkedin">LinkedIn</SelectItem>
-                    <SelectItem value="instagram">Instagram</SelectItem>
-                    <SelectItem value="blog">{de ? "Blog / Website" : "Blog / Website"}</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-medium">{de ? "Posts pro Monat" : "Posts per month"}</Label>
+                <span className="text-sm font-bold text-foreground">{postsPerMonth}</span>
               </div>
-              <div>
-                <Label className="text-sm font-medium">{de ? "Tonalität" : "Tone"}</Label>
-                <Select value={tone} onValueChange={(v: any) => setTone(v)}>
-                  <SelectTrigger className="mt-1.5 bg-white"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="informativ">{de ? "Informativ" : "Informative"}</SelectItem>
-                    <SelectItem value="emotional">{de ? "Emotional" : "Emotional"}</SelectItem>
-                    <SelectItem value="aktivierend">{de ? "Aktivierend" : "Activating"}</SelectItem>
-                  </SelectContent>
-                </Select>
+              <Slider
+                value={[postsPerMonth]}
+                onValueChange={(v) => setPostsPerMonth(v[0])}
+                min={5}
+                max={200}
+                step={5}
+              />
+              <div className="flex justify-between text-[11px] text-muted-foreground mt-1">
+                <span>5</span><span>200</span>
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-[#F8F9FD] p-4 space-y-2">
-              <p className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                {de ? "Automatisch berücksichtigt" : "Automatically applied"}
-              </p>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: HDI_GREEN }} />{de ? "HDI Brand Voice & Farbwelt" : "HDI brand voice & palette"}</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: HDI_GREEN }} />{de ? "Compliance-Regeln (BaFin, DSGVO)" : "Compliance rules (BaFin, GDPR)"}</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: HDI_GREEN }} />{de ? "Aktuelle Trend-Signale" : "Latest trend signals"}</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: HDI_GREEN }} />{de ? "Zielgruppen aus dem Admin" : "Audiences from admin config"}</li>
-              </ul>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-medium">{de ? "Stunden pro Post (heute)" : "Hours per post (today)"}</Label>
+                <span className="text-sm font-bold text-foreground">{hoursPerPost} h</span>
+              </div>
+              <Slider
+                value={[hoursPerPost]}
+                onValueChange={(v) => setHoursPerPost(v[0])}
+                min={1}
+                max={10}
+                step={0.5}
+              />
+              <div className="flex justify-between text-[11px] text-muted-foreground mt-1">
+                <span>1 h</span><span>10 h</span>
+              </div>
             </div>
 
-            <Button
-              size="lg"
-              onClick={generatePost}
-              disabled={generating}
-              className="w-full font-semibold"
-              style={{ background: HDI_DARK }}
-            >
-              {generating ? (
-                <><Loader2 className="h-4 w-4 animate-spin" />{de ? "Generiere Post…" : "Generating post…"}</>
-              ) : (
-                <><Sparkles className="h-4 w-4" />{de ? "Post generieren" : "Generate post"}</>
-              )}
-            </Button>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-medium">{de ? "Ø Stundensatz" : "Avg. hourly rate"}</Label>
+                <span className="text-sm font-bold text-foreground">{fmtEuro(hourlyRate)} €</span>
+              </div>
+              <Slider
+                value={[hourlyRate]}
+                onValueChange={(v) => setHourlyRate(v[0])}
+                min={40}
+                max={200}
+                step={5}
+              />
+              <div className="flex justify-between text-[11px] text-muted-foreground mt-1">
+                <span>40 €</span><span>200 €</span>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border bg-[#F8F9FD] p-4 text-xs text-muted-foreground leading-relaxed">
+              {de
+                ? "Basis: PANTA Flows reduziert die Bearbeitungszeit pro Post auf ≈ 4 Minuten (Trend → Idee → Draft → Freigabe). Basierend auf HDI-Pilot Q1/Q2 2026."
+                : "Baseline: PANTA Flows reduces time per post to ≈ 4 minutes (trend → idea → draft → approval). Based on HDI pilot Q1/Q2 2026."}
+            </div>
           </div>
 
-          {/* Preview */}
-          <div>
-            <div className="rounded-2xl border border-border bg-[#F8F9FD] p-5 min-h-[420px] flex flex-col">
-              <div className="flex items-center gap-2 mb-3">
-                {channel === "linkedin" && <Linkedin className="h-4 w-4 text-[#0A66C2]" />}
-                {channel === "instagram" && <Instagram className="h-4 w-4 text-[#E1306C]" />}
-                {channel === "blog" && <FileText className="h-4 w-4" style={{ color: HDI_BLUE }} />}
-                <p className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                  {channel === "linkedin" ? "LinkedIn Post" : channel === "instagram" ? "Instagram Caption" : de ? "Blog-Artikel" : "Blog article"}
+          {/* Results */}
+          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-3">
+            <ResultCard
+              icon={<Timer className="h-4 w-4" />}
+              label={de ? "Zeitersparnis / Monat" : "Time saved / month"}
+              value={`${fmtNum(roi.hoursSavedMonth, 0)} h`}
+              sub={de ? `von ${fmtNum(roi.hoursBefore)} h auf ${fmtNum(roi.hoursWithFlows, 1)} h` : `from ${fmtNum(roi.hoursBefore)} h to ${fmtNum(roi.hoursWithFlows, 1)} h`}
+              tone="light"
+            />
+            <ResultCard
+              icon={<Timer className="h-4 w-4" />}
+              label={de ? "Zeitersparnis / Jahr" : "Time saved / year"}
+              value={`${fmtNum(roi.hoursSavedYear, 0)} h`}
+              sub={de ? `≈ ${fmtNum(roi.fteEquivalent, 1)} FTE freigespielt` : `≈ ${fmtNum(roi.fteEquivalent, 1)} FTE freed`}
+              tone="light"
+            />
+            <ResultCard
+              icon={<Euro className="h-4 w-4" />}
+              label={de ? "Kostenersparnis / Monat" : "Cost saved / month"}
+              value={`${fmtEuro(roi.savingsMonth)} €`}
+              sub={de ? `bei ${fmtEuro(hourlyRate)} €/h` : `at ${fmtEuro(hourlyRate)} €/h`}
+              tone="light"
+            />
+            <ResultCard
+              icon={<Euro className="h-4 w-4" />}
+              label={de ? "Kostenersparnis / Jahr" : "Cost saved / year"}
+              value={`${fmtEuro(roi.savingsYear)} €`}
+              sub={de ? "Vollkosten-Basis" : "Fully loaded"}
+              tone="dark"
+            />
+            <div
+              className="sm:col-span-2 rounded-2xl p-5 border flex items-center justify-between gap-4 flex-wrap"
+              style={{ background: `linear-gradient(135deg, ${HDI_GREEN} 0%, #6d8a2e 100%)`, borderColor: HDI_GREEN }}
+            >
+              <div>
+                <div className="flex items-center gap-2 text-white/90 text-xs font-semibold uppercase tracking-wide">
+                  <BarChart3 className="h-3.5 w-3.5" />
+                  {de ? "Effizienzgewinn" : "Efficiency gain"}
+                </div>
+                <p className="text-white text-3xl font-bold mt-1">
+                  {fmtNum(roi.percentSaved, 1)} %
+                </p>
+                <p className="text-white/90 text-xs mt-0.5">
+                  {de
+                    ? `${fmtNum(roi.hoursSavedYear, 0)} Stunden pro Jahr für Strategie & Kreation frei`
+                    : `${fmtNum(roi.hoursSavedYear, 0)} hours per year freed for strategy & creation`}
                 </p>
               </div>
-
-              {!generated && !generating && (
-                <div className="flex-1 flex items-center justify-center text-center text-muted-foreground text-sm px-6">
-                  {de ? 'Klicke auf „Post generieren“, um eine Live-Vorschau zu erhalten.' : 'Click "Generate post" for a live preview.'}
-                </div>
-              )}
-
-              {generating && (
-                <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground text-sm">
-                  <Loader2 className="h-6 w-6 animate-spin" style={{ color: HDI_GREEN }} />
-                  {de ? "PANTA Flows verfasst Post im HDI-Stil…" : "PANTA Flows drafting post in HDI style…"}
-                </div>
-              )}
-
-              {generated && !generating && (
-                <div className="flex-1 flex flex-col">
-                  {/* Fake social header */}
-                  <div className="flex items-center gap-2.5 pb-3 border-b border-border">
-                    <div className="w-9 h-9 rounded-full bg-white border border-border flex items-center justify-center">
-                      <img src={hdiLogo.url} alt="HDI" className="h-4 w-auto" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-foreground">HDI Deutschland</p>
-                      <p className="text-[11px] text-muted-foreground">{de ? "Gesponsert · Jetzt" : "Sponsored · Now"}</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 space-y-3 flex-1">
-                    <p className="text-sm font-semibold text-foreground">{generated.hook}</p>
-                    <p className="text-sm text-foreground whitespace-pre-line leading-relaxed">{generated.body}</p>
-                    <p className="text-sm font-semibold" style={{ color: HDI_DARK }}>{generated.cta}</p>
-                    <p className="text-xs text-[#0A66C2]">
-                      {generated.hashtags.map((h) => `#${h}`).join(" ")}
-                    </p>
-                  </div>
-
-                  {/* Fake engagement */}
-                  <div className="flex items-center justify-between pt-3 border-t border-border text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><ThumbsUp className="h-3.5 w-3.5" />{de ? "Wird gefallen" : "Will resonate"}</span>
-                    <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" />{de ? "Diskussion" : "Discussion"}</span>
-                    <span className="flex items-center gap-1"><Share2 className="h-3.5 w-3.5" />{de ? "Teilen" : "Share"}</span>
-                  </div>
-                </div>
-              )}
+              <Button
+                size="lg"
+                className="bg-white text-[#1B4D3E] hover:bg-white/90 font-semibold"
+                onClick={onJumpToPlanner}
+              >
+                {de ? "Workflow starten" : "Start workflow"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
-
-            {generated && !generating && (
-              <div className="flex items-center gap-2 mt-3">
-                <Button variant="outline" size="sm" onClick={copyAll} className="bg-white">
-                  <Copy className="h-3.5 w-3.5" />{de ? "Kopieren" : "Copy"}
-                </Button>
-                <Button variant="outline" size="sm" onClick={generatePost} className="bg-white">
-                  <Sparkles className="h-3.5 w-3.5" />{de ? "Variante" : "Variant"}
-                </Button>
-                <div className="ml-auto text-xs text-muted-foreground">
-                  {de ? "Generiert in " : "Generated in "}<span className="font-semibold text-foreground">3,8 s</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </Card>
@@ -354,63 +326,50 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   );
 };
 
-
-function getSample(
-  topic: string,
-  channel: "linkedin" | "instagram" | "blog",
-  tone: "informativ" | "emotional" | "aktivierend",
-  de: boolean
-) {
-  const hooks = {
-    informativ: {
-      de: `${topic} — was wirklich wichtig ist:`,
-      en: `${topic} — what really matters:`,
-    },
-    emotional: {
-      de: `Was, wenn morgen alles anders ist? ${topic}.`,
-      en: `What if everything changes tomorrow? ${topic}.`,
-    },
-    aktivierend: {
-      de: `Nur 3 Minuten Zeit? Dann sichere jetzt deine Zukunft. ${topic}.`,
-      en: `Just 3 minutes? Then secure your future today. ${topic}.`,
-    },
-  };
-
-  const bodyLinkedIn = {
-    de: `Viele unterschätzen, wie schnell ein Ausfall im Job zur finanziellen Belastung wird.\n\n• 1 von 4 Berufstätigen wird vor der Rente berufsunfähig\n• Ø 6 Monate ohne Einkommen, bevor staatliche Hilfe greift\n• Wer früh einsteigt, spart bis zu 40 % Beitrag\n\nUnser Angebotsrechner zeigt in 3 Minuten, was zu dir passt — ohne Verpflichtung.`,
-    en: `Many underestimate how quickly losing your ability to work becomes a financial burden.\n\n• 1 in 4 workers becomes disabled before retirement\n• Ø 6 months without income before state support kicks in\n• Starting early can save up to 40% in premiums\n\nOur quote calculator shows what fits you in 3 minutes — no strings attached.`,
-  };
-
-  const bodyInstagram = {
-    de: `Absicherung muss nicht kompliziert sein 💚\n\nIn 3 Minuten weißt du, wie viel du wirklich brauchst — persönlich, transparent, ohne Kleingedrucktes.`,
-    en: `Protection doesn't have to be complicated 💚\n\nIn 3 minutes you'll know what you really need — personal, transparent, no fine print.`,
-  };
-
-  const bodyBlog = {
-    de: `In diesem Artikel erfährst du:\n\n1. Warum ${topic} für dich relevant ist\n2. Die 3 häufigsten Irrtümer\n3. Was du in den ersten 5 Jahren beachten solltest\n4. Wie viel Absicherung wirklich sinnvoll ist\n\nHDI-Experten haben aus über 500 Kundengesprächen die wichtigsten Learnings zusammengetragen.`,
-    en: `In this article you'll learn:\n\n1. Why ${topic} matters for you\n2. The 3 most common misconceptions\n3. What to watch out for in the first 5 years\n4. How much cover really makes sense\n\nHDI experts distilled the key learnings from over 500 customer conversations.`,
-  };
-
-  const body = channel === "linkedin" ? bodyLinkedIn : channel === "instagram" ? bodyInstagram : bodyBlog;
-
-  const cta = {
-    de: "👉 Jetzt kostenlos berechnen auf hdi.de",
-    en: "👉 Get your free calculation on hdi.de",
-  };
-
-  const hashtags =
-    channel === "linkedin"
-      ? ["HDI", "Versicherung", "Absicherung", "Karriere", "Berufsunfähigkeit"]
-      : channel === "instagram"
-      ? ["hdi", "absicherung", "zukunftsicher", "geldtipps", "financialfreedom"]
-      : ["HDI", "Ratgeber", "Versicherungswissen"];
-
-  return {
-    hook: hooks[tone][de ? "de" : "en"],
-    body: body[de ? "de" : "en"],
-    cta: cta[de ? "de" : "en"],
-    hashtags,
-  };
+function ResultCard({
+  icon,
+  label,
+  value,
+  sub,
+  tone = "light",
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub: string;
+  tone?: "light" | "dark";
+}) {
+  const isDark = tone === "dark";
+  return (
+    <div
+      className="rounded-2xl border p-4"
+      style={
+        isDark
+          ? { background: `linear-gradient(135deg, ${HDI_DARK} 0%, #1B4D3E 100%)`, borderColor: HDI_DARK }
+          : { background: "#F8F9FD", borderColor: "hsl(var(--border))" }
+      }
+    >
+      <div
+        className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide"
+        style={{ color: isDark ? "rgba(255,255,255,0.8)" : HDI_GREEN }}
+      >
+        {icon}
+        {label}
+      </div>
+      <p
+        className="text-2xl md:text-3xl font-bold mt-2"
+        style={{ color: isDark ? "#fff" : HDI_DARK }}
+      >
+        {value}
+      </p>
+      <p
+        className="text-xs mt-1"
+        style={{ color: isDark ? "rgba(255,255,255,0.75)" : "hsl(var(--muted-foreground))" }}
+      >
+        {sub}
+      </p>
+    </div>
+  );
 }
 
 export default ExecutiveHero;

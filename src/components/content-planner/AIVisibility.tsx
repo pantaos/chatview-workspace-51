@@ -29,7 +29,8 @@ const InfoDot = ({ text }: { text: string }) => (
     </TooltipTrigger>
     <TooltipContent
       side="top"
-      className="max-w-[280px] bg-[#0f2a22] border-white/10 text-white/90 text-xs leading-relaxed"
+      sideOffset={8}
+      className="z-[200] max-w-[280px] bg-[#0f2a22] border-white/10 text-white/90 text-xs leading-relaxed shadow-xl"
     >
       {text}
     </TooltipContent>

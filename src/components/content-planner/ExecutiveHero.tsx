@@ -135,10 +135,6 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Pilotphase" : "Pilot phase"}
               </p>
               <p className="text-2xl font-bold text-white mt-1">Q3 2026</p>
-              <div className="mt-3 pt-3 border-t border-white/15">
-                <p className="text-xs text-white/70">Version</p>
-                <p className="text-sm font-semibold text-white">PANTA Flows 2.4</p>
-              </div>
             </div>
           </div>
 

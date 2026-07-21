@@ -289,7 +289,12 @@ const ContentPlanner = () => {
         </div>
 
         {view === "executive" && <ExecutiveHero lang={lang} onJumpToPlanner={() => setView("planner")} />}
-        {view === "calendarApp" && <CalendarAppMock />}
+        {view === "calendarApp" && (
+          <CalendarAppMock
+            periodStart={getPeriodRange(period, customRange)?.start}
+            periodEnd={getPeriodRange(period, customRange)?.end}
+          />
+        )}
         {view === "performance" && <PerformanceDashboard lang={lang} />}
 
         {view === "planner" && (<>

@@ -170,7 +170,8 @@ const PerformanceDashboard = ({ lang }: Props) => {
   const glassCard = "bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md";
 
   return (
-    <div className="px-4 md:px-8 max-w-[1440px] mx-auto pt-6 pb-12">
+    <TooltipProvider>
+      <div className="px-4 md:px-8 max-w-[1440px] mx-auto pt-6 pb-12">
       {/* Dark command center shell */}
       <div
         className="rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-[0_32px_64px_-12px_rgba(27,77,62,0.25)] relative overflow-hidden"

@@ -68,7 +68,7 @@ const PerformanceDashboard = ({ lang }: Props) => {
     allCamps: de ? "Alle Kampagnen anzeigen" : "View all campaigns",
     topProducts: de ? "Top Produkte nach Abschlüssen" : "Top products by contracts",
     topContent: de ? "Content mit den meisten Abschlüssen" : "Content with most contracts",
-    contentHeaders: de ? ["Content", "Abschlüsse", "Prämienvolumen"] : ["Content", "Contracts", "Premium volume"],
+    contentHeaders: de ? ["Content", "Abschlüsse"] : ["Content", "Contracts"],
     allContent: de ? "Alle Contents anzeigen" : "View all content",
     aiInsights: "AI Insights",
     allInsights: de ? "Alle Insights anzeigen" : "View all insights",

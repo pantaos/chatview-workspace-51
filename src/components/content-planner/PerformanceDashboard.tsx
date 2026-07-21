@@ -247,9 +247,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 className={cn(glassCard, "p-5 transition hover:bg-white/[0.07]")}
               >
                 <div className="flex items-start justify-between gap-2 mb-4">
-                  <p className="text-white/50 text-xs font-semibold uppercase tracking-wider leading-tight">
-                    {k.label}
-                  </p>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <p className="text-white/50 text-xs font-semibold uppercase tracking-wider leading-tight">
+                      {k.label}
+                    </p>
+                    <InfoButton text={k.info} />
+                  </div>
                   <Icon className="h-4 w-4 text-white/40 flex-shrink-0" />
                 </div>
                 <div className="flex items-baseline gap-2">

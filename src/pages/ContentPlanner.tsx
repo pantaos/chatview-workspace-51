@@ -442,7 +442,7 @@ const ContentPlanner = () => {
 
               <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center">
                 <p className="text-sm text-muted-foreground max-w-md">{c.fillHint}</p>
-                <Button onClick={fillCalendar} disabled={filling}>
+                <Button onClick={fillCalendar} disabled={filling || period === "__custom__"}>
                   {filling ? (
                     <><Loader2 className="h-4 w-4 animate-spin" /> {c.fillingBtn}</>
                   ) : (

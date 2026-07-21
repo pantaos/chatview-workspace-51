@@ -510,7 +510,7 @@ const ContentPlanner = () => {
           {activeStep === "suggestions" && (
             <Card className="p-6 bg-white border-border">
               <div className="flex items-start justify-between gap-4 flex-wrap">
-                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} docId="suggestions" lang={lang} />
+                <SectionHead icon={CalendarRange} title={c.step3Title} desc={c.step3Desc} />
                 <Button variant="outline" size="sm" onClick={handleGenerate} disabled={generating}>
                   {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                   {c.regenBtn}

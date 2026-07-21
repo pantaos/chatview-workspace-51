@@ -122,9 +122,9 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                   {de ? "Zum Live-Workflow" : "Go to live workflow"}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
-                <a href="#roi">
+                <a href="#demo">
                   <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                    {de ? "ROI berechnen" : "See the ROI"}
+                    {de ? "Live-Demo" : "Live demo"}
                   </Button>
                 </a>
               </div>

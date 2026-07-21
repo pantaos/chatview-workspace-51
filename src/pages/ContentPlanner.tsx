@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import AdminConfig, { AdminModuleId, AdminPublishBar } from "@/components/content-planner/AdminConfig";
 import DevDocButton, { DevDocId } from "@/components/content-planner/DevDocs";
 import CalendarAppMock from "@/components/content-planner/CalendarAppMock";
+import PerformanceDashboard from "@/components/content-planner/PerformanceDashboard";
 import { CPLang, CPContent, CPSuggestion, CP_CONTENT } from "@/components/content-planner/i18n";
 import {
   Select,
@@ -80,7 +81,7 @@ const ContentPlanner = () => {
   const c = CP_CONTENT[lang];
 
   // Top-level view switch
-  const [view, setView] = useState<"planner" | "calendarApp">("planner");
+  const [view, setView] = useState<"planner" | "calendarApp" | "performance">("planner");
 
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());
@@ -207,6 +208,7 @@ const ContentPlanner = () => {
             {([
               { id: "planner", label: c.titleUser },
               { id: "calendarApp", label: "Content Calendar App" },
+              { id: "performance", label: lang === "de" ? "Performance" : "Performance" },
             ] as const).map((v) => (
               <button
                 key={v.id}
@@ -223,6 +225,7 @@ const ContentPlanner = () => {
         </div>
 
         {view === "calendarApp" && <CalendarAppMock />}
+        {view === "performance" && <PerformanceDashboard lang={lang} />}
 
         {view === "planner" && (<>
         {/* Header */}

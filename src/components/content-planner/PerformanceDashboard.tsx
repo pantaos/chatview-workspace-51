@@ -170,7 +170,7 @@ const PerformanceDashboard = ({ lang }: Props) => {
       </div>
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
         {kpis.map((k) => {
           const Icon = k.icon;
           return (

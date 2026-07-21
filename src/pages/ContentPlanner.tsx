@@ -582,7 +582,7 @@ const ContentPlanner = () => {
                 </Button>
               </div>
               <div className="mt-6 space-y-2">
-                {suggestions.map((s) => (
+                {displayedSuggestions.map((s) => (
                   <div key={s.id} className="flex items-center gap-4 p-3 rounded-lg border border-border hover:border-primary/40 transition-colors">
                     <div className="w-14 text-center shrink-0">
                       <p className="text-xs text-muted-foreground">{s.date.split(" ")[1]}</p>

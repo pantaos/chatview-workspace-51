@@ -16,7 +16,6 @@ import {
   Sparkles,
   Clock,
   TrendingUp,
-  Euro,
   Zap,
   ArrowRight,
   Linkedin,
@@ -30,7 +29,6 @@ import {
   Copy,
   Wand2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { CPLang } from "./i18n";
 import hdiLogo from "@/assets/hdi-logo.png.asset.json";
 import { toast } from "sonner";

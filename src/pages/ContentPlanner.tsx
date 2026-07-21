@@ -11,6 +11,7 @@ import DevDocButton, { DevDocId } from "@/components/content-planner/DevDocs";
 import CalendarAppMock from "@/components/content-planner/CalendarAppMock";
 import PerformanceDashboard from "@/components/content-planner/PerformanceDashboard";
 import { CPLang, CPContent, CPSuggestion, CP_CONTENT } from "@/components/content-planner/i18n";
+import hdiLogoAsset from "@/assets/hdi-logo.png.asset.json";
 import {
   Select,
   SelectContent,

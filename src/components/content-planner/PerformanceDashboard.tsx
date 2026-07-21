@@ -305,8 +305,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
             <div className="space-y-4">
               {funnel.map((f, i) => (
                 <div key={f.label} className="relative">
-                  <div className="flex justify-between text-xs text-white/40 mb-1.5 uppercase tracking-tighter">
-                    <span>{f.label}</span>
+                  <div className="flex justify-between items-center text-xs text-white/40 mb-1.5 uppercase tracking-tighter">
+                    <div className="flex items-center gap-1.5">
+                      <span>{f.label}</span>
+                      <InfoButton text={f.info} />
+                    </div>
                     <span>{f.value}</span>
                   </div>
                   <div className="flex items-center gap-3">

@@ -40,6 +40,7 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { CPLang } from "./i18n";
+import AIVisibility from "./AIVisibility";
 
 interface Props {
   lang: CPLang;

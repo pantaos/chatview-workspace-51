@@ -358,37 +358,6 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   );
 };
 
-const SliderRow = ({
-  label,
-  value,
-  min,
-  max,
-  step,
-  onChange,
-  display,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  onChange: (v: number) => void;
-  display: string;
-}) => (
-  <div>
-    <div className="flex items-center justify-between mb-2">
-      <Label className="text-sm font-medium">{label}</Label>
-      <span className="text-sm font-bold text-foreground tabular-nums">{display}</span>
-    </div>
-    <Slider
-      value={[value]}
-      min={min}
-      max={max}
-      step={step}
-      onValueChange={([v]) => onChange(v)}
-    />
-  </div>
-);
 
 function getSample(
   topic: string,

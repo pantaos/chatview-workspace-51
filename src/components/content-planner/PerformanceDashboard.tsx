@@ -65,6 +65,26 @@ const HDI_HELLGRAU = "#D0D0D0";       // 10
 const DARK_GREEN = "#1B4D3E";
 const GREEN = HDI_UNIVERSALGRUEN;
 
+const InfoButton = ({ text }: { text: string }) => (
+  <Tooltip delayDuration={100}>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        aria-label="Info"
+        className="inline-flex items-center justify-center rounded-full p-1 hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+      >
+        <Info className="h-3.5 w-3.5 text-white/40 hover:text-white/70" />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="top"
+      className="max-w-[260px] bg-[#0f2a22] border-white/10 text-white/90 text-xs leading-relaxed"
+    >
+      {text}
+    </TooltipContent>
+  </Tooltip>
+);
+
 const PerformanceDashboard = ({ lang }: Props) => {
   const de = lang === "de";
   const [channel, setChannel] = useState("all");

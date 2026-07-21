@@ -64,6 +64,10 @@ export interface CPContent {
   // chip groups / selects
   periodLabel: string;
   periodOptions: { value: string; label: string }[];
+  customPeriodLabel: string;
+  customPeriodPlaceholder: string;
+  customPeriodApply: string;
+  customPeriodClear: string;
   targetsLabel: string;
   fieldsLabel: string;
   channelsLabel: string;

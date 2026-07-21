@@ -111,11 +111,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const contentRows = [
-    { title: de ? "5 Dinge, die bei der BU wirklich zählen" : "5 things that really matter with disability cover", closes: 81, vol: "1,7 Mio. €" },
-    { title: de ? "Kfz-Versicherung wechseln – so einfach geht's" : "Switching auto insurance – how easy it is", closes: 64, vol: "1,2 Mio. €" },
-    { title: de ? "Unfallversicherung: Darum ist sie so wichtig" : "Accident cover: why it matters", closes: 42, vol: "0,8 Mio. €" },
-    { title: de ? "Hausratversicherung: So schützen Sie Ihr Zuhause" : "Home contents: how to protect your home", closes: 37, vol: "0,6 Mio. €" },
-    { title: de ? "Privathaftpflicht: Kleine Ursache, große Wirkung" : "Private liability: small cause, big effect", closes: 29, vol: "0,5 Mio. €" },
+    { title: de ? "5 Dinge, die bei der BU wirklich zählen" : "5 things that really matter with disability cover", closes: 81 },
+    { title: de ? "Kfz-Versicherung wechseln – so einfach geht's" : "Switching auto insurance – how easy it is", closes: 64 },
+    { title: de ? "Unfallversicherung: Darum ist sie so wichtig" : "Accident cover: why it matters", closes: 42 },
+    { title: de ? "Hausratversicherung: So schützen Sie Ihr Zuhause" : "Home contents: how to protect your home", closes: 37 },
+    { title: de ? "Privathaftpflicht: Kleine Ursache, große Wirkung" : "Private liability: small cause, big effect", closes: 29 },
   ];
 
   const insights = [

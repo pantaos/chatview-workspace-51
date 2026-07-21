@@ -263,6 +263,7 @@ const ContentPlanner = () => {
           </div>
         </div>
 
+        {view === "executive" && <ExecutiveHero lang={lang} onJumpToPlanner={() => setView("planner")} />}
         {view === "calendarApp" && <CalendarAppMock />}
         {view === "performance" && <PerformanceDashboard lang={lang} />}
 

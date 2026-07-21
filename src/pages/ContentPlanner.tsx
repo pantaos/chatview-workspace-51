@@ -47,6 +47,8 @@ import {
   Users,
   Tags,
   LayoutTemplate,
+  BookOpen,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";

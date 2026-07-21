@@ -288,12 +288,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex-1 space-y-1.5 text-xs">
+            <div className="flex-1 min-w-0 space-y-1.5 text-xs">
               {products.map((p) => (
-                <div key={p.name} className="flex items-center gap-2">
+                <div key={p.name} className="flex items-center gap-2 min-w-0">
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: p.color }} />
-                  <span className="text-foreground flex-1 truncate">{p.name}</span>
-                  <span className="text-muted-foreground tabular-nums">{p.value} ({p.share})</span>
+                  <span className="text-foreground flex-1 min-w-0 truncate">{p.name}</span>
+                  <span className="text-muted-foreground tabular-nums flex-shrink-0">{p.value} ({p.share})</span>
                 </div>
               ))}
             </div>

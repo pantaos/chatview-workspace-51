@@ -280,7 +280,16 @@ const PerformanceDashboard = ({ lang }: Props) => {
           {/* Funnel */}
           <div className={cn(glassCard, "lg:col-span-2 p-6 md:p-8")}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-white font-semibold">{t.funnelTitle}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-white font-semibold">{t.funnelTitle}</h3>
+                <InfoButton
+                  text={
+                    de
+                      ? "Der Conversion Funnel zeigt, wie viele Nutzer jede Stage erreichen – von Awareness bis Vertragsabschluss. Der graue Bereich markiert die Differenz zum Zielwert."
+                      : "The conversion funnel shows how many users reach each stage – from awareness to contract conclusion. The grey area marks the gap to the target value."
+                  }
+                />
+              </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: GREEN }} />

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import AdminConfig, { AdminModuleId, AdminPublishBar } from "@/components/content-planner/AdminConfig";
 import CalendarAppMock from "@/components/content-planner/CalendarAppMock";
 import PerformanceDashboard from "@/components/content-planner/PerformanceDashboard";
+import ExecutiveHero from "@/components/content-planner/ExecutiveHero";
 import { CPLang, CPContent, CPSuggestion, CP_CONTENT } from "@/components/content-planner/i18n";
 import hdiLogoAsset from "@/assets/hdi-logo.png.asset.json";
 import {
@@ -81,7 +82,7 @@ const ContentPlanner = () => {
   const c = CP_CONTENT[lang];
 
   // Top-level view switch
-  const [view, setView] = useState<"planner" | "calendarApp" | "performance">("planner");
+  const [view, setView] = useState<"executive" | "planner" | "calendarApp" | "performance">("executive");
 
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());
@@ -240,6 +241,7 @@ const ContentPlanner = () => {
 
             <div className="inline-flex self-start sm:self-auto rounded-full bg-white/10 p-1 border border-white/10">
               {([
+                { id: "executive", label: lang === "de" ? "Executive" : "Executive" },
                 { id: "planner", label: c.titleUser },
                 { id: "calendarApp", label: "Content Calendar App" },
                 { id: "performance", label: lang === "de" ? "Performance" : "Performance" },
@@ -261,6 +263,7 @@ const ContentPlanner = () => {
           </div>
         </div>
 
+        {view === "executive" && <ExecutiveHero lang={lang} onJumpToPlanner={() => setView("planner")} />}
         {view === "calendarApp" && <CalendarAppMock />}
         {view === "performance" && <PerformanceDashboard lang={lang} />}
 

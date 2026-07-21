@@ -291,7 +291,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
               <tr className="text-muted-foreground border-b border-border">
                 <th className="text-left font-medium pb-2">{t.contentHeaders[0]}</th>
                 <th className="text-right font-medium pb-2">{t.contentHeaders[1]}</th>
-                <th className="text-right font-medium pb-2">{t.contentHeaders[2]}</th>
               </tr>
             </thead>
             <tbody>
@@ -299,7 +298,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 <tr key={r.title} className="border-b border-border/50 last:border-0">
                   <td className="py-2 text-foreground pr-2">{r.title}</td>
                   <td className="py-2 text-right text-foreground tabular-nums">{r.closes}</td>
-                  <td className="py-2 text-right text-foreground tabular-nums whitespace-nowrap">{r.vol}</td>
                 </tr>
               ))}
             </tbody>

@@ -14,6 +14,7 @@ import {
   Lightbulb,
   Zap,
   Target,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   LineChart,
   Line,
@@ -57,6 +64,26 @@ const HDI_HELLGRAU = "#D0D0D0";       // 10
 
 const DARK_GREEN = "#1B4D3E";
 const GREEN = HDI_UNIVERSALGRUEN;
+
+const InfoButton = ({ text }: { text: string }) => (
+  <Tooltip delayDuration={100}>
+    <TooltipTrigger asChild>
+      <button
+        type="button"
+        aria-label="Info"
+        className="inline-flex items-center justify-center rounded-full p-1 hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+      >
+        <Info className="h-3.5 w-3.5 text-white/40 hover:text-white/70" />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="top"
+      className="max-w-[260px] bg-[#0f2a22] border-white/10 text-white/90 text-xs leading-relaxed"
+    >
+      {text}
+    </TooltipContent>
+  </Tooltip>
+);
 
 const PerformanceDashboard = ({ lang }: Props) => {
   const de = lang === "de";
@@ -94,18 +121,18 @@ const PerformanceDashboard = ({ lang }: Props) => {
   };
 
   const kpis = [
-    { icon: Users, label: de ? "Neue Leads" : "New leads", value: "2.481", delta: "+18 %", prev: "2.099", pct: 78, color: GREEN },
-    { icon: Calculator, label: de ? "Angebotsrechner" : "Quote calculator", value: "1.294", delta: "+22 %", prev: "1.060", pct: 62, color: "#C8D55A" },
-    { icon: FileText, label: de ? "Neue Angebote" : "New quotes", value: "842", delta: "+15 %", prev: "732", pct: 55, color: "#6BB0B0" },
-    { icon: CheckCircle2, label: de ? "Verträge" : "Contracts", value: "486", delta: "+11 %", prev: "437", pct: 48, color: HDI_HELLBLAU },
-    { icon: Target, label: de ? "Conversion" : "Conversion", value: "19,8 %", delta: "+2,3 PP", prev: "17,5 %", pct: 82, color: HDI_BLAU, isScore: true },
+    { icon: Users, label: de ? "Neue Leads" : "New leads", value: "2.481", delta: "+18 %", prev: "2.099", pct: 78, color: GREEN, info: de ? "Nutzer, die erstmals Kontaktdaten hinterlassen oder sich für ein Thema interessiert haben." : "Users who left contact details or showed interest for the first time." },
+    { icon: Calculator, label: de ? "Angebotsrechner" : "Quote calculator", value: "1.294", delta: "+22 %", prev: "1.060", pct: 62, color: "#C8D55A", info: de ? "Abschlüsse des Angebotsrechners – ein starker Signal für Kaufbereitschaft." : "Quote calculator completions – a strong buying-intent signal." },
+    { icon: FileText, label: de ? "Neue Angebote" : "New quotes", value: "842", delta: "+15 %", prev: "732", pct: 55, color: "#6BB0B0", info: de ? "Konkrete Versicherungsangebote, die im Anschluss erstellt wurden." : "Concrete insurance quotes created afterwards." },
+    { icon: CheckCircle2, label: de ? "Verträge" : "Contracts", value: "486", delta: "+11 %", prev: "437", pct: 48, color: HDI_HELLBLAU, info: de ? "Abgeschlossene Verträge, die aus Content-Maßnahmen initiiert wurden." : "Contracts concluded that were initiated by content activities." },
+    { icon: Target, label: de ? "Conversion" : "Conversion", value: "19,8 %", delta: "+2,3 PP", prev: "17,5 %", pct: 82, color: HDI_BLAU, isScore: true, info: de ? "Anteil der Leads, die letztlich zu einem Vertragsabschluss führten." : "Share of leads that ultimately resulted in a contract." },
   ];
 
   const funnel = [
-    { label: de ? "Awareness" : "Awareness", value: "940k", pct: 94, color: GREEN, width: "100%" },
-    { label: de ? "Interest" : "Interest", value: "420k", pct: 42, color: "#C8D55A", width: "78%" },
-    { label: de ? "Consideration" : "Consideration", value: "180k", pct: 18, color: "#6BB0B0", width: "56%" },
-    { label: de ? "Action" : "Action", value: "31k", pct: 3.1, color: HDI_BLAU, width: "34%" },
+    { label: de ? "Awareness" : "Awareness", value: "940k", pct: 94, color: GREEN, width: "100%", info: de ? "Reichweite: Nutzer, die mit HDI-Content in Berührung gekommen sind." : "Reach: users who came into contact with HDI content." },
+    { label: de ? "Interest" : "Interest", value: "420k", pct: 42, color: "#C8D55A", width: "78%", info: de ? "Interesse: Nutzer, die länger verweilen, scrollen oder auf Themen klicken." : "Interest: users who stay longer, scroll, or click on topics." },
+    { label: de ? "Consideration" : "Consideration", value: "180k", pct: 18, color: "#6BB0B0", width: "56%", info: de ? "Prüfung: Nutzer, die den Angebotsrechner oder Detailseiten nutzen." : "Consideration: users who use the quote calculator or detail pages." },
+    { label: de ? "Action" : "Action", value: "31k", pct: 3.1, color: HDI_BLAU, width: "34%", info: de ? "Abschluss: Nutzer, die ein konkretes Angebot anfragen oder einen Vertrag abschließen." : "Action: users who request a concrete quote or conclude a contract." },
   ];
 
   const campaigns = [
@@ -143,7 +170,8 @@ const PerformanceDashboard = ({ lang }: Props) => {
   const glassCard = "bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md";
 
   return (
-    <div className="px-4 md:px-8 max-w-[1440px] mx-auto pt-6 pb-12">
+    <TooltipProvider>
+      <div className="px-4 md:px-8 max-w-[1440px] mx-auto pt-6 pb-12">
       {/* Dark command center shell */}
       <div
         className="rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-[0_32px_64px_-12px_rgba(27,77,62,0.25)] relative overflow-hidden"
@@ -219,9 +247,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 className={cn(glassCard, "p-5 transition hover:bg-white/[0.07]")}
               >
                 <div className="flex items-start justify-between gap-2 mb-4">
-                  <p className="text-white/50 text-xs font-semibold uppercase tracking-wider leading-tight">
-                    {k.label}
-                  </p>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <p className="text-white/50 text-xs font-semibold uppercase tracking-wider leading-tight">
+                      {k.label}
+                    </p>
+                    <InfoButton text={k.info} />
+                  </div>
                   <Icon className="h-4 w-4 text-white/40 flex-shrink-0" />
                 </div>
                 <div className="flex items-baseline gap-2">
@@ -249,7 +280,16 @@ const PerformanceDashboard = ({ lang }: Props) => {
           {/* Funnel */}
           <div className={cn(glassCard, "lg:col-span-2 p-6 md:p-8")}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-white font-semibold">{t.funnelTitle}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-white font-semibold">{t.funnelTitle}</h3>
+                <InfoButton
+                  text={
+                    de
+                      ? "Der Conversion Funnel zeigt, wie viele Nutzer jede Stage erreichen – von Awareness bis Vertragsabschluss. Der graue Bereich markiert die Differenz zum Zielwert."
+                      : "The conversion funnel shows how many users reach each stage – from awareness to contract conclusion. The grey area marks the gap to the target value."
+                  }
+                />
+              </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: GREEN }} />
@@ -265,8 +305,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
             <div className="space-y-4">
               {funnel.map((f, i) => (
                 <div key={f.label} className="relative">
-                  <div className="flex justify-between text-xs text-white/40 mb-1.5 uppercase tracking-tighter">
-                    <span>{f.label}</span>
+                  <div className="flex justify-between items-center text-xs text-white/40 mb-1.5 uppercase tracking-tighter">
+                    <div className="flex items-center gap-1.5">
+                      <span>{f.label}</span>
+                      <InfoButton text={f.info} />
+                    </div>
                     <span>{f.value}</span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -451,6 +494,7 @@ const PerformanceDashboard = ({ lang }: Props) => {
         <p className="text-[11px] text-white/30 mt-6 relative z-10">{t.dataAsOf}</p>
       </div>
     </div>
+    </TooltipProvider>
   );
 };
 

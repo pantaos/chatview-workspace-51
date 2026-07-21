@@ -40,6 +40,7 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { CPLang } from "./i18n";
+import AIVisibility from "./AIVisibility";
 
 interface Props {
   lang: CPLang;
@@ -469,6 +470,8 @@ const PerformanceDashboard = ({ lang }: Props) => {
             </div>
           </div>
         </div>
+
+        <AIVisibility lang={lang} />
 
         {/* AI insights footer rail */}
         <div className="flex gap-4 overflow-x-auto pb-2 relative z-10">

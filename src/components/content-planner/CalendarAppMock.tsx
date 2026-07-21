@@ -77,9 +77,13 @@ const CalendarAppMock = () => {
   return (
     <div className="px-6 md:px-10 max-w-6xl mx-auto py-6">
       {/* Title */}
-      <div className="mb-5">
-        <h1 className="text-3xl font-bold text-foreground">Content Calendar App</h1>
-        <p className="text-muted-foreground mt-1">Plan, create, and manage your social media content.</p>
+      <div className="mb-5 flex items-center gap-4">
+        <img src={hdiLogoAsset.url} alt="HDI" className="h-9 w-auto" />
+        <div className="h-9 w-px bg-border" />
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Content Calendar App</h1>
+          <p className="text-muted-foreground mt-1">Plan, create, and manage your social media content.</p>
+        </div>
       </div>
 
       {/* Tabs */}

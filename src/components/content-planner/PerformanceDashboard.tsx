@@ -45,16 +45,23 @@ const spark = (base: number, delta: number) =>
     v: base + Math.sin(i / 2) * (base * 0.05) + (i / 13) * delta + Math.random() * (base * 0.02),
   }));
 
-// HDI brand palette
-const HDI_BLAU = "#003960";
-const HDI_HELLBLAU = "#00A3A8";
-const HDI_DUNKELROT = "#8D1429";
-const HDI_OCKER = "#DB6301";
-const HDI_GELBOCKER = "#FF9900";
+// HDI brand palette — offizielle Farbreihenfolge
+const HDI_UNIVERSALGRUEN = "#8FB03E"; // 1
+const HDI_GRUEN = "#2C6E31";          // 2
+const HDI_HELLBLAU = "#00A3A8";       // 3
+const HDI_BLAU = "#003960";           // 4
+const HDI_DUNKELROT = "#8D1429";      // 5
+const HDI_OCKER = "#DB6301";          // 6
+const HDI_GELBOCKER = "#FF9900";      // 7
+const HDI_GRAU = "#6E6E6E";           // 8
+const HDI_MITTELGRAU = "#A6A6A6";     // 9
+const HDI_HELLGRAU = "#D0D0D0";       // 10
+// HDI_ROT nur für Ausnahmen / Störer
 
-const GREEN = HDI_BLAU;
-const GREEN_SOFT = "#E0EAF1";
-const GREEN_TINT = "#F0F5F9";
+// Primär in digitalen Flächen: Universalgrün als Leitfarbe
+const GREEN = HDI_UNIVERSALGRUEN;
+const GREEN_SOFT = "#EAF2D6";
+const GREEN_TINT = "#F5F9EB";
 
 const PerformanceDashboard = ({ lang }: Props) => {
   const de = lang === "de";
@@ -110,12 +117,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const products = [
-    { name: de ? "Kfz-Versicherung" : "Auto", value: 162, share: "33,3 %", color: HDI_BLAU },
-    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability", value: 114, share: "23,5 %", color: HDI_HELLBLAU },
-    { name: de ? "Privathaftpflicht" : "Private liability", value: 76, share: "15,6 %", color: HDI_DUNKELROT },
-    { name: de ? "Hausratversicherung" : "Home contents", value: 58, share: "11,9 %", color: HDI_OCKER },
-    { name: de ? "Unfallversicherung" : "Accident", value: 49, share: "10,1 %", color: HDI_GELBOCKER },
-    { name: de ? "Sonstige" : "Other", value: 27, share: "5,6 %", color: "#B8C4CE" },
+    { name: de ? "Kfz-Versicherung" : "Auto", value: 162, share: "33,3 %", color: HDI_UNIVERSALGRUEN },
+    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability", value: 114, share: "23,5 %", color: HDI_GRUEN },
+    { name: de ? "Privathaftpflicht" : "Private liability", value: 76, share: "15,6 %", color: HDI_HELLBLAU },
+    { name: de ? "Hausratversicherung" : "Home contents", value: 58, share: "11,9 %", color: HDI_BLAU },
+    { name: de ? "Unfallversicherung" : "Accident", value: 49, share: "10,1 %", color: HDI_OCKER },
+    { name: de ? "Sonstige" : "Other", value: 27, share: "5,6 %", color: HDI_HELLGRAU },
   ];
 
   const contentRows = [

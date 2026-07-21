@@ -471,6 +471,8 @@ const PerformanceDashboard = ({ lang }: Props) => {
           </div>
         </div>
 
+        <AIVisibility lang={lang} />
+
         {/* AI insights footer rail */}
         <div className="flex gap-4 overflow-x-auto pb-2 relative z-10">
           {insights.map((ins, i) => {

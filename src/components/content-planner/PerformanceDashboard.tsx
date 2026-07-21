@@ -45,9 +45,16 @@ const spark = (base: number, delta: number) =>
     v: base + Math.sin(i / 2) * (base * 0.05) + (i / 13) * delta + Math.random() * (base * 0.02),
   }));
 
-const GREEN = "hsl(142 71% 32%)";
-const GREEN_SOFT = "hsl(142 60% 92%)";
-const GREEN_TINT = "hsl(142 50% 96%)";
+// HDI brand palette
+const HDI_BLAU = "#003960";
+const HDI_HELLBLAU = "#00A3A8";
+const HDI_DUNKELROT = "#8D1429";
+const HDI_OCKER = "#DB6301";
+const HDI_GELBOCKER = "#FF9900";
+
+const GREEN = HDI_BLAU;
+const GREEN_SOFT = "#E0EAF1";
+const GREEN_TINT = "#F0F5F9";
 
 const PerformanceDashboard = ({ lang }: Props) => {
   const de = lang === "de";
@@ -103,12 +110,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const products = [
-    { name: de ? "Kfz-Versicherung" : "Auto", value: 162, share: "33,3 %", color: "hsl(142 71% 32%)" },
-    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability", value: 114, share: "23,5 %", color: "hsl(142 65% 42%)" },
-    { name: de ? "Privathaftpflicht" : "Private liability", value: 76, share: "15,6 %", color: "hsl(142 55% 55%)" },
-    { name: de ? "Hausratversicherung" : "Home contents", value: 58, share: "11,9 %", color: "hsl(142 45% 68%)" },
-    { name: de ? "Unfallversicherung" : "Accident", value: 49, share: "10,1 %", color: "hsl(142 40% 78%)" },
-    { name: de ? "Sonstige" : "Other", value: 27, share: "5,6 %", color: "hsl(142 25% 88%)" },
+    { name: de ? "Kfz-Versicherung" : "Auto", value: 162, share: "33,3 %", color: HDI_BLAU },
+    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability", value: 114, share: "23,5 %", color: HDI_HELLBLAU },
+    { name: de ? "Privathaftpflicht" : "Private liability", value: 76, share: "15,6 %", color: HDI_DUNKELROT },
+    { name: de ? "Hausratversicherung" : "Home contents", value: 58, share: "11,9 %", color: HDI_OCKER },
+    { name: de ? "Unfallversicherung" : "Accident", value: 49, share: "10,1 %", color: HDI_GELBOCKER },
+    { name: de ? "Sonstige" : "Other", value: 27, share: "5,6 %", color: "#B8C4CE" },
   ];
 
   const contentRows = [

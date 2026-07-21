@@ -451,7 +451,7 @@ const ContentPlanner = () => {
                 </Button>
               </div>
 
-              {calendarFilled && !filling && <CalendarOverview period={period} c={c} />}
+              {calendarFilled && !filling && <CalendarOverview period={period.startsWith("custom:") ? period.slice(7) : period} c={c} />}
 
               <FooterNav onNext={completeAndNext} nextLabel={c.nextToLogic} nextDisabled={!calendarFilled} back={c.back} />
             </Card>

@@ -185,6 +185,11 @@ const ContentPlanner = () => {
   const STEPS = c.steps as { id: StepId; title: string; subtitle: string }[];
   const stepIndex = STEPS.findIndex((s) => s.id === activeStep);
 
+  const displayedSuggestions = useMemo(
+    () => remapSuggestionDates(suggestions, getPeriodRange(period, customRange), lang),
+    [suggestions, period, customRange, lang]
+  );
+
   const fillCalendar = () => {
     setFilling(true);
     setCalendarFilled(false);

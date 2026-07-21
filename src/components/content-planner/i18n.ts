@@ -255,7 +255,7 @@ const de: CPContent = {
   fillToast: "Kalender automatisch befüllt",
   nextToLogic: "Weiter zu Themenlogik",
 
-  calHeader: "Vorbefüllter Kalender · Januar 2026",
+  calHeader: "Vorbefüllter Kalender",
   calBadgeSuffix: "Vorschläge",
   calFootnote:
     "Die KI hat den Kalender automatisch mit Vorschlägen aus saisonalen Regeln, Trends und HDI-Prioritäten vorbefüllt.",
@@ -506,7 +506,7 @@ const en: CPContent = {
   fillToast: "Calendar filled automatically",
   nextToLogic: "Continue to topic logic",
 
-  calHeader: "Pre-filled calendar · January 2026",
+  calHeader: "Pre-filled calendar",
   calBadgeSuffix: "suggestions",
   calFootnote:
     "The AI automatically pre-filled the calendar with suggestions from seasonal rules, trends and HDI priorities.",

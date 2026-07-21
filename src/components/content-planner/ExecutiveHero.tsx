@@ -171,7 +171,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
         {/* Metric row */}
         <div className="bg-white grid grid-cols-2 md:grid-cols-4 divide-x divide-border border-t border-border">
           {[
-            { label: de ? "Zeit pro Post" : "Time per post", value: "-95 %", sub: de ? "4 h → 4 min" : "4h → 4min" },
+            { label: de ? "Zeit pro Post" : "Time per post", value: `-${fmtNum(roi.percentSaved, 1)} %`, sub: `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)}h → ${roi.minutesWithFlows}min` },
             { label: de ? "Content-Output" : "Content output", value: "+280 %", sub: de ? "vs. Q1 2026" : "vs. Q1 2026" },
             { label: de ? "Lead → Abschluss" : "Lead → close", value: "19,8 %", sub: de ? "+2,3 %-Punkte" : "+2.3 pp" },
             { label: de ? "Ø Qualitäts-Score" : "Avg. quality score", value: "8,7 / 10", sub: de ? "Editorial Review" : "Editorial review" },

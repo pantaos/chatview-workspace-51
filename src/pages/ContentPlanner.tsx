@@ -370,8 +370,8 @@ const ContentPlanner = () => {
                     value={period === "__custom__" || period.startsWith("custom:") ? "__custom__" : period}
                     onValueChange={(v) => {
                       if (v === "__custom__") {
-                        setCustomOpen(true);
                         setPeriod("__custom__");
+                        setTimeout(() => setCustomOpen(true), 150);
                       } else {
                         setPeriod(v);
                       }

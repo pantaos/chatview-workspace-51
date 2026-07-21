@@ -64,6 +64,10 @@ export interface CPContent {
   // chip groups / selects
   periodLabel: string;
   periodOptions: { value: string; label: string }[];
+  customPeriodLabel: string;
+  customPeriodPlaceholder: string;
+  customPeriodApply: string;
+  customPeriodClear: string;
   targetsLabel: string;
   fieldsLabel: string;
   channelsLabel: string;
@@ -223,11 +227,17 @@ const de: CPContent = {
 
   periodLabel: "Zeitraum",
   periodOptions: [
-    { value: "Q1 2026", label: "Q1 2026 (nächstes Quartal)" },
-    { value: "Q2 2026", label: "Q2 2026" },
-    { value: "H1 2026", label: "H1 2026" },
+    { value: "Q1 2026", label: "Q1 2026 (Jan – Mär)" },
+    { value: "Q2 2026", label: "Q2 2026 (Apr – Jun)" },
+    { value: "Q3 2026", label: "Q3 2026 (Jul – Sep)" },
+    { value: "Q4 2026", label: "Q4 2026 (Okt – Dez)" },
     { value: "2026", label: "Gesamtjahr 2026" },
+    { value: "__custom__", label: "Individueller Zeitraum…" },
   ],
+  customPeriodLabel: "Individueller Zeitraum",
+  customPeriodPlaceholder: "Start- und Enddatum wählen",
+  customPeriodApply: "Übernehmen",
+  customPeriodClear: "Zurücksetzen",
   targetsLabel: "Zielgruppen & Region",
   fieldsLabel: "Themenfelder",
   channelsLabel: "Kanäle & Frequenz",
@@ -468,11 +478,17 @@ const en: CPContent = {
 
   periodLabel: "Period",
   periodOptions: [
-    { value: "Q1 2026", label: "Q1 2026 (next quarter)" },
-    { value: "Q2 2026", label: "Q2 2026" },
-    { value: "H1 2026", label: "H1 2026" },
+    { value: "Q1 2026", label: "Q1 2026 (Jan – Mar)" },
+    { value: "Q2 2026", label: "Q2 2026 (Apr – Jun)" },
+    { value: "Q3 2026", label: "Q3 2026 (Jul – Sep)" },
+    { value: "Q4 2026", label: "Q4 2026 (Oct – Dec)" },
     { value: "2026", label: "Full year 2026" },
+    { value: "__custom__", label: "Custom range…" },
   ],
+  customPeriodLabel: "Custom range",
+  customPeriodPlaceholder: "Pick start and end date",
+  customPeriodApply: "Apply",
+  customPeriodClear: "Reset",
   targetsLabel: "Audiences & region",
   fieldsLabel: "Topic fields",
   channelsLabel: "Channels & frequency",

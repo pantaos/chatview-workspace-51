@@ -17,6 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { de as deLocale } from "date-fns/locale";
 import {
   CalendarDays,
   Compass,
@@ -87,6 +91,8 @@ const ContentPlanner = () => {
 
   // Step 1 state
   const [period, setPeriod] = useState("Q1 2026");
+  const [customRange, setCustomRange] = useState<{ from?: Date; to?: Date }>({});
+  const [customOpen, setCustomOpen] = useState(false);
   const [fields, setFields] = useState<string[]>([]);
   const [channels, setChannels] = useState<string[]>([]);
   const [targets, setTargets] = useState<string[]>([]);
@@ -360,7 +366,17 @@ const ContentPlanner = () => {
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div>
                   <Label className="text-sm font-medium">{c.periodLabel}</Label>
-                  <Select value={period} onValueChange={setPeriod}>
+                  <Select
+                    value={period === "__custom__" || period.startsWith("custom:") ? "__custom__" : period}
+                    onValueChange={(v) => {
+                      if (v === "__custom__") {
+                        setCustomOpen(true);
+                        setPeriod("__custom__");
+                      } else {
+                        setPeriod(v);
+                      }
+                    }}
+                  >
                     <SelectTrigger className="mt-2 bg-white">
                       <SelectValue />
                     </SelectTrigger>
@@ -370,6 +386,54 @@ const ContentPlanner = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                  {(period === "__custom__" || period.startsWith("custom:")) && (
+                    <Popover open={customOpen} onOpenChange={setCustomOpen}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="mt-2 w-full justify-start bg-white font-normal">
+                          <CalendarDays className="h-4 w-4" />
+                          {customRange.from && customRange.to
+                            ? `${format(customRange.from, "d. MMM yyyy", { locale: lang === "de" ? deLocale : undefined })} – ${format(customRange.to, "d. MMM yyyy", { locale: lang === "de" ? deLocale : undefined })}`
+                            : c.customPeriodPlaceholder}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
+                        <CalendarPicker
+                          mode="range"
+                          selected={customRange as any}
+                          onSelect={(r: any) => setCustomRange(r || {})}
+                          numberOfMonths={2}
+                          initialFocus
+                          locale={lang === "de" ? deLocale : undefined}
+                          className="p-3 pointer-events-auto"
+                        />
+                        <div className="flex justify-between gap-2 border-t p-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setCustomRange({});
+                            }}
+                          >
+                            {c.customPeriodClear}
+                          </Button>
+                          <Button
+                            size="sm"
+                            disabled={!customRange.from || !customRange.to}
+                            onClick={() => {
+                              if (customRange.from && customRange.to) {
+                                const locale = lang === "de" ? deLocale : undefined;
+                                const label = `${format(customRange.from, "d. MMM yyyy", { locale })} – ${format(customRange.to, "d. MMM yyyy", { locale })}`;
+                                setPeriod(`custom:${label}`);
+                                setCustomOpen(false);
+                              }
+                            }}
+                          >
+                            {c.customPeriodApply}
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </div>
                 <ChipGroup label={c.targetsLabel} options={c.targetGroups} selected={targets} onToggle={(v) => toggle(targets, v, setTargets)} />
                 <ChipGroup label={c.fieldsLabel} options={c.topicFields} selected={fields} onToggle={(v) => toggle(fields, v, setFields)} />
@@ -378,7 +442,7 @@ const ContentPlanner = () => {
 
               <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center">
                 <p className="text-sm text-muted-foreground max-w-md">{c.fillHint}</p>
-                <Button onClick={fillCalendar} disabled={filling}>
+                <Button onClick={fillCalendar} disabled={filling || period === "__custom__"}>
                   {filling ? (
                     <><Loader2 className="h-4 w-4 animate-spin" /> {c.fillingBtn}</>
                   ) : (
@@ -387,7 +451,7 @@ const ContentPlanner = () => {
                 </Button>
               </div>
 
-              {calendarFilled && !filling && <CalendarOverview period={period} c={c} />}
+              {calendarFilled && !filling && <CalendarOverview period={period.startsWith("custom:") ? period.slice(7) : period} c={c} />}
 
               <FooterNav onNext={completeAndNext} nextLabel={c.nextToLogic} nextDisabled={!calendarFilled} back={c.back} />
             </Card>

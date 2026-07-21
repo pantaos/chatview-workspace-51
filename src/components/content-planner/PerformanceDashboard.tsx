@@ -63,8 +63,8 @@ const PerformanceDashboard = ({ lang }: Props) => {
     funnelTitle: de ? "Funnel: Vom Lead zum Vertrag" : "Funnel: From lead to contract",
     campTitle: de ? "Kampagnen nach Business Impact (Top 5)" : "Top campaigns by business impact",
     campHeaders: de
-      ? ["Kampagne", "Neue Leads", "Abschlüsse", "Prämienvolumen"]
-      : ["Campaign", "New leads", "Contracts", "Premium volume"],
+      ? ["Kampagne", "Neue Leads", "Abschlüsse"]
+      : ["Campaign", "New leads", "Contracts"],
     allCamps: de ? "Alle Kampagnen anzeigen" : "View all campaigns",
     topProducts: de ? "Top Produkte nach Abschlüssen" : "Top products by contracts",
     topContent: de ? "Content mit den meisten Abschlüssen" : "Content with most contracts",

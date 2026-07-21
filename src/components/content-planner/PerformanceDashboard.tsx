@@ -4,7 +4,6 @@ import {
   Calculator,
   FileText,
   CheckCircle2,
-  Euro,
   Filter,
   Download,
   Calendar as CalendarIcon,
@@ -64,12 +63,12 @@ const PerformanceDashboard = ({ lang }: Props) => {
     funnelTitle: de ? "Funnel: Vom Lead zum Vertrag" : "Funnel: From lead to contract",
     campTitle: de ? "Kampagnen nach Business Impact (Top 5)" : "Top campaigns by business impact",
     campHeaders: de
-      ? ["Kampagne", "Neue Leads", "Abschlüsse", "Prämienvolumen"]
-      : ["Campaign", "New leads", "Contracts", "Premium volume"],
+      ? ["Kampagne", "Neue Leads", "Abschlüsse"]
+      : ["Campaign", "New leads", "Contracts"],
     allCamps: de ? "Alle Kampagnen anzeigen" : "View all campaigns",
     topProducts: de ? "Top Produkte nach Abschlüssen" : "Top products by contracts",
     topContent: de ? "Content mit den meisten Abschlüssen" : "Content with most contracts",
-    contentHeaders: de ? ["Content", "Abschlüsse", "Prämienvolumen"] : ["Content", "Contracts", "Premium volume"],
+    contentHeaders: de ? ["Content", "Abschlüsse"] : ["Content", "Contracts"],
     allContent: de ? "Alle Contents anzeigen" : "View all content",
     aiInsights: "AI Insights",
     allInsights: de ? "Alle Insights anzeigen" : "View all insights",
@@ -84,7 +83,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
     { icon: Calculator, label: de ? "Angebotsrechner abgeschlossen" : "Quote calc. completed", value: "1.294", delta: "+22 %", prev: "1.060", data: spark(1000, 300) },
     { icon: FileText, label: de ? "Neue Angebote erstellt" : "New quotes created", value: "842", delta: "+15 %", prev: "732", data: spark(700, 150) },
     { icon: CheckCircle2, label: de ? "Abgeschlossene Verträge" : "Contracts closed", value: "486", delta: "+11 %", prev: "437", data: spark(430, 60) },
-    { icon: Euro, label: de ? "Prämienvolumen" : "Premium volume", value: "8,4 Mio. €", delta: "+14 %", prev: "7,4 Mio. €", data: spark(7000, 1500) },
     { icon: Filter, label: de ? "Lead → Abschluss Conversion" : "Lead → close conversion", value: "19,8 %", delta: "+2,3 %-Punkte", prev: "17,5 %", data: spark(17, 3) },
   ];
 
@@ -96,11 +94,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const campaigns = [
-    { name: de ? "Unfallversicherung – Sommer" : "Accident insurance – summer", leads: "542", closes: 126, volume: "2,1 Mio. €", bar: 100 },
-    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability insurance", leads: "451", closes: 98, volume: "1,9 Mio. €", bar: 90 },
-    { name: de ? "Kfz-Versicherung Wechsel" : "Auto insurance switch", leads: "381", closes: 72, volume: "1,3 Mio. €", bar: 62 },
-    { name: de ? "Privathaftpflicht Aktion" : "Private liability promo", leads: "312", closes: 61, volume: "0,9 Mio. €", bar: 43 },
-    { name: de ? "Hausratversicherung – Schutz" : "Home contents – protect", leads: "298", closes: 54, volume: "0,8 Mio. €", bar: 38 },
+    { name: de ? "Unfallversicherung – Sommer" : "Accident insurance – summer", leads: "542", closes: 126 },
+    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability insurance", leads: "451", closes: 98 },
+    { name: de ? "Kfz-Versicherung Wechsel" : "Auto insurance switch", leads: "381", closes: 72 },
+    { name: de ? "Privathaftpflicht Aktion" : "Private liability promo", leads: "312", closes: 61 },
+    { name: de ? "Hausratversicherung – Schutz" : "Home contents – protect", leads: "298", closes: 54 },
   ];
 
   const products = [
@@ -113,11 +111,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const contentRows = [
-    { title: de ? "5 Dinge, die bei der BU wirklich zählen" : "5 things that really matter with disability cover", closes: 81, vol: "1,7 Mio. €" },
-    { title: de ? "Kfz-Versicherung wechseln – so einfach geht's" : "Switching auto insurance – how easy it is", closes: 64, vol: "1,2 Mio. €" },
-    { title: de ? "Unfallversicherung: Darum ist sie so wichtig" : "Accident cover: why it matters", closes: 42, vol: "0,8 Mio. €" },
-    { title: de ? "Hausratversicherung: So schützen Sie Ihr Zuhause" : "Home contents: how to protect your home", closes: 37, vol: "0,6 Mio. €" },
-    { title: de ? "Privathaftpflicht: Kleine Ursache, große Wirkung" : "Private liability: small cause, big effect", closes: 29, vol: "0,5 Mio. €" },
+    { title: de ? "5 Dinge, die bei der BU wirklich zählen" : "5 things that really matter with disability cover", closes: 81 },
+    { title: de ? "Kfz-Versicherung wechseln – so einfach geht's" : "Switching auto insurance – how easy it is", closes: 64 },
+    { title: de ? "Unfallversicherung: Darum ist sie so wichtig" : "Accident cover: why it matters", closes: 42 },
+    { title: de ? "Hausratversicherung: So schützen Sie Ihr Zuhause" : "Home contents: how to protect your home", closes: 37 },
+    { title: de ? "Privathaftpflicht: Kleine Ursache, große Wirkung" : "Private liability: small cause, big effect", closes: 29 },
   ];
 
   const insights = [
@@ -172,7 +170,7 @@ const PerformanceDashboard = ({ lang }: Props) => {
       </div>
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
         {kpis.map((k) => {
           const Icon = k.icon;
           return (
@@ -234,7 +232,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 <th className="text-left font-medium pb-2">{t.campHeaders[0]}</th>
                 <th className="text-right font-medium pb-2">{t.campHeaders[1]}</th>
                 <th className="text-right font-medium pb-2">{t.campHeaders[2]}</th>
-                <th className="text-right font-medium pb-2">{t.campHeaders[3]}</th>
               </tr>
             </thead>
             <tbody>
@@ -243,14 +240,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                   <td className="py-2.5 text-foreground">{c.name}</td>
                   <td className="py-2.5 text-right text-foreground">{c.leads}</td>
                   <td className="py-2.5 text-right text-foreground">{c.closes}</td>
-                  <td className="py-2.5">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${c.bar}%`, backgroundColor: GREEN }} />
-                      </div>
-                      <span className="text-foreground w-[70px] text-right">{c.volume}</span>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -302,7 +291,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
               <tr className="text-muted-foreground border-b border-border">
                 <th className="text-left font-medium pb-2">{t.contentHeaders[0]}</th>
                 <th className="text-right font-medium pb-2">{t.contentHeaders[1]}</th>
-                <th className="text-right font-medium pb-2">{t.contentHeaders[2]}</th>
               </tr>
             </thead>
             <tbody>
@@ -310,7 +298,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 <tr key={r.title} className="border-b border-border/50 last:border-0">
                   <td className="py-2 text-foreground pr-2">{r.title}</td>
                   <td className="py-2 text-right text-foreground tabular-nums">{r.closes}</td>
-                  <td className="py-2 text-right text-foreground tabular-nums whitespace-nowrap">{r.vol}</td>
                 </tr>
               ))}
             </tbody>

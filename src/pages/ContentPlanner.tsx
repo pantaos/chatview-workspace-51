@@ -348,7 +348,17 @@ const ContentPlanner = () => {
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <LangToggle lang={lang} onChange={setLang} label={c.langLabel} />
+              <label className={cn(
+                "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",
+                adminMode ? "border-primary ring-1 ring-primary" : "border-border"
+              )}>
+                <Settings2 className={cn("h-4 w-4", adminMode ? "text-primary" : "text-muted-foreground")} />
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-foreground leading-tight">{c.adminModeTitle}</p>
+                  <p className="text-[11px] text-muted-foreground leading-tight">{c.adminModeSubtitle}</p>
+                </div>
+                <Switch checked={adminMode} onCheckedChange={setAdminMode} className="ml-1" />
+              </label>
               <Button variant="outline" size="sm" className="gap-2 bg-white" asChild>
                 <a href="https://ild-dev-frontend-addgd4e7byh5c5h6.z03.azurefd.net/user/magazines/create" target="_blank" rel="noopener noreferrer">
                   <BookOpen className="h-4 w-4" />
@@ -363,17 +373,7 @@ const ContentPlanner = () => {
                   <ExternalLink className="h-3 w-3 text-muted-foreground" />
                 </a>
               </Button>
-              <label className={cn(
-                "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",
-                adminMode ? "border-primary ring-1 ring-primary" : "border-border"
-              )}>
-                <Settings2 className={cn("h-4 w-4", adminMode ? "text-primary" : "text-muted-foreground")} />
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-foreground leading-tight">{c.adminModeTitle}</p>
-                  <p className="text-[11px] text-muted-foreground leading-tight">{c.adminModeSubtitle}</p>
-                </div>
-                <Switch checked={adminMode} onCheckedChange={setAdminMode} className="ml-1" />
-              </label>
+              <LangToggle lang={lang} onChange={setLang} label={c.langLabel} />
             </div>
           </div>
         </div>

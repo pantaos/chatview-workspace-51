@@ -83,7 +83,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
     { icon: Calculator, label: de ? "Angebotsrechner abgeschlossen" : "Quote calc. completed", value: "1.294", delta: "+22 %", prev: "1.060", data: spark(1000, 300) },
     { icon: FileText, label: de ? "Neue Angebote erstellt" : "New quotes created", value: "842", delta: "+15 %", prev: "732", data: spark(700, 150) },
     { icon: CheckCircle2, label: de ? "Abgeschlossene Verträge" : "Contracts closed", value: "486", delta: "+11 %", prev: "437", data: spark(430, 60) },
-    { icon: Euro, label: de ? "Prämienvolumen" : "Premium volume", value: "8,4 Mio. €", delta: "+14 %", prev: "7,4 Mio. €", data: spark(7000, 1500) },
     { icon: Filter, label: de ? "Lead → Abschluss Conversion" : "Lead → close conversion", value: "19,8 %", delta: "+2,3 %-Punkte", prev: "17,5 %", data: spark(17, 3) },
   ];
 

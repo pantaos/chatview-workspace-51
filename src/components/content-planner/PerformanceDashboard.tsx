@@ -121,11 +121,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
   };
 
   const kpis = [
-    { icon: Users, label: de ? "Neue Leads" : "New leads", value: "2.481", delta: "+18 %", prev: "2.099", pct: 78, color: GREEN },
-    { icon: Calculator, label: de ? "Angebotsrechner" : "Quote calculator", value: "1.294", delta: "+22 %", prev: "1.060", pct: 62, color: "#C8D55A" },
-    { icon: FileText, label: de ? "Neue Angebote" : "New quotes", value: "842", delta: "+15 %", prev: "732", pct: 55, color: "#6BB0B0" },
-    { icon: CheckCircle2, label: de ? "Verträge" : "Contracts", value: "486", delta: "+11 %", prev: "437", pct: 48, color: HDI_HELLBLAU },
-    { icon: Target, label: de ? "Conversion" : "Conversion", value: "19,8 %", delta: "+2,3 PP", prev: "17,5 %", pct: 82, color: HDI_BLAU, isScore: true },
+    { icon: Users, label: de ? "Neue Leads" : "New leads", value: "2.481", delta: "+18 %", prev: "2.099", pct: 78, color: GREEN, info: de ? "Nutzer, die erstmals Kontaktdaten hinterlassen oder sich für ein Thema interessiert haben." : "Users who left contact details or showed interest for the first time." },
+    { icon: Calculator, label: de ? "Angebotsrechner" : "Quote calculator", value: "1.294", delta: "+22 %", prev: "1.060", pct: 62, color: "#C8D55A", info: de ? "Abschlüsse des Angebotsrechners – ein starker Signal für Kaufbereitschaft." : "Quote calculator completions – a strong buying-intent signal." },
+    { icon: FileText, label: de ? "Neue Angebote" : "New quotes", value: "842", delta: "+15 %", prev: "732", pct: 55, color: "#6BB0B0", info: de ? "Konkrete Versicherungsangebote, die im Anschluss erstellt wurden." : "Concrete insurance quotes created afterwards." },
+    { icon: CheckCircle2, label: de ? "Verträge" : "Contracts", value: "486", delta: "+11 %", prev: "437", pct: 48, color: HDI_HELLBLAU, info: de ? "Abgeschlossene Verträge, die aus Content-Maßnahmen initiiert wurden." : "Contracts concluded that were initiated by content activities." },
+    { icon: Target, label: de ? "Conversion" : "Conversion", value: "19,8 %", delta: "+2,3 PP", prev: "17,5 %", pct: 82, color: HDI_BLAU, isScore: true, info: de ? "Anteil der Leads, die letztlich zu einem Vertragsabschluss führten." : "Share of leads that ultimately resulted in a contract." },
   ];
 
   const funnel = [

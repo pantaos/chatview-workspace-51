@@ -129,10 +129,10 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const funnel = [
-    { label: de ? "Awareness" : "Awareness", value: "940k", pct: 94, color: GREEN, width: "100%" },
-    { label: de ? "Interest" : "Interest", value: "420k", pct: 42, color: "#C8D55A", width: "78%" },
-    { label: de ? "Consideration" : "Consideration", value: "180k", pct: 18, color: "#6BB0B0", width: "56%" },
-    { label: de ? "Action" : "Action", value: "31k", pct: 3.1, color: HDI_BLAU, width: "34%" },
+    { label: de ? "Awareness" : "Awareness", value: "940k", pct: 94, color: GREEN, width: "100%", info: de ? "Reichweite: Nutzer, die mit HDI-Content in Berührung gekommen sind." : "Reach: users who came into contact with HDI content." },
+    { label: de ? "Interest" : "Interest", value: "420k", pct: 42, color: "#C8D55A", width: "78%", info: de ? "Interesse: Nutzer, die länger verweilen, scrollen oder auf Themen klicken." : "Interest: users who stay longer, scroll, or click on topics." },
+    { label: de ? "Consideration" : "Consideration", value: "180k", pct: 18, color: "#6BB0B0", width: "56%", info: de ? "Prüfung: Nutzer, die den Angebotsrechner oder Detailseiten nutzen." : "Consideration: users who use the quote calculator or detail pages." },
+    { label: de ? "Action" : "Action", value: "31k", pct: 3.1, color: HDI_BLAU, width: "34%", info: de ? "Abschluss: Nutzer, die ein konkretes Angebot anfragen oder einen Vertrag abschließen." : "Action: users who request a concrete quote or conclude a contract." },
   ];
 
   const campaigns = [

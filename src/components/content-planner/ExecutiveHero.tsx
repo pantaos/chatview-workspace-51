@@ -1,9 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,7 +15,6 @@ import {
   Sparkles,
   Clock,
   TrendingUp,
-  Euro,
   Zap,
   ArrowRight,
   Linkedin,
@@ -30,7 +28,6 @@ import {
   Copy,
   Wand2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { CPLang } from "./i18n";
 import hdiLogo from "@/assets/hdi-logo.png.asset.json";
 import { toast } from "sonner";
@@ -48,27 +45,6 @@ const HDI_OCKER = "#DB6301";
 
 const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   const de = lang === "de";
-
-  // ROI inputs
-  const [posts, setPosts] = useState(80); // posts per month
-  const [hoursPerPost, setHoursPerPost] = useState(4);
-  const [hourly, setHourly] = useState(85);
-  const [aiEfficiency, setAiEfficiency] = useState(65); // % time saved
-
-  const roi = useMemo(() => {
-    const beforeHours = posts * hoursPerPost;
-    const afterHours = beforeHours * (1 - aiEfficiency / 100);
-    const savedHours = beforeHours - afterHours;
-    const savedEuro = savedHours * hourly;
-    const savedYear = savedEuro * 12;
-    return {
-      beforeHours: Math.round(beforeHours),
-      afterHours: Math.round(afterHours),
-      savedHours: Math.round(savedHours),
-      savedEuro: Math.round(savedEuro),
-      savedYear: Math.round(savedYear),
-    };
-  }, [posts, hoursPerPost, hourly, aiEfficiency]);
 
   // Live post generator
   const [topic, setTopic] = useState(
@@ -145,9 +121,9 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                   {de ? "Zum Live-Workflow" : "Go to live workflow"}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
-                <a href="#roi">
+                <a href="#demo">
                   <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                    {de ? "ROI berechnen" : "See the ROI"}
+                    {de ? "Live-Demo" : "Live demo"}
                   </Button>
                 </a>
               </div>
@@ -226,117 +202,8 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
         </div>
       </div>
 
-      {/* ROI Calculator */}
-      <div id="roi" className="grid lg:grid-cols-5 gap-4">
-        <Card className="p-6 bg-white border-border lg:col-span-3">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide" style={{ color: HDI_GREEN }}>
-                <Euro className="h-3.5 w-3.5" />
-                {de ? "Business Case" : "Business case"}
-              </div>
-              <h3 className="text-xl font-bold text-foreground mt-1">
-                {de ? "ROI-Rechner für HDI Marketing" : "ROI calculator for HDI Marketing"}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                {de
-                  ? "Passe die Annahmen an — die Zahlen rechnen sich live neu."
-                  : "Adjust the assumptions — numbers recalculate live."}
-              </p>
-            </div>
-            <Badge variant="outline" className="bg-white">
-              {de ? "Konservativ kalkuliert" : "Conservative estimate"}
-            </Badge>
-          </div>
-
-          <div className="mt-6 space-y-5">
-            <SliderRow
-              label={de ? "Posts pro Monat" : "Posts per month"}
-              value={posts}
-              min={20}
-              max={400}
-              step={10}
-              onChange={setPosts}
-              display={`${posts}`}
-            />
-            <SliderRow
-              label={de ? "Stunden pro Post (heute)" : "Hours per post (today)"}
-              value={hoursPerPost}
-              min={1}
-              max={12}
-              step={0.5}
-              onChange={setHoursPerPost}
-              display={`${hoursPerPost} h`}
-            />
-            <SliderRow
-              label={de ? "Interner Stundensatz (€)" : "Internal hourly rate (€)"}
-              value={hourly}
-              min={40}
-              max={200}
-              step={5}
-              onChange={setHourly}
-              display={`€ ${hourly}`}
-            />
-            <SliderRow
-              label={de ? "KI-Zeitersparnis pro Post" : "AI time savings per post"}
-              value={aiEfficiency}
-              min={20}
-              max={90}
-              step={5}
-              onChange={setAiEfficiency}
-              display={`${aiEfficiency} %`}
-            />
-          </div>
-        </Card>
-
-        <Card className="p-6 bg-white border-border lg:col-span-2 flex flex-col justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              {de ? "Ergebnis" : "Result"}
-            </p>
-            <div className="mt-4 space-y-4">
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  {de ? "Aufwand heute" : "Effort today"}
-                </p>
-                <p className="text-2xl font-bold text-foreground">
-                  {roi.beforeHours} h <span className="text-sm text-muted-foreground font-normal">/ {de ? "Monat" : "month"}</span>
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  {de ? "Aufwand mit PANTA Flows" : "Effort with PANTA Flows"}
-                </p>
-                <p className="text-2xl font-bold" style={{ color: HDI_DARK }}>
-                  {roi.afterHours} h <span className="text-sm text-muted-foreground font-normal">/ {de ? "Monat" : "month"}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-2xl p-5" style={{ background: `linear-gradient(135deg, ${HDI_GREEN} 0%, #7a9834 100%)` }}>
-            <p className="text-xs text-white/85 font-semibold uppercase tracking-wide">
-              {de ? "Ersparnis pro Jahr" : "Yearly savings"}
-            </p>
-            <p className="text-4xl font-bold text-white mt-1 tabular-nums">
-              € {fmtEuro(roi.savedYear)}
-            </p>
-            <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/25">
-              <div>
-                <p className="text-[11px] text-white/80">{de ? "Gesparte Stunden / Mon." : "Hours saved / mo."}</p>
-                <p className="text-lg font-bold text-white tabular-nums">{roi.savedHours} h</p>
-              </div>
-              <div>
-                <p className="text-[11px] text-white/80">{de ? "Ersparnis / Mon." : "Savings / mo."}</p>
-                <p className="text-lg font-bold text-white tabular-nums">€ {fmtEuro(roi.savedEuro)}</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
       {/* Live Post Generator */}
-      <Card className="p-6 bg-white border-border">
+      <Card id="demo" className="p-6 bg-white border-border">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide" style={{ color: HDI_GREEN }}>
@@ -491,37 +358,6 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   );
 };
 
-const SliderRow = ({
-  label,
-  value,
-  min,
-  max,
-  step,
-  onChange,
-  display,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  onChange: (v: number) => void;
-  display: string;
-}) => (
-  <div>
-    <div className="flex items-center justify-between mb-2">
-      <Label className="text-sm font-medium">{label}</Label>
-      <span className="text-sm font-bold text-foreground tabular-nums">{display}</span>
-    </div>
-    <Slider
-      value={[value]}
-      min={min}
-      max={max}
-      step={step}
-      onValueChange={([v]) => onChange(v)}
-    />
-  </div>
-);
 
 function getSample(
   topic: string,

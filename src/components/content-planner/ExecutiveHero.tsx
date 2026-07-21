@@ -135,7 +135,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Vorher" : "Before"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "4 h pro Post" : "4 h per post"}
+                {de ? `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} h pro Post` : `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} h per post`}
               </p>
               <p className="text-white/70 text-xs mt-1">
                 {de ? "Recherche, Briefing, Draft, Abstimmung" : "Research, briefing, draft, alignment"}
@@ -147,7 +147,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Mit PANTA Flows" : "With PANTA Flows"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "≈ 4 Minuten pro Post" : "≈ 4 minutes per post"}
+                {de ? `≈ ${roi.minutesWithFlows} Minuten pro Post` : `≈ ${roi.minutesWithFlows} minutes per post`}
               </p>
               <p className="text-white/70 text-xs mt-1">
                 {de ? "Trends → Ideen → Post in einem Flow" : "Trends → ideas → post in one flow"}
@@ -159,7 +159,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Effekt" : "Impact"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "60× schneller · 4× Output" : "60× faster · 4× output"}
+                {de ? `${fmtNum(roi.speedFactor, 0)}× schneller · ${fmtNum(roi.outputFactor, 0)}× Output` : `${fmtNum(roi.speedFactor, 0)}× faster · ${fmtNum(roi.outputFactor, 0)}× output`}
               </p>
               <p className="text-white/90 text-xs mt-1">
                 {de ? "Bei gleichem Team, höherer Qualität" : "Same team, higher quality"}

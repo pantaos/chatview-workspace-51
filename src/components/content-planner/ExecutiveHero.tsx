@@ -47,27 +47,6 @@ const HDI_OCKER = "#DB6301";
 const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   const de = lang === "de";
 
-  // ROI inputs
-  const [posts, setPosts] = useState(80); // posts per month
-  const [hoursPerPost, setHoursPerPost] = useState(4);
-  const [hourly, setHourly] = useState(85);
-  const [aiEfficiency, setAiEfficiency] = useState(65); // % time saved
-
-  const roi = useMemo(() => {
-    const beforeHours = posts * hoursPerPost;
-    const afterHours = beforeHours * (1 - aiEfficiency / 100);
-    const savedHours = beforeHours - afterHours;
-    const savedEuro = savedHours * hourly;
-    const savedYear = savedEuro * 12;
-    return {
-      beforeHours: Math.round(beforeHours),
-      afterHours: Math.round(afterHours),
-      savedHours: Math.round(savedHours),
-      savedEuro: Math.round(savedEuro),
-      savedYear: Math.round(savedYear),
-    };
-  }, [posts, hoursPerPost, hourly, aiEfficiency]);
-
   // Live post generator
   const [topic, setTopic] = useState(
     de ? "Berufsunfähigkeitsversicherung für junge Berufseinsteiger" : "Disability insurance for young professionals"

@@ -222,25 +222,43 @@ const ContentPlanner = () => {
           </div>
         </div>
 
-        {/* View switch */}
-        <div className="px-6 md:px-10 max-w-6xl mx-auto pt-6">
-          <div className="inline-flex rounded-xl border border-border bg-white p-1">
-            {([
-              { id: "planner", label: c.titleUser },
-              { id: "calendarApp", label: "Content Calendar App" },
-              { id: "performance", label: lang === "de" ? "Performance" : "Performance" },
-            ] as const).map((v) => (
-              <button
-                key={v.id}
-                onClick={() => setView(v.id)}
-                className={cn(
-                  "px-4 py-2 text-sm font-semibold rounded-lg transition-colors",
-                  view === v.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {v.label}
-              </button>
-            ))}
+        {/* Dark app header with pill tab switcher */}
+        <div className="bg-[#1B4D3E] text-white">
+          <div className="px-6 md:px-10 max-w-6xl mx-auto py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center">
+                <LayoutTemplate className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-white/70 uppercase tracking-wide">
+                  {lang === "de" ? "Bereich" : "Area"}
+                </p>
+                <h2 className="text-lg font-bold leading-tight">
+                  {lang === "de" ? "Content Planung" : "Content Planning"}
+                </h2>
+              </div>
+            </div>
+
+            <div className="inline-flex self-start sm:self-auto rounded-full bg-white/10 p-1 border border-white/10">
+              {([
+                { id: "planner", label: c.titleUser },
+                { id: "calendarApp", label: "Content Calendar App" },
+                { id: "performance", label: lang === "de" ? "Performance" : "Performance" },
+              ] as const).map((v) => (
+                <button
+                  key={v.id}
+                  onClick={() => setView(v.id)}
+                  className={cn(
+                    "px-4 py-1.5 text-sm font-semibold rounded-full transition-all",
+                    view === v.id
+                      ? "bg-white text-[#1B4D3E] shadow-sm"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
+                  )}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

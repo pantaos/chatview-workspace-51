@@ -767,14 +767,23 @@ const LangToggle = ({ lang, onChange, label }: { lang: CPLang; onChange: (l: CPL
   </div>
 );
 
-const CalendarOverview = ({ period, c }: { period: string; c: CPContent }) => {
+const CalendarOverview = ({ period, periodStart, lang, c }: { period: string; periodStart?: { year: number; month: number }; lang?: CPLang; c: CPContent }) => {
   const weekDays = c.weekDays;
-  const firstWeekday = 3; // 0=Mo → Donnerstag
-  const daysInMonth = 31;
+  const monthNamesDe = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const monthNamesEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthNames = lang === "en" ? monthNamesEn : monthNamesDe;
+
+  const year = periodStart?.year ?? new Date().getFullYear();
+  const month = periodStart?.month ?? new Date().getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Weekday of the 1st, converted to Mon-first index (0=Mon..6=Sun)
+  const jsDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const firstWeekday = (jsDay + 6) % 7;
   const cells: (number | null)[] = [
     ...Array(firstWeekday).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
+  const monthLabel = `${monthNames[month]} ${year}`;
 
   return (
     <div className="mt-8">

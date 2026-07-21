@@ -47,6 +47,8 @@ import {
   Users,
   Tags,
   LayoutTemplate,
+  BookOpen,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -347,6 +349,20 @@ const ContentPlanner = () => {
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <LangToggle lang={lang} onChange={setLang} label={c.langLabel} />
+              <Button variant="outline" size="sm" className="gap-2 bg-white" asChild>
+                <a href="https://ild-dev-frontend-addgd4e7byh5c5h6.z03.azurefd.net/user/magazines/create" target="_blank" rel="noopener noreferrer">
+                  <BookOpen className="h-4 w-4" />
+                  Broschüren
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </a>
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2 bg-white" asChild>
+                <a href="https://pantaflowstesttenant.pantaflows.com/" target="_blank" rel="noopener noreferrer">
+                  <Sparkles className="h-4 w-4" />
+                  Content generieren
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </a>
+              </Button>
               <label className={cn(
                 "flex items-center gap-2.5 rounded-xl border bg-white px-3.5 py-2.5 cursor-pointer transition-colors",
                 adminMode ? "border-primary ring-1 ring-primary" : "border-border"

@@ -89,9 +89,9 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                 {de ? (
-                  <>Von 4 Stunden pro Post <br />zu 4 Minuten.</>
+                  <>Von {fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} Stunden pro Post <br />zu {roi.minutesWithFlows} Minuten.</>
                 ) : (
-                  <>From 4 hours per post <br />to 4 minutes.</>
+                  <>From {fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} hours per post <br />to {roi.minutesWithFlows} minutes.</>
                 )}
               </h1>
               <p className="text-white/80 mt-4 text-base md:text-lg leading-relaxed">

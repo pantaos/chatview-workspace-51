@@ -77,6 +77,31 @@ const DERIVATIVE_ICONS: Record<string, any> = {
   faq: FileText,
 };
 
+function getPeriodRange(
+  period: string,
+  customRange: { from?: Date; to?: Date }
+): { start: { year: number; month: number }; end: { year: number; month: number } } | null {
+  const qMatch = period.match(/^Q([1-4])\s+(\d{4})$/);
+  if (qMatch) {
+    const q = parseInt(qMatch[1], 10);
+    const y = parseInt(qMatch[2], 10);
+    const startMonth = (q - 1) * 3;
+    return { start: { year: y, month: startMonth }, end: { year: y, month: startMonth + 2 } };
+  }
+  const yMatch = period.match(/^(\d{4})$/);
+  if (yMatch) {
+    const y = parseInt(yMatch[1], 10);
+    return { start: { year: y, month: 0 }, end: { year: y, month: 11 } };
+  }
+  if (period.startsWith("custom:") && customRange.from && customRange.to) {
+    return {
+      start: { year: customRange.from.getFullYear(), month: customRange.from.getMonth() },
+      end: { year: customRange.to.getFullYear(), month: customRange.to.getMonth() },
+    };
+  }
+  return null;
+}
+
 const ContentPlanner = () => {
   const [lang, setLang] = useState<CPLang>("de");
   const c = CP_CONTENT[lang];
@@ -264,7 +289,12 @@ const ContentPlanner = () => {
         </div>
 
         {view === "executive" && <ExecutiveHero lang={lang} onJumpToPlanner={() => setView("planner")} />}
-        {view === "calendarApp" && <CalendarAppMock />}
+        {view === "calendarApp" && (
+          <CalendarAppMock
+            periodStart={getPeriodRange(period, customRange)?.start}
+            periodEnd={getPeriodRange(period, customRange)?.end}
+          />
+        )}
         {view === "performance" && <PerformanceDashboard lang={lang} />}
 
         {view === "planner" && (<>
@@ -490,7 +520,7 @@ const ContentPlanner = () => {
                 </Button>
               </div>
 
-              {calendarFilled && !filling && <CalendarOverview period={period.startsWith("custom:") ? period.slice(7) : period} c={c} />}
+              {calendarFilled && !filling && <CalendarOverview period={period.startsWith("custom:") ? period.slice(7) : period} periodStart={getPeriodRange(period, customRange)?.start} lang={lang} c={c} />}
 
               <FooterNav onNext={completeAndNext} nextLabel={c.nextToLogic} nextDisabled={!calendarFilled} back={c.back} />
             </Card>
@@ -737,21 +767,30 @@ const LangToggle = ({ lang, onChange, label }: { lang: CPLang; onChange: (l: CPL
   </div>
 );
 
-const CalendarOverview = ({ period, c }: { period: string; c: CPContent }) => {
+const CalendarOverview = ({ period, periodStart, lang, c }: { period: string; periodStart?: { year: number; month: number }; lang?: CPLang; c: CPContent }) => {
   const weekDays = c.weekDays;
-  const firstWeekday = 3; // 0=Mo → Donnerstag
-  const daysInMonth = 31;
+  const monthNamesDe = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const monthNamesEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthNames = lang === "en" ? monthNamesEn : monthNamesDe;
+
+  const year = periodStart?.year ?? new Date().getFullYear();
+  const month = periodStart?.month ?? new Date().getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Weekday of the 1st, converted to Mon-first index (0=Mon..6=Sun)
+  const jsDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const firstWeekday = (jsDay + 6) % 7;
   const cells: (number | null)[] = [
     ...Array(firstWeekday).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
+  const monthLabel = `${monthNames[month]} ${year}`;
 
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-primary" />
-          <p className="text-sm font-semibold text-foreground">{c.calHeader}</p>
+          <p className="text-sm font-semibold text-foreground">{c.calHeader} · {monthLabel}</p>
         </div>
         <Badge variant="secondary" className="text-[10px]">
           {Object.keys(c.calEntries).length} {c.calBadgeSuffix} · {period}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,48 +26,97 @@ interface CalEvent {
   status: EventStatus;
 }
 
-const EVENTS: CalEvent[] = [
-  { day: 5, title: "Product Highlight", platform: "Instagram", status: "incomplete" },
-  { day: 7, title: "Customer Story", platform: "Facebook", status: "approved" },
-  { day: 9, title: "Behind the Scenes", platform: "Instagram", status: "incomplete" },
-  { day: 12, title: "Tips & Tricks", platform: "Facebook", status: "approved" },
-  { day: 14, title: "New Feature", platform: "Instagram", status: "incomplete" },
-  { day: 16, title: "Industry News", platform: "Facebook", status: "approved" },
-  { day: 19, title: "Quote Post", platform: "Instagram", status: "incomplete" },
-  { day: 21, title: "Success Story", platform: "Facebook", status: "approved" },
-  { day: 23, title: "Poll / Question", platform: "Instagram", status: "incomplete" },
-  { day: 26, title: "Promo / Offer", platform: "Facebook", status: "approved" },
-  { day: 28, title: "Event Reminder", platform: "Instagram", status: "incomplete" },
-  { day: 30, title: "Weekend Post", platform: "Facebook", status: "approved" },
+const EVENT_TEMPLATE: Omit<CalEvent, "day">[] = [
+  { title: "Product Highlight", platform: "Instagram", status: "incomplete" },
+  { title: "Customer Story", platform: "Facebook", status: "approved" },
+  { title: "Behind the Scenes", platform: "Instagram", status: "incomplete" },
+  { title: "Tips & Tricks", platform: "Facebook", status: "approved" },
+  { title: "New Feature", platform: "Instagram", status: "incomplete" },
+  { title: "Industry News", platform: "Facebook", status: "approved" },
+  { title: "Quote Post", platform: "Instagram", status: "incomplete" },
+  { title: "Success Story", platform: "Facebook", status: "approved" },
+  { title: "Poll / Question", platform: "Instagram", status: "incomplete" },
+  { title: "Promo / Offer", platform: "Facebook", status: "approved" },
+  { title: "Event Reminder", platform: "Instagram", status: "incomplete" },
+  { title: "Weekend Post", platform: "Facebook", status: "approved" },
 ];
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
-// May 2025 starts on a Thursday (index 4). Show trailing Apr days 27-30.
-const LEADING = [27, 28, 29, 30];
-const DAYS_IN_MONTH = 31;
+interface CalendarAppMockProps {
+  /** Start month for the calendar (year, month 0-11). Defaults to current month. */
+  periodStart?: { year: number; month: number };
+  /** End month (inclusive) - limits navigation. */
+  periodEnd?: { year: number; month: number };
+}
 
-const CalendarAppMock = () => {
+const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
   const [tab, setTab] = useState<"calendar" | "approved">("calendar");
   const [platform, setPlatform] = useState<Platform>("all");
 
-  const visibleEvents = EVENTS.filter((e) => {
+  const initial = periodStart ?? { year: new Date().getFullYear(), month: new Date().getMonth() };
+  const [current, setCurrent] = useState(initial);
+
+  // Re-sync when the period from the parent changes
+  useEffect(() => {
+    if (periodStart) setCurrent(periodStart);
+  }, [periodStart?.year, periodStart?.month]);
+
+  const daysInMonth = new Date(current.year, current.month + 1, 0).getDate();
+  const firstWeekday = new Date(current.year, current.month, 1).getDay(); // 0=Sun
+
+  // Distribute template events across the actual days of the month
+  const events: CalEvent[] = EVENT_TEMPLATE.map((e, i) => {
+    const day = Math.min(daysInMonth, Math.round(((i + 1) / (EVENT_TEMPLATE.length + 1)) * daysInMonth));
+    return { ...e, day };
+  }).filter((e, i, arr) => arr.findIndex((x) => x.day === e.day) === i);
+
+  const visibleEvents = events.filter((e) => {
     if (platform === "facebook") return e.platform === "Facebook";
     if (platform === "instagram") return e.platform === "Instagram";
     return true;
   });
 
-  const eventFor = (day: number) =>
-    visibleEvents.find((e) => e.day === day) ?? null;
+  const eventFor = (day: number) => visibleEvents.find((e) => e.day === day) ?? null;
+
+  // Leading days from previous month
+  const prevMonthDays = new Date(current.year, current.month, 0).getDate();
+  const leading = Array.from({ length: firstWeekday }, (_, i) => prevMonthDays - firstWeekday + 1 + i);
 
   const cells: { day: number; outside: boolean }[] = [
-    ...LEADING.map((d) => ({ day: d, outside: true })),
-    ...Array.from({ length: DAYS_IN_MONTH }, (_, i) => ({ day: i + 1, outside: false })),
+    ...leading.map((d) => ({ day: d, outside: true })),
+    ...Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1, outside: false })),
   ];
-  // pad to full weeks
+  let trailing = 1;
   while (cells.length % 7 !== 0) {
-    cells.push({ day: cells.length - (LEADING.length + DAYS_IN_MONTH) + 1, outside: true });
+    cells.push({ day: trailing++, outside: true });
   }
+
+  const monthLabel = `${MONTH_NAMES[current.month]} ${current.year}`;
+
+  const canGoPrev = periodStart
+    ? current.year > periodStart.year || (current.year === periodStart.year && current.month > periodStart.month)
+    : true;
+  const canGoNext = periodEnd
+    ? current.year < periodEnd.year || (current.year === periodEnd.year && current.month < periodEnd.month)
+    : true;
+
+  const goPrev = () => {
+    if (!canGoPrev) return;
+    const m = current.month === 0 ? 11 : current.month - 1;
+    const y = current.month === 0 ? current.year - 1 : current.year;
+    setCurrent({ year: y, month: m });
+  };
+  const goNext = () => {
+    if (!canGoNext) return;
+    const m = current.month === 11 ? 0 : current.month + 1;
+    const y = current.month === 11 ? current.year + 1 : current.year;
+    setCurrent({ year: y, month: m });
+  };
 
   const eventStyles: Record<EventStatus, string> = {
     incomplete: "border-blue-200 bg-blue-50 text-blue-700",
@@ -116,16 +165,20 @@ const CalendarAppMock = () => {
               {/* Toolbar */}
               <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="icon" className="h-9 w-9">
+                  <Button variant="outline" size="icon" className="h-9 w-9" onClick={goPrev} disabled={!canGoPrev}>
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-9 w-9">
+                  <Button variant="outline" size="icon" className="h-9 w-9" onClick={goNext} disabled={!canGoNext}>
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                   <button className="flex items-center gap-1.5 text-lg font-semibold text-foreground ml-1">
-                    May 2025 <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    {monthLabel} <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </button>
-                  <Button variant="outline" size="sm" className="ml-2">Today</Button>
+                  {periodStart && (
+                    <Button variant="outline" size="sm" className="ml-2" onClick={() => setCurrent(periodStart)}>
+                      Jump to start
+                    </Button>
+                  )}
                 </div>
                 <Button variant="outline" size="sm" className="gap-2">
                   <SlidersHorizontal className="h-4 w-4" /> All Platforms
@@ -180,10 +233,10 @@ const CalendarAppMock = () => {
             </>
           ) : (
             <div className="space-y-2">
-              {EVENTS.filter((e) => e.status === "approved").map((e) => (
+              {events.filter((e) => e.status === "approved").map((e) => (
                 <div key={e.day} className="flex items-center gap-4 p-3 rounded-lg border border-border">
                   <div className="w-12 text-center shrink-0">
-                    <p className="text-[11px] text-muted-foreground">May</p>
+                    <p className="text-[11px] text-muted-foreground">{MONTH_NAMES[current.month].slice(0, 3)}</p>
                     <p className="text-lg font-bold text-foreground leading-none">{e.day}</p>
                   </div>
                   <div className="flex-1 min-w-0">

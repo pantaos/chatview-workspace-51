@@ -479,6 +479,7 @@ const PerformanceDashboard = ({ lang }: Props) => {
         <p className="text-[11px] text-white/30 mt-6 relative z-10">{t.dataAsOf}</p>
       </div>
     </div>
+    </TooltipProvider>
   );
 };
 

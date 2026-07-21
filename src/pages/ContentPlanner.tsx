@@ -102,6 +102,33 @@ function getPeriodRange(
   return null;
 }
 
+const MONTHS_DE_SHORT = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const MONTHS_EN_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function remapSuggestionDates(
+  suggestions: CPSuggestion[],
+  range: { start: { year: number; month: number }; end: { year: number; month: number } } | null,
+  lang: CPLang
+): CPSuggestion[] {
+  if (!range) return suggestions;
+  const months = MONTHS_EN_SHORT.map((_, i) => i);
+  const startAbs = range.start.year * 12 + range.start.month;
+  const endAbs = range.end.year * 12 + range.end.month;
+  const numMonths = Math.max(1, endAbs - startAbs + 1);
+  const labels = lang === "de" ? MONTHS_DE_SHORT : MONTHS_EN_SHORT;
+  const n = suggestions.length;
+  return suggestions.map((s, i) => {
+    const day = s.date.split(/[\s.]+/)[0];
+    const monthOffset = Math.floor((i * numMonths) / n);
+    const absMonth = startAbs + monthOffset;
+    const monthIdx = ((absMonth % 12) + 12) % 12;
+    const label = labels[months[monthIdx]];
+    // preserve German "06." style vs English "06" style
+    const dayPart = lang === "de" ? `${day}.` : day;
+    return { ...s, date: lang === "de" ? `${dayPart} ${label}` : `${dayPart} ${label}` };
+  });
+}
+
 const ContentPlanner = () => {
   const [lang, setLang] = useState<CPLang>("de");
   const c = CP_CONTENT[lang];

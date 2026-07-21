@@ -790,7 +790,7 @@ const CalendarOverview = ({ period, periodStart, lang, c }: { period: string; pe
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-primary" />
-          <p className="text-sm font-semibold text-foreground">{c.calHeader}</p>
+          <p className="text-sm font-semibold text-foreground">{c.calHeader} · {monthLabel}</p>
         </div>
         <Badge variant="secondary" className="text-[10px]">
           {Object.keys(c.calEntries).length} {c.calBadgeSuffix} · {period}

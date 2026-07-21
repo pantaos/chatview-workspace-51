@@ -34,6 +34,7 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { CPLang } from "./i18n";
+import hdiLogo from "@/assets/hdi-logo.png.asset.json";
 
 interface Props {
   lang: CPLang;
@@ -129,12 +130,16 @@ const PerformanceDashboard = ({ lang }: Props) => {
     <div className="px-6 md:px-10 max-w-[1400px] mx-auto pt-8 pb-12 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            {t.title}
-            <Info className="h-4 w-4 text-muted-foreground" />
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">{t.subtitle}</p>
+        <div className="flex items-center gap-4">
+          <img src={hdiLogo.url} alt="HDI" className="h-9 w-auto" />
+          <div className="h-9 w-px bg-border" />
+          <div>
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              {t.title}
+              <Info className="h-4 w-4 text-muted-foreground" />
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">{t.subtitle}</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Select value={period} onValueChange={setPeriod}>

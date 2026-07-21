@@ -232,7 +232,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                 <th className="text-left font-medium pb-2">{t.campHeaders[0]}</th>
                 <th className="text-right font-medium pb-2">{t.campHeaders[1]}</th>
                 <th className="text-right font-medium pb-2">{t.campHeaders[2]}</th>
-                <th className="text-right font-medium pb-2">{t.campHeaders[3]}</th>
               </tr>
             </thead>
             <tbody>
@@ -241,14 +240,6 @@ const PerformanceDashboard = ({ lang }: Props) => {
                   <td className="py-2.5 text-foreground">{c.name}</td>
                   <td className="py-2.5 text-right text-foreground">{c.leads}</td>
                   <td className="py-2.5 text-right text-foreground">{c.closes}</td>
-                  <td className="py-2.5">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${c.bar}%`, backgroundColor: GREEN }} />
-                      </div>
-                      <span className="text-foreground w-[70px] text-right">{c.volume}</span>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>

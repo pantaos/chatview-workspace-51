@@ -35,7 +35,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   const [hourlyRate, setHourlyRate] = useState(85);
 
   const roi = useMemo(() => {
-    const minutesWithFlows = 4;
+    const minutesWithFlows = 8;
     const hoursWithFlows = (postsPerMonth * minutesWithFlows) / 60;
     const hoursBefore = postsPerMonth * hoursPerPost;
     const hoursSavedMonth = hoursBefore - hoursWithFlows;
@@ -44,9 +44,12 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
     const costAfter = hoursWithFlows * hourlyRate;
     const savingsMonth = costBefore - costAfter;
     const savingsYear = savingsMonth * 12;
-    const fteEquivalent = hoursSavedYear / 1600; // ~1600 productive hrs / FTE / year
+    const fteEquivalent = hoursSavedYear / 1600;
     const percentSaved = (hoursSavedMonth / hoursBefore) * 100;
+    const speedFactor = (hoursPerPost * 60) / minutesWithFlows;
+    const outputFactor = (hoursPerPost * 60) / minutesWithFlows;
     return {
+      minutesWithFlows,
       hoursBefore,
       hoursWithFlows,
       hoursSavedMonth,
@@ -55,6 +58,8 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
       savingsYear,
       fteEquivalent,
       percentSaved,
+      speedFactor,
+      outputFactor,
     };
   }, [postsPerMonth, hoursPerPost, hourlyRate]);
 

@@ -82,7 +82,7 @@ const ContentPlanner = () => {
   const c = CP_CONTENT[lang];
 
   // Top-level view switch
-  const [view, setView] = useState<"planner" | "calendarApp" | "performance">("planner");
+  const [view, setView] = useState<"executive" | "planner" | "calendarApp" | "performance">("executive");
 
   const [activeStep, setActiveStep] = useState<StepId>("calendar");
   const [completed, setCompleted] = useState<Set<StepId>>(new Set());

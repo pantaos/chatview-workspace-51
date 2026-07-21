@@ -428,7 +428,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
 
               {!generated && !generating && (
                 <div className="flex-1 flex items-center justify-center text-center text-muted-foreground text-sm px-6">
-                  {de ? "Klicke auf „Post generieren", um eine Live-Vorschau zu erhalten." : "Click \"Generate post\" for a live preview."}
+                  {de ? 'Klicke auf „Post generieren“, um eine Live-Vorschau zu erhalten.' : 'Click "Generate post" for a live preview.'}
                 </div>
               )}
 

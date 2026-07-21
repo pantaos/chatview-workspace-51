@@ -241,6 +241,7 @@ const ContentPlanner = () => {
 
             <div className="inline-flex self-start sm:self-auto rounded-full bg-white/10 p-1 border border-white/10">
               {([
+                { id: "executive", label: lang === "de" ? "Executive" : "Executive" },
                 { id: "planner", label: c.titleUser },
                 { id: "calendarApp", label: "Content Calendar App" },
                 { id: "performance", label: lang === "de" ? "Performance" : "Performance" },

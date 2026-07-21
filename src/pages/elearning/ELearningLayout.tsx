@@ -1,9 +1,10 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { GraduationCap, LayoutDashboard, BookOpen, Megaphone, Settings2 } from "lucide-react";
+import { LayoutDashboard, BookOpen, Megaphone, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getRole, setRole as persistRole, Role } from "@/data/elearningData";
+import hdiLogo from "@/assets/hdi-logo.png.asset.json";
 
 interface Props {
   children: ReactNode;
@@ -39,10 +40,9 @@ export default function ELearningLayout({ children }: Props) {
     <div className="min-h-screen bg-[#F8F9FD]">
       <header className="border-b bg-white">
         <div className="container max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between gap-4">
-          <Link to="/elearning" className="flex items-center gap-2 font-semibold">
-            <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
-              <GraduationCap className="h-4 w-4" />
-            </div>
+          <Link to="/elearning" className="flex items-center gap-3 font-semibold">
+            <img src={hdiLogo.url} alt="HDI" className="h-7 w-auto" />
+            <span className="h-6 w-px bg-border" />
             <span>LearnFlow</span>
           </Link>
           <div className="flex items-center gap-2">

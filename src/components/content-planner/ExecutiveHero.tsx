@@ -35,7 +35,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
   const [hourlyRate, setHourlyRate] = useState(85);
 
   const roi = useMemo(() => {
-    const minutesWithFlows = 4;
+    const minutesWithFlows = 8;
     const hoursWithFlows = (postsPerMonth * minutesWithFlows) / 60;
     const hoursBefore = postsPerMonth * hoursPerPost;
     const hoursSavedMonth = hoursBefore - hoursWithFlows;
@@ -44,9 +44,12 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
     const costAfter = hoursWithFlows * hourlyRate;
     const savingsMonth = costBefore - costAfter;
     const savingsYear = savingsMonth * 12;
-    const fteEquivalent = hoursSavedYear / 1600; // ~1600 productive hrs / FTE / year
+    const fteEquivalent = hoursSavedYear / 1600;
     const percentSaved = (hoursSavedMonth / hoursBefore) * 100;
+    const speedFactor = (hoursPerPost * 60) / minutesWithFlows;
+    const outputFactor = (hoursPerPost * 60) / minutesWithFlows;
     return {
+      minutesWithFlows,
       hoursBefore,
       hoursWithFlows,
       hoursSavedMonth,
@@ -55,6 +58,8 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
       savingsYear,
       fteEquivalent,
       percentSaved,
+      speedFactor,
+      outputFactor,
     };
   }, [postsPerMonth, hoursPerPost, hourlyRate]);
 
@@ -84,9 +89,9 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                 {de ? (
-                  <>Von 4 Stunden pro Post <br />zu 4 Minuten.</>
+                  <>Von {fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} Stunden pro Post <br />zu {roi.minutesWithFlows} Minuten.</>
                 ) : (
-                  <>From 4 hours per post <br />to 4 minutes.</>
+                  <>From {fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} hours per post <br />to {roi.minutesWithFlows} minutes.</>
                 )}
               </h1>
               <p className="text-white/80 mt-4 text-base md:text-lg leading-relaxed">
@@ -130,7 +135,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Vorher" : "Before"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "4 h pro Post" : "4 h per post"}
+                {de ? `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} h pro Post` : `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)} h per post`}
               </p>
               <p className="text-white/70 text-xs mt-1">
                 {de ? "Recherche, Briefing, Draft, Abstimmung" : "Research, briefing, draft, alignment"}
@@ -142,7 +147,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Mit PANTA Flows" : "With PANTA Flows"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "≈ 4 Minuten pro Post" : "≈ 4 minutes per post"}
+                {de ? `≈ ${roi.minutesWithFlows} Minuten pro Post` : `≈ ${roi.minutesWithFlows} minutes per post`}
               </p>
               <p className="text-white/70 text-xs mt-1">
                 {de ? "Trends → Ideen → Post in einem Flow" : "Trends → ideas → post in one flow"}
@@ -154,7 +159,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
                 {de ? "Effekt" : "Impact"}
               </div>
               <p className="text-white text-lg font-bold mt-2 leading-tight">
-                {de ? "60× schneller · 4× Output" : "60× faster · 4× output"}
+                {de ? `${fmtNum(roi.speedFactor, 0)}× schneller · ${fmtNum(roi.outputFactor, 0)}× Output` : `${fmtNum(roi.speedFactor, 0)}× faster · ${fmtNum(roi.outputFactor, 0)}× output`}
               </p>
               <p className="text-white/90 text-xs mt-1">
                 {de ? "Bei gleichem Team, höherer Qualität" : "Same team, higher quality"}
@@ -166,7 +171,7 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
         {/* Metric row */}
         <div className="bg-white grid grid-cols-2 md:grid-cols-4 divide-x divide-border border-t border-border">
           {[
-            { label: de ? "Zeit pro Post" : "Time per post", value: "-95 %", sub: de ? "4 h → 4 min" : "4h → 4min" },
+            { label: de ? "Zeit pro Post" : "Time per post", value: `-${fmtNum(roi.percentSaved, 1)} %`, sub: `${fmtNum(hoursPerPost, hoursPerPost % 1 ? 1 : 0)}h → ${roi.minutesWithFlows}min` },
             { label: de ? "Content-Output" : "Content output", value: "+280 %", sub: de ? "vs. Q1 2026" : "vs. Q1 2026" },
             { label: de ? "Lead → Abschluss" : "Lead → close", value: "19,8 %", sub: de ? "+2,3 %-Punkte" : "+2.3 pp" },
             { label: de ? "Ø Qualitäts-Score" : "Avg. quality score", value: "8,7 / 10", sub: de ? "Editorial Review" : "Editorial review" },

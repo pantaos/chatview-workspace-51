@@ -94,11 +94,11 @@ const PerformanceDashboard = ({ lang }: Props) => {
   ];
 
   const campaigns = [
-    { name: de ? "Unfallversicherung – Sommer" : "Accident insurance – summer", leads: "542", closes: 126, volume: "2,1 Mio. €", bar: 100 },
-    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability insurance", leads: "451", closes: 98, volume: "1,9 Mio. €", bar: 90 },
-    { name: de ? "Kfz-Versicherung Wechsel" : "Auto insurance switch", leads: "381", closes: 72, volume: "1,3 Mio. €", bar: 62 },
-    { name: de ? "Privathaftpflicht Aktion" : "Private liability promo", leads: "312", closes: 61, volume: "0,9 Mio. €", bar: 43 },
-    { name: de ? "Hausratversicherung – Schutz" : "Home contents – protect", leads: "298", closes: 54, volume: "0,8 Mio. €", bar: 38 },
+    { name: de ? "Unfallversicherung – Sommer" : "Accident insurance – summer", leads: "542", closes: 126 },
+    { name: de ? "Berufsunfähigkeitsversicherung" : "Disability insurance", leads: "451", closes: 98 },
+    { name: de ? "Kfz-Versicherung Wechsel" : "Auto insurance switch", leads: "381", closes: 72 },
+    { name: de ? "Privathaftpflicht Aktion" : "Private liability promo", leads: "312", closes: 61 },
+    { name: de ? "Hausratversicherung – Schutz" : "Home contents – protect", leads: "298", closes: 54 },
   ];
 
   const products = [

@@ -87,6 +87,8 @@ const ContentPlanner = () => {
 
   // Step 1 state
   const [period, setPeriod] = useState("Q1 2026");
+  const [customRange, setCustomRange] = useState<{ from?: Date; to?: Date }>({});
+  const [customOpen, setCustomOpen] = useState(false);
   const [fields, setFields] = useState<string[]>([]);
   const [channels, setChannels] = useState<string[]>([]);
   const [targets, setTargets] = useState<string[]>([]);

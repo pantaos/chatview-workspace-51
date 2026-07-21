@@ -4,7 +4,6 @@ import {
   Calculator,
   FileText,
   CheckCircle2,
-  Euro,
   Filter,
   Download,
   Calendar as CalendarIcon,

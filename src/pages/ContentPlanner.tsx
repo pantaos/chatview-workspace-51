@@ -623,7 +623,7 @@ const ContentPlanner = () => {
               <div className="grid md:grid-cols-[280px_1fr] gap-6 mt-6">
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{c.pickTopicLabel}</p>
-                  {suggestions.map((s) => (
+                  {displayedSuggestions.map((s) => (
                     <button
                       key={s.id}
                       onClick={() => pickTopic(s)}

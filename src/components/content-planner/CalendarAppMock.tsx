@@ -390,10 +390,17 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
                           {cell.day}
                         </p>
                         {entry && (
-                          <div className={cn("rounded-md border px-2 py-1.5 text-[11px] leading-tight", eventStyles[entry.status])}>
+                          <button
+                            type="button"
+                            onClick={() => setSelected(entry)}
+                            className={cn(
+                              "w-full text-left rounded-md border px-2 py-1.5 text-[11px] leading-tight transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer",
+                              eventStyles[entry.status]
+                            )}
+                          >
                             <p className="font-semibold truncate">{entry.title}</p>
                             <p className="opacity-70 truncate">{entry.platform}</p>
-                          </div>
+                          </button>
                         )}
                       </div>
                     );

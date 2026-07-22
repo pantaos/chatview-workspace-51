@@ -232,6 +232,7 @@ interface CalendarAppMockProps {
 const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
   const [tab, setTab] = useState<"calendar" | "approved">("calendar");
   const [platform, setPlatform] = useState<Platform>("all");
+  const [selected, setSelected] = useState<CalEvent | null>(null);
 
   const initial = periodStart ?? { year: new Date().getFullYear(), month: new Date().getMonth() };
   const [current, setCurrent] = useState(initial);

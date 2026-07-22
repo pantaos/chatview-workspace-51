@@ -458,9 +458,105 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
           </div>
         </Card>
       </div>
+
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          {selected && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-1">
+                  {selected.platform === "Instagram" ? (
+                    <Instagram className="h-4 w-4 text-pink-600" />
+                  ) : (
+                    <Facebook className="h-4 w-4 text-blue-600" />
+                  )}
+                  <span className="text-xs font-medium text-muted-foreground">{selected.platform}</span>
+                  <span className="text-xs text-muted-foreground">·</span>
+                  <span className="text-xs text-muted-foreground">
+                    {MONTH_NAMES[current.month]} {selected.day}, {current.year}
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "ml-auto text-[10px]",
+                      selected.status === "approved"
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-blue-50 text-blue-700 border-blue-200"
+                    )}
+                  >
+                    {selected.status === "approved" ? (
+                      <><CheckCircle2 className="h-3 w-3 mr-1" /> Approved</>
+                    ) : (
+                      <><AlertCircle className="h-3 w-3 mr-1" /> Needs Content</>
+                    )}
+                  </Badge>
+                </div>
+                <DialogTitle className="text-2xl">{selected.title}</DialogTitle>
+              </DialogHeader>
+
+              <div className="grid grid-cols-3 gap-3 mt-4 text-xs">
+                <MetaItem icon={Clock} label="Publish" value={selected.time} />
+                <MetaItem icon={Target} label="Audience" value={selected.audience} />
+                <MetaItem icon={ImageIcon} label="Format" value={selected.format} />
+              </div>
+
+              <div className="mt-5 rounded-xl border border-border bg-muted/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Caption</span>
+                </div>
+                <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{selected.caption}</p>
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <Hash className="h-3.5 w-3.5 text-muted-foreground" />
+                  {selected.hashtags.map((h) => (
+                    <span key={h} className="text-xs text-primary font-medium">{h}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-3 mt-3">
+                <div className="rounded-xl border border-border p-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Visual Brief</span>
+                  </div>
+                  <p className="text-sm text-foreground">{selected.visualBrief}</p>
+                </div>
+                <div className="rounded-xl border border-border p-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Target className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Goal</span>
+                  </div>
+                  <p className="text-sm text-foreground">{selected.goal}</p>
+                  <p className="text-xs text-muted-foreground mt-2">CTA: <span className="text-foreground font-medium">{selected.cta}</span></p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-border">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" /> Regenerate with AI
+                </Button>
+                <Button size="sm">
+                  {selected.status === "approved" ? "Edit post" : "Open in Editor"}
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+const MetaItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+  <div className="rounded-lg border border-border p-3">
+    <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+      <Icon className="h-3 w-3" />
+      <span className="uppercase tracking-wide text-[10px] font-semibold">{label}</span>
+    </div>
+    <p className="text-sm font-medium text-foreground">{value}</p>
+  </div>
+);
 
 const PlatformPill = ({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: any; label: string }) => (
   <button

@@ -119,7 +119,6 @@ const ExecutiveHero = ({ lang, onJumpToPlanner }: Props) => {
             </div>
 
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 min-w-[200px]">
-              <img src={hdiLogo.url} alt="HDI" className="h-8 w-auto mb-3 opacity-90 brightness-0 invert" />
               <p className="text-xs text-white/70 uppercase tracking-wide font-semibold">
                 {de ? "Pilotphase" : "Pilot phase"}
               </p>

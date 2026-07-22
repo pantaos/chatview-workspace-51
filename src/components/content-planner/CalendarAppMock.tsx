@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import hdiLogoAsset from "@/assets/hdi-logo.png.asset.json";
 import {
@@ -14,6 +16,13 @@ import {
   CalendarDays,
   Pencil,
   ChevronRight as ArrowR,
+  Clock,
+  Hash,
+  Image as ImageIcon,
+  Target,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
 } from "lucide-react";
 
 type Platform = "all" | "facebook" | "instagram";
@@ -24,21 +33,187 @@ interface CalEvent {
   title: string;
   platform: "Facebook" | "Instagram";
   status: EventStatus;
+  time: string;
+  audience: string;
+  format: string;
+  caption: string;
+  hashtags: string[];
+  cta: string;
+  visualBrief: string;
+  goal: string;
 }
 
 const EVENT_TEMPLATE: Omit<CalEvent, "day">[] = [
-  { title: "Product Highlight", platform: "Instagram", status: "incomplete" },
-  { title: "Customer Story", platform: "Facebook", status: "approved" },
-  { title: "Behind the Scenes", platform: "Instagram", status: "incomplete" },
-  { title: "Tips & Tricks", platform: "Facebook", status: "approved" },
-  { title: "New Feature", platform: "Instagram", status: "incomplete" },
-  { title: "Industry News", platform: "Facebook", status: "approved" },
-  { title: "Quote Post", platform: "Instagram", status: "incomplete" },
-  { title: "Success Story", platform: "Facebook", status: "approved" },
-  { title: "Poll / Question", platform: "Instagram", status: "incomplete" },
-  { title: "Promo / Offer", platform: "Facebook", status: "approved" },
-  { title: "Event Reminder", platform: "Instagram", status: "incomplete" },
-  { title: "Weekend Post", platform: "Facebook", status: "approved" },
+  {
+    title: "Product Highlight",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "09:00",
+    audience: "Junge Familien 28–40",
+    format: "Reel · 9:16 · 20 Sek.",
+    caption:
+      "Deine Familie zählt auf dich – wir zählen auf dich zurück. Mit der HDI Risikolebensversicherung sicherst du in wenigen Minuten das ab, was wirklich zählt. 💚",
+    hashtags: ["#HDI", "#Familienschutz", "#Risikoleben", "#FinanziellFrei"],
+    cta: "Jetzt Beitrag in 60 Sek. berechnen →",
+    visualBrief:
+      "Familie am Frühstückstisch, warmes Morgenlicht, HDI-Grün als Akzent im Logo-Corner.",
+    goal: "Awareness + Angebotsrechner-Klicks",
+  },
+  {
+    title: "Customer Story",
+    platform: "Facebook",
+    status: "approved",
+    time: "11:30",
+    audience: "Hausbesitzer 40–60",
+    format: "Single Image + Long-Form Caption",
+    caption:
+      "„Nach dem Sturm war unser Dach hin – HDI hat innerhalb von 48 Stunden geregelt.\" Familie Weber aus Hannover erzählt, warum sie sich für HDI Wohngebäude entschieden hat.",
+    hashtags: ["#HDI", "#Kundenstimme", "#Wohngebäudeversicherung"],
+    cta: "Ganze Geschichte lesen",
+    visualBrief:
+      "Portrait Familie Weber vor renoviertem Haus, dokumentarischer Look, keine Stockfotografie.",
+    goal: "Trust + Retention",
+  },
+  {
+    title: "Behind the Scenes",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "14:00",
+    audience: "Employer-Branding · 22–35",
+    format: "Story-Serie · 5 Frames",
+    caption:
+      "Ein Tag im Schadenteam Köln – wie aus einer Meldung um 08:14 Uhr eine Lösung um 16:02 Uhr wird.",
+    hashtags: ["#LifeAtHDI", "#Insurance", "#Karriere"],
+    cta: "Swipe up: Offene Stellen",
+    visualBrief: "Handheld iPhone-Look, echte Mitarbeitende, keine Models.",
+    goal: "Employer Branding",
+  },
+  {
+    title: "Tips & Tricks",
+    platform: "Facebook",
+    status: "approved",
+    time: "10:00",
+    audience: "Autofahrer 25–55",
+    format: "Carousel · 5 Slides",
+    caption:
+      "5 Dinge, die deine Kfz-Prämie senken – und eines davon kennen die wenigsten. Slide 3 lohnt sich. 👀",
+    hashtags: ["#Kfz", "#Sparen", "#HDI"],
+    cta: "Kfz-Tarif prüfen",
+    visualBrief: "Illustrativer Carousel im HDI-Grün, klare Icons, große Zahlen.",
+    goal: "Consideration + Tarifrechner",
+  },
+  {
+    title: "New Feature",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "12:00",
+    audience: "Bestandskunden App-Nutzer",
+    format: "Reel · 9:16 · 15 Sek.",
+    caption:
+      "Schaden melden per Foto – in der HDI App jetzt in unter 60 Sekunden. Zeigen wir dir. 📱",
+    hashtags: ["#HDIApp", "#Schadenmeldung", "#DigitalErsteHilfe"],
+    cta: "App öffnen",
+    visualBrief: "Screen-Recording der App, dazu Hand mit Handy im HDI-Look.",
+    goal: "Feature Adoption",
+  },
+  {
+    title: "Industry News",
+    platform: "Facebook",
+    status: "approved",
+    time: "08:30",
+    audience: "Entscheider · Gewerbe",
+    format: "Link Post + Kommentar",
+    caption:
+      "BaFin-Update: Was ändert sich 2026 für gewerbliche Sachversicherungen? Unser Kurz-Take für Geschäftsführer:innen.",
+    hashtags: ["#Gewerbe", "#BaFin", "#Regulatorik"],
+    cta: "Zum Beitrag im HDI Business-Blog",
+    visualBrief: "Editorial Header mit Zitat + Autor-Portrait rechts unten.",
+    goal: "Thought Leadership B2B",
+  },
+  {
+    title: "Quote Post",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "18:00",
+    audience: "Broad · Brand",
+    format: "Single Image · 1:1",
+    caption:
+      "„Sicherheit ist kein Produkt – sie ist ein Versprechen.\" – Aus unserem Markenmanifest.",
+    hashtags: ["#HDI", "#Markenwerte"],
+    cta: "—",
+    visualBrief: "Typografie-Poster, HDI-Dunkelgrün Hintergrund, große Serif.",
+    goal: "Brand Reach",
+  },
+  {
+    title: "Success Story",
+    platform: "Facebook",
+    status: "approved",
+    time: "13:00",
+    audience: "SME 10–200 MA",
+    format: "Video-Case · 60 Sek.",
+    caption:
+      "Wie die Bäckerei Möller nach einem Wasserschaden innerhalb einer Woche wieder öffnen konnte – dank HDI Betriebsunterbrechung.",
+    hashtags: ["#Mittelstand", "#HDI", "#Betriebsschutz"],
+    cta: "Beratung anfragen",
+    visualBrief: "Cinematic Doku-Look, Interview + B-Roll aus der Backstube.",
+    goal: "Lead Generation SME",
+  },
+  {
+    title: "Poll / Question",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "16:00",
+    audience: "Community · alle",
+    format: "Story mit Umfrage-Sticker",
+    caption:
+      "Wovor hast du im Alltag am meisten Sorge? A) Auto B) Wohnung C) Gesundheit D) Familie – tap it.",
+    hashtags: ["#HDI"],
+    cta: "Antworten & Story teilen",
+    visualBrief: "Foto-Collage 4 Alltagsszenen, Umfrage-Sticker mittig.",
+    goal: "Engagement + Insights",
+  },
+  {
+    title: "Promo / Offer",
+    platform: "Facebook",
+    status: "approved",
+    time: "09:30",
+    audience: "Wechsler Kfz",
+    format: "Static + Paid Boost",
+    caption:
+      "Wechselzeit Kfz: Bis 30.11. abschließen und 2 Monate beitragsfrei fahren. Nur bei HDI.",
+    hashtags: ["#Kfz", "#Wechselaktion", "#HDI"],
+    cta: "Jetzt wechseln",
+    visualBrief: "Product-Shot Auto + großer Preis-Badge in HDI-Grün.",
+    goal: "Direct Conversion",
+  },
+  {
+    title: "Event Reminder",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "17:00",
+    audience: "Makler & Partner",
+    format: "Story-Countdown",
+    caption:
+      "Noch 3 Tage bis zum HDI Partner-Webinar „Cyber für den Mittelstand\". Sei dabei.",
+    hashtags: ["#HDIPartner", "#Cyber"],
+    cta: "Kostenlos anmelden",
+    visualBrief: "Countdown-Sticker + Speaker-Portraits als Kachel.",
+    goal: "Event-Registrierungen",
+  },
+  {
+    title: "Weekend Post",
+    platform: "Facebook",
+    status: "approved",
+    time: "10:30",
+    audience: "Broad · Community",
+    format: "Feel-Good Single Image",
+    caption:
+      "Wochenende. Zeit für die Menschen, die zählen. Wir kümmern uns um den Rest. 💚",
+    hashtags: ["#HDI", "#Wochenende"],
+    cta: "—",
+    visualBrief: "Warmes Familienbild im Park, natürliche Farben.",
+    goal: "Brand Warmth",
+  },
 ];
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -57,6 +232,7 @@ interface CalendarAppMockProps {
 const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
   const [tab, setTab] = useState<"calendar" | "approved">("calendar");
   const [platform, setPlatform] = useState<Platform>("all");
+  const [selected, setSelected] = useState<CalEvent | null>(null);
 
   const initial = periodStart ?? { year: new Date().getFullYear(), month: new Date().getMonth() };
   const [current, setCurrent] = useState(initial);
@@ -214,10 +390,17 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
                           {cell.day}
                         </p>
                         {entry && (
-                          <div className={cn("rounded-md border px-2 py-1.5 text-[11px] leading-tight", eventStyles[entry.status])}>
+                          <button
+                            type="button"
+                            onClick={() => setSelected(entry)}
+                            className={cn(
+                              "w-full text-left rounded-md border px-2 py-1.5 text-[11px] leading-tight transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer",
+                              eventStyles[entry.status]
+                            )}
+                          >
                             <p className="font-semibold truncate">{entry.title}</p>
                             <p className="opacity-70 truncate">{entry.platform}</p>
-                          </div>
+                          </button>
                         )}
                       </div>
                     );
@@ -234,19 +417,24 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
           ) : (
             <div className="space-y-2">
               {events.filter((e) => e.status === "approved").map((e) => (
-                <div key={e.day} className="flex items-center gap-4 p-3 rounded-lg border border-border">
+                <button
+                  key={e.day}
+                  type="button"
+                  onClick={() => setSelected(e)}
+                  className="w-full text-left flex items-center gap-4 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/40 transition-colors"
+                >
                   <div className="w-12 text-center shrink-0">
                     <p className="text-[11px] text-muted-foreground">{MONTH_NAMES[current.month].slice(0, 3)}</p>
                     <p className="text-lg font-bold text-foreground leading-none">{e.day}</p>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-foreground truncate">{e.title}</p>
-                    <p className="text-xs text-muted-foreground">{e.platform}</p>
+                    <p className="text-xs text-muted-foreground">{e.platform} · {e.time} · {e.format}</p>
                   </div>
                   <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                     Approved
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -270,9 +458,105 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
           </div>
         </Card>
       </div>
+
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          {selected && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-1">
+                  {selected.platform === "Instagram" ? (
+                    <Instagram className="h-4 w-4 text-pink-600" />
+                  ) : (
+                    <Facebook className="h-4 w-4 text-blue-600" />
+                  )}
+                  <span className="text-xs font-medium text-muted-foreground">{selected.platform}</span>
+                  <span className="text-xs text-muted-foreground">·</span>
+                  <span className="text-xs text-muted-foreground">
+                    {MONTH_NAMES[current.month]} {selected.day}, {current.year}
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "ml-auto text-[10px]",
+                      selected.status === "approved"
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-blue-50 text-blue-700 border-blue-200"
+                    )}
+                  >
+                    {selected.status === "approved" ? (
+                      <><CheckCircle2 className="h-3 w-3 mr-1" /> Approved</>
+                    ) : (
+                      <><AlertCircle className="h-3 w-3 mr-1" /> Needs Content</>
+                    )}
+                  </Badge>
+                </div>
+                <DialogTitle className="text-2xl">{selected.title}</DialogTitle>
+              </DialogHeader>
+
+              <div className="grid grid-cols-3 gap-3 mt-4 text-xs">
+                <MetaItem icon={Clock} label="Publish" value={selected.time} />
+                <MetaItem icon={Target} label="Audience" value={selected.audience} />
+                <MetaItem icon={ImageIcon} label="Format" value={selected.format} />
+              </div>
+
+              <div className="mt-5 rounded-xl border border-border bg-muted/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Caption</span>
+                </div>
+                <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{selected.caption}</p>
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <Hash className="h-3.5 w-3.5 text-muted-foreground" />
+                  {selected.hashtags.map((h) => (
+                    <span key={h} className="text-xs text-primary font-medium">{h}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-3 mt-3">
+                <div className="rounded-xl border border-border p-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Visual Brief</span>
+                  </div>
+                  <p className="text-sm text-foreground">{selected.visualBrief}</p>
+                </div>
+                <div className="rounded-xl border border-border p-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Target className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Goal</span>
+                  </div>
+                  <p className="text-sm text-foreground">{selected.goal}</p>
+                  <p className="text-xs text-muted-foreground mt-2">CTA: <span className="text-foreground font-medium">{selected.cta}</span></p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-border">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" /> Regenerate with AI
+                </Button>
+                <Button size="sm">
+                  {selected.status === "approved" ? "Edit post" : "Open in Editor"}
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+const MetaItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+  <div className="rounded-lg border border-border p-3">
+    <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+      <Icon className="h-3 w-3" />
+      <span className="uppercase tracking-wide text-[10px] font-semibold">{label}</span>
+    </div>
+    <p className="text-sm font-medium text-foreground">{value}</p>
+  </div>
+);
 
 const PlatformPill = ({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: any; label: string }) => (
   <button

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import hdiLogoAsset from "@/assets/hdi-logo.png.asset.json";
 import {
@@ -14,6 +16,13 @@ import {
   CalendarDays,
   Pencil,
   ChevronRight as ArrowR,
+  Clock,
+  Hash,
+  Image as ImageIcon,
+  Target,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
 } from "lucide-react";
 
 type Platform = "all" | "facebook" | "instagram";
@@ -24,21 +33,187 @@ interface CalEvent {
   title: string;
   platform: "Facebook" | "Instagram";
   status: EventStatus;
+  time: string;
+  audience: string;
+  format: string;
+  caption: string;
+  hashtags: string[];
+  cta: string;
+  visualBrief: string;
+  goal: string;
 }
 
 const EVENT_TEMPLATE: Omit<CalEvent, "day">[] = [
-  { title: "Product Highlight", platform: "Instagram", status: "incomplete" },
-  { title: "Customer Story", platform: "Facebook", status: "approved" },
-  { title: "Behind the Scenes", platform: "Instagram", status: "incomplete" },
-  { title: "Tips & Tricks", platform: "Facebook", status: "approved" },
-  { title: "New Feature", platform: "Instagram", status: "incomplete" },
-  { title: "Industry News", platform: "Facebook", status: "approved" },
-  { title: "Quote Post", platform: "Instagram", status: "incomplete" },
-  { title: "Success Story", platform: "Facebook", status: "approved" },
-  { title: "Poll / Question", platform: "Instagram", status: "incomplete" },
-  { title: "Promo / Offer", platform: "Facebook", status: "approved" },
-  { title: "Event Reminder", platform: "Instagram", status: "incomplete" },
-  { title: "Weekend Post", platform: "Facebook", status: "approved" },
+  {
+    title: "Product Highlight",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "09:00",
+    audience: "Junge Familien 28–40",
+    format: "Reel · 9:16 · 20 Sek.",
+    caption:
+      "Deine Familie zählt auf dich – wir zählen auf dich zurück. Mit der HDI Risikolebensversicherung sicherst du in wenigen Minuten das ab, was wirklich zählt. 💚",
+    hashtags: ["#HDI", "#Familienschutz", "#Risikoleben", "#FinanziellFrei"],
+    cta: "Jetzt Beitrag in 60 Sek. berechnen →",
+    visualBrief:
+      "Familie am Frühstückstisch, warmes Morgenlicht, HDI-Grün als Akzent im Logo-Corner.",
+    goal: "Awareness + Angebotsrechner-Klicks",
+  },
+  {
+    title: "Customer Story",
+    platform: "Facebook",
+    status: "approved",
+    time: "11:30",
+    audience: "Hausbesitzer 40–60",
+    format: "Single Image + Long-Form Caption",
+    caption:
+      "„Nach dem Sturm war unser Dach hin – HDI hat innerhalb von 48 Stunden geregelt.\" Familie Weber aus Hannover erzählt, warum sie sich für HDI Wohngebäude entschieden hat.",
+    hashtags: ["#HDI", "#Kundenstimme", "#Wohngebäudeversicherung"],
+    cta: "Ganze Geschichte lesen",
+    visualBrief:
+      "Portrait Familie Weber vor renoviertem Haus, dokumentarischer Look, keine Stockfotografie.",
+    goal: "Trust + Retention",
+  },
+  {
+    title: "Behind the Scenes",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "14:00",
+    audience: "Employer-Branding · 22–35",
+    format: "Story-Serie · 5 Frames",
+    caption:
+      "Ein Tag im Schadenteam Köln – wie aus einer Meldung um 08:14 Uhr eine Lösung um 16:02 Uhr wird.",
+    hashtags: ["#LifeAtHDI", "#Insurance", "#Karriere"],
+    cta: "Swipe up: Offene Stellen",
+    visualBrief: "Handheld iPhone-Look, echte Mitarbeitende, keine Models.",
+    goal: "Employer Branding",
+  },
+  {
+    title: "Tips & Tricks",
+    platform: "Facebook",
+    status: "approved",
+    time: "10:00",
+    audience: "Autofahrer 25–55",
+    format: "Carousel · 5 Slides",
+    caption:
+      "5 Dinge, die deine Kfz-Prämie senken – und eines davon kennen die wenigsten. Slide 3 lohnt sich. 👀",
+    hashtags: ["#Kfz", "#Sparen", "#HDI"],
+    cta: "Kfz-Tarif prüfen",
+    visualBrief: "Illustrativer Carousel im HDI-Grün, klare Icons, große Zahlen.",
+    goal: "Consideration + Tarifrechner",
+  },
+  {
+    title: "New Feature",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "12:00",
+    audience: "Bestandskunden App-Nutzer",
+    format: "Reel · 9:16 · 15 Sek.",
+    caption:
+      "Schaden melden per Foto – in der HDI App jetzt in unter 60 Sekunden. Zeigen wir dir. 📱",
+    hashtags: ["#HDIApp", "#Schadenmeldung", "#DigitalErsteHilfe"],
+    cta: "App öffnen",
+    visualBrief: "Screen-Recording der App, dazu Hand mit Handy im HDI-Look.",
+    goal: "Feature Adoption",
+  },
+  {
+    title: "Industry News",
+    platform: "Facebook",
+    status: "approved",
+    time: "08:30",
+    audience: "Entscheider · Gewerbe",
+    format: "Link Post + Kommentar",
+    caption:
+      "BaFin-Update: Was ändert sich 2026 für gewerbliche Sachversicherungen? Unser Kurz-Take für Geschäftsführer:innen.",
+    hashtags: ["#Gewerbe", "#BaFin", "#Regulatorik"],
+    cta: "Zum Beitrag im HDI Business-Blog",
+    visualBrief: "Editorial Header mit Zitat + Autor-Portrait rechts unten.",
+    goal: "Thought Leadership B2B",
+  },
+  {
+    title: "Quote Post",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "18:00",
+    audience: "Broad · Brand",
+    format: "Single Image · 1:1",
+    caption:
+      "„Sicherheit ist kein Produkt – sie ist ein Versprechen.\" – Aus unserem Markenmanifest.",
+    hashtags: ["#HDI", "#Markenwerte"],
+    cta: "—",
+    visualBrief: "Typografie-Poster, HDI-Dunkelgrün Hintergrund, große Serif.",
+    goal: "Brand Reach",
+  },
+  {
+    title: "Success Story",
+    platform: "Facebook",
+    status: "approved",
+    time: "13:00",
+    audience: "SME 10–200 MA",
+    format: "Video-Case · 60 Sek.",
+    caption:
+      "Wie die Bäckerei Möller nach einem Wasserschaden innerhalb einer Woche wieder öffnen konnte – dank HDI Betriebsunterbrechung.",
+    hashtags: ["#Mittelstand", "#HDI", "#Betriebsschutz"],
+    cta: "Beratung anfragen",
+    visualBrief: "Cinematic Doku-Look, Interview + B-Roll aus der Backstube.",
+    goal: "Lead Generation SME",
+  },
+  {
+    title: "Poll / Question",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "16:00",
+    audience: "Community · alle",
+    format: "Story mit Umfrage-Sticker",
+    caption:
+      "Wovor hast du im Alltag am meisten Sorge? A) Auto B) Wohnung C) Gesundheit D) Familie – tap it.",
+    hashtags: ["#HDI"],
+    cta: "Antworten & Story teilen",
+    visualBrief: "Foto-Collage 4 Alltagsszenen, Umfrage-Sticker mittig.",
+    goal: "Engagement + Insights",
+  },
+  {
+    title: "Promo / Offer",
+    platform: "Facebook",
+    status: "approved",
+    time: "09:30",
+    audience: "Wechsler Kfz",
+    format: "Static + Paid Boost",
+    caption:
+      "Wechselzeit Kfz: Bis 30.11. abschließen und 2 Monate beitragsfrei fahren. Nur bei HDI.",
+    hashtags: ["#Kfz", "#Wechselaktion", "#HDI"],
+    cta: "Jetzt wechseln",
+    visualBrief: "Product-Shot Auto + großer Preis-Badge in HDI-Grün.",
+    goal: "Direct Conversion",
+  },
+  {
+    title: "Event Reminder",
+    platform: "Instagram",
+    status: "incomplete",
+    time: "17:00",
+    audience: "Makler & Partner",
+    format: "Story-Countdown",
+    caption:
+      "Noch 3 Tage bis zum HDI Partner-Webinar „Cyber für den Mittelstand\". Sei dabei.",
+    hashtags: ["#HDIPartner", "#Cyber"],
+    cta: "Kostenlos anmelden",
+    visualBrief: "Countdown-Sticker + Speaker-Portraits als Kachel.",
+    goal: "Event-Registrierungen",
+  },
+  {
+    title: "Weekend Post",
+    platform: "Facebook",
+    status: "approved",
+    time: "10:30",
+    audience: "Broad · Community",
+    format: "Feel-Good Single Image",
+    caption:
+      "Wochenende. Zeit für die Menschen, die zählen. Wir kümmern uns um den Rest. 💚",
+    hashtags: ["#HDI", "#Wochenende"],
+    cta: "—",
+    visualBrief: "Warmes Familienbild im Park, natürliche Farben.",
+    goal: "Brand Warmth",
+  },
 ];
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

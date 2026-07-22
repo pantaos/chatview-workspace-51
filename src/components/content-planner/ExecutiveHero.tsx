@@ -15,7 +15,6 @@ import {
   BarChart3,
 } from "lucide-react";
 import { CPLang } from "./i18n";
-import hdiLogo from "@/assets/hdi-logo.png.asset.json";
 
 interface Props {
   lang: CPLang;

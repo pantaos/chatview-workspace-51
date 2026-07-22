@@ -417,19 +417,24 @@ const CalendarAppMock = ({ periodStart, periodEnd }: CalendarAppMockProps) => {
           ) : (
             <div className="space-y-2">
               {events.filter((e) => e.status === "approved").map((e) => (
-                <div key={e.day} className="flex items-center gap-4 p-3 rounded-lg border border-border">
+                <button
+                  key={e.day}
+                  type="button"
+                  onClick={() => setSelected(e)}
+                  className="w-full text-left flex items-center gap-4 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/40 transition-colors"
+                >
                   <div className="w-12 text-center shrink-0">
                     <p className="text-[11px] text-muted-foreground">{MONTH_NAMES[current.month].slice(0, 3)}</p>
                     <p className="text-lg font-bold text-foreground leading-none">{e.day}</p>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-foreground truncate">{e.title}</p>
-                    <p className="text-xs text-muted-foreground">{e.platform}</p>
+                    <p className="text-xs text-muted-foreground">{e.platform} · {e.time} · {e.format}</p>
                   </div>
                   <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                     Approved
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           )}
